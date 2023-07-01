@@ -9,7 +9,7 @@
 
 import unittest
 
-from netaddresstool.ipv4 import Network, Netmask, SubNetwork
+from toolbox.netaddresstool.ipv4 import Network, Netmask, SubNetwork
 
 
 class TestSubNetwork(unittest.TestCase):

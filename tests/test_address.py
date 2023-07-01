@@ -8,8 +8,8 @@
 """
 
 import unittest
-from netaddresstool.ipv4 import Address
-from netaddresstool.libs.octets import Octet
+from toolbox.netaddresstool.ipv4 import Address
+from toolbox.netaddresstool.libs.octets import Octet
 
 
 class TestAddress(unittest.TestCase):

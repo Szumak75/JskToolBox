@@ -9,8 +9,8 @@
 
 import unittest
 
-from netaddresstool.ipv4 import Netmask
-from netaddresstool.libs.octets import Octet
+from toolbox.netaddresstool.ipv4 import Netmask
+from toolbox.netaddresstool.libs.octets import Octet
 
 
 class TestNetmask(unittest.TestCase):
