@@ -15,7 +15,7 @@ from toolbox.netaddresstool.ipv4 import Network, Netmask, SubNetwork
 class TestSubNetwork(unittest.TestCase):
     """Class for testing SubNetwork calculator."""
 
-    def test_subnetwork_creare(self):
+    def test_subnetwork_create(self):
         """Test nr 1."""
         try:
             SubNetwork(Network("192.168.1.1/24"), Netmask(30))
