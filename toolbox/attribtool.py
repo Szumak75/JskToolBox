@@ -1,13 +1,17 @@
 # -*- coding: UTF-8 -*-
 """
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 07.05.2023
+  Created: 02.07.2023
 
-  Purpose: NoNewAttributes class for restricting the creation of dynamic
-  attributes on instances of derived types.
+  Purpose: Base classes for restricting the creation of dynamic attributes
+  on instance of derived types.
 
+  [NoNewAttributes]
   The solution idea published in: Python Cookbook (2004), A. Martelli,
   A. Ravenscroft, D. Ascher
+
+  [NoDynamicAttributes]
+  Another solution with the same functionality.
 """
 
 from typing import Any, Callable
@@ -45,6 +49,21 @@ class NoNewAttributes:
         __setattr__: Callable[[Any, str, Any], None] = _no_new_attributes(
             type.__setattr__
         )
+
+
+class NoDynamicAttributes:
+    """NoDynamicAttributes - base class.
+
+    Class for restricting the creation of dynamic attributes on instances
+    of derived types.
+    """
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if not hasattr(self, name):
+            raise AttributeError(
+                f"Cannot add new attribute '{name}' to {self.__class__.__name__} object"
+            )
+        super().__setattr__(name, value)
 
 
 # #[EOF]#######################################################################

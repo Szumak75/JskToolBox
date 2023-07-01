@@ -10,7 +10,7 @@
 
 from types import FrameType
 from typing import Optional
-from attribtool.ndattrib import NoDynamicAttributes
+from toolbox.attribtool import NoDynamicAttributes
 
 
 class Raise(NoDynamicAttributes):

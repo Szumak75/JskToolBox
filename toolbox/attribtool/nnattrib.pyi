@@ -1,6 +1,0 @@
-from typing import Any, Callable
-
-class NoNewAttributes:
-    __setattr__: Callable[[Any, str, Any], None] = ...
-    class __metaclass__(type):
-        __setattr__: Callable[[Any, str, Any], None] = ...
