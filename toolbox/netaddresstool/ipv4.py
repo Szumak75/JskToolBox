@@ -13,8 +13,8 @@ from copy import deepcopy
 
 from typing import TypeVar, Union, List
 
-from attribtool.ndattrib import NoDynamicAttributes
-from raisetool.formatter import Raise
+from toolbox.attribtool import NoDynamicAttributes
+from toolbox.raisetool import Raise
 from .libs.octets import Octet
 from .libs.interfaces import IComparators
 

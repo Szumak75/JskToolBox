@@ -9,7 +9,7 @@
 import unittest
 import inspect
 
-from raisetool.formatter import Raise
+from toolbox.raisetool import Raise
 
 
 class TestRaise(unittest.TestCase):

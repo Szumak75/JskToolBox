@@ -7,8 +7,8 @@
 """
 import inspect
 from typing import Union, TypeVar
-from attribtool.ndattrib import NoDynamicAttributes
-from raisetool.formatter import Raise
+from toolbox.attribtool import NoDynamicAttributes
+from toolbox.raisetool import Raise
 
 from .interfaces import IComparators
 
