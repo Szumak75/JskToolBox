@@ -61,6 +61,12 @@ Returns a list of four Octet objects representing the stored address. The list i
 ```
 octets: Union[str, int, List]
 ```
+Allows you to configure the network address by accepting input data in one of the selected formats:
+- "192.168.0.1" # as string
+- 3232235521 # as an integer
+- [192, 168, 0, 1] # as a list of integers
+- ["192", "168", "0", "1"] # as a list of strings
+- [Octet(192), Octet(168), Octet(0), Octet(1)] # as a list of Octet objects.
 
 ### Functional properties
 
