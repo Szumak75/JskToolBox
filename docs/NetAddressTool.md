@@ -199,8 +199,8 @@ Returns the network address.
 1. `str(Network("192.168.1.22/30"))` will return the network address: `"192.168.1.20/30"`
 1. `str(Network("192.168.1.22/30").address)` will return the ipv4 address: `"192.168.1.22"`
 1. `str(Network("192.168.1.22/30").broadcast)` will return the ipv4 broadcast address: `"192.168.1.23"`
-1. `str(Network("192.168.1.22/30").count)` will return the number of hosts in network range: `"2"`
-1. `str(Network("192.168.1.22/30").hosts)` will return the list of hosts in network range: `"[Address('192.168.1.21'), Address('192.168.1.22')]"`
+1. `str(Network("192.168.1.22/30").count)` will return the number of hosts in the network range: `"2"`
+1. `str(Network("192.168.1.22/30").hosts)` will return the list of hosts in the network range: `"[Address('192.168.1.21'), Address('192.168.1.22')]"`
 1. `str(Network("192.168.1.22/30").mask)` will return the network mask: `"255.255.255.252"`
 1. `str(Network("192.168.1.22/30").max)` will return the ipv4 last host address: `"192.168.1.22"`
 1. `str(Network("192.168.1.22/30").max)` will return the ipv4 first host address: `"192.168.1.21"`
@@ -231,4 +231,4 @@ The Netmask object is the netmask value for the subnets you are looking for.
 Returns a list of subnets found in the given network address with the given netmask.
 
 ### Functional properties
-1. `SubNetwork(Network('192.168.1.20/29'), Netmask(30)).subnets` will return list of subnets: `[Network(192.168.1.16/30), Network(192.168.1.20/30)]`
+1. `SubNetwork(Network('192.168.1.20/29'), Netmask(30)).subnets` will return the list of subnets: `[Network(192.168.1.16/30), Network(192.168.1.20/30)]`
