@@ -4,15 +4,23 @@ The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
 
-Octet
+```
+from toolbox.netaddresstool.libs.octets import Octet
+Octet(self, value: Union[str, int, Octet])
 
-Address
 
-Netmask
+from toolbox.netaddresstool.ipv4 import Address
+Address(self, addr: Union[str, int, List])
 
-Network
+from toolbox.netaddresstool.ipv4 import Netmask
+Netmask(self, addr: Union[str, int, List])
 
-SubNetwork
+from toolbox.netaddresstool.ipv4 import Network
+Network(self, addr: Union[str, List])
+
+from toolbox.netaddresstool.ipv4 import SubNetwork, Network, Netmask
+SubNetwork(self, network: Network, mask: Netmask)
+```
 
 ## Octet
 
