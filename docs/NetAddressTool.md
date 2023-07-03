@@ -56,6 +56,7 @@ from toolbox.netaddresstool.ipv4 import Address
 ```
 Address(addr: Union[str, int, List[Union[int, str, Octet]]])
 ```
+The addr argument takes values such as the `.octets` property described in the head **Public setters**.
 
 ### Public properties
 ```
@@ -78,9 +79,9 @@ Allows you to configure the network address by accepting input data in one of th
 
 The class has been equipped with comparators that allow comparing objects with each other.
 
-`int(Address("192.168.0.1"))` will return the numeric representation of the address as integer = `3232235521`.
+`int(Address("192.168.0.1"))` will return the numeric representation of the address as integer: `3232235521`.
 
-`str(Address(3232235521))` will return the text representation of the address as string = `"192.168.0.1"`.
+`str(Address(3232235521))` will return the text representation of the address as string: `"192.168.0.1"`.
 
 ## Netmask
 
