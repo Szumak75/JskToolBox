@@ -76,6 +76,12 @@ Allows you to configure the network address by accepting input data in one of th
 
 ### Functional properties
 
+The class has been equipped with comparators that allow comparing objects with each other.
+
+`int(Address("192.168.0.1"))` will return the numeric representation of the address as integer = `3232235521`.
+
+`str(Address(3232235521))` will return the text representation of the address as string = `"192.168.0.1"`.
+
 ## Netmask
 
 The class for IPv4 network mask representation.
