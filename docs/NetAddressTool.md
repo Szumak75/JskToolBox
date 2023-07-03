@@ -2,14 +2,14 @@
 
 The project contains sets of base classes for operations on IPv4 addresses.
 
-## Public Classes
-1. [Octet](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#octet)(self, value: Union[str, int, Octet])
-1. [Address](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#address)(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-1. [Netmask](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#netmask)(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-1. [Network](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#network)(self, addr: Union[str, List])
-1. [SubNetwork](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#subnetwork)(self, network: Network, mask: Netmask)
+## 1. Public Classes
+1. [Octet](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#octet)(value: Union[str, int, Octet])
+1. [Address](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#address)(addr: Union[str, int, List[Union[int, str, Octet]]])
+1. [Netmask](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#netmask)(addr: Union[str, int, List[Union[int, str, Octet]]])
+1. [Network](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#network)(addr: Union[str, List])
+1. [SubNetwork](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#subnetwork)(network: Network, mask: Netmask)
 
-## Octet
+## 1. Octet
 
 The class for IPv4 octet representation.
 
@@ -20,7 +20,7 @@ from toolbox.netaddresstool.libs.octets import Octet
 
 ### Constructor
 ```
-Octet(self, value: Union[str, int, Octet])
+Octet(value: Union[str, int, Octet])
 ```
 
 ### Public properties
@@ -54,7 +54,7 @@ from toolbox.netaddresstool.ipv4 import Address
 
 ### Constructor
 ```
-Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+Address(addr: Union[str, int, List[Union[int, str, Octet]]])
 ```
 
 ### Public properties
@@ -87,7 +87,7 @@ from toolbox.netaddresstool.ipv4 import Netmask
 
 ### Constructor
 ```
-Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+Netmask(addr: Union[str, int, List[Union[int, str, Octet]]])
 ```
 
 ### Public properties
@@ -123,7 +123,7 @@ from toolbox.netaddresstool.ipv4 import Network
 
 ### Constructor
 ```
-Network(self, addr: Union[str, List])
+Network(addr: Union[str, List])
 ```
 
 ### Public properties
@@ -180,7 +180,7 @@ from toolbox.netaddresstool.ipv4 import SubNetwork
 
 ### Constructor
 ```
-SubNetwork(self, network: Network, mask: Netmask)
+SubNetwork(network: Network, mask: Netmask)
 ```
 
 ### Public properties
