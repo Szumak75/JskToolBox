@@ -57,7 +57,15 @@ class Raise(NoDynamicAttributes):
 
         Return: AttributeError
         """
-        return AttributeError(cls.message(message, class_name, currentframe))
+        return AttributeError(
+            cls.message(
+                f"[AttributeError]: {message}"
+                if message
+                else "[AttributeError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
     @classmethod
     def connection_error(
@@ -75,7 +83,13 @@ class Raise(NoDynamicAttributes):
         Return: ConnectionError
         """
         return ConnectionError(
-            cls.message(message, class_name, currentframe)
+            cls.message(
+                f"[ConnectionError]: {message}"
+                if message
+                else "[ConnectionError]:",
+                class_name,
+                currentframe,
+            )
         )
 
     @classmethod
@@ -93,7 +107,13 @@ class Raise(NoDynamicAttributes):
 
         Return: IndexError
         """
-        return IndexError(cls.message(message, class_name, currentframe))
+        return IndexError(
+            cls.message(
+                f"[IndexError]: {message}" if message else "[IndexError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
     @classmethod
     def key_error(
@@ -110,7 +130,13 @@ class Raise(NoDynamicAttributes):
 
         Return: KeyError
         """
-        return KeyError(cls.message(message, class_name, currentframe))
+        return KeyError(
+            cls.message(
+                f"[KeyError]: {message}" if message else "[KeyError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
     @classmethod
     def not_implemented_error(
@@ -128,7 +154,13 @@ class Raise(NoDynamicAttributes):
         Return: NotImplementedError
         """
         return NotImplementedError(
-            cls.message(message, class_name, currentframe)
+            cls.message(
+                f"[NotImplementedError]: {message}"
+                if message
+                else "[NotImplementedError]:",
+                class_name,
+                currentframe,
+            )
         )
 
     @classmethod
@@ -146,7 +178,13 @@ class Raise(NoDynamicAttributes):
 
         Return: OSError
         """
-        return OSError(cls.message(message, class_name, currentframe))
+        return OSError(
+            cls.message(
+                f"[OSError]: {message}" if message else "[OSError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
     @classmethod
     def syntax_error(
@@ -163,7 +201,13 @@ class Raise(NoDynamicAttributes):
 
         Return: SyntaxError
         """
-        return SyntaxError(cls.message(message, class_name, currentframe))
+        return SyntaxError(
+            cls.message(
+                f"[SyntaxError]: {message}" if message else "[SyntaxError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
     @classmethod
     def type_error(
@@ -180,7 +224,13 @@ class Raise(NoDynamicAttributes):
 
         Return: TypeError
         """
-        return TypeError(cls.message(message, class_name, currentframe))
+        return TypeError(
+            cls.message(
+                f"[TypeError]: {message}" if message else "[TypeError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
     @classmethod
     def value_error(
@@ -197,7 +247,13 @@ class Raise(NoDynamicAttributes):
 
         Return: ValueError
         """
-        return ValueError(cls.message(message, class_name, currentframe))
+        return ValueError(
+            cls.message(
+                f"[ValueError]: {message}" if message else "[ValueError]:",
+                class_name,
+                currentframe,
+            )
+        )
 
 
 # #[EOF]#######################################################################

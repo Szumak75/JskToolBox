@@ -41,7 +41,7 @@ class Example:
                 inspect.currentframe(),
             )
         except ValueError as ex:
-            print(f"4: {ex.__class__.__name__}: {ex}")
+            print(f"4: {ex}")
 
 
 if __name__ == "__main__":
@@ -52,5 +52,5 @@ Output:
 1: example message 1
 2: Example: example message 2
 3: Example.__init__ [line:21]: example message 3
-4: ValueError: Example.__init__ [line:24]: example message 4
+4: Example.__init__ [line:24]: [ValueError]: example message 4
 ```
