@@ -61,7 +61,7 @@ class Raise(NoDynamicAttributes):
             cls.message(
                 f"[AttributeError]: {message}"
                 if message
-                else "[AttributeError]:",
+                else "[AttributeError]",
                 class_name,
                 currentframe,
             )
@@ -86,7 +86,7 @@ class Raise(NoDynamicAttributes):
             cls.message(
                 f"[ConnectionError]: {message}"
                 if message
-                else "[ConnectionError]:",
+                else "[ConnectionError]",
                 class_name,
                 currentframe,
             )
@@ -109,7 +109,7 @@ class Raise(NoDynamicAttributes):
         """
         return IndexError(
             cls.message(
-                f"[IndexError]: {message}" if message else "[IndexError]:",
+                f"[IndexError]: {message}" if message else "[IndexError]",
                 class_name,
                 currentframe,
             )
@@ -132,7 +132,7 @@ class Raise(NoDynamicAttributes):
         """
         return KeyError(
             cls.message(
-                f"[KeyError]: {message}" if message else "[KeyError]:",
+                f"[KeyError]: {message}" if message else "[KeyError]",
                 class_name,
                 currentframe,
             )
@@ -157,7 +157,7 @@ class Raise(NoDynamicAttributes):
             cls.message(
                 f"[NotImplementedError]: {message}"
                 if message
-                else "[NotImplementedError]:",
+                else "[NotImplementedError]",
                 class_name,
                 currentframe,
             )
@@ -203,7 +203,7 @@ class Raise(NoDynamicAttributes):
         """
         return SyntaxError(
             cls.message(
-                f"[SyntaxError]: {message}" if message else "[SyntaxError]:",
+                f"[SyntaxError]: {message}" if message else "[SyntaxError]",
                 class_name,
                 currentframe,
             )
@@ -226,7 +226,7 @@ class Raise(NoDynamicAttributes):
         """
         return TypeError(
             cls.message(
-                f"[TypeError]: {message}" if message else "[TypeError]:",
+                f"[TypeError]: {message}" if message else "[TypeError]",
                 class_name,
                 currentframe,
             )
@@ -249,7 +249,7 @@ class Raise(NoDynamicAttributes):
         """
         return ValueError(
             cls.message(
-                f"[ValueError]: {message}" if message else "[ValueError]:",
+                f"[ValueError]: {message}" if message else "[ValueError]",
                 class_name,
                 currentframe,
             )
