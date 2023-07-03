@@ -87,7 +87,7 @@ class Address(IComparators, NoDynamicAttributes):
             )
         if len(value) != 4:
             raise Raise.value_error(
-                "Expected list with four elements, len({len(value)}) received.",
+                f"Expected list with four elements, len({len(value)}) received.",
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -190,6 +190,9 @@ class Netmask(NoDynamicAttributes):
         return socket.inet_ntoa(
             struct.pack("!I", (1 << 32) - (1 << (32 - self.__cidr)))
         )
+
+    def __repr__(self) -> str:
+        return f"Netmask({self.cidr})"
 
     def __cidr_validator(self, cidr: int) -> None:
         """Check and set cidr."""

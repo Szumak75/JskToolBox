@@ -69,7 +69,7 @@ Returns a list of four Octet objects representing the stored address. The list i
 .octets: Union[str, int, List[Union[int, str, Octet]]]
 ```
 Allows you to configure the network address by accepting input data in one of the selected formats:
-- **"192.168.0.1"** -- *as string*
+- **"192.168.0.1"** -- *as a string*
 - **3232235521** -- *as an integer*
 - **[192, 168, 0, 1]** -- *as a list of integers*
 - **["192", "168", "0", "1"]** -- *as a list of strings*
@@ -77,11 +77,11 @@ Allows you to configure the network address by accepting input data in one of th
 
 ### Functional properties
 
-The class has been equipped with comparators that allow comparing objects with each other.
+1. The class has been equipped with comparators that allow comparing objects with each other.
+1. `int(Address("192.168.0.1"))` will return the numeric representation of the address as integer: `3232235521`.
+1. `str(Address(3232235521))` will return the text representation of the address as string: `"192.168.0.1"`.
+1. Attempting to create an object with an invalid IPv4 address `Address("192.256.0.1")` will throw a `ValueError` exception.
 
-`int(Address("192.168.0.1"))` will return the numeric representation of the address as integer: `3232235521`.
-
-`str(Address(3232235521))` will return the text representation of the address as string: `"192.168.0.1"`.
 
 ## Netmask
 
@@ -96,6 +96,12 @@ from toolbox.netaddresstool.ipv4 import Netmask
 ```
 Netmask(addr: Union[str, int, List[Union[int, str, Octet]]])
 ```
+The addr argument takes values in several formats:
+- **16** -- *as an integer in range at 0 to 32 (CIDR format)*
+- **"32"** -- *as a string in range at "0" to "32" (CIDR format)*
+- **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
+- **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
+- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
 
 ### Public properties
 ```
@@ -113,11 +119,23 @@ Returns the netmask in CIDR format.
 ```
 .octets: List[Union[int, str, Octet]]
 ```
+Takes values as list:
+- **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
+- **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
+- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
+
 ```
 .cidr: Union[str, int]
 ```
+Takes values in CIDR format:
+- **16** -- *as an integer in range at 0 to 32*
+- **"32"** -- *as a string in range at "0" to "32"*
 
 ### Functional properties
+1. `int(Netmask(16))` will return the netmask value as an integer as CIDR format: `16`
+1. `str(Netmask(16))` will return the netmask value in text form: `"255.255.0.0"`
+1. Attempting to create an object with an invalid IPv4 netmask `Netmask(33)` will throw a `ValueError` exception.
+
 
 ## Network
 
@@ -132,6 +150,9 @@ from toolbox.netaddresstool.ipv4 import Network
 ```
 Network(addr: Union[str, List])
 ```
+The addr argument takes the value as a string written in the form of the network
+address `"192.168.1.20/30"` (the IPv4 address can be any address within the subnet
+indicated by the netmask) or in the form of a two-element list: `[ipv4 address, netmask]`.
 
 ### Public properties
 ```
