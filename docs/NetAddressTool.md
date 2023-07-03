@@ -3,7 +3,7 @@
 The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
-1. Octet(self, value: Union[str, int, Octet])
+1. [Octet](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#octet)(self, value: Union[str, int, Octet])
 1. Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
 1. Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
 1. Network(self, addr: Union[str, List])
