@@ -334,7 +334,7 @@ class Network(NoDynamicAttributes):
         """Build configuration from list."""
         if len(addr) != 2:
             raise Raise.value_error(
-                "Two element list expected ['ip','mask']",
+                "Two element list expected ['ip','netmask']",
                 self.__class__.__name__,
                 inspect.currentframe(),
             )

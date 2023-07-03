@@ -5,19 +5,10 @@ The project contains sets of base classes for operations on IPv4 addresses.
 ## Public Classes
 
 ```
-from toolbox.netaddresstool.libs.octets import Octet
 Octet(self, value: Union[str, int, Octet])
-
-from toolbox.netaddresstool.ipv4 import Address
 Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-
-from toolbox.netaddresstool.ipv4 import Netmask
 Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-
-from toolbox.netaddresstool.ipv4 import Network
 Network(self, addr: Union[str, List])
-
-from toolbox.netaddresstool.ipv4 import SubNetwork, Network, Netmask
 SubNetwork(self, network: Network, mask: Netmask)
 ```
 
@@ -31,6 +22,9 @@ from toolbox.netaddresstool.libs.octets import Octet
 ```
 
 ### Constructor
+```
+Octet(self, value: Union[str, int, Octet])
+```
 
 ### Public properties
 
@@ -62,16 +56,17 @@ from toolbox.netaddresstool.ipv4 import Address
 ```
 
 ### Constructor
+```
+Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+```
 
 ### Public properties
-
 ```
 octets: List[Octet]
 ```
 Returns a list of four Octet objects representing the stored address. The list is a copy of the stored value and does not allow modification of the class object.
 
 ### Public setters
-
 ```
 octets: Union[str, int, List[Union[int, str, Octet]]]
 ```
@@ -94,9 +89,11 @@ from toolbox.netaddresstool.ipv4 import Netmask
 ```
 
 ### Constructor
+```
+Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+```
 
 ### Public properties
-
 ```
 octets: List[Octet]
 ```
@@ -128,9 +125,11 @@ from toolbox.netaddresstool.ipv4 import Network
 ```
 
 ### Constructor
+```
+Network(self, addr: Union[str, List])
+```
 
 ### Public properties
-
 ```
 address: Address
 ```
@@ -184,9 +183,11 @@ from toolbox.netaddresstool.ipv4 import SubNetwork
 ```
 
 ### Constructor
+```
+SubNetwork(self, network: Network, mask: Netmask)
+```
 
 ### Public properties
-
 ```
 subnets: List[Network]
 ```
