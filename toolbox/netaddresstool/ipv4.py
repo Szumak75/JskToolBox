@@ -247,19 +247,45 @@ class Netmask(NoDynamicAttributes):
             return True
         return False
 
+    @staticmethod
+    def __octets_validator2(octets: List[Octet]) -> bool:
+        """Check if given octets list is valid."""
+        # tu binary string
+        tmp = str().join([bin(octet.value)[2:] for octet in octets])
+        test = octets[0].value == 0
+        for bit in tmp[1:]:
+            if bit == "1" and test:
+                return False
+            if bit == "0":
+                test = True
+        return True
+
     @property
     def octets(self) -> List[Octet]:
         """Return octets list of four Octets."""
         tmp = str(self).split(".")
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
+    # @octets.setter
+    # def octets(self, addr: List[Union[int, str, Octet]]) -> None:
+    # """Set netmask from list of 4 values [int||str||Octets]."""
+    # tmp = str(Address(addr))
+    # if not Netmask.__octets_validator(tmp):
+    # raise Raise.value_error(f"Invalid mask, received: {tmp}")
+    # self.cidr = sum(
+    # [bin(x.value).count("1") for x in Address(addr).octets]
+    # )
+
     @octets.setter
     def octets(self, addr: List[Union[int, str, Octet]]) -> None:
         """Set netmask from list of 4 values [int||str||Octets]."""
-        tmp = str(Address(addr))
-        if not Netmask.__octets_validator(tmp):
-            raise Raise.value_error(f"Invalid mask, received: {tmp}")
-        self.cidr = sum([bin(int(x)).count("1") for x in tmp.split(".")])
+        if not Netmask.__octets_validator2(Address(addr).octets):
+            raise Raise.value_error(
+                f"Invalid mask, received: {Address(addr)}"
+            )
+        self.cidr = sum(
+            [bin(x.value).count("1") for x in Address(addr).octets]
+        )
 
     @property
     def cidr(self) -> str:

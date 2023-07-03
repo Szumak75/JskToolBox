@@ -90,6 +90,10 @@ class TestNetmask(unittest.TestCase):
             Netmask("256.255.255.255")
         with self.assertRaises(ValueError):
             Netmask("127.0.0.1")
+        with self.assertRaises(ValueError):
+            Netmask("255.254.255.0")
+        with self.assertRaises(ValueError):
+            Netmask("255.253.0.0")
 
 
 if __name__ == "__main__":
