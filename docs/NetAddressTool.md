@@ -3,14 +3,11 @@
 The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
-
-```
-Octet(self, value: Union[str, int, Octet])
-Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-Network(self, addr: Union[str, List])
-SubNetwork(self, network: Network, mask: Netmask)
-```
+1. Octet(self, value: Union[str, int, Octet])
+1. Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+1. Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+1. Network(self, addr: Union[str, List])
+1. SubNetwork(self, network: Network, mask: Netmask)
 
 ## Octet
 
@@ -29,14 +26,14 @@ Octet(self, value: Union[str, int, Octet])
 ### Public properties
 
 ```
-value: int
+.value: int
 ```
-Return ostet as integer.
+Return octet as integer.
 
 ### Public setters
 
 ```
-value: Union[str, int, Octet]
+.value: Union[str, int, Octet]
 ```
 Set octet from integer, string or other octet object.
 
@@ -62,13 +59,13 @@ Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
 
 ### Public properties
 ```
-octets: List[Octet]
+.octets: List[Octet]
 ```
 Returns a list of four Octet objects representing the stored address. The list is a copy of the stored value and does not allow modification of the class object.
 
 ### Public setters
 ```
-octets: Union[str, int, List[Union[int, str, Octet]]]
+.octets: Union[str, int, List[Union[int, str, Octet]]]
 ```
 Allows you to configure the network address by accepting input data in one of the selected formats:
 - "192.168.0.1" # as string
@@ -95,22 +92,22 @@ Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
 
 ### Public properties
 ```
-octets: List[Octet]
+.octets: List[Octet]
 ```
 Returns the netmask as a list of four Octet objects.
 
 ```
-cidr: str
+.cidr: str
 ```
 Returns the netmask in CIDR format.
 
 ### Public setters
 
 ```
-octets: List[Union[int, str, Octet]]
+.octets: List[Union[int, str, Octet]]
 ```
 ```
-cidr: Union[str, int]
+.cidr: Union[str, int]
 ```
 
 ### Functional properties
@@ -131,46 +128,45 @@ Network(self, addr: Union[str, List])
 
 ### Public properties
 ```
-address: Address
+.address: Address
 ```
 Returns the address passed when creating the object.
 
 ```
-broadcast: Address
+.broadcast: Address
 ```
 Returns the broadcast address.
 
 ```
-count: int
+.count: int
 ```
 Returns the number of host addresses in the network range.
 
 ```
-hosts: List[Address]
+.hosts: List[Address]
 ```
 Returns a list of host addresses in the network range.
 
 ```
-mask: Netmask
+.mask: Netmask
 ```
 Returns the network mask.
 
 ```
-max: Address
+.max: Address
 ```
 Returns the last host address in the network range.
 
 ```
-min: Address
+.min: Address
 ```
 Returns the first host address in the network range.
 
 ```
-network: Address
+.network: Address
 ```
 Returns the network address.
 
-### Public setters
 ### Functional properties
 
 ## SubNetwork
@@ -189,9 +185,8 @@ SubNetwork(self, network: Network, mask: Netmask)
 
 ### Public properties
 ```
-subnets: List[Network]
+.subnets: List[Network]
 ```
 Returns a list of subnets found in the given network address with the given netmask.
 
-### Public setters
 ### Functional properties
