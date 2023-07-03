@@ -4,10 +4,10 @@ The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
 1. [Octet](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#octet)(self, value: Union[str, int, Octet])
-1. Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-1. Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
-1. Network(self, addr: Union[str, List])
-1. SubNetwork(self, network: Network, mask: Netmask)
+1. [Address](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#address)(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+1. [Netmask](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#netmask)(self, addr: Union[str, int, List[Union[int, str, Octet]]])
+1. [Network](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#network)(self, addr: Union[str, List])
+1. [SubNetwork](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#subnetwork)(self, network: Network, mask: Netmask)
 
 ## Octet
 
