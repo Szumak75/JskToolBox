@@ -36,7 +36,9 @@ class Address(IComparators, NoDynamicAttributes):
 
     __varint: int = 0
 
-    def __init__(self, addr: Union[str, int, List]) -> None:
+    def __init__(
+        self, addr: Union[str, int, List[Union[int, str, Octet]]]
+    ) -> None:
         """Constructor."""
         self.octets = addr
 
@@ -74,7 +76,9 @@ class Address(IComparators, NoDynamicAttributes):
         """Convert ipv4 str representation to ip int."""
         return struct.unpack("!L", socket.inet_aton(ipstr))[0]
 
-    def __set_octets_from_list(self, value: List) -> None:
+    def __set_octets_from_list(
+        self, value: List[Union[int, str, Octet]]
+    ) -> None:
         if not value:
             raise Raise.value_error(
                 "Empty list received.",
@@ -122,7 +126,9 @@ class Address(IComparators, NoDynamicAttributes):
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
     @octets.setter
-    def octets(self, value: Union[str, int, List]) -> None:
+    def octets(
+        self, value: Union[str, int, List[Union[int, str, Octet]]]
+    ) -> None:
         if isinstance(value, List):
             self.__set_octets_from_list(value)
         elif isinstance(value, int):
@@ -156,7 +162,9 @@ class Netmask(NoDynamicAttributes):
     # CIDR format
     __cidr: int = 0
 
-    def __init__(self, addr: Union[str, int, List]) -> None:
+    def __init__(
+        self, addr: Union[str, int, List[Union[int, str, Octet]]]
+    ) -> None:
         """Constructor."""
         if isinstance(addr, int):
             self.cidr = addr
@@ -243,7 +251,7 @@ class Netmask(NoDynamicAttributes):
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
     @octets.setter
-    def octets(self, addr: List) -> None:
+    def octets(self, addr: List[Union[int, str, Octet]]) -> None:
         """Set netmask from list of 4 values [int||str||Octets]."""
         tmp = str(Address(addr))
         if not Netmask.__octets_validator(tmp):

@@ -9,10 +9,10 @@ from toolbox.netaddresstool.libs.octets import Octet
 Octet(self, value: Union[str, int, Octet])
 
 from toolbox.netaddresstool.ipv4 import Address
-Address(self, addr: Union[str, int, List])
+Address(self, addr: Union[str, int, List[Union[int, str, Octet]]])
 
 from toolbox.netaddresstool.ipv4 import Netmask
-Netmask(self, addr: Union[str, int, List])
+Netmask(self, addr: Union[str, int, List[Union[int, str, Octet]]])
 
 from toolbox.netaddresstool.ipv4 import Network
 Network(self, addr: Union[str, List])
@@ -25,6 +25,13 @@ SubNetwork(self, network: Network, mask: Netmask)
 
 The class for IPv4 octet representation.
 
+### Import
+```
+from toolbox.netaddresstool.libs.octets import Octet
+```
+
+### Constructor
+
 ### Public properties
 
 ```
@@ -35,7 +42,7 @@ Return ostet as integer.
 ### Public setters
 
 ```
-value: Union[str, int Octet]
+value: Union[str, int, Octet]
 ```
 Set octet from integer, string or other octet object.
 
@@ -49,6 +56,13 @@ Validation of the assigned value is also carried out, in the event of exceeding 
 
 The class for IPv4 address representation.
 
+### Import
+```
+from toolbox.netaddresstool.ipv4 import Address
+```
+
+### Constructor
+
 ### Public properties
 
 ```
@@ -59,7 +73,7 @@ Returns a list of four Octet objects representing the stored address. The list i
 ### Public setters
 
 ```
-octets: Union[str, int, List]
+octets: Union[str, int, List[Union[int, str, Octet]]]
 ```
 Allows you to configure the network address by accepting input data in one of the selected formats:
 - "192.168.0.1" # as string
@@ -73,6 +87,13 @@ Allows you to configure the network address by accepting input data in one of th
 ## Netmask
 
 The class for IPv4 network mask representation.
+
+### Import
+```
+from toolbox.netaddresstool.ipv4 import Netmask
+```
+
+### Constructor
 
 ### Public properties
 
@@ -89,7 +110,7 @@ Returns the netmask in CIDR format.
 ### Public setters
 
 ```
-octets: List
+octets: List[Union[int, str, Octet]]
 ```
 ```
 cidr: Union[str, int]
@@ -100,6 +121,13 @@ cidr: Union[str, int]
 ## Network
 
 The class for IPv4 network address representation.
+
+### Import
+```
+from toolbox.netaddresstool.ipv4 import Network
+```
+
+### Constructor
 
 ### Public properties
 
@@ -149,6 +177,13 @@ Returns the network address.
 ## SubNetwork
 
 A calculator that generates subnet addresses in the given network address and with the assumed network mask.
+
+### Import
+```
+from toolbox.netaddresstool.ipv4 import SubNetwork
+```
+
+### Constructor
 
 ### Public properties
 
