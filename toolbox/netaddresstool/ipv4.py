@@ -206,59 +206,46 @@ class Netmask(NoDynamicAttributes):
             )
 
     @staticmethod
-    def __octets_validator(octets: str) -> bool:
+    def __octets_validator(octets: int) -> bool:
         """Check if given octets list is valid."""
         test = [
-            "0.0.0.0",
-            "128.0.0.0",
-            "192.0.0.0",
-            "224.0.0.0",
-            "240.0.0.0",
-            "248.0.0.0",
-            "252.0.0.0",
-            "254.0.0.0",
-            "255.0.0.0",
-            "255.128.0.0",
-            "255.192.0.0",
-            "255.224.0.0",
-            "255.240.0.0",
-            "255.248.0.0",
-            "255.252.0.0",
-            "255.254.0.0",
-            "255.255.0.0",
-            "255.255.128.0",
-            "255.255.192.0",
-            "255.255.224.0",
-            "255.255.240.0",
-            "255.255.248.0",
-            "255.255.252.0",
-            "255.255.254.0",
-            "255.255.255.0",
-            "255.255.255.128",
-            "255.255.255.192",
-            "255.255.255.224",
-            "255.255.255.240",
-            "255.255.255.248",
-            "255.255.255.252",
-            "255.255.255.254",
-            "255.255.255.255",
+            0,  # '0.0.0.0'
+            2147483648,  # "128.0.0.0",
+            3221225472,  # "192.0.0.0",
+            3758096384,  # "224.0.0.0",
+            4026531840,  # "240.0.0.0",
+            4160749568,  # "248.0.0.0",
+            4227858432,  # "252.0.0.0",
+            4261412864,  # "254.0.0.0",
+            4278190080,  # "255.0.0.0",
+            4286578688,  # "255.128.0.0",
+            4290772992,  # "255.192.0.0",
+            4292870144,  # "255.224.0.0",
+            4293918720,  # "255.240.0.0",
+            4294443008,  # "255.248.0.0",
+            4294705152,  # "255.252.0.0",
+            4294836224,  # "255.254.0.0",
+            4294901760,  # "255.255.0.0",
+            4294934528,  # "255.255.128.0",
+            4294950912,  # "255.255.192.0",
+            4294959104,  # "255.255.224.0",
+            4294963200,  # "255.255.240.0",
+            4294965248,  # "255.255.248.0",
+            4294966272,  # "255.255.252.0",
+            4294966784,  # "255.255.254.0",
+            4294967040,  # "255.255.255.0",
+            4294967168,  # "255.255.255.128",
+            4294967232,  # "255.255.255.192",
+            4294967264,  # "255.255.255.224",
+            4294967280,  # "255.255.255.240",
+            4294967288,  # "255.255.255.248",
+            4294967292,  # "255.255.255.252",
+            4294967294,  # "255.255.255.254",
+            4294967295,  # "255.255.255.255",
         ]
         if octets in test:
             return True
         return False
-
-    @staticmethod
-    def __octets_validator2(octets: List[Octet]) -> bool:
-        """Check if given octets list is valid."""
-        # tu binary string
-        tmp = str().join([bin(octet.value)[2:] for octet in octets])
-        test = octets[0].value == 0
-        for bit in tmp[1:]:
-            if bit == "1" and test:
-                return False
-            if bit == "0":
-                test = True
-        return True
 
     @property
     def octets(self) -> List[Octet]:
@@ -266,22 +253,13 @@ class Netmask(NoDynamicAttributes):
         tmp = str(self).split(".")
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
-    # @octets.setter
-    # def octets(self, addr: List[Union[int, str, Octet]]) -> None:
-    # """Set netmask from list of 4 values [int||str||Octets]."""
-    # tmp = str(Address(addr))
-    # if not Netmask.__octets_validator(tmp):
-    # raise Raise.value_error(f"Invalid mask, received: {tmp}")
-    # self.cidr = sum(
-    # [bin(x.value).count("1") for x in Address(addr).octets]
-    # )
-
     @octets.setter
     def octets(self, addr: List[Union[int, str, Octet]]) -> None:
         """Set netmask from list of 4 values [int||str||Octets]."""
-        if not Netmask.__octets_validator2(Address(addr).octets):
+        tmp = int(Address(addr))
+        if not Netmask.__octets_validator(tmp):
             raise Raise.value_error(
-                f"Invalid mask, received: {Address(addr)}"
+                f"Invalid mask, received: {str(Address(addr))}"
             )
         self.cidr = sum(
             [bin(x.value).count("1") for x in Address(addr).octets]
