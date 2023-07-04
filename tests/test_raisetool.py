@@ -9,7 +9,7 @@
 import unittest
 import inspect
 
-from toolbox.raisetool import Raise
+from jsktoolbox.raisetool import Raise
 
 
 class TestRaise(unittest.TestCase):

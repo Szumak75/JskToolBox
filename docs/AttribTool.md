@@ -7,7 +7,7 @@ Classes throw an AttributeError exception when trying to add an undefined attrib
 ## Usage examples
 
 ```
-from toolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes
 
 class Example(NoDynamicAttributes):
     __name = None
@@ -22,15 +22,15 @@ if __name__ == "__main__":
 ```
 % ./example.py
 Traceback (most recent call last):
-  File "/home/szumak/Projects/ToolBox/AttribTool/./example.py", line 22, in <module>
+  File "/home/szumak/Projects/jsktoolbox/AttribTool/./example.py", line 22, in <module>
     obj.data = "abc"
-  File "/home/szumak/Projects/ToolBox/AttribTool/attribtool/ndattrib.py", line 22, in __setattr__
+  File "/home/szumak/Projects/jsktoolbox/AttribTool/attribtool/ndattrib.py", line 22, in __setattr__
     raise AttributeError(
 AttributeError: Cannot add new attribute 'data' to Example object
 ```
 
 ```
-from toolbox.attribtool import NoNewAttributes
+from jsktoolbox.attribtool import NoNewAttributes
 
 class Example(NoNewAttributes):
     __name = None
@@ -45,11 +45,11 @@ if __name__ == "__main__":
 ```
 % ./example.py
 Traceback (most recent call last):
-  File "/home/szumak/Projects/ToolBox/AttribTool/./example.py", line 22, in <module>
+  File "/home/szumak/Projects/jsktoolbox/AttribTool/./example.py", line 22, in <module>
     obj = Example()
-  File "/home/szumak/Projects/ToolBox/AttribTool/./example.py", line 18, in __init__
+  File "/home/szumak/Projects/jsktoolbox/AttribTool/./example.py", line 18, in __init__
     self.__data = 1
-  File "/home/szumak/Projects/ToolBox/AttribTool/attribtool/nnattrib.py", line 24, in __setattr__
+  File "/home/szumak/Projects/jsktoolbox/AttribTool/attribtool/nnattrib.py", line 24, in __setattr__
     raise AttributeError(
 AttributeError: Undefined attribute _Example__data cannot be added to <__main__.Example object at 0x7f7129ccc2b0>
 ```

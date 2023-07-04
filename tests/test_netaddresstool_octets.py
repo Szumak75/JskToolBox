@@ -8,7 +8,7 @@
 """
 
 import unittest
-from toolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool.libs.octets import Octet
 
 
 class TestOctet(unittest.TestCase):

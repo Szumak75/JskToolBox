@@ -15,7 +15,7 @@ class TestNoNewAttributes(unittest.TestCase):
 
     def setUp(self) -> None:
         """Setting up testing engine."""
-        from toolbox.attribtool import NoNewAttributes
+        from jsktoolbox.attribtool import NoNewAttributes
 
         class Example(NoNewAttributes):
             """Example testing class."""
@@ -55,7 +55,7 @@ class TestNoDynamicAttributes(unittest.TestCase):
 
     def setUp(self) -> None:
         """Setting up testing engine."""
-        from toolbox.attribtool import NoDynamicAttributes
+        from jsktoolbox.attribtool import NoDynamicAttributes
 
         class Example(NoDynamicAttributes):
             """Example testing class."""

@@ -10,7 +10,7 @@
 
 from types import FrameType
 from typing import Optional
-from toolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes
 
 
 class Raise(NoDynamicAttributes):

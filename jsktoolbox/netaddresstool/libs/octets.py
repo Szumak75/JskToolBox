@@ -7,8 +7,8 @@
 """
 import inspect
 from typing import Union, TypeVar
-from toolbox.attribtool import NoDynamicAttributes
-from toolbox.raisetool import Raise
+from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.raisetool import Raise
 
 from .interfaces import IComparators
 

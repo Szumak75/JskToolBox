@@ -22,7 +22,7 @@ Raise.value_error(message:str, class_name:Optional[str],currentframe:Optional[Fr
 
 ```
 import inspect
-from toolbox.raisetool import Raise
+from jsktoolbox.raisetool import Raise
 
 
 class Example:

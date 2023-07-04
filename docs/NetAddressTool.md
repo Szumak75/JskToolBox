@@ -3,11 +3,11 @@
 The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
-1. [Octet](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#octet)(**value**: Union[str, int, Octet])
-1. [Address](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#address)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
-1. [Netmask](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#netmask)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
-1. [Network](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#network)(**addr**: Union[str, List])
-1. [SubNetwork](https://github.com/Szumak75/ToolBox/blob/master/docs/NetAddressTool.md#subnetwork)(**network**: Network, **mask**: Netmask)
+1. [Octet](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md#octet)(**value**: Union[str, int, Octet])
+1. [Address](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md#address)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
+1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md#netmask)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
+1. [Network](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md#network)(**addr**: Union[str, List])
+1. [SubNetwork](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md#subnetwork)(**network**: Network, **mask**: Netmask)
 
 ## Octet
 
@@ -15,7 +15,7 @@ The class for IPv4 octet representation.
 
 ### Import
 ```
-from toolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool.libs.octets import Octet
 ```
 
 ### Constructor
@@ -49,7 +49,7 @@ The class for IPv4 address representation.
 
 ### Import
 ```
-from toolbox.netaddresstool.ipv4 import Address
+from jsktoolbox.netaddresstool.ipv4 import Address
 ```
 
 ### Constructor
@@ -89,7 +89,7 @@ The class for IPv4 network mask representation.
 
 ### Import
 ```
-from toolbox.netaddresstool.ipv4 import Netmask
+from jsktoolbox.netaddresstool.ipv4 import Netmask
 ```
 
 ### Constructor
@@ -143,7 +143,7 @@ The class for IPv4 network address representation.
 
 ### Import
 ```
-from toolbox.netaddresstool.ipv4 import Network
+from jsktoolbox.netaddresstool.ipv4 import Network
 ```
 
 ### Constructor
@@ -213,7 +213,7 @@ A calculator that generates subnet addresses in the given network address and wi
 
 ### Import
 ```
-from toolbox.netaddresstool.ipv4 import SubNetwork
+from jsktoolbox.netaddresstool.ipv4 import SubNetwork
 ```
 
 ### Constructor

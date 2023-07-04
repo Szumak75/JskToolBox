@@ -8,8 +8,8 @@
 """
 
 import unittest
-from toolbox.netaddresstool.ipv4 import Address
-from toolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool.ipv4 import Address
+from jsktoolbox.netaddresstool.libs.octets import Octet
 
 
 class TestAddress(unittest.TestCase):
