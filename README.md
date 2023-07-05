@@ -6,16 +6,16 @@ The project contains sets of base classes for various operations.
 
 The project contains base classes that limit the possibility of adding new attributes without their prior declaration inside classes inheriting from them or their objects.
 
-[AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.0.0/docs/AttribTool.md)
+[AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.0.1/docs/AttribTool.md)
 
 ## RaiseTool
 
 The project contains small class for formatting thrown exception messages.
 
-[RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.0.0/docs/RaiseTool.md)
+[RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.0.1/docs/RaiseTool.md)
 
 ## NetAddressTool
 
 The project contains sets of base classes for operations on IPv4 addresses.
 
-[NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.0.0/docs/NetAddressTool.md)
+[NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.0.1/docs/NetAddressTool.md)
