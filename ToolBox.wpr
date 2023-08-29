@@ -4,6 +4,24 @@
 # Wing project file                                              #
 ##################################################################
 [project attributes]
+console.toolbox = [{'autosave': False,
+                    'cmd': 'bash -norc -ic ". /home/szumak/.wingpro9/envs/jsktoolbox/bin/activate && bash -norc"',
+                    'context': ('project',
+                                ''),
+                    'env': ('merge',
+                            ['TERM=dumb']),
+                    'id': 'cmd-FDnEGFqVDETLxbyS',
+                    'io_encoding': None,
+                    'key_binding': None,
+                    'line_mode': True,
+                    'pseudo_tty': True,
+                    'pypath': ('project',
+                               []),
+                    'raise_panel': True,
+                    'rundir': ('project',
+                               ''),
+                    'shared': False,
+                    'title': 'Terminal 1'}]
 proj.directory-list = [{'dirloc': loc('.'),
                         'excludes': (),
                         'filter': '*',
