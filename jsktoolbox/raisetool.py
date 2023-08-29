@@ -7,7 +7,7 @@
   The message can be formatted with information about the class,
   method, and line number where the exception was thrown.
 """
-
+import inspect
 from types import FrameType
 from typing import Optional
 from jsktoolbox.attribtool import NoDynamicAttributes
@@ -87,6 +87,47 @@ class Raise(NoDynamicAttributes):
                 f"[ConnectionError]: {message}"
                 if message
                 else "[ConnectionError]",
+                class_name,
+                currentframe,
+            )
+        )
+
+    @classmethod
+    def error(
+        cls,
+        message: str,
+        exception: Exception = Exception,
+        class_name: str = "",
+        currentframe: Optional[FrameType] = None,
+    ) -> Exception:
+        """Return exception with formatted string.
+
+        message: str - message to format
+        exception: Exception - custom exception to return
+        class_name: str - caller class name (self.__class__.__name__)
+        currentframe: FrameType - object from inspect.currentframe()
+
+        Return: given exception type"""
+        if isinstance(exception, type):
+            if not isinstance(exception(), Exception):
+                raise Raise.error(
+                    f"Exception class or its derived class expected, '{exception.__qualname__}' received.",
+                    TypeError,
+                    class_name,
+                    currentframe,
+                )
+        else:
+            raise Raise.error(
+                "Exception class or its derived class expected.",
+                TypeError,
+                class_name,
+                currentframe,
+            )
+        return exception(
+            cls.message(
+                f"[{exception.__qualname__}]: {message}"
+                if message
+                else f"[{exception.__qualname__}]",
                 class_name,
                 currentframe,
             )

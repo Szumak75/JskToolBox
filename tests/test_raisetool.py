@@ -91,5 +91,20 @@ class TestRaise(unittest.TestCase):
             Raise.not_implemented_error("test"), NotImplementedError
         )
 
+    def test_returning_custom_error(self):
+        """Test nr 13."""
+        self.assertIsInstance(
+            Raise.error("test"),
+            Exception,
+        )
+        self.assertIsInstance(
+            Raise.error("test", ValueError),
+            ValueError,
+        )
+        self.assertIsInstance(
+            Raise.error("test", IndexError),
+            IndexError,
+        )
+
 
 # #[EOF]#######################################################################
