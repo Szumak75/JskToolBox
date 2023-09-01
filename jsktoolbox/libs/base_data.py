@@ -3,7 +3,7 @@
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
   Created: 01.09.2023
 
-  Purpose: DData container
+  Purpose: BData container base class.
 """
 import inspect
 from typing import Dict, Optional
@@ -11,8 +11,8 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 
 
-class DData(NoDynamicAttributes):
-    """DDara container class."""
+class BData(NoDynamicAttributes):
+    """BData container class."""
 
     __data: Optional[Dict] = None
 

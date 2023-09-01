@@ -3,12 +3,12 @@
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
   Created: 01.09.2023
 
-  Purpose:
+  Purpose: for testing DData class
 """
 
 import unittest
 from typing import Dict
-from jsktoolbox.devices.libs.base_data import DData
+from jsktoolbox.libs.base_data import BData
 
 
 class TestDData(unittest.TestCase):
@@ -16,15 +16,14 @@ class TestDData(unittest.TestCase):
 
     def setUp(self) -> None:
         """Set up."""
-
         try:
-            self.obj = DData()
+            self.obj = BData()
         except Exception as ex:
             self.fail(f"Unexpected exception was throw: '{ex}'")
 
     def test_obj_instance(self) -> None:
         """Test nr 1."""
-        self.assertIsInstance(self.obj, DData)
+        self.assertIsInstance(self.obj, BData)
 
     def test_return_dict(self) -> None:
         """Test nr 2."""
