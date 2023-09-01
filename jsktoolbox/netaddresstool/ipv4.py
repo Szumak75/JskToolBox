@@ -80,14 +80,16 @@ class Address(IComparators, NoDynamicAttributes):
         self, value: List[Union[int, str, Octet]]
     ) -> None:
         if not value:
-            raise Raise.value_error(
+            raise Raise.error(
                 "Empty list received.",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
         if len(value) != 4:
-            raise Raise.value_error(
+            raise Raise.error(
                 f"Expected list with four elements, len({len(value)}) received.",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -100,8 +102,9 @@ class Address(IComparators, NoDynamicAttributes):
         if value >= 0 and value <= 4294967295:
             self.__varint = value
         else:
-            raise Raise.value_error(
-                f"IP-int out of range (0-4294967295), received: {value}"
+            raise Raise.error(
+                f"IP-int out of range (0-4294967295), received: {value}",
+                ValueError,
             )
 
     def __set_octets_from_str(self, value: str) -> None:
@@ -136,8 +139,9 @@ class Address(IComparators, NoDynamicAttributes):
         elif isinstance(value, str):
             self.__set_octets_from_str(value)
         else:
-            raise Raise.type_error(
+            raise Raise.error(
                 f"String or Integer or List type expected, {type(value)} received.",
+                TypeError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -176,8 +180,9 @@ class Netmask(NoDynamicAttributes):
         elif isinstance(addr, List):
             self.octets = str(Address(addr))
         else:
-            raise Raise.value_error(
+            raise Raise.error(
                 f"String, integer or list expected, '{type(addr)}' received.",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -199,8 +204,9 @@ class Netmask(NoDynamicAttributes):
         if cidr >= 0 and cidr <= 32:
             self.__cidr = cidr
         else:
-            raise Raise.value_error(
+            raise Raise.error(
                 f"CIDR is out of range (0-32), received: {cidr}",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -258,8 +264,9 @@ class Netmask(NoDynamicAttributes):
         """Set netmask from list of 4 values [int||str||Octets]."""
         tmp = int(Address(addr))
         if not Netmask.__octets_validator(tmp):
-            raise Raise.value_error(
-                f"Invalid mask, received: {str(Address(addr))}"
+            raise Raise.error(
+                f"Invalid mask, received: {str(Address(addr))}",
+                ValueError,
             )
         self.cidr = sum(
             [bin(x.value).count("1") for x in Address(addr).octets]
@@ -277,8 +284,9 @@ class Netmask(NoDynamicAttributes):
         elif isinstance(value, int):
             self.__cidr_validator(value)
         else:
-            raise Raise.value_error(
-                f"Digit string or int expected. Received: {value}"
+            raise Raise.error(
+                f"Digit string or int expected. Received: {value}",
+                ValueError,
             )
 
 
@@ -310,8 +318,9 @@ class Network(NoDynamicAttributes):
         elif isinstance(addr, List):
             self.__network_from_list(addr)
         else:
-            raise Raise.value_error(
+            raise Raise.error(
                 f"IP network string or list expected, '{type(addr)}' received.",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -331,8 +340,9 @@ class Network(NoDynamicAttributes):
             self.__address = Address(tmp[0])
             self.__mask = Netmask(tmp[1])
         else:
-            raise Raise.value_error(
+            raise Raise.error(
                 f"Expected network address in 'ip/mask' format string, received '{addr}'",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -340,8 +350,9 @@ class Network(NoDynamicAttributes):
     def __network_from_list(self, addr: List) -> None:
         """Build configuration from list."""
         if len(addr) != 2:
-            raise Raise.value_error(
+            raise Raise.error(
                 "Two element list expected ['ip','netmask']",
+                ValueError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
@@ -441,17 +452,19 @@ class SubNetwork(NoDynamicAttributes):
                 self.__network = network
                 self.__mask = mask
             else:
-                raise Raise.value_error(
+                raise Raise.error(
                     (
                         "The network mask must be greater then or equal to the subnet mask you are looking for."
                         f"Received: {int(network.mask)} and {int(mask)}"
                     ),
+                    ValueError,
                     self.__class__.__name__,
                     inspect.currentframe(),
                 )
         else:
-            raise Raise.type_error(
+            raise Raise.error(
                 f"Argument of (Network, Netmask) expected, ({type(network)},{type(mask)}) received.",
+                TypeError,
                 self.__class__.__name__,
                 inspect.currentframe(),
             )
