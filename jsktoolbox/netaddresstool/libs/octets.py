@@ -99,8 +99,9 @@ class Octet(IComparators, NoDynamicAttributes):
                 self.__value = args
                 return
             else:
-                raise Raise.value_error(
-                    f"Received value '{args}' out of range(0-255)."
+                raise Raise.error(
+                    f"Received value '{args}' out of range(0-255).",
+                    ValueError,
                 )
         elif isinstance(args, str):
             if Octet.__is_integer(args):
@@ -109,15 +110,17 @@ class Octet(IComparators, NoDynamicAttributes):
                     self.__value = var
                     return
                 else:
-                    raise Raise.value_error(
-                        f"Received value '{args}' out of range(0-255)."
+                    raise Raise.error(
+                        f"Received value '{args}' out of range(0-255).",
+                        ValueError,
                     )
         elif isinstance(args, Octet):
             tmp: TOctet = args
             self.__value = tmp.value
             return
-        raise Raise.type_error(
+        raise Raise.error(
             f"Integer or String expected, {type(args)} received.",
+            TypeError,
             self.__class__.__name__,
             inspect.currentframe(),
         )
