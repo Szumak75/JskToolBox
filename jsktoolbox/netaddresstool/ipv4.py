@@ -16,7 +16,7 @@ from typing import TypeVar, Union, List
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from .libs.octets import Octet
-from .libs.interfaces import IComparators
+from jsktoolbox.libs.interfaces.comparators import IComparators
 
 TAddress = TypeVar("TAddress", bound="Address")
 

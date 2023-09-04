@@ -10,7 +10,7 @@ from typing import Union, TypeVar
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 
-from .interfaces import IComparators
+from jsktoolbox.libs.interfaces.comparators import IComparators
 
 TOctet = TypeVar("TOctet", bound="Octet")
 
