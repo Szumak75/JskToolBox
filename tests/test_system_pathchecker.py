@@ -65,5 +65,11 @@ class TestPathChecker(unittest.TestCase):
             self.assertFalse(o.is_dir)
             self.assertTrue(o.is_file)
 
+    def test_07_path_split(self):
+        """Test nr 7."""
+        if PathChecker("/usr/bin/nm").exists:
+            self.assertEqual(PathChecker("/usr/bin/nm").dirname, "/usr/bin")
+            self.assertEqual(PathChecker("/usr/bin/nm").filename, "nm")
+
 
 # #[EOF]#######################################################################

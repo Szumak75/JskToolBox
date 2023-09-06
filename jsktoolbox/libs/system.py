@@ -106,6 +106,27 @@ class PathChecker(BData, NoDynamicAttributes):
         return f"PathChecker('{self.path}')"
 
     @property
+    def dirname(self) -> Optional[str]:
+        """Return dirname from path."""
+        if self.exists:
+            last = None
+            for item in self.data["list"]:
+                if item.is_dir:
+                    last = item.path
+            return last
+        return None
+
+    @property
+    def filename(self) -> Optional[str]:
+        """Return filename from path."""
+        if self.exists and self.is_file:
+            tmp = self.path.split(os.sep)
+            if len(tmp) > 0:
+                if tmp[-1] != "":
+                    return tmp[-1]
+        return None
+
+    @property
     def exists(self) -> bool:
         """Return path exists flag."""
         if "exists" in self.data:
