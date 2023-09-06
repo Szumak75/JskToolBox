@@ -9,9 +9,11 @@
 import os
 import sys
 from abc import ABC, abstractmethod
+from inspect import currentframe
 
 from typing import Optional, List, Dict
 from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.libs.system import Env, PathChecker
 
@@ -94,16 +96,31 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
     @logfile.setter
     def logfile(self, filename: str) -> None:
         """Set log file name."""
+        # TODO: check procedure
         fn = None
-        if self.logdir is not None:
-            fn = os.path.join(self.logdir, filename)
-        else:
+        if self.logdir is None:
             fn = filename
+        else:
+            fn = os.path.join(self.logdir, filename)
         ld = PathChecker(fn)
         if ld.exists:
-            if ld.is_file:
-                # set filename, check dirname
-
+            if not ld.is_file:
+                raise Raise.error(
+                    f"The filename passed: '{filename}' is a directory.",
+                    FileExistsError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        else:
+            if not ld.create():
+                raise Raise.error(
+                    f"I cannot create a file: {ld.path}",
+                    PermissionError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        self.logdir = ld.dirname
+        self.data["file"] = ld.filename
 
 
 class LoggerEngineSyslog(ILoggerEngine, BData, NoDynamicAttributes):
