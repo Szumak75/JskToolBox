@@ -5,12 +5,15 @@
 
   Purpose: logs subsystem classes.
 """
+
+import os
 import sys
 from abc import ABC, abstractmethod
 
 from typing import Optional, List, Dict
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.libs.base_data import BData
+from jsktoolbox.libs.system import Env, PathChecker
 
 
 class ILoggerEngine(ABC):
@@ -73,6 +76,13 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
     @logdir.setter
     def logdir(self, dirname: str) -> None:
         """Set log directory."""
+        if dirname[-1] != os.sep:
+            dirname = f"{dirname}/"
+        ld = PathChecker(dirname)
+        if not ld.exists:
+            ld.create()
+        if ld.exists and ld.is_dir:
+            self.data["dir"] = ld.path
 
     @property
     def logfile(self) -> Optional[str]:
@@ -84,6 +94,16 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
     @logfile.setter
     def logfile(self, filename: str) -> None:
         """Set log file name."""
+        fn = None
+        if self.logdir is not None:
+            fn = os.path.join(self.logdir, filename)
+        else:
+            fn = filename
+        ld = PathChecker(fn)
+        if ld.exists:
+            if ld.is_file:
+                # set filename, check dirname
+
 
 
 class LoggerEngineSyslog(ILoggerEngine, BData, NoDynamicAttributes):
