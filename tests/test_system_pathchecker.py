@@ -41,11 +41,11 @@ class TestPathChecker(unittest.TestCase):
 
     def test_03_path_is_dir(self):
         """Test nr 3."""
-        self.assertTrue(PathChecker("/tmp").isdir)
+        self.assertTrue(PathChecker("/tmp").is_dir)
 
     def test_04_path_is_file(self):
         """Test nr 4."""
-        self.assertTrue(PathChecker("/bin/sh").isfile)
+        self.assertTrue(PathChecker("/bin/sh").is_file)
 
     def test_05_path_create_dir(self):
         """Test nr 5."""
@@ -53,8 +53,8 @@ class TestPathChecker(unittest.TestCase):
         if not o.exists:
             self.assertTrue(o.create())
             self.assertTrue(o.exists)
-            self.assertTrue(o.isdir)
-            self.assertFalse(o.isfile)
+            self.assertTrue(o.is_dir)
+            self.assertFalse(o.is_file)
 
     def test_06_path_create_file(self):
         """Test nr 6."""
@@ -62,8 +62,8 @@ class TestPathChecker(unittest.TestCase):
         if not o.exists:
             self.assertTrue(o.create())
             self.assertTrue(o.exists)
-            self.assertFalse(o.isdir)
-            self.assertTrue(o.isfile)
+            self.assertFalse(o.is_dir)
+            self.assertTrue(o.is_file)
 
 
 # #[EOF]#######################################################################
