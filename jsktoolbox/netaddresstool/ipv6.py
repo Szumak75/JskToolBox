@@ -6,11 +6,10 @@
   Purpose: Classes for IPv6
 """
 
-import inspect
 import socket
 import struct
 from copy import deepcopy
-
+from inspect import currentframe
 from typing import TypeVar, Union, List, Optional
 
 from jsktoolbox.attribtool import NoDynamicAttributes
@@ -108,6 +107,25 @@ class Address6(IComparators, NoDynamicAttributes):
             or self.words[7] != arg.words[7]
         )
 
+    def __str__(self) -> str:
+        """Return words as string."""
+        return f"{self.words[0]}:{self.words[1]}:{self.words[2]}:{self.words[3]}:{self.words[4]}:{self.words[5]}:{self.words[6]}:{self.words[7]}"
+
+    def __repr__(self) -> str:
+        """Return class representation as string."""
+        return (
+            f"{self.__class__.__name}(["
+            f"Word16({self.words[0]}), "
+            f"Word16({self.words[1]}), "
+            f"Word16({self.words[2]}), "
+            f"Word16({self.words[3]}), "
+            f"Word16({self.words[4]}), "
+            f"Word16({self.words[5]}), "
+            f"Word16({self.words[6]}), "
+            f"Word16({self.words[7]})"
+            "])"
+        )
+
     @property
     def words(self) -> List[Word16]:
         """Return words list of eight Word16."""
@@ -123,6 +141,37 @@ class Address6(IComparators, NoDynamicAttributes):
                 Word16(0),
             ]
         return self.__listwords
+
+    @words.setter
+    def words(
+        self, value: Union[int, str, List[Union[int, str, Word16]]]
+    ) -> None:
+        if isinstance(value, List):
+            self.__set_words_from_list(value)
+        # TODO: analise sense of this argument method
+        elif isinstance(value, int):
+            pass
+        elif isinstance(value, str):
+            self.__set_words_from_string(value)
+        else:
+            raise Raise.error(
+                f"", TypeError, self.__class__.__name__, currentframe()
+            )
+
+    def __set_words_from_list(self, value: Union[int, str, Word16]) -> None:
+        """Set address from list."""
+        if len(value) != 8:
+            raise Raise.error(
+                f"Expected list of eight elements.",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        for idx in range(0, 8):
+            self.words[idx] = Word16(value[idx])
+
+    def __set_words_from_string(self, value: str) -> None:
+        """Set address from string."""
 
 
 # #[EOF]#######################################################################

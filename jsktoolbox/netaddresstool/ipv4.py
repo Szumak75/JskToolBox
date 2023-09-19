@@ -6,11 +6,10 @@
   Purpose: Classes for IPv4
 """
 
-import inspect
 import socket
 import struct
 from copy import deepcopy
-
+from inspect import currentframe
 from typing import TypeVar, Union, List
 
 from jsktoolbox.attribtool import NoDynamicAttributes
@@ -84,14 +83,14 @@ class Address(IComparators, NoDynamicAttributes):
                 "Empty list received.",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
         if len(value) != 4:
             raise Raise.error(
                 f"Expected list with four elements, len({len(value)}) received.",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
         self.__varint = Address.__ip_to_int(
@@ -143,7 +142,7 @@ class Address(IComparators, NoDynamicAttributes):
                 f"String or Integer or List type expected, {type(value)} received.",
                 TypeError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
 
@@ -184,7 +183,7 @@ class Netmask(NoDynamicAttributes):
                 f"String, integer or list expected, '{type(addr)}' received.",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
     def __int__(self) -> int:
@@ -208,7 +207,7 @@ class Netmask(NoDynamicAttributes):
                 f"CIDR is out of range (0-32), received: {cidr}",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
     @staticmethod
@@ -322,7 +321,7 @@ class Network(NoDynamicAttributes):
                 f"IP network string or list expected, '{type(addr)}' received.",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
     def __str__(self) -> str:
@@ -344,7 +343,7 @@ class Network(NoDynamicAttributes):
                 f"Expected network address in 'ip/mask' format string, received '{addr}'",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
     def __network_from_list(self, addr: List) -> None:
@@ -354,7 +353,7 @@ class Network(NoDynamicAttributes):
                 "Two element list expected ['ip','netmask']",
                 ValueError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
         if isinstance(addr[0], Address):
             self.__address = deepcopy(addr[0])
@@ -459,14 +458,14 @@ class SubNetwork(NoDynamicAttributes):
                     ),
                     ValueError,
                     self.__class__.__name__,
-                    inspect.currentframe(),
+                    currentframe(),
                 )
         else:
             raise Raise.error(
                 f"Argument of (Network, Netmask) expected, ({type(network)},{type(mask)}) received.",
                 TypeError,
                 self.__class__.__name__,
-                inspect.currentframe(),
+                currentframe(),
             )
 
     @property

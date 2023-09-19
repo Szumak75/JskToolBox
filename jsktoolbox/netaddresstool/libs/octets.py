@@ -5,7 +5,7 @@
 
   Purpose: Octet class for representing ipv4 octet.
 """
-import inspect
+from inspect import currentframe
 from typing import Union, TypeVar
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
@@ -122,7 +122,7 @@ class Octet(IComparators, NoDynamicAttributes):
             f"Integer or String expected, {type(args)} received.",
             TypeError,
             self.__class__.__name__,
-            inspect.currentframe(),
+            currentframe(),
         )
 
 
