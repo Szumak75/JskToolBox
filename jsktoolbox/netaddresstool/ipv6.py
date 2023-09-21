@@ -33,7 +33,7 @@ class Address6(IComparators, NoDynamicAttributes):
     words: Union[str, int, List] -- Set IPv6 address from string, integer or list of Word16.
     """
 
-    __listwords: Optional[List[Word16]] = None
+    __varint: int = 0
 
     def __init__(
         self, addr: Union[str, int, List[Union[int, str, Word16]]]
@@ -43,120 +43,82 @@ class Address6(IComparators, NoDynamicAttributes):
 
     def __eq__(self, arg: TAddress6) -> bool:
         """Equal."""
-        return (
-            self.words[0] == arg.words[0]
-            and self.words[1] == arg.words[1]
-            and self.words[2] == arg.words[2]
-            and self.words[3] == arg.words[3]
-            and self.words[4] == arg.words[4]
-            and self.words[5] == arg.words[5]
-            and self.words[6] == arg.words[6]
-            and self.words[7] == arg.words[7]
-        )
+        return self.__varint == int(arg)
 
     def __ge__(self, arg: TAddress6) -> bool:
         """Greater or equal."""
-        if self == arg:
-            return True
-        if self > arg:
-            return True
-        return False
+        return self.__varint >= int(arg)
 
     def __gt__(self, arg: TAddress6) -> bool:
         """Greater."""
-        if self.words[0] > arg.words[0]:
-            return True
-        for i in range(1, 8):
-            if self.words[i - 1] == arg.words[i - 1]:
-                if self.words[i] > arg.words[i]:
-                    return True
-            else:
-                return False
-        return False
+        return self.__varint > int(arg)
 
     def __le__(self, arg: TAddress6) -> bool:
         """Less or equal."""
-        if self == arg:
-            return True
-        if self < arg:
-            return True
-        return False
+        return self.__varint <= int(arg)
 
     def __lt__(self, arg: TAddress6) -> bool:
         """Less."""
-        if self.words[0] < arg.words[0]:
-            return True
-        for i in range(1, 8):
-            if self.words[i - 1] == arg.words[i - 1]:
-                if self.words[i] < arg.words[i]:
-                    return True
-            else:
-                return False
-        return False
+        return self.__varint < int(arg)
 
     def __ne__(self, arg: TAddress6) -> bool:
         """Negative."""
-        return (
-            self.words[0] != arg.words[0]
-            or self.words[1] != arg.words[1]
-            or self.words[2] != arg.words[2]
-            or self.words[3] != arg.words[3]
-            or self.words[4] != arg.words[4]
-            or self.words[5] != arg.words[5]
-            or self.words[6] != arg.words[6]
-            or self.words[7] != arg.words[7]
-        )
+        return self.__varint != int(arg)
 
-    def __str__(self) -> str:
-        """Return words as string."""
-        return f"{self.words[0]}:{self.words[1]}:{self.words[2]}:{self.words[3]}:{self.words[4]}:{self.words[5]}:{self.words[6]}:{self.words[7]}"
+    @staticmethod
+    def __check_groups(group_list: List[str]) -> List[str]:
+        for i in range(0, len(group_list)):
+            group_list[i] = group_list[i].zfill(4)
+        return group_list
 
-    def __repr__(self) -> str:
-        """Return class representation as string."""
-        return (
-            f"{self.__class__.__name}(["
-            f"Word16({self.words[0]}), "
-            f"Word16({self.words[1]}), "
-            f"Word16({self.words[2]}), "
-            f"Word16({self.words[3]}), "
-            f"Word16({self.words[4]}), "
-            f"Word16({self.words[5]}), "
-            f"Word16({self.words[6]}), "
-            f"Word16({self.words[7]})"
-            "])"
-        )
+    @staticmethod
+    def __expand_ipv6(ipv6_address: str) -> str:
+        # Sprawdzenie czy adres jest już w pełnej reprezentacji
+        if "::" not in ipv6_address:
+            return ipv6_address
 
-    @property
-    def words(self) -> List[Word16]:
-        """Return words list of eight Word16."""
-        if self.__listwords is None:
-            self.__listwords = [
-                Word16(0),
-                Word16(0),
-                Word16(0),
-                Word16(0),
-                Word16(0),
-                Word16(0),
-                Word16(0),
-                Word16(0),
-            ]
-        return self.__listwords
+        # Podziel adres na dwie części, przed '::' i po '::'
+        parts = ipv6_address.split("::", 1)
+        head = Address6.__check_groups(parts[0].split(":"))
+        tail = Address6.__check_groups(parts[1].split(":"))
 
-    @words.setter
-    def words(
-        self, value: Union[int, str, List[Union[int, str, Word16]]]
-    ) -> None:
-        if isinstance(value, List):
-            self.__set_words_from_list(value)
-        # TODO: analise sense of this argument method
-        elif isinstance(value, int):
-            pass
-        elif isinstance(value, str):
-            self.__set_words_from_string(value)
-        else:
-            raise Raise.error(
-                f"", TypeError, self.__class__.__name__, currentframe()
-            )
+        # Oblicz ile zer należy dodać, aby osiągnąć 8 części
+        missing_zeros = 8 - (len(head) + len(tail))
+        zero_part = "0000"
+
+        # Połącz części przed '::' i po '::', wstawiając brakujące zera
+        expanded_parts = ":".join(head + [zero_part] * missing_zeros + tail)
+
+        return expanded_parts
+
+    @staticmethod
+    def __is_valid_ipv6(ipv6_addr: str) -> bool:
+        """Check if ipv6_addr is valid."""
+        try:
+            # Używamy socket.inet_pton, aby sprawdzić poprawność adresu IPv6
+            socket.inet_pton(socket.AF_INET6, ipv6_addr)
+            return True
+        except (socket.error, ValueError):
+            return False
+
+    @staticmethod
+    def __int_to_ip(ipint: int) -> str:
+        """Convert ip int representation to ipv6 str."""
+        # W przypadku adresu IPv6 zawsze przekształcamy go na 16 bajtów (128 bitów)
+        binary_ip = ipint.to_bytes(16, byteorder="big")
+        ipv6_address = socket.inet_ntop(socket.AF_INET6, binary_ip)
+
+        return ipv6_address
+
+    @staticmethod
+    def __ip_to_int(ipstr: str) -> int:
+        """Convert ipv6 str representation to ip int."""
+        # Używamy socket.inet_pton, aby przekształcić adres IPv6 w postaci binarnej
+        packed_ip = socket.inet_pton(socket.AF_INET6, ipstr)
+        # Następnie przekształcamy binarny adres IPv6 na liczbę całkowitą (integer)
+        int_ip = int.from_bytes(packed_ip, byteorder="big")
+
+        return int_ip
 
     def __set_words_from_list(self, value: Union[int, str, Word16]) -> None:
         """Set address from list."""
@@ -167,11 +129,83 @@ class Address6(IComparators, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        for idx in range(0, 8):
-            self.words[idx] = Word16(value[idx])
+        tmp = (
+            f"{str(Word16(value[0]))}:"
+            f"{str(Word16(value[1]))}:"
+            f"{str(Word16(value[2]))}:"
+            f"{str(Word16(value[3]))}:"
+            f"{str(Word16(value[4]))}:"
+            f"{str(Word16(value[5]))}:"
+            f"{str(Word16(value[6]))}:"
+            f"{str(Word16(value[7]))}"
+        )
+        self.__set_words_from_str(tmp)
 
-    def __set_words_from_string(self, value: str) -> None:
-        """Set address from string."""
+    def __set_words_from_int(self, value: int) -> None:
+        if value >= 0 and value <= 340282366920938463463374607431768211455:
+            self.__varint = value
+        else:
+            raise Raise.error(
+                f"IP-int out of range (0-340282366920938463463374607431768211455), received: {value}",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    def __set_words_from_str(self, value: str) -> None:
+        if Address6.__is_valid_ipv6(value):
+            self.__varint = Address6.__ip_to_int(value)
+        else:
+            raise Raise.error(
+                f"IPv6 address is invalid: {value}",
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    def __int__(self) -> int:
+        """Return ipv4 representation as integer."""
+        return self.__varint
+
+    def __str__(self) -> str:
+        """Return string representation of address."""
+        return Address6.__int_to_ip(self.__varint)
+
+    def __repr__(self):
+        """Return representation of object."""
+        return f"Address6('{str(self)}')"
+
+    @property
+    def words(self) -> List[Word16]:
+        """Return words list of eight Word16."""
+        tmp = Address6.__expand_ipv6(str(self)).split(":")
+        return [
+            Word16(tmp[0]),
+            Word16(tmp[1]),
+            Word16(tmp[2]),
+            Word16(tmp[3]),
+            Word16(tmp[4]),
+            Word16(tmp[5]),
+            Word16(tmp[6]),
+            Word16(tmp[7]),
+        ]
+
+    @words.setter
+    def words(
+        self, value: Union[str, int, List[Union[int, str, Word16]]]
+    ) -> None:
+        if isinstance(value, List):
+            self.__set_words_from_list(value)
+        elif isinstance(value, int):
+            self.__set_words_from_int(value)
+        elif isinstance(value, str):
+            self.__set_words_from_str(value)
+        else:
+            raise Raise.error(
+                f"String or Integer or List type expected, {type(value)} received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
 
 
 # #[EOF]#######################################################################
