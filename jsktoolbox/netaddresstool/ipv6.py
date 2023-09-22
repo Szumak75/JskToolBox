@@ -45,27 +45,27 @@ class Address6(IComparators, NoDynamicAttributes):
 
     def __eq__(self, arg: TAddress6) -> bool:
         """Equal."""
-        return self.__varint == int(arg)
+        return int(self) == int(arg)
 
     def __ge__(self, arg: TAddress6) -> bool:
         """Greater or equal."""
-        return self.__varint >= int(arg)
+        return int(self) >= int(arg)
 
     def __gt__(self, arg: TAddress6) -> bool:
         """Greater."""
-        return self.__varint > int(arg)
+        return int(self) > int(arg)
 
     def __le__(self, arg: TAddress6) -> bool:
         """Less or equal."""
-        return self.__varint <= int(arg)
+        return int(self) <= int(arg)
 
     def __lt__(self, arg: TAddress6) -> bool:
         """Less."""
-        return self.__varint < int(arg)
+        return int(self) < int(arg)
 
     def __ne__(self, arg: TAddress6) -> bool:
         """Negative."""
-        return self.__varint != int(arg)
+        return int(self) != int(arg)
 
     @staticmethod
     def __check_groups(group_list: List[str]) -> List[str]:
@@ -213,7 +213,11 @@ class Address6(IComparators, NoDynamicAttributes):
 
 # prefix
 # https://www.heficed.com/subnet-mask-cheat-sheet/
-class Prefix6(NoDynamicAttributes):
+
+TPrefix6 = TypeVar("TPrefix6", bound="Prefix6")
+
+
+class Prefix6(IComparators, NoDynamicAttributes):
     """Prefix6 class for IPv6 addresses.
 
     Constructor argument:
@@ -231,6 +235,30 @@ class Prefix6(NoDynamicAttributes):
     def __init__(self, prefix: Union[str, int]) -> None:
         """Constructor."""
         self.prefix = prefix
+
+    def __eq__(self, arg: TPrefix6) -> bool:
+        """Equal."""
+        return int(self) == int(arg)
+
+    def __ge__(self, arg: TPrefix6) -> bool:
+        """Greater or equal."""
+        return int(self) >= int(arg)
+
+    def __gt__(self, arg: TPrefix6) -> bool:
+        """Greater."""
+        return int(self) > int(arg)
+
+    def __le__(self, arg: TPrefix6) -> bool:
+        """Less or equal."""
+        return int(self) <= int(arg)
+
+    def __lt__(self, arg: TPrefix6) -> bool:
+        """Less."""
+        return int(self) < int(arg)
+
+    def __ne__(self, arg: TPrefix6) -> bool:
+        """Negative."""
+        return int(self) != int(arg)
 
     def __str__(self) -> str:
         """Return prefix as string."""

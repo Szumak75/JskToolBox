@@ -36,27 +36,27 @@ class Octet(IComparators, NoDynamicAttributes):
 
     def __eq__(self, arg: TOctet) -> bool:
         """Equal."""
-        return self.value == arg.value
+        return int(self) == int(arg)
 
     def __ge__(self, arg: TOctet) -> bool:
         """Greater then or equal."""
-        return self.value >= arg.value
+        return int(self) >= int(arg)
 
     def __gt__(self, arg: TOctet) -> bool:
         """Greater then."""
-        return self.value > arg.value
+        return int(self) > int(arg)
 
     def __le__(self, arg: TOctet) -> bool:
         """Less then or equal."""
-        return self.value <= arg.value
+        return int(self) <= int(arg)
 
     def __lt__(self, arg: TOctet) -> bool:
         """Less then."""
-        return self.value < arg.value
+        return int(self) < int(arg)
 
     def __ne__(self, arg: TOctet) -> bool:
         """Negative."""
-        return self.value != arg.value
+        return int(self) != int(arg)
 
     def __int__(self) -> int:
         """Return integer representation of octet."""

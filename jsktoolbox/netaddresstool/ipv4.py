@@ -43,27 +43,27 @@ class Address(IComparators, NoDynamicAttributes):
 
     def __eq__(self, arg: TAddress) -> bool:
         """Equal."""
-        return self.__varint == int(arg)
+        return int(self) == int(arg)
 
     def __ge__(self, arg: TAddress) -> bool:
         """Greater or equal."""
-        return self.__varint >= int(arg)
+        return int(self) >= int(arg)
 
     def __gt__(self, arg: TAddress) -> bool:
         """Greater."""
-        return self.__varint > int(arg)
+        return int(self) > int(arg)
 
     def __le__(self, arg: TAddress) -> bool:
         """Less or equal."""
-        return self.__varint <= int(arg)
+        return int(self) <= int(arg)
 
     def __lt__(self, arg: TAddress) -> bool:
         """Less."""
-        return self.__varint < int(arg)
+        return int(self) < int(arg)
 
     def __ne__(self, arg: TAddress) -> bool:
         """Negative."""
-        return self.__varint != int(arg)
+        return int(self) != int(arg)
 
     @staticmethod
     def __int_to_ip(ipint: int) -> str:
