@@ -158,6 +158,7 @@ class Address6(IComparators, NoDynamicAttributes):
         else:
             raise Raise.error(
                 f"IPv6 address is invalid: {value}",
+                ValueError,
                 self.__class__.__name__,
                 currentframe(),
             )
