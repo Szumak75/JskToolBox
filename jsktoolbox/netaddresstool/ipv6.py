@@ -144,7 +144,8 @@ class Address6(IComparators, NoDynamicAttributes):
         self.__set_words_from_str(tmp)
 
     def __set_words_from_int(self, value: int) -> None:
-        if value >= 0 and value <= 340282366920938463463374607431768211455:
+        # if value >= 0 and value <= 340282366920938463463374607431768211455:
+        if value in range(0, 340282366920938463463374607431768211456):
             self.__varint = value
         else:
             raise Raise.error(
