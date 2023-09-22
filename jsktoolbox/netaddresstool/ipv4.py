@@ -98,12 +98,14 @@ class Address(IComparators, NoDynamicAttributes):
         )
 
     def __set_octets_from_int(self, value: int) -> None:
-        if value >= 0 and value <= 4294967295:
+        if value in range(0, 4294967296):
             self.__varint = value
         else:
             raise Raise.error(
                 f"IP-int out of range (0-4294967295), received: {value}",
                 ValueError,
+                self.__class__.__name__,
+                currentframe(),
             )
 
     def __set_octets_from_str(self, value: str) -> None:
@@ -119,7 +121,7 @@ class Address(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"Address('{str(self)}')"
+        return f"{self.__class__.__name__}('{str(self)}')"
 
     @property
     def octets(self) -> List[Octet]:
@@ -196,7 +198,7 @@ class Netmask(NoDynamicAttributes):
         )
 
     def __repr__(self) -> str:
-        return f"Netmask({self.cidr})"
+        return f"{self.__class__.__name__}({self.cidr})"
 
     def __cidr_validator(self, cidr: int) -> None:
         """Check and set cidr."""
@@ -266,6 +268,8 @@ class Netmask(NoDynamicAttributes):
             raise Raise.error(
                 f"Invalid mask, received: {str(Address(addr))}",
                 ValueError,
+                self.__class__.__name__,
+                currentframe(),
             )
         self.cidr = sum(
             [bin(x.value).count("1") for x in Address(addr).octets]
@@ -286,6 +290,8 @@ class Netmask(NoDynamicAttributes):
             raise Raise.error(
                 f"Digit string or int expected. Received: {value}",
                 ValueError,
+                self.__class__.__name__,
+                currentframe(),
             )
 
 
@@ -330,7 +336,7 @@ class Network(NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return  string representation of class object."""
-        return f"Network({str(self)})"
+        return f"{self.__class__.__name__}({str(self)})"
 
     def __network_from_str(self, addr: str) -> None:
         """Build configuration from string."""

@@ -68,7 +68,7 @@ class Octet(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"Octet({self.value})"
+        return f"{self.__class__.__name__}({self.value})"
 
     @staticmethod
     def __check_range(value: int) -> bool:
@@ -102,6 +102,8 @@ class Octet(IComparators, NoDynamicAttributes):
                 raise Raise.error(
                     f"Received value '{args}' out of range(0-255).",
                     ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
                 )
         elif isinstance(args, str):
             if Octet.__is_integer(args):
@@ -113,6 +115,8 @@ class Octet(IComparators, NoDynamicAttributes):
                     raise Raise.error(
                         f"Received value '{args}' out of range(0-255).",
                         ValueError,
+                        self.__class__.__name__,
+                        currentframe(),
                     )
         elif isinstance(args, Octet):
             tmp: TOctet = args

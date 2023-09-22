@@ -4,6 +4,8 @@
   Created: 14.09.2023
 
   Purpose: Classes for IPv6
+
+  https://www.ibm.com/docs/en/ts3500-tape-library?topic=formats-subnet-masks-ipv4-prefixes-ipv6
 """
 
 import socket
@@ -173,7 +175,7 @@ class Address6(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"Address6('{str(self)}')"
+        return f"{self.__class__.__name__}('{str(self)}')"
 
     @property
     def words(self) -> List[Word16]:
@@ -203,6 +205,89 @@ class Address6(IComparators, NoDynamicAttributes):
         else:
             raise Raise.error(
                 f"String or Integer or List type expected, {type(value)} received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+
+# prefix
+# https://www.heficed.com/subnet-mask-cheat-sheet/
+class Prefix6(NoDynamicAttributes):
+    """Prefix6 class for IPv6 addresses.
+
+    Constructor argument:
+    prefix: Union[str, int] -- Set prefix from string or integer.
+
+    Public property:
+    prefix: str -- Return prefix as string.
+
+    Public setter:
+    prefix: Union[str, int] -- Set prefix from string or integer.
+    """
+
+    __prefix_int: int = 0
+
+    def __init__(self, prefix: Union[str, int]) -> None:
+        """Constructor."""
+        self.prefix = prefix
+
+    def __str__(self) -> str:
+        """Return prefix as string."""
+        return str(self.__prefix_int)
+
+    def __int__(self) -> int:
+        """Return prefix as integer."""
+        return self.__prefix_int
+
+    def __repr__(self) -> str:
+        """Return Prefix6 representation string."""
+        return f"{self.__class__.__name__}({int(self)})"
+
+    def __range_validator(self, value: int) -> bool:
+        """Proper range validator."""
+        if value not in range(8, 129):
+            raise Raise.error(
+                f"Prefix out of range (8-128), received: {value}",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        return True
+
+    @staticmethod
+    def __is_integer(value: str) -> bool:
+        try:
+            int(value)
+            return True
+        except:
+            return False
+
+    @property
+    def prefix(self) -> str:
+        """Return prefix as string."""
+        return str(self)
+
+    @prefix.setter
+    def prefix(self, value: Union[str, int]) -> None:
+        """Set prefix from string or integer."""
+        if isinstance(value, int) and self.__range_validator(value):
+            self.__prefix_int = value
+        elif isinstance(value, str):
+            if Prefix6.__is_integer(value) and self.__range_validator(
+                int(value)
+            ):
+                self.__prefix_int = int(value)
+            else:
+                raise Raise.error(
+                    f"Expected proper integer string, '{value}' received.",
+                    ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        else:
+            raise Raise.error(
+                f"String or integer expected, '{type(value)}' received.",
                 TypeError,
                 self.__class__.__name__,
                 currentframe(),

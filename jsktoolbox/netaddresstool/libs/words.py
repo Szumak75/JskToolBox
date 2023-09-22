@@ -68,7 +68,7 @@ class Word16(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"Word16({self.value})"
+        return f"{self.__class__.__name__}({self.value})"
 
     @staticmethod
     def __check_range(value: int) -> bool:
@@ -105,6 +105,8 @@ class Word16(IComparators, NoDynamicAttributes):
                 raise Raise.error(
                     f"Received value '{args}' out of range(0-65535).",
                     ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
                 )
         elif isinstance(args, str):
             if Word16.__is_integer(args):
@@ -119,6 +121,8 @@ class Word16(IComparators, NoDynamicAttributes):
                     raise Raise.error(
                         f"Received value '{args}' out of range(0-65535).",
                         ValueError,
+                        self.__class__.__name__,
+                        currentframe(),
                     )
         elif isinstance(args, Word16):
             tmp: TWord16 = args

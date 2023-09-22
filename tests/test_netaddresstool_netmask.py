@@ -15,7 +15,7 @@ from jsktoolbox.netaddresstool.libs.octets import Octet
 class TestNetmask(unittest.TestCase):
     """Class for testing Netmask."""
 
-    def test_netmask_create(self):
+    def test_01_netmask_create(self):
         """Test nr 1."""
         try:
             Netmask("255.255.255.255")
@@ -24,7 +24,7 @@ class TestNetmask(unittest.TestCase):
         except Exception as ex:
             self.fail(f"Unexpected exception was throw: {ex}")
 
-    def test_netmask_check_conversion(self):
+    def test_02_netmask_check_conversion(self):
         """Test nr 2."""
         tab = {
             0: "0.0.0.0",
@@ -70,7 +70,7 @@ class TestNetmask(unittest.TestCase):
             self.assertEqual(key, int(Netmask(val)))
             self.assertEqual(tab[key], str(Netmask(val)))
 
-    def test_netmask_create_from_list(self):
+    def test_03_netmask_create_from_list(self):
         """Test nr 3."""
         self.assertEqual(32, int(Netmask([255, 255, 255, 255])))
         self.assertEqual(32, int(Netmask(["255", "255", "255", "255"])))
@@ -79,7 +79,7 @@ class TestNetmask(unittest.TestCase):
             int(Netmask([Octet(255), Octet(255), Octet(255), Octet(255)])),
         )
 
-    def test_netmask_invalid_values(self):
+    def test_04_netmask_invalid_values(self):
         """Test nr 4."""
         with self.assertRaises(ValueError):
             Netmask(256)
@@ -93,10 +93,6 @@ class TestNetmask(unittest.TestCase):
             Netmask("255.254.255.0")
         with self.assertRaises(ValueError):
             Netmask("255.253.0.0")
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 # #[EOF]#######################################################################
