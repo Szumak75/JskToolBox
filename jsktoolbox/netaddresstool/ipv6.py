@@ -113,7 +113,7 @@ class Address6(IComparators, NoDynamicAttributes):
     @staticmethod
     def __ip_to_int(ipstr: str) -> int:
         """Convert ipv6 str representation to ip int."""
-        # Używamy socket.inet_pton, aby przekształcić adres IPv6 w postaci binarnej
+        # Używamy socket.inet_pton, aby przekształcić adres IPv6 w postać binarną
         packed_ip = socket.inet_pton(socket.AF_INET6, ipstr)
         # Następnie przekształcamy binarny adres IPv6 na liczbę całkowitą (integer)
         int_ip = int.from_bytes(packed_ip, byteorder="big")
