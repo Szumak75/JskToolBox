@@ -55,10 +55,7 @@ class TestPrefix6(unittest.TestCase):
             Prefix6(129)
 
         with self.assertRaises(ValueError):
-            Prefix6(7)
-
-        with self.assertRaises(ValueError):
-            Prefix6(0)
+            Prefix6(-1)
 
         with self.assertRaises(ValueError):
             Prefix6("test")
