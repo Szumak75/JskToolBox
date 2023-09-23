@@ -444,4 +444,59 @@ class Network6(NoDynamicAttributes):
         return self.__prefix
 
 
+# SubNetwork
+class SubNetwork6(NoDynamicAttributes):
+    """SubNetwork6 calculator class.
+
+    Constructor argument:
+    network: Network6 -- The address of the network where the subnet is being searched for.
+    prefix: Prefix6 -- Subnet prefix.
+
+    Public property:
+    subnets: List[Network6] -- Subnet list.
+    """
+
+    __network: Network6 = None
+    __prefix: Prefix6 = None
+
+    def __init__(self, network: Network6, prefix: Prefix6) -> None:
+        """Constructor."""
+        if isinstance(network, Network6) and isinstance(prefix, Prefix6):
+            if int(network.prefix) <= int(prefix):
+                self.__network = network
+                self.__prefix = prefix
+            else:
+                raise Raise.error(
+                    (
+                        "The network prefix must be greater then or equal to the subnet prefix you are looking for."
+                        f"Received: {int(network.prefix)} and {int(prefix)}"
+                    ),
+                    ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        else:
+            raise Raise.error(
+                f"Argument of (Network6, Prefix6) expected, ({type(network)},{type(prefix)}) received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    @property
+    def subnets(self) -> List[Network6]:
+        """Return subnets list."""
+        tmp: List[Network6] = []
+        nstart = int(self.__network.min)
+        nend = int(self.__network.max)
+        start = nstart
+        while True:
+            subnet = Network6([Address6(start), self.__prefix])
+            tmp.append(subnet)
+            if int(subnet.max) >= nend:
+                break
+            start = int(subnet.max) + 1
+        return tmp
+
+
 # #[EOF]#######################################################################
