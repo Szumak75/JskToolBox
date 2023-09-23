@@ -21,7 +21,7 @@ class TestNetwork6(unittest.TestCase):
         try:
             Network6("fd00::1/125")
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: {ex}")
+            self.fail(f"Unexpected exception was thrown: {ex}")
 
     def test_02_network(self):
         """Test nr 2."""
@@ -70,7 +70,7 @@ class TestNetwork6(unittest.TestCase):
             Network6([336294682933583715844663186250927177729, 125])
             Network6([Address6("fd00::1"), Prefix6(125)])
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: {ex}")
+            self.fail(f"Unexpected exception was thrown: {ex}")
 
 
 # #[EOF]#######################################################################

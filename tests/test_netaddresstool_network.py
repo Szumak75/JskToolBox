@@ -20,7 +20,7 @@ class TestNetwork(unittest.TestCase):
             Network("192.168.1.1/24")
             Network("192.168.17.18/255.255.255.248")
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: {ex}")
+            self.fail(f"Unexpected exception was thrown: {ex}")
 
     def test_02_network(self):
         """Test nr 2."""
@@ -83,7 +83,7 @@ class TestNetwork(unittest.TestCase):
             Network(["192.168.74.98", "255.255.255.248"])
             Network([Address("192.168.1.1"), Netmask(24)])
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: {ex}")
+            self.fail(f"Unexpected exception was thrown: {ex}")
 
 
 # #[EOF]#######################################################################

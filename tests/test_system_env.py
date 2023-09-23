@@ -20,7 +20,7 @@ class TestEnv(unittest.TestCase):
         try:
             Env()
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: '{ex}'")
+            self.fail(f"Unexpected exception was thrown: '{ex}'")
 
     def test_system_env_home_return(self):
         """Test nr 2."""

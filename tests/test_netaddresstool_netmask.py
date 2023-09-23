@@ -22,7 +22,7 @@ class TestNetmask(unittest.TestCase):
             Netmask("30")
             Netmask(16)
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: {ex}")
+            self.fail(f"Unexpected exception was thrown: {ex}")
 
     def test_02_netmask_check_conversion(self):
         """Test nr 2."""

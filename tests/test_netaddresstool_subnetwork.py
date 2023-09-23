@@ -19,7 +19,7 @@ class TestSubNetwork(unittest.TestCase):
         try:
             SubNetwork(Network("192.168.1.1/24"), Netmask(30))
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: '{ex}'")
+            self.fail(f"Unexpected exception was thrown: '{ex}'")
 
     def test_02_subnetwork_list_count(self):
         """Test nr 2."""
