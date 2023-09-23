@@ -370,11 +370,6 @@ class Network(NoDynamicAttributes):
         else:
             self.__mask = Netmask(addr[1])
 
-    @staticmethod
-    def __ip_int_to_address(ipint: int) -> Address:
-        """Converting IPv4 binary to Address."""
-        return Address(socket.inet_ntoa(struct.pack("!L", ipint)))
-
     @property
     def address(self) -> Address:
         """Return IPv4 address."""
@@ -386,7 +381,7 @@ class Network(NoDynamicAttributes):
         ip = int(self.address)
         mask = int(Address(self.mask.octets))
         broadcast = ip | (mask ^ (1 << 32) - 1)
-        return Network.__ip_int_to_address(broadcast)
+        return Address(broadcast)
 
     @property
     def count(self) -> int:
@@ -432,7 +427,7 @@ class Network(NoDynamicAttributes):
         ip = int(self.address)
         mask = int(Address(self.mask.octets))
         net = ip & mask
-        return Network.__ip_int_to_address(net)
+        return Address(net)
 
 
 # SubNetwork

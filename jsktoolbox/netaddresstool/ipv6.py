@@ -323,4 +323,125 @@ class Prefix6(IComparators, NoDynamicAttributes):
             )
 
 
+# Network
+class Network6(NoDynamicAttributes):
+    """Network6 IPv6 class.
+
+    Constructor argument:
+    addr: Union[str, List] -- Set IPv6 network address from string or two element list of address [Address6,str,int,list] and prefix [Prefix6, str, int].
+
+    Public property:
+    address: Address6 -- Return IPv6 address set in the constructor.
+    count: int -- Return count hosts adresses in network range.
+    hosts: List[Address6] -- Return hosts address list.
+    network: Address6 -- Return network address.
+    prefix: Prefix6 -- Return prefix.
+    max: Address6 -- Return max address of host in network range.
+    min: Address6 -- Return min address of host in network range.
+    """
+
+    __address: Address6 = None
+    __prefix: Prefix6 = None
+
+    def __init__(self, addr: Union[str, List]) -> None:
+        """Constructor."""
+        if isinstance(addr, str):
+            self.__network_from_str(addr)
+        elif isinstance(addr, List):
+            self.__network_from_list(addr)
+        else:
+            raise Raise.error(
+                f"IP network string or list expected, '{type(addr)}' received.",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    def __str__(self) -> str:
+        """Return string representation of network address."""
+        return f"{self.network}/{int(self.prefix)}"
+
+    def __repr__(self) -> str:
+        """Return  string representation of class object."""
+        return f"{self.__class__.__name__}({str(self)})"
+
+    def __network_from_str(self, addr: str) -> None:
+        """Build configuration from string."""
+        if addr.find("/") > 0:
+            tmp = addr.split("/")
+            self.__address = Address6(tmp[0])
+            self.__prefix = Prefix6(tmp[1])
+        else:
+            raise Raise.error(
+                f"Expected network address in 'ipv6/prefix' format string, received '{addr}'",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    def __network_from_list(self, addr: List) -> None:
+        """Build configuration from list."""
+        if len(addr) != 2:
+            raise Raise.error(
+                "A list of two elements was expected: ['ipv6','prefix']",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        if isinstance(addr[0], Address6):
+            self.__address = deepcopy(addr[0])
+        else:
+            self.__address = Address6(addr[0])
+        if isinstance(addr[1], Prefix6):
+            self.__prefix = deepcopy(addr[1])
+        else:
+            self.__prefix = Prefix6(addr[1])
+
+    @property
+    def address(self) -> Address6:
+        """Return IPv6 address."""
+        return self.__address
+
+    @property
+    def count(self) -> int:
+        """Return number of hosts in subnet."""
+        return 2 ** (128 - int(self.prefix))
+
+    @property
+    def hosts(self) -> List[Address6]:
+        """Return list of hosts addresses."""
+        start = int(self.min)
+        tmp: List[Address6] = []
+        for i in range(0, self.count):
+            tmp.append(Address6(start + i))
+        return tmp
+
+    @property
+    def max(self) -> Address6:
+        """Return last IPv6 address from subnet."""
+        return Address6(int(self.network) + self.count - 1)
+
+    @property
+    def min(self) -> Address6:
+        """Return first IPv6 address from subnet."""
+        ip = int(self.address)
+        mask = (1 << 128 - int(self.prefix)) - 1
+        net = ip & ~mask
+        subnet_address = []
+        for _ in range(8):
+            subnet_address.insert(0, format(net & 0xFFFF, "x"))
+            net >>= 16
+        return Address6(":".join(subnet_address))
+
+    @property
+    def network(self) -> Address6:
+        """Return network address (first host address of subnet)."""
+        return self.min
+
+    @property
+    def prefix(self) -> Prefix6:
+        """Return IPv6 network prefix."""
+        return self.__prefix
+
+
 # #[EOF]#######################################################################
