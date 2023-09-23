@@ -20,13 +20,13 @@ class Word16(IComparators, NoDynamicAttributes):
     """Class for representing ipv6 16-bits word.
 
     Constructor arguments:
-    value [str|int|Octet] -- Value of word in proper range from 0x0000 to 0xffff
+    value [str|int|Word16] -- Value of word in proper range from 0x0000 to 0xffff
 
     Public property:
     value [int] -- Return integer representation of word.
 
     Public setters:
-    value [str|int|Octet] -- Set value of word."""
+    value [str|int|Word16] -- Set value of word."""
 
     __value: int = 0
 

@@ -275,9 +275,9 @@ class Prefix6(IComparators, NoDynamicAttributes):
 
     def __range_validator(self, value: int) -> bool:
         """Proper range validator."""
-        if value not in range(8, 129):
+        if value not in range(0, 129):
             raise Raise.error(
-                f"Prefix out of range (8-128), received: {value}",
+                f"Prefix out of range (0-128), received: {value}",
                 ValueError,
                 self.__class__.__name__,
                 currentframe(),
