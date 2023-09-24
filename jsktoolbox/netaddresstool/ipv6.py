@@ -363,7 +363,7 @@ class Network6(NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return  string representation of class object."""
-        return f"{self.__class__.__name__}({str(self)})"
+        return f"{self.__class__.__name__}('{str(self)}')"
 
     def __network_from_str(self, addr: str) -> None:
         """Build configuration from string."""
