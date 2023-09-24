@@ -8,24 +8,24 @@
 
 import unittest
 
-from jsktoolbox.netaddresstool.ipv4 import Network, Netmask, SubNetwork
+from jsktoolbox.netaddresstool.ipv6 import Network6, Prefix6, SubNetwork6
 
 
-class TestSubNetwork(unittest.TestCase):
-    """Class for testing SubNetwork calculator."""
+class TestSubNetwork6(unittest.TestCase):
+    """Class for testing SubNetwork6 calculator."""
 
     def test_01_subnetwork_create(self):
         """Test nr 1."""
         try:
-            SubNetwork(Network("192.168.1.1/24"), Netmask(30))
+            SubNetwork6(Network6("fd00::1/125"), Prefix6(128))
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: '{ex}'")
 
     def test_02_subnetwork_list_count(self):
         """Test nr 2."""
         self.assertEqual(
-            len(SubNetwork(Network("192.168.1.1/24"), Netmask(30)).subnets),
-            64,
+            len(SubNetwork6(Network6("fd00::1/125"), Prefix6(128)).subnets),
+            8,
         )
 
 
