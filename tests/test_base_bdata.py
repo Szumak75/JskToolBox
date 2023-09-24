@@ -19,7 +19,7 @@ class TestDData(unittest.TestCase):
         try:
             self.obj = BData()
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: '{ex}'")
+            self.fail(f"Unexpected exception was thrown: '{ex}'")
 
     def test_obj_instance(self) -> None:
         """Test nr 1."""
@@ -36,7 +36,7 @@ class TestDData(unittest.TestCase):
         try:
             self.assertEqual(self.obj.data["test"], 1)
         except Exception as ex:
-            self.fail(f"Unexpected exception was throw: '{ex}'")
+            self.fail(f"Unexpected exception was thrown: '{ex}'")
 
     def test_cleanup_dict(self) -> None:
         """Test nr 4."""

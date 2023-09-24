@@ -1,34 +1,34 @@
 # -*- coding: UTF-8 -*-
 """
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 23.06.2023
+  Created: 14.09.2023
 
-  Purpose: for testing Octet class.
+  Purpose: for testing Word16 class.
 """
 
 import unittest
-from jsktoolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool.libs.words import Word16
 
 
-class TestOctet(unittest.TestCase):
-    """Testing Octet class."""
+class TestWord16(unittest.TestCase):
+    """Testing Word16 class."""
 
     def setUp(self):
         """Configure the test engine."""
-        self.o = Octet(0)
+        self.o = Word16(0)
 
     def test_01_create_proper_object_from_int(self):
         """Test nr 1."""
-        self.assertIsInstance(Octet(1), Octet)
+        self.assertIsInstance(Word16(1), Word16)
 
     def test_02_create_proper_object_from_str(self):
         """Test nr 2."""
-        self.assertIsInstance(Octet("255"), Octet)
+        self.assertIsInstance(Word16("0x000a"), Word16)
 
     def test_03_set_proper_value(self):
         """Test nr 3."""
         try:
-            for i in range(0, 256):
+            for i in range(0, 65536):
                 self.o.value = i
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: {ex}")
@@ -40,6 +40,8 @@ class TestOctet(unittest.TestCase):
             self.o.value = "10"
             self.o.value = "192"
             self.o.value = "255"
+            self.o.value = "0xffff"
+            self.o.value = 0xA10F
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: {ex}")
 
@@ -47,7 +49,7 @@ class TestOctet(unittest.TestCase):
         """Test nr 5."""
         with self.assertRaises(ValueError):
             self.o.value = -1
-            self.o.value = 256
+            self.o.value = 65536
 
     def test_06_set_invalid_value_str(self):
         """Test nr 6."""
@@ -73,47 +75,47 @@ class TestOctet(unittest.TestCase):
     def test_10_string_representation(self):
         """Test nr 10."""
         self.o.value = 123
-        self.assertEqual(str(self.o), "123")
+        self.assertEqual(str(self.o), "7b")
 
     def test_11_set_proper_value_of_octet(self):
         """Test nr 11."""
         try:
-            self.o.value = Octet(13)
+            self.o.value = Word16(13)
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: {ex}")
         self.assertEqual(self.o.value, 13)
 
     def test_12_octets_equal(self):
         """Test nr 12."""
-        self.assertTrue(Octet(10) == Octet(10))
-        self.assertFalse(Octet(10) == Octet(11))
+        self.assertTrue(Word16(10) == Word16(10))
+        self.assertFalse(Word16(10) == Word16(11))
 
     def test_13_octets_negative(self):
         """Test nr 13."""
-        self.assertTrue(Octet(2) != Octet(3))
-        self.assertFalse(Octet(12) != Octet(12))
+        self.assertTrue(Word16(2) != Word16(3))
+        self.assertFalse(Word16(12) != Word16(12))
 
     def test_14_octets_less(self):
         """Test nr 14."""
-        self.assertTrue(Octet(193) < Octet(194))
-        self.assertFalse(Octet(194) < Octet(193))
+        self.assertTrue(Word16(193) < Word16(194))
+        self.assertFalse(Word16(194) < Word16(193))
 
     def test_15_octets_less_or_equal(self):
         """Test nr 15."""
-        self.assertTrue(Octet(7) <= Octet(7))
-        self.assertTrue(Octet(1) <= Octet(7))
-        self.assertFalse(Octet(194) <= Octet(193))
+        self.assertTrue(Word16(7) <= Word16(7))
+        self.assertTrue(Word16(1) <= Word16(7))
+        self.assertFalse(Word16(194) <= Word16(193))
 
     def test_16_octets_qreater(self):
         """Test nr 16."""
-        self.assertTrue(Octet(19) > Octet(14))
-        self.assertFalse(Octet(1) > Octet(3))
+        self.assertTrue(Word16(19) > Word16(14))
+        self.assertFalse(Word16(1) > Word16(3))
 
     def test_17_octets_greater_or_equal(self):
         """Test nr 17."""
-        self.assertTrue(Octet(7) >= Octet(7))
-        self.assertTrue(Octet(10) >= Octet(7))
-        self.assertFalse(Octet(19) >= Octet(193))
+        self.assertTrue(Word16(7) >= Word16(7))
+        self.assertTrue(Word16(10) >= Word16(7))
+        self.assertFalse(Word16(19) >= Word16(193))
 
 
 # #[EOF]#######################################################################
