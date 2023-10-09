@@ -18,6 +18,58 @@ from jsktoolbox.libs.base_data import BData
 from jsktoolbox.libs.system import Env, PathChecker
 
 
+class LogsLevelKeys(NoDynamicAttributes):
+    """LogsLevelKeys container class."""
+
+    @classmethod
+    @property
+    def emergency(cls) -> str:
+        """Return EMERGENCY Key."""
+        return "EMERGENCY"
+
+    @classmethod
+    @property
+    def alert(cls) -> str:
+        """Return ALERT Key."""
+        return "ALERT"
+
+    @classmethod
+    @property
+    def critical(cls) -> str:
+        """Return CRITICAL Key."""
+        return "CRITICAL"
+
+    @classmethod
+    @property
+    def error(cls) -> str:
+        """Return ERROR Key."""
+        return "ERROR"
+
+    @classmethod
+    @property
+    def warning(cls) -> str:
+        """Return WARNING Key."""
+        return "WARNING"
+
+    @classmethod
+    @property
+    def notice(cls) -> str:
+        """Return NOTICE Key."""
+        return "NOTICE"
+
+    @classmethod
+    @property
+    def info(cls) -> str:
+        """Return INFO Key."""
+        return "INFO"
+
+    @classmethod
+    @property
+    def debug(cls) -> str:
+        """Return DEBUG Key."""
+        return "DEBUG"
+
+
 class ILoggerEngine(ABC):
     """Logger engine interface class."""
 
