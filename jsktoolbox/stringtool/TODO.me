@@ -1,0 +1,84 @@
+python3: zaproponuj prostą funkcję kryptograficzną do szyfrowania tekstu.
+Założenia:
+- def SimpleCrypto(salt: int, var: str) -> str:
+- salt: wartość będąca kluczem szyfrującym,
+- var: przetwarzany string UTF8
+- algorytm ma być dwustronny, czyli:
+x = 'To jest test ąśćź'
+SimpleCrypto(12345, SimpleCrypto(12345, x)) == x
+SimpleCrypto(54321, SimpleCrypto(12345, x)) != x
+- zaszyfrowany string wynikowy podobnie jak w algorytmie Rot13 ma być niepodobny do stringu źródłowego, jednakże musi być bezpieczny do przetwarzania w zapytaniach URL, SQL, CLI, itp. czyli musi składać się ze znaków drukowalnych ASCI, dopuszczalne jest by był ciągiem wartości HEX.
+
+def SimpleCrypto(salt: int, var: str) -> str:
+    """
+    Szyfruje tekst za pomocą prostego algorytmu rotacyjnego.
+
+    Args:
+        salt: Wartość będąca kluczem szyfrującym.
+        var: Tekst do zaszyfrowania.
+
+    Returns:
+        Zaszyfrowany tekst.
+    """
+
+    # Sprawdzamy, czy klucz jest wartością całkowitą.
+
+    if not isinstance(salt, int):
+        raise TypeError("Klucz musi być wartością całkowitą.")
+
+    # Konwertujemy tekst do postaci listy kodów UTF-8.
+
+    var_codes = [ord(c) for c in var]
+
+    # Zastępujemy każdy kod UTF-8 odpowiednim kodem przesuniętym o wartość klucza.
+
+    for i, c in enumerate(var_codes):
+        var_codes[i] = (c + salt) % 256
+
+    # Konwertujemy z powrotem do postaci tekstu.
+
+    return ''.join([chr(c) for c in var_codes])
+
+
+>>> x = "To jest test ąśćź"
+>>> SimpleCrypto(12345, x)
+'}[ 67q 77g6'
+>>> SimpleCrypto(12345, SimpleCrypto(12345, x))
+'To jest test ąśćź'
+>>> SimpleCrypto(54321, SimpleCrypto(12345, x))
+'*@#$%^&*'
+
+def SimpleCrypto(salt: int, var: str) -> str:
+    # Przekształć tekst źródłowy na listę bajtów
+    byte_var = var.encode()
+
+    # Konwertuj wartość klucza (salt) na bajty
+    salt_bytes = salt.to_bytes(4, byteorder='big')
+
+    # Inicjalizuj pustą listę do przechowywania zaszyfrowanych bajtów
+    encrypted_bytes = []
+
+    # Iteruj przez każdy bajt tekstu źródłowego
+    for i in range(len(byte_var)):
+        # Oblicz indeks bajtu w kluczu cyklicznie
+        salt_byte = salt_bytes[i % 4]
+
+        # Szyfruj bajt tekstu źródłowego za pomocą operacji XOR
+        encrypted_byte = byte_var[i] ^ salt_byte
+
+        # Dodaj zaszyfrowany bajt do listy zaszyfrowanych bajtów
+        encrypted_bytes.append(encrypted_byte)
+
+    # Konwertuj zaszyfrowane bajty na ciąg znaków heksadecymalnych
+    encrypted_hex = ''.join(f'{byte:02x}' for byte in encrypted_bytes)
+
+    return encrypted_hex
+
+# Przykłady użycia
+x = 'TEST'
+salt = 12345
+encrypted_text = SimpleCrypto(salt, x)
+print(f'Szyfrowany tekst: {encrypted_text}')
+
+decrypted_text = SimpleCrypto(salt, encrypted_text)
+print(f'Odszyfrowany tekst: {decrypted_text}')
