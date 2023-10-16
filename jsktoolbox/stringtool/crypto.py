@@ -15,6 +15,7 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 
 # https://www.tutorialspoint.com/cryptography_with_python/cryptography_with_python_xor_process.htm
+# https://teachen.info/cspp/unit4/lab04-02.html
 
 
 class SimpleCrypto(NoDynamicAttributes):
@@ -31,6 +32,30 @@ class SimpleCrypto(NoDynamicAttributes):
                 currentframe(),
             )
         return randrange(int(10**length / 10), 10**length - 1)
+
+    @classmethod
+    def caesar_codec(cls, salt: int, message: str) -> str:
+        """"""
+        result = ""
+        for i in range(len(message)):
+            char = message[i]
+            if char.isupper():
+                result += chr((ord(char) + salt - 65) % 26 + 65)
+            else:
+                result += chr((ord(char) + salt - 97) % 26 + 97)
+        return result
+
+    @classmethod
+    def caesar_decode(cls, salt: int, message: str) -> str:
+        """"""
+        result = ""
+        for i in range(len(message)):
+            char = message[i]
+            if char.isupper():
+                result += chr((ord(char) - salt + 65) % 26 - 65)
+            else:
+                result += chr((ord(char) - salt + 97) % 26 - 97)
+        return result
 
     @classmethod
     def rot13_codec(cls, message: str) -> str:
