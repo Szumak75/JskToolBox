@@ -10,8 +10,8 @@ import unittest
 from jsktoolbox.stringtool.crypto import SimpleCrypto
 
 
-class TestStringtool(unittest.TestCase):
-    """TestStringtool testing class."""
+class TestStringtoolCrypto(unittest.TestCase):
+    """TestStringtoolCrypto testing class."""
 
     def test_01_create_object(self) -> None:
         """Test nr 01."""
@@ -36,6 +36,22 @@ class TestStringtool(unittest.TestCase):
             self.assertTrue(
                 SimpleCrypto.salt_generator(x_len) in range(100000, 1000000)
             )
+
+    def test_05_rot13_codec(self) -> None:
+        """Test rn 05."""
+        message: str = "This is example text: ąśżćń"
+        self.assertEqual(
+            SimpleCrypto.rot13_codec(SimpleCrypto.rot13_codec(message)),
+            message,
+        )
+
+    def test_06_b64_codec(self) -> None:
+        """Test nr 06."""
+        message: str = "This is example text: ąśżćń"
+        self.assertEqual(
+            SimpleCrypto.b64_decode(SimpleCrypto.b64_encode(message)),
+            message,
+        )
 
 
 # #[EOF]#######################################################################
