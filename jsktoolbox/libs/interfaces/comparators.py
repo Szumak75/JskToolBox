@@ -16,7 +16,7 @@ class ILt(ABC):
     """
 
     @abstractmethod
-    def __lt__(self, value):
+    def __lt__(self, value: object) -> bool:
         pass
 
 
@@ -27,7 +27,7 @@ class ILe(ABC):
     """
 
     @abstractmethod
-    def __le__(self, value):
+    def __le__(self, value: object) -> bool:
         pass
 
 
@@ -38,7 +38,7 @@ class IEq(ABC):
     """
 
     @abstractmethod
-    def __eq__(self, value):
+    def __eq__(self, value: object) -> bool:
         pass
 
 
@@ -49,7 +49,7 @@ class INe(ABC):
     """
 
     @abstractmethod
-    def __ne__(self, value):
+    def __ne__(self, value: object) -> bool:
         pass
 
 
@@ -60,7 +60,7 @@ class IGt(ABC):
     """
 
     @abstractmethod
-    def __gt__(self, value):
+    def __gt__(self, value: object) -> bool:
         pass
 
 
@@ -71,7 +71,7 @@ class IGe(ABC):
     """
 
     @abstractmethod
-    def __ge__(self, value):
+    def __ge__(self, value: object) -> bool:
         pass
 
 
