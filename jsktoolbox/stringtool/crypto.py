@@ -6,6 +6,9 @@
   Purpose: simple class for basic cryptographics procedures for strings.
 """
 
+import string
+from typing import Dict
+
 from base64 import b64decode, b64encode
 from codecs import getencoder
 from inspect import currentframe
@@ -21,6 +24,11 @@ from jsktoolbox.raisetool import Raise
 class SimpleCrypto(NoDynamicAttributes):
     """SimpleCrypto class."""
 
+    @staticmethod
+    def chars_table_generator() -> str:
+        """Return printable chars list."""
+        return string.printable + "ĄĆĘŁŃÓŚŻŹąćęłńóśżź"
+
     @classmethod
     def salt_generator(cls, length: int = 8) -> int:
         """Method for generate random salt with specific length."""
@@ -34,28 +42,28 @@ class SimpleCrypto(NoDynamicAttributes):
         return randrange(int(10**length / 10), 10**length - 1)
 
     @classmethod
-    def caesar_codec(cls, salt: int, message: str) -> str:
+    def caesar_encrypt(cls, salt: int, message: str) -> str:
         """"""
-        result = ""
-        for i in range(len(message)):
-            char = message[i]
-            if char.isupper():
-                result += chr((ord(char) + salt - 65) % 26 + 65)
-            else:
-                result += chr((ord(char) + salt - 97) % 26 + 97)
-        return result
+        chars: str = cls.chars_table_generator()
+        chars_len: int = len(chars)
+        shift: int = salt % chars_len
+        transtable: Dict = str.maketrans(
+            chars, chars[shift:] + chars[:shift]
+        )
+
+        return message.translate(transtable)
 
     @classmethod
-    def caesar_decode(cls, salt: int, message: str) -> str:
+    def caesar_decrypt(cls, salt: int, message: str) -> str:
         """"""
-        result = ""
-        for i in range(len(message)):
-            char = message[i]
-            if char.isupper():
-                result += chr((ord(char) - salt + 65) % 26 - 65)
-            else:
-                result += chr((ord(char) - salt + 97) % 26 - 97)
-        return result
+        chars: str = cls.chars_table_generator()
+        chars_len: int = len(chars)
+        shift: int = chars_len - (salt % chars_len)
+        transtable: Dict = str.maketrans(
+            chars, chars[shift:] + chars[:shift]
+        )
+
+        return message.translate(transtable)
 
     @classmethod
     def rot13_codec(cls, message: str) -> str:
@@ -64,16 +72,32 @@ class SimpleCrypto(NoDynamicAttributes):
         return codec(message)
 
     @classmethod
-    def b64_encode(cls, message: str) -> str:
-        """Base64 encoder method with rot13."""
-        return cls.rot13_codec(
-            b64encode(cls.rot13_codec(message).encode()).decode()
+    def b64_encrypt(cls, message: str) -> str:
+        """Base64 encoder method."""
+        # return cls.rot13_codec(
+        # b64encode(cls.rot13_codec(message).encode()).decode()
+        # )
+        return b64encode(message.encode()).decode()
+
+    @classmethod
+    def b64_decrypt(cls, message: str) -> str:
+        """Base64 decoder method."""
+        # return cls.rot13_codec(b64decode(cls.rot13_codec(message)).decode())
+        return b64decode(message).decode()
+
+    @classmethod
+    def multiple_encrypt(cls, salt: int, message: str) -> str:
+        """Multiple encoder method."""
+        return cls.b64_encrypt(
+            cls.caesar_encrypt(salt, cls.rot13_codec(message))
         )
 
     @classmethod
-    def b64_decode(cls, message: str) -> str:
-        """Base64 decoder method with rot13."""
-        return cls.rot13_codec(b64decode(cls.rot13_codec(message)).decode())
+    def multiple_decrypt(cls, salt: int, message: str) -> str:
+        """Multiple decoder method."""
+        return cls.b64_decrypt(
+            cls.rot13_codec(cls.caesar_decrypt(salt, message))
+        )
 
 
 # #[EOF]#######################################################################

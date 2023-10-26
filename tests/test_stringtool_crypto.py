@@ -49,7 +49,29 @@ class TestStringtoolCrypto(unittest.TestCase):
         """Test nr 06."""
         message: str = "This is example text: ąśżćń"
         self.assertEqual(
-            SimpleCrypto.b64_decode(SimpleCrypto.b64_encode(message)),
+            SimpleCrypto.b64_decrypt(SimpleCrypto.b64_encrypt(message)),
+            message,
+        )
+
+    def test_07_caesar(self) -> None:
+        """Test nr 07."""
+        message: str = "This is example text: ąśżćń"
+        salt: int = SimpleCrypto.salt_generator(6)
+        self.assertEqual(
+            SimpleCrypto.caesar_decrypt(
+                salt, SimpleCrypto.caesar_encrypt(salt, message)
+            ),
+            message,
+        )
+
+    def test_08_multiple(self) -> None:
+        """Test nr 08."""
+        message: str = "This is example text: ąśżćń"
+        salt: int = SimpleCrypto.salt_generator(12)
+        self.assertEqual(
+            SimpleCrypto.multiple_decrypt(
+                salt, SimpleCrypto.multiple_encrypt(salt, message)
+            ),
             message,
         )
 
