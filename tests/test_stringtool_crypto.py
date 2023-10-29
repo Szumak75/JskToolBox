@@ -66,14 +66,15 @@ class TestStringtoolCrypto(unittest.TestCase):
 
     def test_08_multiple(self) -> None:
         """Test nr 08."""
-        message: str = "This is example text: ąśżćń"
-        salt: int = SimpleCrypto.salt_generator(12)
-        self.assertEqual(
-            SimpleCrypto.multiple_decrypt(
-                salt, SimpleCrypto.multiple_encrypt(salt, message)
-            ),
-            message,
-        )
+        message: str = "This is example text: ĄŻŹĆŚŁÓŃĘąśżćń"
+        for _ in range(0, 1000):
+            salt: int = SimpleCrypto.salt_generator(12)
+            self.assertEqual(
+                SimpleCrypto.multiple_decrypt(
+                    salt, SimpleCrypto.multiple_encrypt(salt, message)
+                ),
+                message,
+            )
 
 
 # #[EOF]#######################################################################

@@ -43,25 +43,21 @@ class SimpleCrypto(NoDynamicAttributes):
 
     @classmethod
     def caesar_encrypt(cls, salt: int, message: str) -> str:
-        """"""
+        """Caesar encoder method with chars translate table."""
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = salt % chars_len
-        transtable: Dict = str.maketrans(
-            chars, chars[shift:] + chars[:shift]
-        )
+        transtable: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
 
         return message.translate(transtable)
 
     @classmethod
     def caesar_decrypt(cls, salt: int, message: str) -> str:
-        """"""
+        """Caesar decoder method with chars translate table."""
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = chars_len - (salt % chars_len)
-        transtable: Dict = str.maketrans(
-            chars, chars[shift:] + chars[:shift]
-        )
+        transtable: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
 
         return message.translate(transtable)
 
@@ -74,30 +70,23 @@ class SimpleCrypto(NoDynamicAttributes):
     @classmethod
     def b64_encrypt(cls, message: str) -> str:
         """Base64 encoder method."""
-        # return cls.rot13_codec(
-        # b64encode(cls.rot13_codec(message).encode()).decode()
-        # )
-        return b64encode(message.encode()).decode()
+        return b64encode(message.encode("UTF-32")).decode()
 
     @classmethod
     def b64_decrypt(cls, message: str) -> str:
         """Base64 decoder method."""
         # return cls.rot13_codec(b64decode(cls.rot13_codec(message)).decode())
-        return b64decode(message).decode()
+        return b64decode(message.encode("UTF-32")).decode("UTF-32")
 
     @classmethod
     def multiple_encrypt(cls, salt: int, message: str) -> str:
         """Multiple encoder method."""
-        return cls.b64_encrypt(
-            cls.caesar_encrypt(salt, cls.rot13_codec(message))
-        )
+        return cls.b64_encrypt(cls.caesar_encrypt(salt, cls.rot13_codec(message)))
 
     @classmethod
     def multiple_decrypt(cls, salt: int, message: str) -> str:
         """Multiple decoder method."""
-        return cls.b64_decrypt(
-            cls.rot13_codec(cls.caesar_decrypt(salt, message))
-        )
+        return cls.rot13_codec(cls.caesar_decrypt(salt, cls.b64_decrypt(message)))
 
 
 # #[EOF]#######################################################################
