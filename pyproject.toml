@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "jsktoolbox"
-version = "1.0.0"
-description = "Small sets of base classes for varoius operations."
+version = "1.0.3"
+description = "Small sets of classes for varoius operations."
 authors = ["Jacek Kotlarski <szumak@virthost.pl>"]
 maintainers = ["Jacek Kotlarski <szumak@virthost.pl>"]
 license = "MIT"
