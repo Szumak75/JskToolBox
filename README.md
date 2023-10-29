@@ -19,3 +19,9 @@ The project contains small class for formatting thrown exception messages.
 The project contains sets of base classes for operations on IPv4 and IPv6 addresses.
 
 [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)
+
+## StringTool
+
+The project contains sets of classes for various operations on string.
+
+[StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md)
