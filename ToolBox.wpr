@@ -29,3 +29,6 @@ proj.directory-list = [{'dirloc': loc('.'),
                         'recursive': True,
                         'watch_for_changes': True}]
 proj.file-type = 'shared'
+proj.launch-config = {loc('jsktoolbox/stringtool/TODO.me'): ('project',
+        ('',
+         'launch-qR99q31BBCboApf1'))}
