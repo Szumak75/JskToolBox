@@ -3,7 +3,7 @@
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
   Created: 16.10.2023
 
-  Purpose: simple class for basic cryptographics procedures for strings.
+  Purpose: a simple class containing basic cryptographic procedures for strings.
 """
 
 import string
@@ -22,16 +22,28 @@ from jsktoolbox.raisetool import Raise
 
 
 class SimpleCrypto(NoDynamicAttributes):
-    """SimpleCrypto class."""
+    """SimpleCrypto class.
+
+    A class that allows performing simple cryptographic operations on strings of characters.
+    """
 
     @staticmethod
     def chars_table_generator() -> str:
-        """Return printable chars list."""
+        """Return printable chars string.
+
+        A static method that returns an extended string of printable characters
+        that is used to generate a translation table in caesar methods.
+        """
         return string.printable + "ĄĆĘŁŃÓŚŻŹąćęłńóśżź"
 
     @classmethod
     def salt_generator(cls, length: int = 8) -> int:
-        """Method for generate random salt with specific length."""
+        """Method for generate random salt with specific length.
+
+        length: int - number of digits in the generated salt
+
+        Return: int - salt number
+        """
         if length < 1:
             raise Raise.error(
                 f"...{length}",
@@ -43,7 +55,27 @@ class SimpleCrypto(NoDynamicAttributes):
 
     @classmethod
     def caesar_encrypt(cls, salt: int, message: str) -> str:
-        """Caesar encoder method with chars translate table."""
+        """Caesar encoder method with chars translate table.
+
+        salt: int    - a number used to calculate the offset in the translation table,
+        message: str - string to encode,
+
+        Return: str  - encoded string
+        """
+        if not isinstance(salt, int):
+            raise Raise.error(
+                "Expected 'salt' as integer.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = salt % chars_len
@@ -53,7 +85,27 @@ class SimpleCrypto(NoDynamicAttributes):
 
     @classmethod
     def caesar_decrypt(cls, salt: int, message: str) -> str:
-        """Caesar decoder method with chars translate table."""
+        """Caesar decoder method with chars translate table.
+
+        salt: int    - a number used to calculate the offset in the translation table,
+        message: str - encoded string,
+
+        Return: str  - decoded string
+        """
+        if not isinstance(salt, int):
+            raise Raise.error(
+                "Expected 'salt' as integer.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = chars_len - (salt % chars_len)
@@ -63,29 +115,90 @@ class SimpleCrypto(NoDynamicAttributes):
 
     @classmethod
     def rot13_codec(cls, message: str) -> str:
-        """Rot13 encoder/decoder method."""
+        """Rot13 encoder/decoder method.
+
+        message: str - string for encode/decode
+
+        Return: str - encoded/decoded string
+        """
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         codec = lambda s: getencoder("rot13")(s)[0]
         return codec(message)
 
     @classmethod
     def b64_encrypt(cls, message: str) -> str:
-        """Base64 encoder method."""
+        """Base64 encoder method.
+
+        message: str - string for encode,
+
+        Return: str - base64 encoded string.
+        """
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         return b64encode(message.encode("UTF-32")).decode()
 
     @classmethod
     def b64_decrypt(cls, message: str) -> str:
-        """Base64 decoder method."""
-        # return cls.rot13_codec(b64decode(cls.rot13_codec(message)).decode())
+        """Base64 decoder method.
+
+        message: str - base64 string for decode,
+
+        Return: str - decoded string.
+        """
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         return b64decode(message.encode("UTF-32")).decode("UTF-32")
 
     @classmethod
     def multiple_encrypt(cls, salt: int, message: str) -> str:
-        """Multiple encoder method."""
+        """Multiple encoder method.
+
+        salt: int    - a number used to calculate the offset in the translation table,
+        message: str - string to encode,
+
+        Return: str  - encoded string
+        """
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         return cls.b64_encrypt(cls.caesar_encrypt(salt, cls.rot13_codec(message)))
 
     @classmethod
     def multiple_decrypt(cls, salt: int, message: str) -> str:
-        """Multiple decoder method."""
+        """Multiple decoder method.
+
+        salt: int    - a number used to calculate the offset in the translation table,
+        message: str - encoded string,
+
+        Return: str  - decoded string
+        """
+        if not isinstance(message, str):
+            raise Raise.error(
+                "Expected 'message' as str type.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
         return cls.rot13_codec(cls.caesar_decrypt(salt, cls.b64_decrypt(message)))
 
 
