@@ -111,7 +111,7 @@ Returns the prefix as a string objects.
 ```
 .prefix: Union[int, str]
 ```
-Takes values as list:
+Takes values as integer or string:
 - **125** -- *as an integer in range at 0 to 128*
 - **"127"** -- *as a string in range at "0" to "128"*
 
