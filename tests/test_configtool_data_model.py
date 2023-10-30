@@ -10,8 +10,8 @@ import unittest
 from jsktoolbox.configtool.libs.data import SectionModel, VariableModel
 
 
-class TestSectionModel(unittest.TestCase):
-    """Test for SectionModel class."""
+class TestDataModel(unittest.TestCase):
+    """Test for Data Model classes."""
 
     def test_01_create_object(self):
         """Test nr 01."""
@@ -34,6 +34,20 @@ class TestSectionModel(unittest.TestCase):
         with self.assertRaises(ValueError):
             obj = SectionModel()
             obj.name = " [] \n"
+
+    def test_03_name_check(self):
+        """Test nr 03."""
+        src = "[TEST]\n"
+        expectation = "TEST"
+        obj = SectionModel(src)
+        self.assertEqual(obj.name, expectation)
+
+    def test_04_search(self):
+        """Test nr 04."""
+        src = "[TEST]"
+        name = "TEST"
+        obj = SectionModel(src)
+        self.assertTrue(obj.search(name))
 
 
 # #[EOF]#######################################################################

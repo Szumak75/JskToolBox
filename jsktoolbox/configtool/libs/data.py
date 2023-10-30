@@ -9,6 +9,7 @@
 from inspect import currentframe
 from typing import Dict, List, Tuple, Optional, Union, Any
 from abc import ABC, abstractmethod
+from copy import copy
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
@@ -17,13 +18,10 @@ from jsktoolbox.libs.base_data import BData
 class IModel(ABC):
     """Model class interface."""
 
+    @property
     @abstractmethod
-    def parser(self, value: str) -> None:
-        """Parser method."""
-
-    @abstractmethod
-    def search(self, name: str) -> bool:
-        """Search method."""
+    def dump(self) -> List[str]:
+        """Dump data."""
 
     @property
     @abstractmethod
@@ -35,6 +33,14 @@ class IModel(ABC):
     def name(self, name: str) -> None:
         """Set name property."""
 
+    @abstractmethod
+    def parser(self, value: str) -> None:
+        """Parser method."""
+
+    @abstractmethod
+    def search(self, name: str) -> bool:
+        """Search method."""
+
 
 class SectionModel(BData, IModel, NoDynamicAttributes):
     """SectionModel class."""
@@ -42,7 +48,25 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     def __init__(self, name: Optional[str] = None) -> None:
         """Constructor."""
         self._data["name"] = None
+        self._data["variables"]: List[VariableModel] = []
         self.parser(name)
+
+    def __repr__(self) -> str:
+        """Return representation class string."""
+        return f"{self.__class__.__name__}(name='{self.name}')"
+
+    def __str__(self) -> str:
+        """Return formated string."""
+        return f"[{self.name}]"
+
+    @property
+    def dump(self) -> List[Any]:
+        """Dump data."""
+        tmp = []
+        tmp.append(self)
+        for item in self._data["variables"]:
+            tmp.append(item)
+        return copy(tmp)
 
     def parser(self, value: str) -> None:
         """Parser method."""
@@ -61,6 +85,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
 
     def search(self, name: str) -> bool:
         """Search method."""
+        return self.name == name
 
     @property
     def name(self) -> Optional[str]:
@@ -83,6 +108,60 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         desc: Optional[str] = None,
     ) -> None:
         """Constructor."""
+        self._data["name"] = name
+        self._data["value"] = value
+        self._data["desc"] = desc
+
+    def __repr__(self) -> str:
+        """Return representation class string."""
+        tmp = ""
+        tmp += f"name='{self.name}', " if self.name else ""
+        if isinstance(self.value, (int, float)):
+            tmp += f"value={self.value}, " if self.value else ""
+        elif isinstance(self.value, (List, Tuple)):
+            tmp += f"value=[{self.value}], " if self.value else ""
+        else:
+            tmp += f"value='{self.value}', " if self.value else ""
+        tmp += f"desc='{self.desc}'" if self.desc else ""
+        return f"{self.__class__.__name__}({tmp})"
+
+    def __str__(self) -> str:
+        """Return formated string."""
+        tmp = ""
+        tmp += f"{self.name} = " if self.name else ""
+        if isinstance(self.value, (int, float)):
+            tmp += f"{self.value}" if self.value else ""
+        elif isinstance(self.value, (List, Tuple)):
+            tmp += f"[{self.value}]" if self.value else ""
+        else:
+            tmp += f'"{self.value}"' if self.value else ""
+        if tmp:
+            tmp += f" # {self.desc}" if self.desc else ""
+        else:
+            tmp += f"# {self.desc}" if self.desc else "#"
+        return tmp
+
+    @property
+    def desc(self) -> Optional[str]:
+        """Get descrption property."""
+        return self._data["desc"]
+
+    @desc.setter
+    def desc(self, desc: Optional[str]) -> None:
+        """Set description property."""
+
+    @property
+    def dump(self) -> List[Any]:
+        """Dump data."""
+
+    @property
+    def name(self) -> Optional[str]:
+        """Get name property."""
+        return self._data["name"]
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        """Set name property."""
 
     def parser(self, value: str) -> None:
         """Parser method."""
@@ -91,28 +170,13 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         """Search method."""
 
     @property
-    def name(self) -> Optional[str]:
-        """Get name property."""
-
-    @name.setter
-    def name(self, name: Optional[str]) -> None:
-        """Set name property."""
-
-    @property
     def value(self) -> Optional[Union[str, int, float, List]]:
         """Get value property."""
+        return self._data["value"]
 
     @value.setter
     def value(self, value: Optional[Union[str, int, float, List]]) -> None:
         """Set value property."""
-
-    @property
-    def desc(self) -> Optional[str]:
-        """Get descrption property."""
-
-    @name.setter
-    def desc(self, desc: Optional[str]) -> None:
-        """Set description property."""
 
 
 class DataProcessor(BData, NoDynamicAttributes):
