@@ -111,7 +111,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         """Return representation class string."""
         tmp = ""
         tmp += f"name='{self.name}', " if self.name else ""
-        if isinstance(self.value, (int, float)):
+        if isinstance(self.value, (int, float, bool)):
             tmp += f"value={self.value}, " if self.value else ""
         elif isinstance(self.value, (List, Tuple)):
             tmp += f"value=[{self.value}], " if self.value else ""
@@ -124,12 +124,12 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         """Return formated string."""
         tmp = ""
         tmp += f"{self.name} = " if self.name else ""
-        if isinstance(self.value, (int, float)):
+        if isinstance(self.value, (int, float, bool)):
             tmp += f"{self.value}" if self.value else ""
         elif isinstance(self.value, (List, Tuple)):
-            tmp += f"[{self.value}]" if self.value else ""
+            tmp += f"{self.value}" if self.value else ""
         else:
-            tmp += f'"{self.value}"' if self.value else ""
+            tmp += '"{}"'.format(self.value.strip('"')) if self.value else ""
         if tmp:
             tmp += f" # {self.desc}" if self.desc else ""
         else:
@@ -169,12 +169,14 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         return self.name == name
 
     @property
-    def value(self) -> Optional[Union[str, int, float, List]]:
+    def value(self) -> Optional[Union[str, int, float, bool, List]]:
         """Get value property."""
         return self._data[Keys.value]
 
     @value.setter
-    def value(self, value: Optional[Union[str, int, float, List]]) -> None:
+    def value(
+        self, value: Optional[Union[str, int, float, bool, List]]
+    ) -> None:
         """Set value property."""
         self._data[Keys.value] = value
 
@@ -295,17 +297,21 @@ class DataProcessor(BData, NoDynamicAttributes):
             out.append(item.name)
         return tuple(sorted(out))
 
-    def add_section(self, name: str) -> None:
-        """Add section object to dataset."""
-        if not isinstance(name, str):
-            name = str(name)
-        if name not in self.sections:
-            self._data[Keys.data].append(SectionModel(name))
+    def add_section(self, name: str) -> str:
+        """Add section object to dataset.
+
+        Return: extracted section name.
+        """
+        sm = SectionModel(str(name))
+        if sm.name not in self.sections:
+            self._data[Keys.data].append(sm)
+        return sm.name
 
     def get_section(self, name: str) -> Optional[SectionModel]:
         """Get section object if exists."""
+        sm = SectionModel(name)
         for item in self._data[Keys.data]:
-            if item.name == name:
+            if item.name == sm.name:
                 return item
         return None
 
@@ -317,16 +323,16 @@ class DataProcessor(BData, NoDynamicAttributes):
         desc: str = None,
     ) -> None:
         """Set data to [SectionModel]->[VariableModel]."""
-        if section not in self.sections:
-            self.add_section(section)
-        found_section = self.get_section(section)
+        section_name = self.add_section(section)
+        found_section = self.get_section(section_name)
         found_section.set_variable(varname, value, desc)
 
     def get(
         self, section: str, varname: str = None, desc: bool = False
     ) -> Optional[Any]:
         """Return value."""
-        if section in self.sections:
+        sm = SectionModel(section)
+        if sm.name in self.sections:
             found_section = self.get_section(section)
             if varname is not None:
                 found_var = found_section.get_variable(varname)
@@ -362,7 +368,9 @@ class DataProcessor(BData, NoDynamicAttributes):
             out += f"{found_section}\n"
             for item in found_section.variables:
                 out += f"{item}\n"
-            out += f"#####[End of section:'{found_section.name}']#####\n\n"
+            out += (
+                f"# :::::<End of section: '{found_section.name}'>:::::\n\n"
+            )
         else:
             raise Raise.error(
                 f"Section name: '{section}' not found.",

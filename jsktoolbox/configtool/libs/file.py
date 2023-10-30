@@ -66,6 +66,18 @@ class FileProcessor(BData, NoDynamicAttributes):
                 out = file.read()
         return out
 
+    def readlines(self) -> List[str]:
+        """Try to read config file and create list of strings."""
+        out: List[str] = []
+        if self.file_exists:
+            with open(self.file, "r") as file:
+                tmp = file.readlines()
+                for line in tmp:
+                    if line.find("<End of section") > 0:
+                        continue
+                    out.append(line.strip())
+        return out
+
     def write(self, data: str) -> None:
         """Try to write data to config file."""
         test = self.file_exists
