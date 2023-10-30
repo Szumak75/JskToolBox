@@ -7,7 +7,7 @@
 """
 
 from inspect import currentframe
-from typing import Dict, List, Tuple, Optional, Union, Any, TypeVar
+from typing import List, Tuple, Optional, Union, Any, TypeVar
 from abc import ABC, abstractmethod
 from copy import copy
 from jsktoolbox.attribtool import NoDynamicAttributes
