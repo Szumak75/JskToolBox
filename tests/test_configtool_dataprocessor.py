@@ -143,12 +143,12 @@ class TestDataProcessor(unittest.TestCase):
 # Second line comment.
 var01 = 1
 var02 = 2 # comment 02
-#####[End of section:'TEST']#####
+# :::::<End of section: 'TEST'>:::::
 
 [TEST2]
 var01 = 1
 var02 = 2 # comment 02
-#####[End of section:'TEST2']#####
+# :::::<End of section: 'TEST2'>:::::
 
 """
         self.dp.main_section = "TEST"
