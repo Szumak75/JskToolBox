@@ -7,12 +7,63 @@
 """
 
 from inspect import currentframe
-from typing import Dict, List, Tuple, Optional, Union, Any
+from typing import Dict, List, Tuple, Optional, Union, Any, TypeVar
 from abc import ABC, abstractmethod
 from copy import copy
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
+
+TVariableModel = TypeVar("TVariableModel", bound="VariableModel")
+
+
+class Keys(NoDynamicAttributes):
+    """Keys definition class.
+
+    For internal purpose only.
+    """
+
+    @classmethod
+    @property
+    def data(self) -> str:
+        """Return data key."""
+        return "data"
+
+    @classmethod
+    @property
+    def desc(self) -> str:
+        """Return desc key."""
+        return "desc"
+
+    @classmethod
+    @property
+    def description(self) -> str:
+        """Return description key."""
+        return "__description__"
+
+    @classmethod
+    @property
+    def main(self) -> str:
+        """Return main key."""
+        return "main"
+
+    @classmethod
+    @property
+    def name(self) -> str:
+        """Return name key."""
+        return "name"
+
+    @classmethod
+    @property
+    def value(self) -> str:
+        """Return value key."""
+        return "value"
+
+    @classmethod
+    @property
+    def variables(self) -> str:
+        """Return variables key."""
+        return "variables"
 
 
 class IModel(ABC):
@@ -20,7 +71,7 @@ class IModel(ABC):
 
     @property
     @abstractmethod
-    def dump(self) -> List[str]:
+    def dump(self) -> Union[List[str], TVariableModel]:
         """Dump data."""
 
     @property
@@ -47,8 +98,8 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
 
     def __init__(self, name: Optional[str] = None) -> None:
         """Constructor."""
-        self._data["name"] = None
-        self._data["variables"]: List[VariableModel] = []
+        self._data[Keys.name] = None
+        self._data[Keys.variables]: List[VariableModel] = []
         self.parser(name)
 
     def __repr__(self) -> str:
@@ -64,8 +115,8 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         """Dump data."""
         tmp = []
         tmp.append(self)
-        for item in self._data["variables"]:
-            tmp.append(item)
+        for item in self._data[Keys.variables]:
+            tmp.append(item.dump())
         return copy(tmp)
 
     def parser(self, value: str) -> None:
@@ -74,7 +125,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
             return
         tmp = f"{value}".strip("[] \n")
         if tmp:
-            self._data["name"] = tmp
+            self._data[Keys.name] = tmp
         else:
             raise Raise.error(
                 f"String name expected, '{tmp}' received.",
@@ -90,7 +141,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     @property
     def name(self) -> Optional[str]:
         """Get name property."""
-        return self._data["name"]
+        return self._data[Keys.name]
 
     @name.setter
     def name(self, name: str) -> None:
@@ -108,9 +159,9 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         desc: Optional[str] = None,
     ) -> None:
         """Constructor."""
-        self._data["name"] = name
-        self._data["value"] = value
-        self._data["desc"] = desc
+        self._data[Keys.name] = name
+        self._data[Keys.value] = value
+        self._data[Keys.desc] = desc
 
     def __repr__(self) -> str:
         """Return representation class string."""
@@ -144,39 +195,44 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     @property
     def desc(self) -> Optional[str]:
         """Get descrption property."""
-        return self._data["desc"]
+        return self._data[Keys.desc]
 
     @desc.setter
     def desc(self, desc: Optional[str]) -> None:
         """Set description property."""
+        self._data[Keys.desc] = desc
 
     @property
-    def dump(self) -> List[Any]:
+    def dump(self) -> TVariableModel:
         """Dump data."""
+        return self
 
     @property
     def name(self) -> Optional[str]:
         """Get name property."""
-        return self._data["name"]
+        return self._data[Keys.name]
 
     @name.setter
     def name(self, name: Optional[str]) -> None:
         """Set name property."""
+        self._data[Keys.name] = name.strip()
 
     def parser(self, value: str) -> None:
         """Parser method."""
 
     def search(self, name: str) -> bool:
         """Search method."""
+        return self.name == name
 
     @property
     def value(self) -> Optional[Union[str, int, float, List]]:
         """Get value property."""
-        return self._data["value"]
+        return self._data[Keys.value]
 
     @value.setter
     def value(self, value: Optional[Union[str, int, float, List]]) -> None:
         """Set value property."""
+        self._data[Keys.value] = value
 
 
 class DataProcessor(BData, NoDynamicAttributes):
@@ -184,35 +240,34 @@ class DataProcessor(BData, NoDynamicAttributes):
 
     def __init__(self) -> None:
         """Constructor."""
-        self._data["data"] = {}
-        self._data["desckey"] = "__description__"
+        self._data[Keys.data] = {}
 
     @property
     def main_section(self) -> Optional[str]:
         """Return main section name."""
-        if "main" not in self._data:
-            self._data["main"] = None
-        return self._data["main"]
+        if Keys.main not in self._data:
+            self._data[Keys.main] = None
+        return self._data[Keys.main]
 
     @main_section.setter
     def main_section(self, name: str) -> None:
         """Set main section name."""
         if not isinstance(name, str):
             name = str(name)
-        self._data["main"] = name
+        self._data[Keys.main] = name
         self.add_section(name)
 
     @property
     def sections(self) -> Tuple:
         """Return sections keys tuple."""
-        return tuple(sorted(self._data["data"]))
+        return tuple(sorted(self._data[Keys.data]))
 
     def add_section(self, name: str) -> None:
         """Add section key to dataset."""
         if not isinstance(name, str):
             name = str(name)
-        if name not in self._data["data"]:
-            self._data["data"][name] = []
+        if name not in self._data[Keys.data]:
+            self._data[Keys.data][name] = []
 
     def set(
         self,
@@ -225,23 +280,23 @@ class DataProcessor(BData, NoDynamicAttributes):
         if section in self.sections:
             if key is not None:
                 test = False
-                for item in self._data["data"][section]:
+                for item in self._data[Keys.data][section]:
                     if key in item:
                         item[key] = value if value is not None else ""
                         if desc is not None:
-                            item[self._data["desckey"]] = desc
+                            item[Keys.description] = desc
                         test = True
                         break
                 if not test:
-                    self._data["data"][section].append(
+                    self._data[Keys.data][section].append(
                         {
                             key: value,
-                            self._data["desckey"]: desc,
+                            Keys.description: desc,
                         }
                     )
             elif desc is not None:
-                self._data["data"][section].append(
-                    {self._data["desckey"]: desc}
+                self._data[Keys.data][section].append(
+                    {Keys.description: desc}
                 )
         else:
             raise Raise.error(
@@ -259,23 +314,20 @@ class DataProcessor(BData, NoDynamicAttributes):
             if key is not None:
                 if desc:
                     # Return description for key
-                    for item in self._data["data"][section]:
+                    for item in self._data[Keys.data][section]:
                         if key in item:
-                            return item[self._data["desckey"]]
+                            return item[Keys.description]
                 else:
                     # Return value for key
-                    for item in self._data["data"][section]:
+                    for item in self._data[Keys.data][section]:
                         if key in item:
                             return item[key]
             else:
                 # Return list of description for section
                 out = []
-                for item in self._data["data"][section]:
-                    if (
-                        len(item.keys()) == 1
-                        and self._data["desckey"] in item
-                    ):
-                        out.append(item[self._data["desckey"]])
+                for item in self._data[Keys.data][section]:
+                    if len(item.keys()) == 1 and Keys.description in item:
+                        out.append(item[Keys.description])
                 if out:
                     return out
             return None
@@ -290,22 +342,22 @@ class DataProcessor(BData, NoDynamicAttributes):
     def __dump(self, section: str) -> str:
         """Return formatted configuration data for section name."""
         out = ""
-        if section in self._data["data"]:
+        if section in self._data[Keys.data]:
             out += f"[{section}]\n"
-            for item in self._data["data"][section]:
+            for item in self._data[Keys.data][section]:
                 if len(item.keys()) == 1:
                     if (
-                        self._data["desckey"] in item
-                        and item[self._data["desckey"]] is not None
+                        Keys.description in item
+                        and item[Keys.description] is not None
                     ):
-                        out += f"# {item[self._data['desckey']]}\n"
+                        out += f"# {item[Keys.description]}\n"
                     else:
                         out += "#\n"
                 else:
                     desc = None
                     keys = []
                     for key in item.keys():
-                        if key == self._data["desckey"]:
+                        if key == Keys.description:
                             desc = item[key]
                         else:
                             keys.append(key)
