@@ -93,62 +93,6 @@ class IModel(ABC):
         """Search method."""
 
 
-class SectionModel(BData, IModel, NoDynamicAttributes):
-    """SectionModel class."""
-
-    def __init__(self, name: Optional[str] = None) -> None:
-        """Constructor."""
-        self._data[Keys.name] = None
-        self._data[Keys.variables]: List[VariableModel] = []
-        self.parser(name)
-
-    def __repr__(self) -> str:
-        """Return representation class string."""
-        return f"{self.__class__.__name__}(name='{self.name}')"
-
-    def __str__(self) -> str:
-        """Return formated string."""
-        return f"[{self.name}]"
-
-    @property
-    def dump(self) -> List[Any]:
-        """Dump data."""
-        tmp = []
-        tmp.append(self)
-        for item in self._data[Keys.variables]:
-            tmp.append(item.dump())
-        return copy(tmp)
-
-    def parser(self, value: str) -> None:
-        """Parser method."""
-        if value is None:
-            return
-        tmp = f"{value}".strip("[] \n")
-        if tmp:
-            self._data[Keys.name] = tmp
-        else:
-            raise Raise.error(
-                f"String name expected, '{tmp}' received.",
-                ValueError,
-                self.__class__.__name__,
-                currentframe(),
-            )
-
-    def search(self, name: str) -> bool:
-        """Search method."""
-        return self.name == name
-
-    @property
-    def name(self) -> Optional[str]:
-        """Get name property."""
-        return self._data[Keys.name]
-
-    @name.setter
-    def name(self, name: str) -> None:
-        """Set name property."""
-        self.parser(name)
-
-
 class VariableModel(BData, IModel, NoDynamicAttributes):
     """VariableModel class."""
 
@@ -235,12 +179,98 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         self._data[Keys.value] = value
 
 
+class SectionModel(BData, IModel, NoDynamicAttributes):
+    """SectionModel class."""
+
+    def __init__(self, name: Optional[str] = None) -> None:
+        """Constructor."""
+        self._data[Keys.name] = None
+        self._data[Keys.variables]: List[VariableModel] = []
+        self.parser(name)
+
+    def __repr__(self) -> str:
+        """Return representation class string."""
+        return f"{self.__class__.__name__}(name='{self.name}')"
+
+    def __str__(self) -> str:
+        """Return formated string."""
+        return f"[{self.name}]"
+
+    @property
+    def dump(self) -> List[Any]:
+        """Dump data."""
+        tmp = []
+        tmp.append(self)
+        for item in self._data[Keys.variables]:
+            tmp.append(item.dump())
+        return copy(tmp)
+
+    def parser(self, value: str) -> None:
+        """Parser method."""
+        if value is None:
+            return
+        tmp = f"{value}".strip("[] \n")
+        if tmp:
+            self._data[Keys.name] = tmp
+        else:
+            raise Raise.error(
+                f"String name expected, '{tmp}' received.",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    def search(self, name: str) -> bool:
+        """Search method."""
+        return self.name == name
+
+    @property
+    def name(self) -> Optional[str]:
+        """Get name property."""
+        return self._data[Keys.name]
+
+    @name.setter
+    def name(self, name: str) -> None:
+        """Set name property."""
+        self.parser(name)
+
+    def get_variable(self, name: str) -> Optional[VariableModel]:
+        """Search and return VariableModel if exists."""
+        name = str(name)
+        for item in self._data[Keys.variables]:
+            if item.name == name:
+                return item
+        return None
+
+    def set_variable(
+        self,
+        name: Optional[str] = None,
+        value: Optional[Any] = None,
+        desc: Optional[str] = None,
+    ) -> None:
+        """Add or update VariableModel."""
+        if name is not None:
+            item: VariableModel = self.get_variable(name)
+            if item is not None:
+                item.name = name
+                item.value = value
+                item.desc = desc
+                return
+        # add new VariableModel
+        self._data[Keys.variables].append(VariableModel(name, value, desc))
+
+    @property
+    def variables(self) -> List[VariableModel]:
+        """Return list of VariableModel."""
+        return self._data[Keys.variables]
+
+
 class DataProcessor(BData, NoDynamicAttributes):
     """DataProcessor class."""
 
     def __init__(self) -> None:
         """Constructor."""
-        self._data[Keys.data] = {}
+        self._data[Keys.data] = []
 
     @property
     def main_section(self) -> Optional[str]:
@@ -260,77 +290,62 @@ class DataProcessor(BData, NoDynamicAttributes):
     @property
     def sections(self) -> Tuple:
         """Return sections keys tuple."""
-        return tuple(sorted(self._data[Keys.data]))
+        out = []
+        for item in self._data[Keys.data]:
+            out.append(item.name)
+        return tuple(sorted(out))
 
     def add_section(self, name: str) -> None:
-        """Add section key to dataset."""
+        """Add section object to dataset."""
         if not isinstance(name, str):
             name = str(name)
-        if name not in self._data[Keys.data]:
-            self._data[Keys.data][name] = []
+        if name not in self.sections:
+            self._data[Keys.data].append(SectionModel(name))
+
+    def get_section(self, name: str) -> Optional[SectionModel]:
+        """Get section object if exists."""
+        for item in self._data[Keys.data]:
+            if item.name == name:
+                return item
+        return None
 
     def set(
         self,
         section: str,
-        key: str = None,
+        varname: str = None,
         value: Any = None,
         desc: str = None,
     ) -> None:
-        """Set data to [section]->[key]."""
-        if section in self.sections:
-            if key is not None:
-                test = False
-                for item in self._data[Keys.data][section]:
-                    if key in item:
-                        item[key] = value if value is not None else ""
-                        if desc is not None:
-                            item[Keys.description] = desc
-                        test = True
-                        break
-                if not test:
-                    self._data[Keys.data][section].append(
-                        {
-                            key: value,
-                            Keys.description: desc,
-                        }
-                    )
-            elif desc is not None:
-                self._data[Keys.data][section].append(
-                    {Keys.description: desc}
-                )
-        else:
-            raise Raise.error(
-                f"Given section name: '{section}' not found.",
-                KeyError,
-                self.__class__.__name__,
-                currentframe(),
-            )
+        """Set data to [SectionModel]->[VariableModel]."""
+        if section not in self.sections:
+            self.add_section(section)
+        found_section = self.get_section(section)
+        found_section.set_variable(varname, value, desc)
 
     def get(
-        self, section: str, key: str = None, desc: bool = False
+        self, section: str, varname: str = None, desc: bool = False
     ) -> Optional[Any]:
         """Return value."""
         if section in self.sections:
-            if key is not None:
-                if desc:
-                    # Return description for key
-                    for item in self._data[Keys.data][section]:
-                        if key in item:
-                            return item[Keys.description]
+            found_section = self.get_section(section)
+            if varname is not None:
+                found_var = found_section.get_variable(varname)
+                if found_var is not None:
+                    if desc:
+                        # Return description for varname
+                        return found_var.desc
+                    else:
+                        # Return value for varname
+                        return found_var.value
                 else:
-                    # Return value for key
-                    for item in self._data[Keys.data][section]:
-                        if key in item:
-                            return item[key]
+                    return None
             else:
-                # Return list of description for section
+                # Return list od description for section
                 out = []
-                for item in self._data[Keys.data][section]:
-                    if len(item.keys()) == 1 and Keys.description in item:
-                        out.append(item[Keys.description])
-                if out:
-                    return out
-            return None
+                for item in found_section.variables:
+                    if item.name is None and item.desc is not None:
+                        out.append(item.desc)
+                return out
         else:
             raise Raise.error(
                 f"Given section name: '{section}' not found.",
@@ -342,31 +357,12 @@ class DataProcessor(BData, NoDynamicAttributes):
     def __dump(self, section: str) -> str:
         """Return formatted configuration data for section name."""
         out = ""
-        if section in self._data[Keys.data]:
-            out += f"[{section}]\n"
-            for item in self._data[Keys.data][section]:
-                if len(item.keys()) == 1:
-                    if (
-                        Keys.description in item
-                        and item[Keys.description] is not None
-                    ):
-                        out += f"# {item[Keys.description]}\n"
-                    else:
-                        out += "#\n"
-                else:
-                    desc = None
-                    keys = []
-                    for key in item.keys():
-                        if key == Keys.description:
-                            desc = item[key]
-                        else:
-                            keys.append(key)
-                    for key in keys:
-                        out += f"{key}={item[key]}"
-                    if desc:
-                        out += f" # {desc}"
-                    out += "\n"
-            out += "\n"
+        if section in self.sections:
+            found_section = self.get_section(section)
+            out += f"{found_section}\n"
+            for item in found_section.variables:
+                out += f"{item}\n"
+            out += f"#####[End of section:'{found_section.name}']#####\n\n"
         else:
             raise Raise.error(
                 f"Section name: '{section}' not found.",
