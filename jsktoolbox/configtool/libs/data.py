@@ -41,7 +41,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
 
     def __init__(self, name: Optional[str] = None) -> None:
         """Constructor."""
-        self.data["name"] = None
+        self._data["name"] = None
         self.parser(name)
 
     def parser(self, value: str) -> None:
@@ -50,7 +50,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
             return
         tmp = f"{value}".strip("[] \n")
         if tmp:
-            self.data["name"] = tmp
+            self._data["name"] = tmp
         else:
             raise Raise.error(
                 f"String name expected, '{tmp}' received.",
@@ -65,7 +65,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     @property
     def name(self) -> Optional[str]:
         """Get name property."""
-        return self.data["name"]
+        return self._data["name"]
 
     @name.setter
     def name(self, name: str) -> None:
@@ -120,35 +120,35 @@ class DataProcessor(BData, NoDynamicAttributes):
 
     def __init__(self) -> None:
         """Constructor."""
-        self.data["data"] = {}
-        self.data["desckey"] = "__description__"
+        self._data["data"] = {}
+        self._data["desckey"] = "__description__"
 
     @property
     def main_section(self) -> Optional[str]:
         """Return main section name."""
-        if "main" not in self.data:
-            self.data["main"] = None
-        return self.data["main"]
+        if "main" not in self._data:
+            self._data["main"] = None
+        return self._data["main"]
 
     @main_section.setter
     def main_section(self, name: str) -> None:
         """Set main section name."""
         if not isinstance(name, str):
             name = str(name)
-        self.data["main"] = name
+        self._data["main"] = name
         self.add_section(name)
 
     @property
     def sections(self) -> Tuple:
         """Return sections keys tuple."""
-        return tuple(sorted(self.data["data"]))
+        return tuple(sorted(self._data["data"]))
 
     def add_section(self, name: str) -> None:
         """Add section key to dataset."""
         if not isinstance(name, str):
             name = str(name)
-        if name not in self.data["data"]:
-            self.data["data"][name] = []
+        if name not in self._data["data"]:
+            self._data["data"][name] = []
 
     def set(
         self,
@@ -161,23 +161,23 @@ class DataProcessor(BData, NoDynamicAttributes):
         if section in self.sections:
             if key is not None:
                 test = False
-                for item in self.data["data"][section]:
+                for item in self._data["data"][section]:
                     if key in item:
                         item[key] = value if value is not None else ""
                         if desc is not None:
-                            item[self.data["desckey"]] = desc
+                            item[self._data["desckey"]] = desc
                         test = True
                         break
                 if not test:
-                    self.data["data"][section].append(
+                    self._data["data"][section].append(
                         {
                             key: value,
-                            self.data["desckey"]: desc,
+                            self._data["desckey"]: desc,
                         }
                     )
             elif desc is not None:
-                self.data["data"][section].append(
-                    {self.data["desckey"]: desc}
+                self._data["data"][section].append(
+                    {self._data["desckey"]: desc}
                 )
         else:
             raise Raise.error(
@@ -195,23 +195,23 @@ class DataProcessor(BData, NoDynamicAttributes):
             if key is not None:
                 if desc:
                     # Return description for key
-                    for item in self.data["data"][section]:
+                    for item in self._data["data"][section]:
                         if key in item:
-                            return item[self.data["desckey"]]
+                            return item[self._data["desckey"]]
                 else:
                     # Return value for key
-                    for item in self.data["data"][section]:
+                    for item in self._data["data"][section]:
                         if key in item:
                             return item[key]
             else:
                 # Return list of description for section
                 out = []
-                for item in self.data["data"][section]:
+                for item in self._data["data"][section]:
                     if (
                         len(item.keys()) == 1
-                        and self.data["desckey"] in item
+                        and self._data["desckey"] in item
                     ):
-                        out.append(item[self.data["desckey"]])
+                        out.append(item[self._data["desckey"]])
                 if out:
                     return out
             return None
@@ -226,22 +226,22 @@ class DataProcessor(BData, NoDynamicAttributes):
     def __dump(self, section: str) -> str:
         """Return formatted configuration data for section name."""
         out = ""
-        if section in self.data["data"]:
+        if section in self._data["data"]:
             out += f"[{section}]\n"
-            for item in self.data["data"][section]:
+            for item in self._data["data"][section]:
                 if len(item.keys()) == 1:
                     if (
-                        self.data["desckey"] in item
-                        and item[self.data["desckey"]] is not None
+                        self._data["desckey"] in item
+                        and item[self._data["desckey"]] is not None
                     ):
-                        out += f"# {item[self.data['desckey']]}\n"
+                        out += f"# {item[self._data['desckey']]}\n"
                     else:
                         out += "#\n"
                 else:
                     desc = None
                     keys = []
                     for key in item.keys():
-                        if key == self.data["desckey"]:
+                        if key == self._data["desckey"]:
                             desc = item[key]
                         else:
                             keys.append(key)

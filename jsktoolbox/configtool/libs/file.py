@@ -25,28 +25,30 @@ class FileProcessor(BData, NoDynamicAttributes):
     @property
     def file(self) -> Optional[str]:
         """Return config file path."""
-        if "file" not in self.data:
-            self.data["file"] = None
-        if isinstance(self.data["file"], PathChecker):
-            return self.data["file"].path
-        return self.data["file"]
+        if "file" not in self._data:
+            self._data["file"] = None
+        if isinstance(self._data["file"], PathChecker):
+            return self._data["file"].path
+        return self._data["file"]
 
     @file.setter
     def file(self, path: str) -> None:
         """Set file name."""
-        self.data["file"] = PathChecker(path)
+        self._data["file"] = PathChecker(path)
 
     @property
     def file_exists(self) -> bool:
         """Check if the file exists and is a file."""
-        obj: PathChecker = self.data["file"]
-        return obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
+        obj: PathChecker = self._data["file"]
+        return (
+            obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
+        )
 
     def file_create(self) -> bool:
         """Try to create file."""
         if self.file_exists:
             return True
-        obj: PathChecker = self.data["file"]
+        obj: PathChecker = self._data["file"]
         if obj.exists and obj.is_dir:
             raise Raise.error(
                 f"Given path: {obj.path} exists and is a directory.",
