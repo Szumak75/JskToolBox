@@ -21,20 +21,20 @@ class Config(BData, NoDynamicAttributes):
 
     def __init__(self, filename: str, main_section_name: str) -> None:
         """Constructor."""
-        self.data["fp"] = FileProcessor()
-        self.data["dp"] = DataProcessor()
+        self._data["fp"] = FileProcessor()
+        self._data["dp"] = DataProcessor()
         self.__fp.file = filename
         self.__dp.main_section = main_section_name
 
     @property
     def __fp(self) -> FileProcessor:
         """Return FileProcessor object."""
-        return self.data["fp"]
+        return self._data["fp"]
 
     @property
     def __dp(self) -> DataProcessor:
         """Return DataProcessor object."""
-        return self.data["dp"]
+        return self._data["dp"]
 
 
 # #[EOF]#######################################################################
