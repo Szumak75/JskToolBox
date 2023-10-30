@@ -8,9 +8,111 @@
 
 from inspect import currentframe
 from typing import Dict, List, Tuple, Optional, Union, Any
+from abc import ABC, abstractmethod
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
+
+
+class IModel(ABC):
+    """Model class interface."""
+
+    @abstractmethod
+    def parser(self, value: str) -> None:
+        """Parser method."""
+
+    @abstractmethod
+    def search(self, name: str) -> bool:
+        """Search method."""
+
+    @property
+    @abstractmethod
+    def name(self) -> Optional[str]:
+        """Get name property."""
+
+    @name.setter
+    @abstractmethod
+    def name(self, name: str) -> None:
+        """Set name property."""
+
+
+class SectionModel(BData, IModel, NoDynamicAttributes):
+    """SectionModel class."""
+
+    def __init__(self, name: Optional[str] = None) -> None:
+        """Constructor."""
+        self.data["name"] = None
+        self.parser(name)
+
+    def parser(self, value: str) -> None:
+        """Parser method."""
+        if value is None:
+            return
+        tmp = f"{value}".strip("[] \n")
+        if tmp:
+            self.data["name"] = tmp
+        else:
+            raise Raise.error(
+                f"String name expected, '{tmp}' received.",
+                ValueError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+
+    def search(self, name: str) -> bool:
+        """Search method."""
+
+    @property
+    def name(self) -> Optional[str]:
+        """Get name property."""
+        return self.data["name"]
+
+    @name.setter
+    def name(self, name: str) -> None:
+        """Set name property."""
+        self.parser(name)
+
+
+class VariableModel(BData, IModel, NoDynamicAttributes):
+    """VariableModel class."""
+
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        value: Optional[Union[str, int, float, List]] = None,
+        desc: Optional[str] = None,
+    ) -> None:
+        """Constructor."""
+
+    def parser(self, value: str) -> None:
+        """Parser method."""
+
+    def search(self, name: str) -> bool:
+        """Search method."""
+
+    @property
+    def name(self) -> Optional[str]:
+        """Get name property."""
+
+    @name.setter
+    def name(self, name: Optional[str]) -> None:
+        """Set name property."""
+
+    @property
+    def value(self) -> Optional[Union[str, int, float, List]]:
+        """Get value property."""
+
+    @value.setter
+    def value(self, value: Optional[Union[str, int, float, List]]) -> None:
+        """Set value property."""
+
+    @property
+    def desc(self) -> Optional[str]:
+        """Get descrption property."""
+
+    @name.setter
+    def desc(self, desc: Optional[str]) -> None:
+        """Set description property."""
 
 
 class DataProcessor(BData, NoDynamicAttributes):
@@ -49,7 +151,11 @@ class DataProcessor(BData, NoDynamicAttributes):
             self.data["data"][name] = []
 
     def set(
-        self, section: str, key: str = None, value: Any = None, desc: str = None
+        self,
+        section: str,
+        key: str = None,
+        value: Any = None,
+        desc: str = None,
     ) -> None:
         """Set data to [section]->[key]."""
         if section in self.sections:
@@ -70,7 +176,9 @@ class DataProcessor(BData, NoDynamicAttributes):
                         }
                     )
             elif desc is not None:
-                self.data["data"][section].append({self.data["desckey"]: desc})
+                self.data["data"][section].append(
+                    {self.data["desckey"]: desc}
+                )
         else:
             raise Raise.error(
                 f"Given section name: '{section}' not found.",
@@ -79,7 +187,9 @@ class DataProcessor(BData, NoDynamicAttributes):
                 currentframe(),
             )
 
-    def get(self, section: str, key: str = None, desc: bool = False) -> Optional[Any]:
+    def get(
+        self, section: str, key: str = None, desc: bool = False
+    ) -> Optional[Any]:
         """Return value."""
         if section in self.sections:
             if key is not None:
@@ -97,7 +207,10 @@ class DataProcessor(BData, NoDynamicAttributes):
                 # Return list of description for section
                 out = []
                 for item in self.data["data"][section]:
-                    if len(item.keys()) == 1 and self.data["desckey"] in item:
+                    if (
+                        len(item.keys()) == 1
+                        and self.data["desckey"] in item
+                    ):
                         out.append(item[self.data["desckey"]])
                 if out:
                     return out
