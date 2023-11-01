@@ -7,6 +7,7 @@
 """
 
 import unittest
+from typing import List
 from jsktoolbox.configtool.main import Config
 from jsktoolbox.configtool.libs.file import FileProcessor
 
@@ -64,6 +65,66 @@ label=
             self.assertTrue(obj.load())
             # save config
             self.assertTrue(obj.save())
+        except Exception as ex:
+            self.fail(msg=f"{ex}")
+
+    def test_03_save_and_read_check_types(self):
+        """Test nr 03."""
+        filename = "/tmp/test.ini"
+        main_section = "TEST"
+
+        # create config
+        try:
+            obj = Config(filename, main_section, auto_create=True)
+            obj.set(
+                main_section,
+                varname="test01",
+                value="test",
+                desc="Set string data",
+            )
+            obj.set(
+                main_section,
+                varname="test02",
+                value=123,
+                desc="Set integer data",
+            )
+            obj.set(
+                main_section,
+                varname="test03",
+                value=3.14,
+                desc="Set float data",
+            )
+            obj.set(
+                main_section,
+                varname="test04",
+                value=["a", 13, 45.18, True],
+                desc="Set List data",
+            )
+            obj.set(
+                main_section,
+                varname="test05",
+                value=False,
+                desc="Set boolean data",
+            )
+            self.assertTrue(obj.save())
+        except Exception as ex:
+            self.fail(msg=f"{ex}")
+
+        # get config
+        try:
+            obj = Config(filename, main_section)
+            self.assertTrue(obj.load())
+            test = obj.get(main_section, varname="test01")
+            self.assertIsInstance(test, str)
+            test = obj.get(main_section, varname="test02")
+            self.assertIsInstance(test, int)
+            test = obj.get(main_section, varname="test03")
+            self.assertIsInstance(test, float)
+            test = obj.get(main_section, varname="test04")
+            self.assertIsInstance(test, List)
+            test = obj.get(main_section, varname="test05")
+            self.assertIsInstance(test, bool)
+
         except Exception as ex:
             self.fail(msg=f"{ex}")
 

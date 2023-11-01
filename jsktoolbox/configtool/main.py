@@ -208,5 +208,21 @@ class Config(BData, NoDynamicAttributes):
         test = True
         return test
 
+    def get(
+        self, section: str, varname: Optional[str] = None, desc: bool = False
+    ) -> Any:
+        """Get and return data."""
+        return self.__dp.get(section, varname, desc)
+
+    def set(
+        self,
+        section: str,
+        varname: Optional[str] = None,
+        value: Optional[Any] = None,
+        desc: Optional[str] = None,
+    ) -> None:
+        """Set data."""
+        self.__dp.set(section, varname, value, desc)
+
 
 # #[EOF]#######################################################################

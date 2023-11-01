@@ -99,7 +99,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     def __init__(
         self,
         name: Optional[str] = None,
-        value: Optional[Union[str, int, float, List]] = None,
+        value: Optional[Union[str, int, float, bool, List]] = None,
         desc: Optional[str] = None,
     ) -> None:
         """Constructor."""
@@ -110,30 +110,38 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     def __repr__(self) -> str:
         """Return representation class string."""
         tmp = ""
-        tmp += f"name='{self.name}', " if self.name else ""
+        tmp += f"name='{self.name}', " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
-            tmp += f"value={self.value}, " if self.value else ""
+            tmp += f"value={self.value}, " if self.value is not None else ""
         elif isinstance(self.value, (List, Tuple)):
-            tmp += f"value=[{self.value}], " if self.value else ""
+            tmp += (
+                f"value=[{self.value}], " if self.value is not None else ""
+            )
         else:
-            tmp += f"value='{self.value}', " if self.value else ""
-        tmp += f"desc='{self.desc}'" if self.desc else ""
+            tmp += (
+                f"value='{self.value}', " if self.value is not None else ""
+            )
+        tmp += f"desc='{self.desc}'" if self.desc is not None else ""
         return f"{self.__class__.__name__}({tmp})"
 
     def __str__(self) -> str:
         """Return formated string."""
         tmp = ""
-        tmp += f"{self.name} = " if self.name else ""
+        tmp += f"{self.name} = " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
-            tmp += f"{self.value}" if self.value else ""
+            tmp += f"{self.value}" if self.value is not None else ""
         elif isinstance(self.value, (List, Tuple)):
-            tmp += f"{self.value}" if self.value else ""
+            tmp += f"{self.value}" if self.value is not None else ""
         else:
-            tmp += '"{}"'.format(self.value.strip('"')) if self.value else ""
+            tmp += (
+                '"{}"'.format(self.value.strip("\"'"))
+                if self.value is not None
+                else ""
+            )
         if tmp:
-            tmp += f" # {self.desc}" if self.desc else ""
+            tmp += f" # {self.desc}" if self.desc is not None else ""
         else:
-            tmp += f"# {self.desc}" if self.desc else "#"
+            tmp += f"# {self.desc}" if self.desc is not None else "#"
         return tmp
 
     @property
@@ -318,9 +326,9 @@ class DataProcessor(BData, NoDynamicAttributes):
     def set(
         self,
         section: str,
-        varname: str = None,
-        value: Any = None,
-        desc: str = None,
+        varname: Optional[str] = None,
+        value: Optional[Any] = None,
+        desc: Optional[str] = None,
     ) -> None:
         """Set data to [SectionModel]->[VariableModel]."""
         section_name = self.add_section(section)
@@ -328,7 +336,7 @@ class DataProcessor(BData, NoDynamicAttributes):
         found_section.set_variable(varname, value, desc)
 
     def get(
-        self, section: str, varname: str = None, desc: bool = False
+        self, section: str, varname: Optional[str] = None, desc: bool = False
     ) -> Optional[Any]:
         """Return value."""
         sm = SectionModel(section)
