@@ -26,6 +26,24 @@ class Keys(NoDynamicAttributes):
 
     @classmethod
     @property
+    def VARNAME(self) -> str:
+        """Return FP key."""
+        return "__varname__"
+
+    @classmethod
+    @property
+    def VALUE(self) -> str:
+        """Return FP key."""
+        return "__value__"
+
+    @classmethod
+    @property
+    def DESC(self) -> str:
+        """Return FP key."""
+        return "__desc__"
+
+    @classmethod
+    @property
     def FP(self) -> str:
         """Return FP key."""
         return "__file_processor__"
@@ -155,9 +173,9 @@ class Config(BData, NoDynamicAttributes):
     def __var_parser(self, line: str) -> Dict:
         """Return Dict[varname, value, desc]."""
         out = {
-            "varname": None,
-            "value": None,
-            "desc": None,
+            Keys.VARNAME: None,
+            Keys.VALUE: None,
+            Keys.DESC: None,
         }
         tmp = line.split("=", 1)
         if len(tmp) != 2:
@@ -167,14 +185,14 @@ class Config(BData, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        out["varname"] = tmp[0].strip()
+        out[Keys.VARNAME] = tmp[0].strip()
         if len(tmp[1]) > 0:
             tmp = tmp[1].split("#", 1)
             # desc
             if len(tmp) == 2 and len(tmp[1]) > 0:
-                out["desc"] = tmp[1].strip()
+                out[Keys.DESC] = tmp[1].strip()
             # value
-            out["value"] = self.__value_parser(tmp[0].strip())
+            out[Keys.VALUE] = self.__value_parser(tmp[0].strip())
 
         return out
 
@@ -196,9 +214,9 @@ class Config(BData, NoDynamicAttributes):
                 out = self.__var_parser(line)
                 self.__dp.set(
                     section=section_name,
-                    varname=out["varname"],
-                    value=out["value"],
-                    desc=out["desc"],
+                    varname=out[Keys.VARNAME],
+                    value=out[Keys.VALUE],
+                    desc=out[Keys.DESC],
                 )
             else:
                 self.__dp.set(section_name, desc=line)
