@@ -145,8 +145,12 @@ class Config(BData, NoDynamicAttributes):
         elif self._data[Keys.RE_FLOAT].match(item):
             return float(item)
         elif self._data[Keys.RE_LIST].match(item):
-            return [x.strip() for x in item.strip("[]").split(",")]
-        return item
+            out = []
+            tmp = [x.strip() for x in item.strip("[]").split(",")]
+            for item in tmp:
+                out.append(self.__value_parser(item))
+            return out
+        return str(item.strip("\"'"))
 
     def __var_parser(self, line: str) -> Dict:
         """Return Dict[varname, value, desc]."""

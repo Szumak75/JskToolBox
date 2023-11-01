@@ -113,7 +113,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         tmp += f"name='{self.name}', " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
             tmp += f"value={self.value}, " if self.value is not None else ""
-        elif isinstance(self.value, (List, Tuple)):
+        elif isinstance(self.value, List):
             tmp += (
                 f"value=[{self.value}], " if self.value is not None else ""
             )
@@ -130,7 +130,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         tmp += f"{self.name} = " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
             tmp += f"{self.value}" if self.value is not None else ""
-        elif isinstance(self.value, (List, Tuple)):
+        elif isinstance(self.value, List):
             tmp += f"{self.value}" if self.value is not None else ""
         else:
             tmp += (

@@ -115,15 +115,27 @@ label=
             obj = Config(filename, main_section)
             self.assertTrue(obj.load())
             test = obj.get(main_section, varname="test01")
-            self.assertIsInstance(test, str)
+            self.assertIsInstance(test, str, msg=f"get:{test}")
+            self.assertTrue(test == "test", msg=f"get:{test}")
             test = obj.get(main_section, varname="test02")
-            self.assertIsInstance(test, int)
+            self.assertIsInstance(test, int, msg=f"get:{test}")
+            self.assertTrue(test == 123, msg=f"get:{test}")
             test = obj.get(main_section, varname="test03")
-            self.assertIsInstance(test, float)
+            self.assertIsInstance(test, float, msg=f"get:{test}")
+            self.assertTrue(test == 3.14, msg=f"get:{test}")
             test = obj.get(main_section, varname="test04")
-            self.assertIsInstance(test, List)
+            self.assertIsInstance(test, List, msg=f"get:{test}")
+            # check list contents
+            self.assertIsInstance(test[0], str, msg=f"get:{test[0]}")
+            self.assertIsInstance(test[1], int, msg=f"get:{test[1]}")
+            self.assertIsInstance(test[2], float, msg=f"get:{test[2]}")
+            self.assertIsInstance(test[3], bool, msg=f"get:{test[3]}")
+            self.assertTrue(
+                test == ["a", 13, 45.18, True], msg=f"get:{test}"
+            )
             test = obj.get(main_section, varname="test05")
-            self.assertIsInstance(test, bool)
+            self.assertIsInstance(test, bool, msg=f"get:{test}")
+            self.assertTrue(test == False)
 
         except Exception as ex:
             self.fail(msg=f"{ex}")
