@@ -6,11 +6,9 @@
   Purpose: Main class for creating and processes config files.
 """
 
-import os
-import sys
 import re
 from inspect import currentframe
-from typing import List, Dict, Tuple, Optional, Union, Any
+from typing import List, Dict, Optional, Any
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
