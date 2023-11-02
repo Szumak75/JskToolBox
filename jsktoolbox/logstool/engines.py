@@ -16,6 +16,7 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.libs.system import Env, PathChecker
+from jsktoolbox.logstool.formatters import BLogFormatter
 
 # https://www.geeksforgeeks.org/python-testing-output-to-stdout/
 
@@ -44,6 +45,18 @@ class Keys(NoDynamicAttributes):
         """Return FILE Key."""
         return "__file__"
 
+    @classmethod
+    @property
+    def FORMATTER(cls) -> str:
+        """Return FORMATTER Key."""
+        return "__formatter__"
+
+    @classmethod
+    @property
+    def NAME(cls) -> str:
+        """Return NAME Key."""
+        return "__name__"
+
 
 class ILoggerEngine(ABC):
     """Logger engine interface class."""
@@ -53,15 +66,53 @@ class ILoggerEngine(ABC):
         """Send message method."""
 
 
-class LoggerEngineStdout(ILoggerEngine, BData, NoDynamicAttributes):
+class BLoggerEngine(BData, NoDynamicAttributes):
+    """"""
+
+    @property
+    def name(self) -> Optional[str]:
+        """Return app name string."""
+        if Keys.NAME not in self._data:
+            self._data[Keys.NAME] = None
+        return self._data[Keys.NAME]
+
+    @name.setter
+    def name(self, value: str) -> None:
+        """Set app name string."""
+        self._data[Keys.NAME] = value
+
+
+class LoggerEngineStdout(
+    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
+):
     """STDOUT Logger engine."""
 
-    def __init__(self, buffered: bool = False) -> None:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        formatter: Optional[BLogFormatter] = None,
+        buffered: bool = False,
+    ) -> None:
         """Constructor."""
+        if name is not None:
+            self.name = name
         self._data[Keys.BUFFERED] = buffered
+        self._data[Keys.FORMATTER] = None
+        if formatter is not None:
+            if isinstance(formatter, BLogFormatter):
+                self._data[Keys.FORMATTER] = formatter
+            else:
+                raise Raise.error(
+                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    TypeError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
 
     def send(self, message: str) -> None:
         """Send message to STDOUT."""
+        if self._data[Keys.FORMATTER]:
+            message = self._data[Keys.FORMATTER].format(message, self.name)
         sys.stdout.write(f"{message}")
         if not f"{message}".endswith("\n"):
             sys.stdout.write("\n")
@@ -69,15 +120,37 @@ class LoggerEngineStdout(ILoggerEngine, BData, NoDynamicAttributes):
             sys.stdout.flush()
 
 
-class LoggerEngineStderr(ILoggerEngine, BData, NoDynamicAttributes):
+class LoggerEngineStderr(
+    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
+):
     """STDERR Logger engine."""
 
-    def __init__(self, buffered: bool = False) -> None:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        formatter: Optional[BLogFormatter] = None,
+        buffered: bool = False,
+    ) -> None:
         """Constructor."""
+        if name is not None:
+            self.name = name
         self._data[Keys.BUFFERED] = buffered
+        self._data[Keys.FORMATTER] = None
+        if formatter is not None:
+            if isinstance(formatter, BLogFormatter):
+                self._data[Keys.FORMATTER] = formatter
+            else:
+                raise Raise.error(
+                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    TypeError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
 
     def send(self, message: str) -> None:
         """Send message to STDERR."""
+        if self._data[Keys.FORMATTER]:
+            message = self._data[Keys.FORMATTER].format(message, self.name)
         sys.stderr.write(f"{message}")
         if not f"{message}".endswith("\n"):
             sys.stderr.write("\n")
@@ -85,15 +158,37 @@ class LoggerEngineStderr(ILoggerEngine, BData, NoDynamicAttributes):
             sys.stderr.flush()
 
 
-class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
+class LoggerEngineFile(
+    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
+):
     """FILE Logger engine."""
 
-    def __init__(self, buffered: bool = False) -> None:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        formatter: Optional[BLogFormatter] = None,
+        buffered: bool = False,
+    ) -> None:
         """Constructor."""
+        if name is not None:
+            self.name = name
         self._data[Keys.BUFFERED] = buffered
+        self._data[Keys.FORMATTER] = None
+        if formatter is not None:
+            if isinstance(formatter, BLogFormatter):
+                self._data[Keys.FORMATTER] = formatter
+            else:
+                raise Raise.error(
+                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    TypeError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
 
     def send(self, message: str) -> None:
         """Send message to file."""
+        if self._data[Keys.FORMATTER]:
+            message = self._data[Keys.FORMATTER].format(message, self.name)
 
     @property
     def logdir(self) -> Optional[str]:
@@ -150,15 +245,37 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
         self._data[Keys.FILE] = ld.filename
 
 
-class LoggerEngineSyslog(ILoggerEngine, BData, NoDynamicAttributes):
+class LoggerEngineSyslog(
+    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
+):
     """SYSLOG Logger engine."""
 
-    def __init__(self, buffered: bool = False) -> None:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        formatter: Optional[BLogFormatter] = None,
+        buffered: bool = False,
+    ) -> None:
         """Constructor."""
+        if name is not None:
+            self.name = name
         self._data[Keys.BUFFERED] = buffered
+        self._data[Keys.FORMATTER] = None
+        if formatter is not None:
+            if isinstance(formatter, BLogFormatter):
+                self._data[Keys.FORMATTER] = formatter
+            else:
+                raise Raise.error(
+                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    TypeError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
 
     def send(self, message: str) -> None:
         """Send message to SYSLOG."""
+        if self._data[Keys.FORMATTER]:
+            message = self._data[Keys.FORMATTER].format(message, self.name)
 
 
 # #[EOF]#######################################################################
