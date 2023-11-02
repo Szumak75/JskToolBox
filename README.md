@@ -8,11 +8,11 @@ The project contains base classes that limit the possibility of adding new attri
 
 [AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md)
 
-## RaiseTool
+## ConfigTool
 
-The project contains small class for formatting thrown exception messages.
+The project contains classes that enable common operations on configuration files.
 
-[RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/RaiseTool.md)
+[ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md)
 
 ## NetAddressTool
 
@@ -20,8 +20,15 @@ The project contains sets of base classes for operations on IPv4 and IPv6 addres
 
 [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)
 
+## RaiseTool
+
+The project contains small class for formatting thrown exception messages.
+
+[RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/RaiseTool.md)
+
 ## StringTool
 
 The project contains sets of classes for various operations on string.
 
 [StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md)
+
