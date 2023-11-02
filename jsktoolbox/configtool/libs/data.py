@@ -262,11 +262,14 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         if name is not None:
             item: VariableModel = self.get_variable(name)
             if item is not None:
-                item.name = name
-                item.value = value
-                item.desc = desc
+                if value is not None or (value is None and desc is None):
+                    item.value = value
+                if desc is not None or (desc is None and value is None):
+                    item.desc = desc
                 return
         # add new VariableModel
+        if name is None and value is not None:
+            return
         self._data[Keys.VARIABLES].append(VariableModel(name, value, desc))
 
     @property
