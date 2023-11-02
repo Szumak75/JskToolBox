@@ -8,6 +8,7 @@
 
 import os
 import sys
+import syslog
 from abc import ABC, abstractmethod
 from inspect import currentframe
 
@@ -53,9 +54,179 @@ class Keys(NoDynamicAttributes):
 
     @classmethod
     @property
+    def FACILITY(cls) -> str:
+        """Return FACILITY Key."""
+        return "__facility__"
+
+    @classmethod
+    @property
+    def LEVEL(cls) -> str:
+        """Return LEVEL Key."""
+        return "__level__"
+
+    @classmethod
+    @property
     def NAME(cls) -> str:
         """Return NAME Key."""
         return "__name__"
+
+    @classmethod
+    @property
+    def SYSLOG(cls) -> str:
+        """Return SYSLOG Key."""
+        return "__syslog__"
+
+
+class SysLogKeys(NoDynamicAttributes):
+    """SysLog keys definition container class."""
+
+    class __Levels(NoDynamicAttributes):
+        @classmethod
+        @property
+        def NOTICE(cls) -> int:
+            return syslog.LOG_NOTICE
+
+        @classmethod
+        @property
+        def EMERGENCY(cls) -> int:
+            return syslog.LOG_EMERG
+
+        @classmethod
+        @property
+        def ALERT(cls) -> int:
+            return syslog.LOG_ALERT
+
+        @classmethod
+        @property
+        def CRITICAL(cls) -> int:
+            return syslog.LOG_CRIT
+
+        @classmethod
+        @property
+        def INFO(cls) -> int:
+            return syslog.LOG_INFO
+
+        @classmethod
+        @property
+        def DEBUG(cls) -> int:
+            return syslog.LOG_DEBUG
+
+        @classmethod
+        @property
+        def WARNING(cls) -> int:
+            return syslog.LOG_WARNING
+
+        @classmethod
+        @property
+        def ERROR(cls) -> int:
+            return syslog.LOG_ERR
+
+    class __Facilities(NoDynamicAttributes):
+        @classmethod
+        @property
+        def DAEMON(cls) -> int:
+            return syslog.LOG_DAEMON
+
+        @classmethod
+        @property
+        def USER(cls) -> int:
+            return syslog.LOG_USER
+
+        @classmethod
+        @property
+        def LOCAL0(cls) -> int:
+            return syslog.LOG_LOCAL0
+
+        @classmethod
+        @property
+        def LOCAL1(cls) -> int:
+            return syslog.LOG_LOCAL1
+
+        @classmethod
+        @property
+        def LOCAL2(cls) -> int:
+            return syslog.LOG_LOCAL2
+
+        @classmethod
+        @property
+        def LOCAL3(cls) -> int:
+            return syslog.LOG_LOCAL3
+
+        @classmethod
+        @property
+        def LOCAL4(cls) -> int:
+            return syslog.LOG_LOCAL4
+
+        @classmethod
+        @property
+        def LOCAL5(cls) -> int:
+            return syslog.LOG_LOCAL5
+
+        @classmethod
+        @property
+        def LOCAL6(cls) -> int:
+            return syslog.LOG_LOCAL6
+
+        @classmethod
+        @property
+        def LOCAL7(cls) -> int:
+            return syslog.LOG_LOCAL7
+
+        @classmethod
+        @property
+        def MAIL(cls) -> int:
+            return syslog.LOG_MAIL
+
+        @classmethod
+        @property
+        def SYSLOG(cls) -> int:
+            return syslog.LOG_SYSLOG
+
+    @classmethod
+    @property
+    def level(cls):
+        """Returns Levels keys property."""
+        return cls.__Levels
+
+    @classmethod
+    @property
+    def facility(cls):
+        """Returns Facility keys property."""
+        return cls.__Facilities
+
+    @classmethod
+    @property
+    def level_keys(cls) -> Dict:
+        """Returns level keys property."""
+        return {
+            "NOTICE": SysLogKeys.level.NOTICE,
+            "INFO": SysLogKeys.level.INFO,
+            "DEBUG": SysLogKeys.level.DEBUG,
+            "WARNING": SysLogKeys.level.WARNING,
+            "ERROR": SysLogKeys.level.ERROR,
+            "EMERGENCY": SysLogKeys.level.EMERGENCY,
+            "ALERT": SysLogKeys.level.ALERT,
+            "CRITICAL": SysLogKeys.level.CRITICAL,
+        }
+
+    @classmethod
+    @property
+    def facility_keys(cls) -> Dict:
+        """Returns Facility keys property."""
+        return {
+            "DAEMON": SysLogKeys.facility.DAEMON,
+            "USER": SysLogKeys.facility.USER,
+            "LOCAL0": SysLogKeys.facility.LOCAL0,
+            "LOCAL1": SysLogKeys.facility.LOCAL1,
+            "LOCAL2": SysLogKeys.facility.LOCAL2,
+            "LOCAL3": SysLogKeys.facility.LOCAL3,
+            "LOCAL4": SysLogKeys.facility.LOCAL4,
+            "LOCAL5": SysLogKeys.facility.LOCAL5,
+            "LOCAL6": SysLogKeys.facility.LOCAL6,
+            "LOCAL7": SysLogKeys.facility.LOCAL7,
+            "MAIL": SysLogKeys.facility.MAIL,
+            "SYSLOG": SysLogKeys.facility.SYSLOG,
+        }
 
 
 class ILoggerEngine(ABC):
@@ -261,6 +432,9 @@ class LoggerEngineSyslog(
             self.name = name
         self._data[Keys.BUFFERED] = buffered
         self._data[Keys.FORMATTER] = None
+        self._data[Keys.LEVEL] = SysLogKeys.level.INFO
+        self._data[Keys.FACILITY] = SysLogKeys.facility.USER
+        self._data[Keys.SYSLOG] = None
         if formatter is not None:
             if isinstance(formatter, BLogFormatter):
                 self._data[Keys.FORMATTER] = formatter
@@ -272,10 +446,93 @@ class LoggerEngineSyslog(
                     currentframe(),
                 )
 
+    def __del__(self):
+        try:
+            self._data[Keys.SYSLOG].closelog()
+        except:
+            pass
+        self._data[Keys.SYSLOG] = None
+
+    @property
+    def facility(self) -> int:
+        """Return syslog facility."""
+        return self._data[Keys.FACILITY]
+
+    @facility.setter
+    def facility(self, value: Union[int, str]) -> None:
+        """Set syslog facility."""
+        if isinstance(value, int):
+            if value in tuple(SysLogKeys.facility_keys.values()):
+                self._data[Keys.FACILITY] = value
+            else:
+                raise Raise.error(
+                    f"Syslog facility: '{value}' not found.",
+                    ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        if isinstance(value, str):
+            if value in SysLogKeys.facility_keys:
+                self._data[Keys.FACILITY] = SysLogKeys.facility_keys[value]
+            else:
+                raise Raise.error(
+                    f"Syslog facility name not found: '{value}'",
+                    KeyError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        try:
+            self._data[Keys.SYSLOG].closelog()
+        except:
+            pass
+        self._data[Keys.SYSLOG] = None
+
+    @property
+    def level(self) -> int:
+        """Return syslog level."""
+        return self._data[Keys.LEVEL]
+
+    @level.setter
+    def level(self, value: Union[int, str]) -> None:
+        """Set syslog level."""
+        if isinstance(value, int):
+            if value in tuple(SysLogKeys.level_keys.values()):
+                self._data[Keys.LEVEL] = value
+            else:
+                raise Raise.error(
+                    f"Syslog level: '{value}' not found.",
+                    ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        if isinstance(value, str):
+            if value in SysLogKeys.level_keys:
+                self._data[Keys.LEVEL] = SysLogKeys.level_keys[value]
+            else:
+                raise Raise.error(
+                    f"Syslog level name not found: '{value}'",
+                    KeyError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+        try:
+            self._data[Keys.SYSLOG].closelog()
+        except:
+            pass
+        self._data[Keys.SYSLOG] = None
+
     def send(self, message: str) -> None:
         """Send message to SYSLOG."""
         if self._data[Keys.FORMATTER]:
             message = self._data[Keys.FORMATTER].format(message, self.name)
+        if self._data[Keys.SYSLOG] is None:
+            self._data[Keys.SYSLOG] = syslog
+            self._data[Keys.SYSLOG].openlog(
+                facility=self._data[Keys.FACILITY]
+            )
+        self._data[Keys.SYSLOG].syslog(
+            priority=self._data[Keys.LEVEL], message=message
+        )
 
 
 # #[EOF]#######################################################################
