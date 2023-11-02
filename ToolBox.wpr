@@ -23,7 +23,7 @@ console.toolbox = [{'autosave': False,
                     'shared': False,
                     'title': 'Terminal 1'}]
 proj.directory-list = [{'dirloc': loc('.'),
-                        'excludes': (),
+                        'excludes': ['poetry.lock'],
                         'filter': '*',
                         'include_hidden': False,
                         'recursive': True,
