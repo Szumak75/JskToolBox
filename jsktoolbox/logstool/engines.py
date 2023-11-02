@@ -20,6 +20,31 @@ from jsktoolbox.libs.system import Env, PathChecker
 # https://www.geeksforgeeks.org/python-testing-output-to-stdout/
 
 
+class Keys(NoDynamicAttributes):
+    """Keys definition class.
+
+    For internal purpose only.
+    """
+
+    @classmethod
+    @property
+    def BUFFERED(cls) -> str:
+        """Return BUFFERED Key."""
+        return "__buffered__"
+
+    @classmethod
+    @property
+    def DIR(cls) -> str:
+        """Return DIR Key."""
+        return "__dir__"
+
+    @classmethod
+    @property
+    def FILE(cls) -> str:
+        """Return FILE Key."""
+        return "__file__"
+
+
 class ILoggerEngine(ABC):
     """Logger engine interface class."""
 
@@ -33,14 +58,14 @@ class LoggerEngineStdout(ILoggerEngine, BData, NoDynamicAttributes):
 
     def __init__(self, buffered: bool = False) -> None:
         """Constructor."""
-        self.data["buffered"] = buffered
+        self._data[Keys.BUFFERED] = buffered
 
     def send(self, message: str) -> None:
         """Send message to STDOUT."""
         sys.stdout.write(f"{message}")
         if not f"{message}".endswith("\n"):
             sys.stdout.write("\n")
-        if not self.data["buffered"]:
+        if not self._data[Keys.BUFFERED]:
             sys.stdout.flush()
 
 
@@ -49,14 +74,14 @@ class LoggerEngineStderr(ILoggerEngine, BData, NoDynamicAttributes):
 
     def __init__(self, buffered: bool = False) -> None:
         """Constructor."""
-        self.data["buffered"] = buffered
+        self._data[Keys.BUFFERED] = buffered
 
     def send(self, message: str) -> None:
         """Send message to STDERR."""
         sys.stderr.write(f"{message}")
         if not f"{message}".endswith("\n"):
             sys.stderr.write("\n")
-        if not self.data["buffered"]:
+        if not self._data[Keys.BUFFERED]:
             sys.stderr.flush()
 
 
@@ -65,7 +90,7 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
 
     def __init__(self, buffered: bool = False) -> None:
         """Constructor."""
-        self.data["buffered"] = buffered
+        self._data[Keys.BUFFERED] = buffered
 
     def send(self, message: str) -> None:
         """Send message to file."""
@@ -73,9 +98,9 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
     @property
     def logdir(self) -> Optional[str]:
         """Return log directory."""
-        if "dir" not in self.data:
-            self.data["dir"] = None
-        return self.data["dir"]
+        if Keys.DIR not in self._data:
+            self._data[Keys.DIR] = None
+        return self._data[Keys.DIR]
 
     @logdir.setter
     def logdir(self, dirname: str) -> None:
@@ -86,14 +111,14 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
         if not ld.exists:
             ld.create()
         if ld.exists and ld.is_dir:
-            self.data["dir"] = ld.path
+            self._data[Keys.DIR] = ld.path
 
     @property
     def logfile(self) -> Optional[str]:
         """Return log file name."""
-        if "file" not in self.data:
-            self.data["file"] = None
-        return self.data["file"]
+        if Keys.FILE not in self._data:
+            self._data[Keys.FILE] = None
+        return self._data[Keys.FILE]
 
     @logfile.setter
     def logfile(self, filename: str) -> None:
@@ -122,7 +147,7 @@ class LoggerEngineFile(ILoggerEngine, BData, NoDynamicAttributes):
                     currentframe(),
                 )
         self.logdir = ld.dirname
-        self.data["file"] = ld.filename
+        self._data[Keys.FILE] = ld.filename
 
 
 class LoggerEngineSyslog(ILoggerEngine, BData, NoDynamicAttributes):
@@ -130,7 +155,7 @@ class LoggerEngineSyslog(ILoggerEngine, BData, NoDynamicAttributes):
 
     def __init__(self, buffered: bool = False) -> None:
         """Constructor."""
-        self.data["buffered"] = buffered
+        self._data[Keys.BUFFERED] = buffered
 
     def send(self, message: str) -> None:
         """Send message to SYSLOG."""

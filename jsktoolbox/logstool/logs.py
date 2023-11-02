@@ -20,6 +20,31 @@ from jsktoolbox.libs.system import Env, PathChecker
 from jsktoolbox.logstool.engines import *
 
 
+class Keys(NoDynamicAttributes):
+    """Keys definition class.
+
+    For internal purpose only.
+    """
+
+    @classmethod
+    @property
+    def CONF(cls) -> str:
+        """Return CONF Key."""
+        return "__conf__"
+
+    @classmethod
+    @property
+    def NO_CONF(cls) -> str:
+        """Return NO_CONF Key."""
+        return "__noconf__"
+
+    @classmethod
+    @property
+    def NAME(cls) -> str:
+        """Return NAME Key."""
+        return "__name__"
+
+
 class LogsLevelKeys(NoDynamicAttributes):
     """LogsLevelKeys container class."""
 
@@ -75,14 +100,13 @@ class LogsLevelKeys(NoDynamicAttributes):
 class LoggerEngine(BData, NoDynamicAttributes):
     """LoggerEngine container class."""
 
-    __ckey = "conf"
-    __nkey = "noconf"
-
     def __init__(self) -> None:
         """Constructor."""
-        self.data[self.__nkey] = {}
-        self.data[self.__nkey][LogsLevelKeys.info] = [LoggerEngineStdout()]
-        self.data[self.__nkey][LogsLevelKeys.debug] = [LoggerEngineStderr()]
+        self._data[Keys.NO_CONF] = {}
+        self._data[Keys.NO_CONF][LogsLevelKeys.info] = [LoggerEngineStdout()]
+        self._data[Keys.NO_CONF][LogsLevelKeys.debug] = [
+            LoggerEngineStderr()
+        ]
 
     def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
         """Add LoggerEngine to specific log level."""
@@ -100,23 +124,23 @@ class LoggerEngine(BData, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        if self.__ckey not in self.data:
-            self.data[self.__ckey] = {}
-            self.data[self.__ckey][log_level] = [engine]
+        if Keys.CONF not in self._data:
+            self._data[Keys.CONF] = {}
+            self._data[Keys.CONF][log_level] = [engine]
         else:
-            if log_level not in self.data[self.__ckey].keys():
-                self.data[self.__ckey][log_level] = [engine]
+            if log_level not in self._data[Keys.CONF].keys():
+                self._data[Keys.CONF][log_level] = [engine]
             else:
                 test = False
-                for i in range(0, len(self.data[self.__ckey][log_level])):
+                for i in range(0, len(self._data[Keys.CONF][log_level])):
                     if (
-                        self.data[self.__ckey][log_level][i].__class__
+                        self._data[Keys.CONF][log_level][i].__class__
                         == engine.__class__
                     ):
-                        self.data[self.__ckey][log_level][i] = engine
+                        self._data[Keys.CONF][log_level][i] = engine
                         test = True
                 if not test:
-                    self.data[self.__ckey][log_level].append(engine)
+                    self._data[Keys.CONF][log_level].append(engine)
 
 
 class LoggerClient(BData, NoDynamicAttributes):
@@ -134,7 +158,7 @@ class LoggerClient(BData, NoDynamicAttributes):
     def __init__(self, name: Optional[str] = None) -> None:
         """Constructor."""
         # store name
-        self.data["name"] = name
+        self._data[Keys.NAME] = name
 
 
 # #[EOF]#######################################################################
