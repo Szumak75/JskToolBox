@@ -54,7 +54,7 @@ If the 'desc' flag is set to 'True', there are two different cases for this meth
 - if the 'varname' defaults to 'None', the method will return description placed in the section, not related to any 'varname', as a list of strings.
 
 ```
-.set()
+.set(section: str, varname: Optional[str] = None, value: Optional[Any] = None, desc: Optional[str] = None)
 ```
 Sets data to the configuration section.
 Arguments:
