@@ -6,12 +6,11 @@
   Purpose: logs subsystem classes.
 """
 
-import os
 import time
 import threading
 from inspect import currentframe
 
-from typing import Optional, List, Dict, Tuple, Any
+from typing import Optional, List, Tuple, Any
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
