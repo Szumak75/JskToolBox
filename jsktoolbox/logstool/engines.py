@@ -12,7 +12,7 @@ import syslog
 from abc import ABC, abstractmethod
 from inspect import currentframe
 
-from typing import Optional, List, Dict
+from typing import Optional, Union, List, Dict
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
@@ -360,6 +360,17 @@ class LoggerEngineFile(
         """Send message to file."""
         if self._data[Keys.FORMATTER]:
             message = self._data[Keys.FORMATTER].format(message, self.name)
+            if self.logfile is None:
+                raise Raise.error(
+                    f"The {self.__class__.__name__} is not configured correctly.",
+                    ValueError,
+                    self.__class__.__name__,
+                    currentframe(),
+                )
+            with open(os.path.join(self.logdir, self.logfile), "a") as file:
+                if file.writable:
+                    file.write(message)
+                    file.write("\n")
 
     @property
     def logdir(self) -> Optional[str]:
