@@ -67,13 +67,14 @@ class B(MLoggerQueue, NoDynamicAttributes):
         self.msg = logger
         self.msg.logs_queue.put("test")
         self.msg.logs_queue.put("test 2", LogsLevelKeys.DEBUG)
+        self.msg.message_debug = "coś się stało"
 
 
 if __name__ == "__main__":
     obj_a = A()
 
     # make connection to logs_queue from A object
-    obj_b = B(LoggerClient(obj_a.logs_queue))
+    obj_b = B(LoggerClient(obj_a.logs_queue, "B"))
 
     print(obj_a._data)
     print(obj_b._data)

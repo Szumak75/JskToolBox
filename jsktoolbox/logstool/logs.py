@@ -287,13 +287,112 @@ class LoggerClient(MLoggerQueue, NoDynamicAttributes):
         name [str] - optional app name for logs decorator
         """
         # store name
-        self._data[Keys.NAME] = name
+        self.name = name
         # logger queue
         if not isinstance(queue, LoggerQueue):
             raise Raise.error(
                 f"LoggerQueue type expected, '{type(queue)}' received."
             )
         self.logs_queue = queue
+
+    @property
+    def name(self) -> Optional[str]:
+        """Get LoggerClient name string."""
+        if Keys.NAME not in self._data:
+            self._data[Keys.NAME] = None
+        return self._data[Keys.NAME]
+
+    @name.setter
+    def name(self, name: str) -> None:
+        """Set LoggerClient name string."""
+        if not isinstance(name, str):
+            raise Raise.error(
+                f"name as string expected, '{type(name)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.NAME] = name
+
+    def message(
+        self, message: str, log_level: str = LogsLevelKeys.INFO
+    ) -> None:
+        """Send message to logging subsystem."""
+        if self.name is not None:
+            message = f"[{self.name}] {message}"
+        self.logs_queue.put(message, log_level)
+
+    @property
+    def message_alert(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_alert.setter
+    def message_alert(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.ALERT)
+
+    @property
+    def message_critical(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_alert.setter
+    def message_critical(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.CRITICAL)
+
+    @property
+    def message_debug(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_debug.setter
+    def message_debug(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.DEBUG)
+
+    @property
+    def message_emergency(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_emergency.setter
+    def message_emergency(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.EMERGENCY)
+
+    @property
+    def message_error(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_error.setter
+    def message_error(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.ERROR)
+
+    @property
+    def message_info(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_info.setter
+    def message_info(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.INFO)
+
+    @property
+    def message_notice(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_notice.setter
+    def message_notice(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.NOTICE)
+
+    @property
+    def message_warning(self) -> None:
+        """Do nothing, for defining setter only."""
+
+    @message_warning.setter
+    def message_warning(self, message: str) -> None:
+        """Send message property."""
+        self.message(message, LogsLevelKeys.WARNING)
 
 
 # #[EOF]#######################################################################
