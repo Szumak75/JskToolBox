@@ -7,6 +7,8 @@
   Purpose: test logs engine
 """
 
+import time
+
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.logstool.logs import (
     LoggerEngine,
@@ -15,6 +17,7 @@ from jsktoolbox.logstool.logs import (
     LoggerEngineStderr,
     LoggerEngineStdout,
     LoggerEngineSyslog,
+    ThLoggerProcessor,
 )
 from jsktoolbox.libs.base_logs import (
     LoggerQueue,
@@ -71,16 +74,47 @@ class B(BLoggerQueue, NoDynamicAttributes):
         self.msg.logs_queue.put("test 2", LogsLevelKeys.DEBUG)
         self.msg.message_debug = "coś się stało"
 
+    def send(self, msg: str) -> None:
+        """Test"""
+        self.msg.logs_queue.put(msg)
+        self.msg.logs_queue.put(msg, LogsLevelKeys.DEBUG)
+
 
 if __name__ == "__main__":
-    obj_a = A()
+    obj_a = ThLoggerProcessor()
+
+    obj_a.logger_engine = LoggerEngine()
+    obj_a.logger_engine.add_engine(
+        LogsLevelKeys.INFO,
+        LoggerEngineStdout("name", LogFormatterDateTime()),
+    )
+    obj_a.logger_engine.add_engine(
+        LogsLevelKeys.DEBUG,
+        LoggerEngineStderr("name", LogFormatterTimestamp()),
+    )
+    lff = LoggerEngineFile("name", LogFormatterTime())
+    lff.logdir = "/tmp"
+    lff.logfile = "A.debug.log"
+    obj_a.logger_engine.add_engine(LogsLevelKeys.DEBUG, lff)
+
+    obj_a.logger_client = LoggerClient(
+        obj_a.logger_engine.logs_queue, "ThLoggerProcessor"
+    )
 
     # make connection to logs_queue from A object
-    obj_b = B(LoggerClient(obj_a.logs_queue, "B"))
+    obj_b = B(LoggerClient(obj_a.logger_engine.logs_queue, "B"))
 
+    obj_a.start()
+    count = 0
+    while True:
+        count += 1
+        time.sleep(5.0)
+        obj_b.send(f"Count: {count}")
+        if count == 10:
+            obj_a.stop()
+            break
+    time.sleep(1.0)
+    obj_a.join()
     print(obj_a._data)
-    print(obj_b._data)
-    obj_a.send()
-
 
 # #[EOF]#######################################################################
