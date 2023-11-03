@@ -11,13 +11,15 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.logstool.logs import (
     LoggerEngine,
     LoggerClient,
-    LogsLevelKeys,
     LoggerEngineFile,
     LoggerEngineStderr,
     LoggerEngineStdout,
     LoggerEngineSyslog,
+)
+from jsktoolbox.libs.base_logs import (
     LoggerQueue,
-    MLoggerQueue,
+    BLoggerQueue,
+    LogsLevelKeys,
 )
 from jsktoolbox.logstool.formatters import (
     LogFormatterDateTime,
@@ -27,7 +29,7 @@ from jsktoolbox.logstool.formatters import (
 )
 
 
-class A(MLoggerQueue, NoDynamicAttributes):
+class A(BLoggerQueue, NoDynamicAttributes):
     """"""
 
     __le = None
@@ -57,7 +59,7 @@ class A(MLoggerQueue, NoDynamicAttributes):
         self.__le.send()
 
 
-class B(MLoggerQueue, NoDynamicAttributes):
+class B(BLoggerQueue, NoDynamicAttributes):
     """"""
 
     msg = None

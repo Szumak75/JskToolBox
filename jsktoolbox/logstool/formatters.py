@@ -11,71 +11,12 @@ import sys
 import time
 from datetime import datetime
 
-from abc import ABC, abstractmethod
-from inspect import currentframe
-from typing import Optional, List, Dict, Any
-from jsktoolbox.attribtool import NoDynamicAttributes
-from jsktoolbox.raisetool import Raise
+from typing import Optional, List, Any
+from jsktoolbox.libs.base_logs import BLogFormatter
 
 #  https://www.programiz.com/python-programming/datetime/strftime
 # timestamp: int(time.time())
 # now: time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-
-
-class BLogFormatter(NoDynamicAttributes):
-    """Log formatter base class."""
-
-    __template: Optional[str] = None
-    __forms: Optional[List] = None
-
-    def __init__(self) -> None:
-        """Constructor."""
-        self.__forms = []
-
-    def format(self, message: str, name: str = None) -> str:
-        """Method for format message string.
-
-        Arguments:
-        message [str]: log string to send
-        name [str]: optional name of apps,
-        """
-        out = ""
-        for item in self._forms_:
-            if callable(item):
-                out += f"{item()} "
-            elif isinstance(item, str):
-                if name is None:
-                    if item.find("name") == -1:
-                        out += item.format(message=f"{message}")
-                else:
-                    if item.find("name") > 0:
-                        out += item.format(
-                            name=f"{name}",
-                            message=f"{message}",
-                        )
-        return out
-
-    @property
-    def _forms_(self) -> List:
-        """Get forms list."""
-        return self.__forms
-
-    @_forms_.setter
-    def _forms_(self, item: Any) -> None:
-        """Set forms list."""
-        # assigning function to a variable
-        # def a(): print('test')
-        # var=a
-        # var()
-        ####
-        # >>> x._forms_[2].__class__
-        # <class 'builtin_function_or_method'>
-        # >>> x._forms_[1].__class__
-        # <class 'float'>
-        # >>> x._forms_[0].__class__
-        # <class 'str'>
-
-        self.__forms.append(item)
 
 
 class LogFormatterNull(BLogFormatter):

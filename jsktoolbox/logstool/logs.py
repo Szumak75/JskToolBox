@@ -8,192 +8,36 @@
 
 import os
 import sys
-from abc import abstractmethod
+import threading
 from inspect import currentframe
 
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict, Tuple, Any
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.libs.system import Env, PathChecker
+from jsktoolbox.libs.base_logs import (
+    BLoggerQueue,
+    LoggerQueue,
+    LogsLevelKeys,
+    Keys,
+)
+from jsktoolbox.libs.base_th import ThBaseObject
 from jsktoolbox.logstool.engines import *
 
 
-class Keys(NoDynamicAttributes):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
-
-    @classmethod
-    @property
-    def CONF(cls) -> str:
-        """Return CONF Key."""
-        return "__conf__"
-
-    @classmethod
-    @property
-    def NO_CONF(cls) -> str:
-        """Return NO_CONF Key."""
-        return "__noconf__"
-
-    @classmethod
-    @property
-    def NAME(cls) -> str:
-        """Return NAME Key."""
-        return "__name__"
-
-    @classmethod
-    @property
-    def QUEUE(cls) -> str:
-        """Return QUEUE Key."""
-        return "__queue__"
-
-
-class LogsLevelKeys(NoDynamicAttributes):
-    """LogsLevelKeys container class."""
-
-    @classmethod
-    @property
-    def keys(cls) -> Tuple[str]:
-        """Return tuple of avaiable keys."""
-        return tuple(
-            [
-                LogsLevelKeys.ALERT,
-                LogsLevelKeys.CRITICAL,
-                LogsLevelKeys.DEBUG,
-                LogsLevelKeys.EMERGENCY,
-                LogsLevelKeys.ERROR,
-                LogsLevelKeys.INFO,
-                LogsLevelKeys.NOTICE,
-                LogsLevelKeys.WARNING,
-            ]
-        )
-
-    @classmethod
-    @property
-    def ALERT(cls) -> str:
-        """Return ALERT Key."""
-        return "ALERT"
-
-    @classmethod
-    @property
-    def CRITICAL(cls) -> str:
-        """Return CRITICAL Key."""
-        return "CRITICAL"
-
-    @classmethod
-    @property
-    def DEBUG(cls) -> str:
-        """Return DEBUG Key."""
-        return "DEBUG"
-
-    @classmethod
-    @property
-    def EMERGENCY(cls) -> str:
-        """Return EMERGENCY Key."""
-        return "EMERGENCY"
-
-    @classmethod
-    @property
-    def ERROR(cls) -> str:
-        """Return ERROR Key."""
-        return "ERROR"
-
-    @classmethod
-    @property
-    def INFO(cls) -> str:
-        """Return INFO Key."""
-        return "INFO"
-
-    @classmethod
-    @property
-    def NOTICE(cls) -> str:
-        """Return NOTICE Key."""
-        return "NOTICE"
-
-    @classmethod
-    @property
-    def WARNING(cls) -> str:
-        """Return WARNING Key."""
-        return "WARNING"
-
-
-class LoggerQueue(NoDynamicAttributes):
-    """LoggerQueue simple class."""
-
-    __queue: List[str] = None
-
-    def __init__(self):
-        """Constructor."""
-        self.__queue = []
-
-    def get(self) -> Optional[Tuple[str, str]]:
-        """Get item from queue.
-
-        Returs queue tuple[logs_level:str, message:str] or None if empty.
-        """
-        try:
-            return tuple(self.__queue.pop(0))
-        except IndexError:
-            return None
-        except Exception as ex:
-            raise Raise.error(
-                f"Unexpected exception was thrown: {ex}",
-                self.__class__.__name__,
-                currentframe(),
-            )
-
-    def put(
-        self, message: str, logs_level: str = LogsLevelKeys.INFO
-    ) -> None:
-        """Put item to queue."""
-        if logs_level not in LogsLevelKeys.keys:
-            raise Raise.error(
-                f"logs_level key not found, '{logs_level}' received.",
-                KeyError,
-                self.__class__.__name__,
-                currentframe(),
-            )
-        self.__queue.append(
-            [
-                logs_level,
-                message,
-            ]
-        )
-
-
-class LoggerProcessor:
+class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
     """LoggerProcessor thread engine."""
 
     def __init__(self):
         """Constructor."""
+        threading.Thread.__init__(self, name=self.__class__.__name__)
+        self._data["stopevent"] = threading.Event()
+        self._data["sleepperiod"] = 1.0
+        self._data["running"] = False
+        self._data["done"] = False
 
 
-class MLoggerQueue(BData, NoDynamicAttributes):
-    """Logger Queue base metaclass."""
-
-    @property
-    def logs_queue(self) -> Optional[LoggerQueue]:
-        """Get LoggerQueue object."""
-        if Keys.QUEUE not in self._data:
-            return None
-        return self._data[Keys.QUEUE]
-
-    @logs_queue.setter
-    def logs_queue(self, obj: LoggerQueue) -> None:
-        """Set LoggerQueue object."""
-        if not isinstance(obj, LoggerQueue):
-            raise Raise.error(
-                f"LoggerQueue type object expected, '{type(obj)}' received.",
-                self.__class__.__name__,
-                currentframe(),
-            )
-        self._data[Keys.QUEUE] = obj
-
-
-class LoggerEngine(MLoggerQueue, NoDynamicAttributes):
+class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
     """LoggerEngine container class."""
 
     def __init__(self) -> None:
@@ -265,7 +109,7 @@ class LoggerEngine(MLoggerQueue, NoDynamicAttributes):
                         engine.send(message)
 
 
-class LoggerClient(MLoggerQueue, NoDynamicAttributes):
+class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     """Logger Client main class."""
 
     # TODO:
