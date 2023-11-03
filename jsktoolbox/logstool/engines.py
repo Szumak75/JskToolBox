@@ -11,12 +11,12 @@ import sys
 import syslog
 
 from inspect import currentframe
-from typing import Optional, Union, List, Dict
+from typing import Optional, Union, Dict
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
-from jsktoolbox.libs.system import Env, PathChecker
+from jsktoolbox.libs.system import PathChecker
 from jsktoolbox.libs.base_logs import (
     ILoggerEngine,
     BLoggerEngine,
