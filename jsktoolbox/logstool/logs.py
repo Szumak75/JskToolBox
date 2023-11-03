@@ -233,6 +233,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         """Constructor."""
         threading.Thread.__init__(self, name=self.__class__.__name__)
         self._stop_event = threading.Event()
+        self.daemon = True
         self._sleep_period = 0.2
 
     @property
