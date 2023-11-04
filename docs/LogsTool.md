@@ -25,7 +25,7 @@ The project contains several classes that create a logging subsystem for the des
 # Public classes
 ## ThLoggerProcessor
 
-A class derived from "threading.Thread", for processing in another thread messages from "LoggerClient" through "LoggerQueue" and formatted using the configured "LoggerEngine" class.
+A class derived from `threading.Thread`, for processing in another thread messages from `LoggerClient` through `LoggerQueue` and formatted using the configured `LoggerEngine` class.
 
 ## LoggerEngine
 
@@ -38,45 +38,45 @@ A class that defines a client API that allows sending messages with different lo
 # Engine classes
 ## LoggerEngineStdout
 
-A class that formats the message using the 'LogFormatter' class and sends the result to STDOUT.
+A class that formats the message using the `LogFormatter` class and sends the result to STDOUT.
 
 ## LoggerEngineStderr
 
-A class that formats the message using the 'LogFormatter' class and sends the result to STDERR.
+A class that formats the message using the `LogFormatter` class and sends the result to STDERR.
 
 ## LoggerEngineFile
 
-A class that formats the message using the 'LogFormatter' class and writes the result to a file.
+A class that formats the message using the `LogFormatter` class and writes the result to a file.
 
 ## LoggerEngineSyslog
 
-A class that formats the message using the 'LogFormatter' class and sends the result to the system syslog.
+A class that formats the message using the `LogFormatter` class and sends the result to the system syslog.
 
 # Formatter classes
 ## LogFormatterNull
 
 A class that formats the transmitted message.
-If the 'name' variable has been defined for the 'LoggerEngine' class, the message will be preceded by the '[name]' prefix, otherwise it will be processed unchanged.
+If the `name` variable has been defined for the `LoggerEngine` class, the message will be preceded by the `[name]` prefix, otherwise it will be processed unchanged.
 
 ## LogFormatterDateTime
 
 A class that formats the transmitted message.
-If the 'name' variable has been defined for the 'LoggerEngine' class, the message will be prefixed with '[name]'.
-The processed message will be preceded by information about the current date and time in the format: "%Y-%m-%d %H:%M:%S".
+If the `name` variable has been defined for the `LoggerEngine` class, the message will be prefixed with `[name]`.
+The processed message will be preceded by information about the current date and time in the format: `%Y-%m-%d %H:%M:%S`.
 
 ## LogFormatterTime
 
 A class that formats the transmitted message.
-If the 'name' variable has been defined for the 'LoggerEngine' class, the message will be prefixed with '[name]'.
-The processed message will be preceded by information about the current time in the format: "%H:%M:%S".
+If the `name` variable has been defined for the `LoggerEngine` class, the message will be prefixed with `[name]`.
+The processed message will be preceded by information about the current time in the format: `%H:%M:%S`.
 
 ## LogFormatterTimestamp
 
 A class that formats the transmitted message.
-If the 'name' variable has been defined for the 'LoggerEngine' class, the message will be prefixed with '[name]'.
+If the `name` variable has been defined for the `LoggerEngine` class, the message will be prefixed with `[name]`.
 The processed message will be prefixed with the current timestamp rounded to an integer value.
 
 # Queue class
 ## LoggerQueue
 
-A simple class that defines a queue of messages sent between the 'LoggerClient' and 'LoggerEngine' classes.
+A simple class that defines a queue of messages sent between the `LoggerClient` and `LoggerEngine` classes.
