@@ -10,7 +10,7 @@ import time
 import threading
 from inspect import currentframe
 
-from typing import Optional, List, Tuple, Any
+from typing import Optional
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
@@ -39,7 +39,12 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         ]
 
     def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
-        """Add LoggerEngine to specific log level."""
+        """Add LoggerEngine to specific log level.
+
+        Arguments:
+        log_level [str] - String Key from .base_log.LogsLevelKeys.keys,
+        engine [ILoggerEngine] - an object created from Engine classes.
+        """
         if not isinstance(log_level, str):
             raise Raise.error(
                 f"Key as string expected, '{type(log_level)}' received.'",
@@ -99,15 +104,6 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     """Logger Client main class."""
 
-    # TODO:
-    # stworzyć obiekt konfiguracyjny z listą
-    # silników do raportowania wszystkich typów
-    # logów: message, error, warning, debug
-    # przekazać konfigurator w konstruktorze
-
-    # stworzyć obiekt z szablonami formatowania
-    # informacji przekazywanych do każdego z typów silników
-
     def __init__(
         self, queue: LoggerQueue, name: Optional[str] = None
     ) -> None:
@@ -159,7 +155,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_alert.setter
     def message_alert(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with ALERT level."""
         self.message(message, LogsLevelKeys.ALERT)
 
     @property
@@ -168,7 +164,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_alert.setter
     def message_critical(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with CRITICAL level."""
         self.message(message, LogsLevelKeys.CRITICAL)
 
     @property
@@ -177,7 +173,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_debug.setter
     def message_debug(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with DEBUG level."""
         self.message(message, LogsLevelKeys.DEBUG)
 
     @property
@@ -186,7 +182,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_emergency.setter
     def message_emergency(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with EMERGENCY level."""
         self.message(message, LogsLevelKeys.EMERGENCY)
 
     @property
@@ -195,7 +191,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_error.setter
     def message_error(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with ERROR level."""
         self.message(message, LogsLevelKeys.ERROR)
 
     @property
@@ -204,7 +200,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_info.setter
     def message_info(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with INFO level."""
         self.message(message, LogsLevelKeys.INFO)
 
     @property
@@ -213,7 +209,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_notice.setter
     def message_notice(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with NOTICE level."""
         self.message(message, LogsLevelKeys.NOTICE)
 
     @property
@@ -222,7 +218,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @message_warning.setter
     def message_warning(self, message: str) -> None:
-        """Send message property."""
+        """Property for sending messages with WARNING level."""
         self.message(message, LogsLevelKeys.WARNING)
 
 
@@ -302,13 +298,12 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
             self.logger_engine.send()
             time.sleep(self._sleep_period)
         self.logger_client.message_debug = f"Stop {self.__class__.__name__}"
+        self.logger_engine.send()
 
     def stop(self) -> None:
         """Set stop event."""
         self.logger_client.message_debug = "stopping..."
-        print(self._data)
         self._stop_event.set()
-        print(self._data)
 
     @property
     def stopped(self) -> bool:

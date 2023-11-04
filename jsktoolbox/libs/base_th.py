@@ -14,145 +14,288 @@ from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 
 
+class Keys(NoDynamicAttributes):
+    """Keys definition class.
+
+    For internal purpose only.
+    """
+
+    @classmethod
+    @property
+    def TARGET(cls) -> str:
+        """Return TARGET Key."""
+        return "_target"
+
+    @classmethod
+    @property
+    def NAME(cls) -> str:
+        """Return NAME Key."""
+        return "_name"
+
+    @classmethod
+    @property
+    def ARGS(cls) -> str:
+        """Return ARGS Key."""
+        return "_args"
+
+    @classmethod
+    @property
+    def KWARGS(cls) -> str:
+        """Return KWARGS Key."""
+        return "_kwargs"
+
+    @classmethod
+    @property
+    def DAEMONIC(cls) -> str:
+        """Return DAEMONIC Key."""
+        return "_daemonic"
+
+    @classmethod
+    @property
+    def IDENT(cls) -> str:
+        """Return IDENT Key."""
+        return "_ident"
+
+    @classmethod
+    @property
+    def NATIVE_ID(cls) -> str:
+        """Return NATIVE_ID Key."""
+        return "_native_id"
+
+    @classmethod
+    @property
+    def TSTATE_LOCK(cls) -> str:
+        """Return TSTATE_LOCK Key."""
+        return "_tstate_lock"
+
+    @classmethod
+    @property
+    def STARTED(cls) -> str:
+        """Return STARTED Key."""
+        return "_started"
+
+    @classmethod
+    @property
+    def IS_STOPPED(cls) -> str:
+        """Return IS_STOPPED Key."""
+        return "_is_stopped"
+
+    @classmethod
+    @property
+    def STDERR(cls) -> str:
+        """Return STDERR Key."""
+        return "_stderr"
+
+    @classmethod
+    @property
+    def INVOKE_EXCEPTHOOK(cls) -> str:
+        """Return INVOKE_EXCEPTHOOK Key."""
+        return "_invoke_excepthook"
+
+    @classmethod
+    @property
+    def STOP_EVENT(cls) -> str:
+        """Return STOP_EVENT Key."""
+        return "_stop_event"
+
+    @classmethod
+    @property
+    def SLEEP_PERIOD(cls) -> str:
+        """Return SLEEP_PERIOD Key."""
+        return "_sleep_period"
+
+
 class ThBaseObject(BData, NoDynamicAttributes):
-    """Base class for classes derived from threading.Thread"""
+    """Base class for classes derived from threading.Thread.
+
+    Definition of properties used in the threading library.
+    """
 
     @property
     def _target(self) -> Optional[Any]:
-        if "_target" not in self._data:
-            self._data["_target"] = None
-        return self._data["_target"]
+        if Keys.TARGET not in self._data:
+            self._data[Keys.TARGET] = None
+        return self._data[Keys.TARGET]
 
     @_target.setter
     def _target(self, value: Any) -> None:
-        self._data["_target"] = value
+        self._data[Keys.TARGET] = value
 
     @property
     def _name(self) -> Optional[str]:
-        if "_name" not in self._data:
-            self._data["_name"] = None
-        return self._data["_name"]
+        if Keys.NAME not in self._data:
+            self._data[Keys.NAME] = None
+        return self._data[Keys.NAME]
 
     @_name.setter
-    def _name(self, value: str) -> None:
-        self._data["_name"] = value
+    def _name(self, value: Optional[str]) -> None:
+        if value is not None and not isinstance(value, str):
+            raise Raise.error(
+                f"String type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.NAME] = value
 
     @property
     def _args(self) -> Optional[Tuple]:
-        if "_args" not in self._data:
-            self._data["_args"] = None
-        return self._data["_args"]
+        if Keys.ARGS not in self._data:
+            self._data[Keys.ARGS] = None
+        return self._data[Keys.ARGS]
 
     @_args.setter
     def _args(self, value: Tuple) -> None:
-        self._data["_args"] = value
+        self._data[Keys.ARGS] = value
 
     @property
     def _kwargs(self) -> Optional[Dict]:
-        if "_kwargs" not in self._data:
-            self._data["_kwargs"] = None
-        return self._data["_kwargs"]
+        if Keys.KWARGS not in self._data:
+            self._data[Keys.KWARGS] = None
+        return self._data[Keys.KWARGS]
 
     @_kwargs.setter
     def _kwargs(self, value: Dict) -> None:
-        self._data["_kwargs"] = value
+        if value is not None and not isinstance(value, Dict):
+            raise Raise.error(
+                f"Dict type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.KWARGS] = value
 
     @property
     def _daemonic(self) -> Optional[bool]:
-        if "_daemonic" not in self._data:
-            self._data["_daemonic"] = None
-        return self._data["_daemonic"]
+        if Keys.DAEMONIC not in self._data:
+            self._data[Keys.DAEMONIC] = None
+        return self._data[Keys.DAEMONIC]
 
     @_daemonic.setter
     def _daemonic(self, value: bool) -> None:
-        self._data["_daemonic"] = value
+        if not isinstance(value, bool):
+            raise Raise.error(
+                f"Boolean type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.DAEMONIC] = value
 
     @property
     def _ident(self) -> Optional[int]:
-        if "_ident" not in self._data:
-            self._data["_ident"] = None
-        return self._data["_ident"]
+        if Keys.IDENT not in self._data:
+            self._data[Keys.IDENT] = None
+        return self._data[Keys.IDENT]
 
     @_ident.setter
-    def _ident(self, value: int) -> None:
-        self._data["_ident"] = value
+    def _ident(self, value: Optional[int]) -> None:
+        if value is not None and not isinstance(value, int):
+            raise Raise.error(
+                f"Integer type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.IDENT] = value
 
     @property
     def _native_id(self) -> Optional[int]:
-        if "_native_id" not in self._data:
-            self._data["_native_id"] = None
-        return self._data["_native_id"]
+        if Keys.NATIVE_ID not in self._data:
+            self._data[Keys.NATIVE_ID] = None
+        return self._data[Keys.NATIVE_ID]
 
     @_native_id.setter
-    def _native_id(self, value: int) -> None:
-        self._data["_native_id"] = value
+    def _native_id(self, value: Optional[int]) -> None:
+        if value is not None and not isinstance(value, int):
+            raise Raise.error(
+                f"Integer type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.NATIVE_ID] = value
 
     @property
     def _tstate_lock(self) -> Optional[Any]:
-        if "_tstate_lock" not in self._data:
-            self._data["_tstate_lock"] = None
-        return self._data["_tstate_lock"]
+        if Keys.TSTATE_LOCK not in self._data:
+            self._data[Keys.TSTATE_LOCK] = None
+        return self._data[Keys.TSTATE_LOCK]
 
     @_tstate_lock.setter
     def _tstate_lock(self, value: Any) -> None:
-        self._data["_tstate_lock"] = value
+        self._data[Keys.TSTATE_LOCK] = value
 
     @property
     def _started(self) -> Optional[Event]:
-        if "_started" not in self._data:
-            self._data["_started"] = None
-        return self._data["_started"]
+        if Keys.STARTED not in self._data:
+            self._data[Keys.STARTED] = None
+        return self._data[Keys.STARTED]
 
     @_started.setter
     def _started(self, value: Event) -> None:
-        self._data["_started"] = value
+        if value is not None and not isinstance(value, Event):
+            raise Raise.error(
+                f"threading.Event type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.STARTED] = value
 
     @property
     def _is_stopped(self) -> Optional[bool]:
-        if "_is_stopped" not in self._data:
-            self._data["_is_stopped"] = None
-        return self._data["_is_stopped"]
+        if Keys.IS_STOPPED not in self._data:
+            self._data[Keys.IS_STOPPED] = None
+        return self._data[Keys.IS_STOPPED]
 
     @_is_stopped.setter
     def _is_stopped(self, value: bool) -> None:
-        self._data["_is_stopped"] = value
+        if not isinstance(value, bool):
+            raise Raise.error(
+                f"Boolean type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[Keys.IS_STOPPED] = value
 
     @property
     def _stderr(self) -> Optional[Any]:
-        if "_stderr" not in self._data:
-            self._data["_stderr"] = None
-        return self._data["_stderr"]
+        if Keys.STDERR not in self._data:
+            self._data[Keys.STDERR] = None
+        return self._data[Keys.STDERR]
 
     @_stderr.setter
     def _stderr(self, value: Any) -> None:
-        self._data["_stderr"] = value
+        self._data[Keys.STDERR] = value
 
     @property
     def _invoke_excepthook(self) -> Optional[Any]:
-        if "_invoke_excepthook" not in self._data:
-            self._data["_invoke_excepthook"] = None
-        return self._data["_invoke_excepthook"]
+        if Keys.INVOKE_EXCEPTHOOK not in self._data:
+            self._data[Keys.INVOKE_EXCEPTHOOK] = None
+        return self._data[Keys.INVOKE_EXCEPTHOOK]
 
     @_invoke_excepthook.setter
     def _invoke_excepthook(self, value: Any) -> None:
-        self._data["_invoke_excepthook"] = value
+        self._data[Keys.INVOKE_EXCEPTHOOK] = value
 
     @property
     def _stop_event(self) -> Optional[Event]:
-        if "_stop_event" not in self._data:
-            self._data["_stop_event"] = None
-        return self._data["_stop_event"]
+        if Keys.STOP_EVENT not in self._data:
+            self._data[Keys.STOP_EVENT] = None
+        return self._data[Keys.STOP_EVENT]
 
     @_stop_event.setter
     def _stop_event(self, obj: Event) -> None:
-        if not isinstance(obj, Event):
+        if obj is not None and not isinstance(obj, Event):
             raise Raise.error(
                 f"threading.Event type expected, '{type(obj)}' received.",
                 TypeError,
                 self.__class__.__name__,
                 currentframe(),
             )
-        self._data["_stop_event"] = obj
+        self._data[Keys.STOP_EVENT] = obj
 
     @property
     def is_stopped(self) -> Optional[bool]:
@@ -165,9 +308,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     @property
     def _sleep_period(self) -> float:
         """Return sleepperiod value."""
-        if "_sleep_period" not in self._data:
-            self._data["_sleep_period"] = 1.0
-        return self._data["_sleep_period"]
+        if Keys.SLEEP_PERIOD not in self._data:
+            self._data[Keys.SLEEP_PERIOD] = 1.0
+        return self._data[Keys.SLEEP_PERIOD]
 
     @_sleep_period.setter
     def _sleep_period(self, value: float) -> None:
@@ -175,11 +318,11 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if not isinstance(value, float):
             raise Raise.error(
                 f"Positive float type expected, '{value}' received.",
-                ValueError,
+                TypeError,
                 self.__class__.__name__,
                 currentframe(),
             )
-        self._data["_sleep_period"] = value
+        self._data[Keys.SLEEP_PERIOD] = value
 
 
 # #[EOF]#######################################################################

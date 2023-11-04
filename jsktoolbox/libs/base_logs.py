@@ -10,7 +10,6 @@ import syslog
 
 from inspect import currentframe
 from typing import Optional, Tuple, List, Dict, Any
-from abc import ABC, abstractmethod
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
@@ -375,14 +374,6 @@ class BLoggerQueue(BData, NoDynamicAttributes):
                 currentframe(),
             )
         self._data[Keys.QUEUE] = obj
-
-
-class ILoggerEngine(ABC):
-    """Logger engine interface class."""
-
-    @abstractmethod
-    def send(self, message: str) -> None:
-        """Send message method."""
 
 
 class BLoggerEngine(BData, NoDynamicAttributes):

@@ -3,20 +3,13 @@
   Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 10.10.2023
 
-  Purpose:
+  Purpose: LogFormatter classes.
 """
 
-import os
-import sys
 import time
 from datetime import datetime
 
-from typing import Optional, List, Any
 from jsktoolbox.libs.base_logs import BLogFormatter
-
-#  https://www.programiz.com/python-programming/datetime/strftime
-# timestamp: int(time.time())
-# now: time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 
 
 class LogFormatterNull(BLogFormatter):

@@ -11,18 +11,18 @@ import sys
 import syslog
 
 from inspect import currentframe
-from typing import Optional, Union, Dict
+from typing import Optional, Union
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.libs.system import PathChecker
 from jsktoolbox.libs.base_logs import (
-    ILoggerEngine,
     BLoggerEngine,
     Keys,
     SysLogKeys,
 )
+from jsktoolbox.libs.interfaces.logger_engine import ILoggerEngine
 from jsktoolbox.logstool.formatters import BLogFormatter
 
 # https://www.geeksforgeeks.org/python-testing-output-to-stdout/
