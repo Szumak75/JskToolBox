@@ -24,83 +24,6 @@ from jsktoolbox.libs.base_th import ThBaseObject
 from jsktoolbox.logstool.engines import *
 
 
-class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
-    """LoggerEngine container class."""
-
-    def __init__(self) -> None:
-        """Constructor."""
-        # make logs queue object
-        self._data[Keys.QUEUE] = LoggerQueue()
-        # default logs level configuration
-        self._data[Keys.NO_CONF] = {}
-        self._data[Keys.NO_CONF][LogsLevelKeys.INFO] = [LoggerEngineStdout()]
-        self._data[Keys.NO_CONF][LogsLevelKeys.DEBUG] = [
-            LoggerEngineStderr()
-        ]
-
-    def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
-        """Add LoggerEngine to specific log level.
-
-        Arguments:
-        log_level [str] - String Key from .base_log.LogsLevelKeys.keys,
-        engine [ILoggerEngine] - an object created from Engine classes.
-        """
-        if not isinstance(log_level, str):
-            raise Raise.error(
-                f"Key as string expected, '{type(log_level)}' received.'",
-                TypeError,
-                self.__class__.__name__,
-                currentframe(),
-            )
-        if not isinstance(engine, ILoggerEngine):
-            raise Raise.error(
-                f"ILoggerEngine type expected, '{type(engine)}' received.",
-                TypeError,
-                self.__class__.__name__,
-                currentframe(),
-            )
-        if Keys.CONF not in self._data:
-            self._data[Keys.CONF] = {}
-            self._data[Keys.CONF][log_level] = [engine]
-        else:
-            if log_level not in self._data[Keys.CONF].keys():
-                self._data[Keys.CONF][log_level] = [engine]
-            else:
-                test = False
-                for i in range(0, len(self._data[Keys.CONF][log_level])):
-                    if (
-                        self._data[Keys.CONF][log_level][i].__class__
-                        == engine.__class__
-                    ):
-                        self._data[Keys.CONF][log_level][i] = engine
-                        test = True
-                if not test:
-                    self._data[Keys.CONF][log_level].append(engine)
-
-    def send(self) -> None:
-        """The LoggerEngine method.
-
-        For sending messages to the configured logging subsystem.
-        """
-        while True:
-            item = self.logs_queue.get()
-            if item is None:
-                return
-            # get tuple(log_level, message)
-            log_level, message = item
-            # check if has have configured logging subsystem
-            if Keys.CONF in self._data and len(self._data[Keys.CONF]) > 0:
-                if log_level in self._data[Keys.CONF]:
-                    for item in self._data[Keys.CONF][log_level]:
-                        engine: ILoggerEngine = item
-                        engine.send(message)
-            else:
-                if log_level in self._data[Keys.NO_CONF]:
-                    for item in self._data[Keys.NO_CONF][log_level]:
-                        engine: ILoggerEngine = item
-                        engine.send(message)
-
-
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     """Logger Client main class."""
 
@@ -235,8 +158,85 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         self.message(message, LogsLevelKeys.WARNING)
 
 
+class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
+    """LoggerEngine container class."""
+
+    def __init__(self) -> None:
+        """Constructor."""
+        # make logs queue object
+        self._data[Keys.QUEUE] = LoggerQueue()
+        # default logs level configuration
+        self._data[Keys.NO_CONF] = {}
+        self._data[Keys.NO_CONF][LogsLevelKeys.INFO] = [LoggerEngineStdout()]
+        self._data[Keys.NO_CONF][LogsLevelKeys.DEBUG] = [
+            LoggerEngineStderr()
+        ]
+
+    def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
+        """Add LoggerEngine to specific log level.
+
+        Arguments:
+        log_level [str] - String Key from .base_log.LogsLevelKeys.keys,
+        engine [ILoggerEngine] - an object created from Engine classes.
+        """
+        if not isinstance(log_level, str):
+            raise Raise.error(
+                f"Key as string expected, '{type(log_level)}' received.'",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        if not isinstance(engine, ILoggerEngine):
+            raise Raise.error(
+                f"ILoggerEngine type expected, '{type(engine)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        if Keys.CONF not in self._data:
+            self._data[Keys.CONF] = {}
+            self._data[Keys.CONF][log_level] = [engine]
+        else:
+            if log_level not in self._data[Keys.CONF].keys():
+                self._data[Keys.CONF][log_level] = [engine]
+            else:
+                test = False
+                for i in range(0, len(self._data[Keys.CONF][log_level])):
+                    if (
+                        self._data[Keys.CONF][log_level][i].__class__
+                        == engine.__class__
+                    ):
+                        self._data[Keys.CONF][log_level][i] = engine
+                        test = True
+                if not test:
+                    self._data[Keys.CONF][log_level].append(engine)
+
+    def send(self) -> None:
+        """The LoggerEngine method.
+
+        For sending messages to the configured logging subsystem.
+        """
+        while True:
+            item = self.logs_queue.get()
+            if item is None:
+                return
+            # get tuple(log_level, message)
+            log_level, message = item
+            # check if has have configured logging subsystem
+            if Keys.CONF in self._data and len(self._data[Keys.CONF]) > 0:
+                if log_level in self._data[Keys.CONF]:
+                    for item in self._data[Keys.CONF][log_level]:
+                        engine: ILoggerEngine = item
+                        engine.send(message)
+            else:
+                if log_level in self._data[Keys.NO_CONF]:
+                    for item in self._data[Keys.NO_CONF][log_level]:
+                        engine: ILoggerEngine = item
+                        engine.send(message)
+
+
 class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
-    """LoggerProcessor thread engine."""
+    """LoggerProcessor thread class."""
 
     def __init__(self):
         """Constructor."""
