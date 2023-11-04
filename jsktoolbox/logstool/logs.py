@@ -105,22 +105,19 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     """Logger Client main class."""
 
     def __init__(
-        self, queue: LoggerQueue, name: Optional[str] = None
+        self, queue: Optional[LoggerQueue] = None, name: Optional[str] = None
     ) -> None:
         """Constructor.
 
         Arguments:
-        queue [LoggerQueue] - LoggerQeueu class object from LoggerEngine,
+        queue [LoggerQueue] - optional LoggerQeueu class object from LoggerEngine, required, but can be set after the object is created,
         name [str] - optional app name for logs decorator
         """
         # store name
         self.name = name
         # logger queue
-        if not isinstance(queue, LoggerQueue):
-            raise Raise.error(
-                f"LoggerQueue type expected, '{type(queue)}' received."
-            )
-        self.logs_queue = queue
+        if queue:
+            self.logs_queue = queue
 
     @property
     def name(self) -> Optional[str]:
@@ -130,7 +127,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         return self._data[Keys.NAME]
 
     @name.setter
-    def name(self, name: str) -> None:
+    def name(self, name: Optional[str]) -> None:
         """Set LoggerClient name string."""
         if name and not isinstance(name, str):
             raise Raise.error(
@@ -145,6 +142,22 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         self, message: str, log_level: str = LogsLevelKeys.INFO
     ) -> None:
         """Send message to logging subsystem."""
+        if not isinstance(log_level, str):
+            raise Raise.error(
+                f"log_level as string type expected, '{type(log_level)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        if log_level not in LogsLevelKeys.keys:
+            raise Raise.error(
+                f"log_level as key from .base_logs.LogsLevelKeys.keys expected, '{log_level}' received.",
+                KeyError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        if not isinstance(message, str):
+            message = f"{message}"
         if self.name is not None:
             message = f"[{self.name}] {message}"
         self.logs_queue.put(message, log_level)
