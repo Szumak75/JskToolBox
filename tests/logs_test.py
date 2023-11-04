@@ -70,14 +70,14 @@ class B(BLoggerQueue, NoDynamicAttributes):
     def __init__(self, logger: LoggerClient):
         """Constructor."""
         self.msg = logger
-        self.msg.logs_queue.put("test")
-        self.msg.logs_queue.put("test 2", LogsLevelKeys.DEBUG)
         self.msg.message_debug = "coś się stało"
 
     def send(self, msg: str) -> None:
         """Test"""
-        self.msg.logs_queue.put(msg)
-        self.msg.logs_queue.put(msg, LogsLevelKeys.DEBUG)
+        # self.msg.logs_queue.put(msg)
+        # self.msg.logs_queue.put(msg, LogsLevelKeys.DEBUG)
+        self.msg.message_info = msg
+        self.msg.message_debug = msg
 
 
 if __name__ == "__main__":
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     count = 0
     while True:
         count += 1
-        time.sleep(5.0)
+        time.sleep(0.7)
         obj_b.send(f"Count: {count}")
         if count == 10:
             obj_a.stop()

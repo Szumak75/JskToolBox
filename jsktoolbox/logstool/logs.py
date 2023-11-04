@@ -305,12 +305,12 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 currentframe(),
             )
 
-        self.logger_client.message_debug = f"Start {self.__class__.__name__}"
+        self.logger_client.message_debug = f"Start."
         # run
         while not self.stopped:
             self.logger_engine.send()
             time.sleep(self._sleep_period)
-        self.logger_client.message_debug = f"Stop {self.__class__.__name__}"
+        self.logger_client.message_debug = f"Stop."
         self.logger_engine.send()
 
     def stop(self) -> None:
