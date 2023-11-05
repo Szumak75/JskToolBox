@@ -14,6 +14,12 @@ The project contains classes that enable common operations on configuration file
 
 [ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md)
 
+## LogsTool
+
+The project contains several classes that create a logging subsystem for the designed solutions.
+
+[LogsTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md)
+
 ## NetAddressTool
 
 The project contains sets of base classes for operations on IPv4 and IPv6 addresses.
