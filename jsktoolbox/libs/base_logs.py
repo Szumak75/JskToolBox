@@ -322,7 +322,7 @@ class LoggerQueue(NoDynamicAttributes):
     def get(self) -> Optional[Tuple[str, str]]:
         """Get item from queue.
 
-        Returs queue tuple[logs_level:str, message:str] or None if empty.
+        Returs queue tuple[log_level:str, message:str] or None if empty.
         """
         try:
             return tuple(self.__queue.pop(0))
@@ -335,20 +335,18 @@ class LoggerQueue(NoDynamicAttributes):
                 currentframe(),
             )
 
-    def put(
-        self, message: str, logs_level: str = LogsLevelKeys.INFO
-    ) -> None:
+    def put(self, message: str, log_level: str = LogsLevelKeys.INFO) -> None:
         """Put item to queue."""
-        if logs_level not in LogsLevelKeys.keys:
+        if log_level not in LogsLevelKeys.keys:
             raise Raise.error(
-                f"logs_level key not found, '{logs_level}' received.",
+                f"logs_level key not found, '{log_level}' received.",
                 KeyError,
                 self.__class__.__name__,
                 currentframe(),
             )
         self.__queue.append(
             [
-                logs_level,
+                log_level,
                 message,
             ]
         )

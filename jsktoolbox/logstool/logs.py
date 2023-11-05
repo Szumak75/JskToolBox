@@ -34,7 +34,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
         Arguments:
         queue [LoggerQueue] - optional LoggerQeueu class object from LoggerEngine, required, but can be set after the object is created,
-        name [str] - optional app name for logs decorator
+        name [str] - optional client name for logs decorator
         """
         # store name
         self.name = name
@@ -164,12 +164,26 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
     def __init__(self) -> None:
         """Constructor."""
         # make logs queue object
-        self._data[Keys.QUEUE] = LoggerQueue()
+        self.logs_queue = LoggerQueue()
         # default logs level configuration
         self._data[Keys.NO_CONF] = {}
         self._data[Keys.NO_CONF][LogsLevelKeys.INFO] = [LoggerEngineStdout()]
+        self._data[Keys.NO_CONF][LogsLevelKeys.WARNING] = [
+            LoggerEngineStdout()
+        ]
+        self._data[Keys.NO_CONF][LogsLevelKeys.NOTICE] = [
+            LoggerEngineStdout()
+        ]
         self._data[Keys.NO_CONF][LogsLevelKeys.DEBUG] = [
             LoggerEngineStderr()
+        ]
+        self._data[Keys.NO_CONF][LogsLevelKeys.ERROR] = [
+            LoggerEngineStdout(),
+            LoggerEngineStderr(),
+        ]
+        self._data[Keys.NO_CONF][LogsLevelKeys.CRITICAL] = [
+            LoggerEngineStdout(),
+            LoggerEngineStderr(),
         ]
 
     def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
