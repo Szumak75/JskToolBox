@@ -7,13 +7,123 @@
 """
 
 import os
+import sys
+import getopt
+
 from inspect import currentframe
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, Union, List, Tuple, Dict
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
+
+
+class Keys(NoDynamicAttributes):
+    """Keys definition class.
+
+    For internal purpose only.
+    """
+
+    @staticmethod
+    @property
+    def ARGS() -> str:
+        """Return ARGS Key."""
+        return "__args__"
+
+    @staticmethod
+    @property
+    def CONFIGURED_ARGS() -> str:
+        """Return CONFIGURED_ARGS Key."""
+        return "__cargs__"
+
+    @staticmethod
+    @property
+    def DESC_OPTS() -> str:
+        """Return DESC_OPTS Key."""
+        return "__desc_opts__"
+
+    @staticmethod
+    @property
+    def SHORT_OPTS() -> str:
+        """Return SHORT_OPTS Key."""
+        return "__short_opts__"
+
+    @staticmethod
+    @property
+    def LONG_OPTS() -> str:
+        """Return LONG_OPTS Key."""
+        return "__long_opts__"
+
+
+class CommandLineParser(BData, NoDynamicAttributes):
+    """Parser for command line options."""
+
+    def __init__(self) -> None:
+        """Constructor."""
+        self._data[Keys.CONFIGURED_ARGS] = {}
+        self._data[Keys.ARGS] = {}
+
+    def configure_argument(
+        self,
+        short_arg: str,
+        long_arg: str,
+        desc_arg: Union[str, List, Tuple],
+        has_value: bool = False,
+    ) -> None:
+        """Application command line argument configuration method and its description."""
+        if Keys.SHORT_OPTS not in self._data[Keys.CONFIGURED_ARGS]:
+            self._data[Keys.CONFIGURED_ARGS][Keys.SHORT_OPTS] = ""
+        if Keys.LONG_OPTS not in self._data[Keys.CONFIGURED_ARGS]:
+            self._data[Keys.CONFIGURED_ARGS][Keys.LONG_OPTS] = []
+        if Keys.DESC_OPTS not in self._data[Keys.CONFIGURED_ARGS]:
+            self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS] = []
+
+        self._data[Keys.CONFIGURED_ARGS][Keys.SHORT_OPTS] += short_arg + (
+            ":" if has_value else ""
+        )
+        self._data[Keys.CONFIGURED_ARGS][Keys.LONG_OPTS].append(
+            long_arg + ("=" if has_value else "")
+        )
+        if desc_arg:
+            if isinstance(desc_arg, str):
+                self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS].append(
+                    desc_arg
+                )
+            elif isinstance(desc_arg, (Tuple, List)):
+                for desc in desc_arg:
+                    self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS].append(
+                        desc
+                    )
+
+    def parse_arguments(self) -> None:
+        """Command line arguments parser."""
+        try:
+            opts, _ = getopt.getopt(
+                sys.argv[1:],
+                self._data[Keys.CONFIGURED_ARGS][Keys.SHORT_OPTS],
+                self._data[Keys.CONFIGURED_ARGS][Keys.LONG_OPTS],
+            )
+        except getopt.GetoptError as ex:
+            print(f"Command line argument error: {ex}")
+            sys.exit(2)
+
+        for opt, value in opts:
+            for short_arg, long_arg in zip(
+                self._data[Keys.CONFIGURED_ARGS][Keys.SHORT_OPTS],
+                self._data[Keys.CONFIGURED_ARGS][Keys.LONG_OPTS],
+            ):
+                if opt in ("-" + short_arg, "--" + long_arg):
+                    self.args[long_arg] = value
+
+    def get_option(self, option: str) -> Optional[str]:
+        """Get value of the option or None if it doesn't exist."""
+        return self.args.get(option)
+
+    @property
+    def args(self) -> Dict:
+        """Return parsed arguments dict."""
+        return self._data[Keys.ARGS]
 
 
 class Env(NoDynamicAttributes):

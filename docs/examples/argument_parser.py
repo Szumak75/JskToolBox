@@ -1,6 +1,7 @@
 import getopt
 import sys
 
+
 class ArgumentParser:
     def __init__(self, **kwargs):
         self._options = {}
@@ -11,7 +12,8 @@ class ArgumentParser:
                 self._options[option] = (option[2:], False, option[0])
 
     def parse_args(self, argv):
-        print(argv)
+        print(f"{argv} -- {self._options.keys()}")
+        print(f"{self._options}")
         options, args = getopt.getopt(argv, self._options.keys())
         for option, value in options:
             self._handle_option(option, value)
@@ -19,6 +21,7 @@ class ArgumentParser:
     def _handle_option(self, option, value):
         if value is None:
             value = ""
+        options = str(options)
         key = self._options[option][0]
         if self._options[option][1]:
             self._options[key] = value
@@ -27,6 +30,7 @@ class ArgumentParser:
 
     def get_option(self, option):
         return self._options.get(option)
+
 
 class MyApp:
     def __init__(self, **kwargs):
@@ -41,8 +45,7 @@ class MyApp:
         if self.file:
             print("Plik:", self.file)
 
+
 if __name__ == "__main__":
     app = MyApp(verbose=True, file="myfile.txt")
     app.run()
-
-
