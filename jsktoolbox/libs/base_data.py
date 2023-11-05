@@ -5,6 +5,7 @@
 
   Purpose: BData container base class.
 """
+
 import inspect
 from typing import Dict, Optional
 from jsktoolbox.attribtool import NoDynamicAttributes

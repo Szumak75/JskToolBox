@@ -25,33 +25,33 @@ class Keys(NoDynamicAttributes):
     For internal purpose only.
     """
 
-    @staticmethod
+    @classmethod
     @property
-    def ARGS() -> str:
+    def ARGS(cls) -> str:
         """Return ARGS Key."""
         return "__args__"
 
-    @staticmethod
+    @classmethod
     @property
-    def CONFIGURED_ARGS() -> str:
+    def CONFIGURED_ARGS(cls) -> str:
         """Return CONFIGURED_ARGS Key."""
         return "__cargs__"
 
-    @staticmethod
+    @classmethod
     @property
-    def DESC_OPTS() -> str:
+    def DESC_OPTS(cls) -> str:
         """Return DESC_OPTS Key."""
         return "__desc_opts__"
 
-    @staticmethod
+    @classmethod
     @property
-    def SHORT_OPTS() -> str:
+    def SHORT_OPTS(cls) -> str:
         """Return SHORT_OPTS Key."""
         return "__short_opts__"
 
-    @staticmethod
+    @classmethod
     @property
-    def LONG_OPTS() -> str:
+    def LONG_OPTS(cls) -> str:
         """Return LONG_OPTS Key."""
         return "__long_opts__"
 
@@ -68,7 +68,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
         self,
         short_arg: str,
         long_arg: str,
-        desc_arg: Union[str, List, Tuple],
+        desc_arg: Optional[Union[str, List, Tuple]] = None,
         has_value: bool = False,
     ) -> None:
         """Application command line argument configuration method and its description."""
@@ -91,10 +91,19 @@ class CommandLineParser(BData, NoDynamicAttributes):
                     desc_arg
                 )
             elif isinstance(desc_arg, (Tuple, List)):
+                tmp = []
                 for desc in desc_arg:
-                    self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS].append(
-                        desc
-                    )
+                    tmp.append(desc)
+                if not tmp:
+                    tmp = ""
+                self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS].append(tmp)
+            else:
+                self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS].append(
+                    str(desc_arg)
+                )
+
+        else:
+            self._data[Keys.CONFIGURED_ARGS][Keys.DESC_OPTS].append("")
 
     def parse_arguments(self) -> None:
         """Command line arguments parser."""
