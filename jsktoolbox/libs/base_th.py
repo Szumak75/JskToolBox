@@ -306,14 +306,14 @@ class ThBaseObject(BData, NoDynamicAttributes):
         return self._started.is_set()
 
     @property
-    def _sleep_period(self) -> float:
+    def sleep_period(self) -> float:
         """Return sleepperiod value."""
         if Keys.SLEEP_PERIOD not in self._data:
             self._data[Keys.SLEEP_PERIOD] = 1.0
         return self._data[Keys.SLEEP_PERIOD]
 
-    @_sleep_period.setter
-    def _sleep_period(self, value: float) -> None:
+    @sleep_period.setter
+    def sleep_period(self, value: float) -> None:
         """Set sleepperiod value."""
         if not isinstance(value, float):
             raise Raise.error(
