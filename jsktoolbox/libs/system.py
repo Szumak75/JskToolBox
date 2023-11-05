@@ -58,35 +58,35 @@ class PathChecker(BData, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        self.data["pathname"] = pathname
-        self.data["split"] = check_deep
-        self.data["list"]: List = []
+        self._data["pathname"] = pathname
+        self._data["split"] = check_deep
+        self._data["list"]: List = []
         # analysis
         self.__run__()
 
     def __run__(self) -> None:
         """Path analysis procedure."""
-        query = Path(self.data["pathname"])
+        query = Path(self._data["pathname"])
         # check exists
-        self.data["exists"] = query.exists()
-        if self.data["exists"]:
+        self._data["exists"] = query.exists()
+        if self._data["exists"]:
             # check isfile
-            self.data["isfile"] = query.is_file()
+            self._data["isfile"] = query.is_file()
             # check isdir
-            self.data["isdir"] = query.is_dir()
+            self._data["isdir"] = query.is_dir()
             # check issymlink
-            self.data["issymlink"] = query.is_symlink()
+            self._data["issymlink"] = query.is_symlink()
             # resolve symlink
-            self.data["posixpath"] = str(query.resolve())
+            self._data["posixpath"] = str(query.resolve())
 
-        if self.data["split"]:
+        if self._data["split"]:
             # split and analyse
             tmp = ""
             for item in self.path.split(os.sep):
                 if item == "":
                     continue
                 tmp += f"{os.sep}{item}"
-                self.data["list"].append(PathChecker(tmp, False))
+                self._data["list"].append(PathChecker(tmp, False))
 
     def __str__(self) -> str:
         """Return class data as string."""
@@ -110,7 +110,7 @@ class PathChecker(BData, NoDynamicAttributes):
         """Return dirname from path."""
         if self.exists:
             last = None
-            for item in self.data["list"]:
+            for item in self._data["list"]:
                 if item.is_dir:
                     last = item.path
             return last
@@ -129,8 +129,8 @@ class PathChecker(BData, NoDynamicAttributes):
     @property
     def exists(self) -> bool:
         """Return path exists flag."""
-        if "exists" in self.data:
-            return self.data["exists"]
+        if "exists" in self._data:
+            return self._data["exists"]
         else:
             raise Raise.error(
                 "Unexpected exception",
@@ -142,8 +142,8 @@ class PathChecker(BData, NoDynamicAttributes):
     @property
     def is_dir(self) -> bool:
         """Return path isdir flag."""
-        if "isdir" in self.data:
-            return self.data["isdir"]
+        if "isdir" in self._data:
+            return self._data["isdir"]
         else:
             raise Raise.error(
                 "Unexpected exception",
@@ -155,8 +155,8 @@ class PathChecker(BData, NoDynamicAttributes):
     @property
     def is_file(self) -> bool:
         """Return path isfile flag."""
-        if "isfile" in self.data:
-            return self.data["isfile"]
+        if "isfile" in self._data:
+            return self._data["isfile"]
         else:
             raise Raise.error(
                 "Unexpected exception",
@@ -168,8 +168,8 @@ class PathChecker(BData, NoDynamicAttributes):
     @property
     def is_symlink(self) -> bool:
         """Return path issymlink flag."""
-        if "issymlink" in self.data:
-            return self.data["issymlink"]
+        if "issymlink" in self._data:
+            return self._data["issymlink"]
         else:
             raise Raise.error(
                 "Unexpected exception",
@@ -181,13 +181,13 @@ class PathChecker(BData, NoDynamicAttributes):
     @property
     def path(self) -> str:
         """Return path string."""
-        return self.data["pathname"]
+        return self._data["pathname"]
 
     @property
     def posixpath(self) -> Optional[str]:
         """Return path string."""
         if self.exists:
-            return self.data["posixpath"]
+            return self._data["posixpath"]
         return None
 
     def create(self) -> bool:
@@ -197,7 +197,7 @@ class PathChecker(BData, NoDynamicAttributes):
         if self.path[-1] == os.sep:
             file = False
             test_path = self.path[:-1]
-        for item in self.data["list"]:
+        for item in self._data["list"]:
             if item.exists:
                 continue
             if item.path == test_path:
@@ -211,7 +211,7 @@ class PathChecker(BData, NoDynamicAttributes):
             else:
                 os.mkdir(item.path)
         # check
-        self.data["list"] = []
+        self._data["list"] = []
         self.__run__()
 
         return self.exists

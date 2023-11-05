@@ -23,9 +23,12 @@ console.toolbox = [{'autosave': False,
                     'shared': False,
                     'title': 'Terminal 1'}]
 proj.directory-list = [{'dirloc': loc('.'),
-                        'excludes': (),
+                        'excludes': ['poetry.lock'],
                         'filter': '*',
                         'include_hidden': False,
                         'recursive': True,
                         'watch_for_changes': True}]
 proj.file-type = 'shared'
+proj.launch-config = {loc('jsktoolbox/stringtool/TODO.me'): ('project',
+        ('',
+         'launch-qR99q31BBCboApf1'))}

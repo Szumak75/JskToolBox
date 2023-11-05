@@ -17,14 +17,14 @@ class BData(NoDynamicAttributes):
     __data: Optional[Dict] = None
 
     @property
-    def data(self) -> Dict:
+    def _data(self) -> Dict:
         """Return data dict."""
         if self.__data is None:
             self.__data = {}
         return self.__data
 
-    @data.setter
-    def data(self, value: Optional[Dict]) -> None:
+    @_data.setter
+    def _data(self, value: Optional[Dict]) -> None:
         """Set data dict."""
         if value is None:
             self.__data = {}
