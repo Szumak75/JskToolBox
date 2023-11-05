@@ -129,12 +129,12 @@ The default engine configuration is only used if there is no user configuration.
 
 ### Public methods
 ```
-.add_engine(log_level: str, engine: LoggerEngine**) -> None
+.add_engine(log_level: str, engine: LoggerEngine*) -> None
 ```
 
 Arguments:
 - **log_level** [str] - _the key as a string from the `base_log.LogsLevelKeys.keys` list._
-- **engine** [LoggerEngine**] - _an object created from any Engine classes._
+- **engine** [LoggerEngine*] - _an object created from any Engine classes._
 
 The method that adds an engine object of any engine class to the list of engines used to process messages for the specified logging level.
 
@@ -276,7 +276,7 @@ from jsktoolbox.logstool.engines import LoggerEngineStdout
 
 ### Constructor
 ```
-LoggerEngineStdout(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
+LoggerEngineStdout(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
 ```
 
 Arguments:
@@ -317,7 +317,7 @@ from jsktoolbox.logstool.engines import LoggerEngineStderr
 
 ### Constructor
 ```
-LoggerEngineStderr(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
+LoggerEngineStderr(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
 ```
 
 Arguments:
@@ -357,7 +357,7 @@ from jsktoolbox.logstool.engines import LoggerEngineFile
 
 ### Constructor
 ```
-LoggerEngineFile(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
+LoggerEngineFile(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
 ```
 
 Arguments:
@@ -424,7 +424,7 @@ from jsktoolbox.logstool.engines import LoggerEngineSyslog
 
 ### Constructor
 ```
-LoggerEngineSyslog(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
+LoggerEngineSyslog(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
 ```
 
 Arguments:
