@@ -123,18 +123,18 @@ from jsktoolbox.logstool.logs import LoggerEngine
 LoggerEngine()
 ```
 
-The constructor returns a class object with an initialized instance of the `LoggerQueue` class and pre-configured logging levels for the `LoggerEngineStdout` engine: [*INFO*, *NOTICE*, *WARNING*, *ERROR*, *CRITICAL*] and for the `LoggerEngineStderr` engine: [*ERROR*, *CRITICAL*, *DEBUG*].
+The constructor returns a class object with an initialized instance of the `LoggerQueue` class and pre-configured logging levels for the `LoggerEngineStdout` engine: [**INFO**, **NOTICE**, **WARNING**, **ERROR**, **CRITICAL**] and for the `LoggerEngineStderr` engine: [**ERROR**, **CRITICAL**, **DEBUG**].
 The default engine configuration is only used if there is no user configuration. When you add any engine to any login level, the default configuration is bypassed.
 
 
 ### Public methods
 ```
-.add_engine(log_level: str, engine: LoggerEngine*) -> None
+.add_engine(log_level: str, engine: LoggerEngine**) -> None
 ```
 
 Arguments:
-- *log_level* [str] - _the key as a string from the `base_log.LogsLevelKeys.keys` list._
-- *engine* [LoggerEngine*] - _an object created from any Engine classes._
+- **log_level** [str] - _the key as a string from the `base_log.LogsLevelKeys.keys` list._
+- **engine** [LoggerEngine**] - _an object created from any Engine classes._
 
 The method that adds an engine object of any engine class to the list of engines used to process messages for the specified logging level.
 
@@ -176,13 +176,16 @@ LoggerClient(queue: Optional[LoggerQueue] = None, name: Optional[str] = None)
 ```
 
 Arguments:
-- *queue* [LoggerQueue] - _optional `LoggerQeueu` class object from `LoggerEngine`, required, but can be set after the object is created,_
-- *name* [str] - _optional client name string, will be added to the sent message if its value is other than `None`._
+- **queue** [LoggerQueue] - _optional `LoggerQeueu` class object from `LoggerEngine`, required, but can be set after the object is created,_
+- **name** [str] - _optional client name string, will be added to the sent message if its value is other than `None`._
 
 ### Public methods
 ```
 .message(message: str, log_level: str = .libs.base_log.LogsLevelKeys.INFO) -> None
 ```
+Arguments:
+- **message** [str] - _message string_.
+- **log_level** [str] - _logging level string from `.libs.base_log.LogsLevelKeys.keys` tuple_.
 
 Method that adds a message with the given logging level to the `LoggerQueue` queue.
 
@@ -273,13 +276,13 @@ from jsktoolbox.logstool.engines import LoggerEngineStdout
 
 ### Constructor
 ```
-LoggerEngineStdout(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
+LoggerEngineStdout(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
 ```
 
 Arguments:
-- *name* - _optional string name, should usually be copied from `LoggerEngine.name`._
-- *formatter* - _optional object of an formatters classes._
-- *buffered* - _the flag enabling the use of a buffered messaging strategy._
+- **name** - _optional string name, should usually be copied from `LoggerEngine.name`._
+- **formatter** - _optional object of an formatters classes._
+- **buffered** - _the flag enabling the use of a buffered messaging strategy._
 
 ### Public methods
 ```
@@ -314,13 +317,13 @@ from jsktoolbox.logstool.engines import LoggerEngineStderr
 
 ### Constructor
 ```
-LoggerEngineStderr(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
+LoggerEngineStderr(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
 ```
 
 Arguments:
-- *name* - _optional string name, should usually be copied from `LoggerEngine.name`._
-- *formatter* - _optional object of an formatters classes._
-- *buffered* - _the flag enabling the use of a buffered messaging strategy._
+- **name** - _optional string name, should usually be copied from `LoggerEngine.name`._
+- **formatter** - _optional object of an formatters classes._
+- **buffered** - _the flag enabling the use of a buffered messaging strategy._
 
 ### Public methods
 ```
@@ -354,13 +357,13 @@ from jsktoolbox.logstool.engines import LoggerEngineFile
 
 ### Constructor
 ```
-LoggerEngineFile(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
+LoggerEngineFile(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
 ```
 
 Arguments:
-- *name* - _optional string name, should usually be copied from `LoggerEngine.name`._
-- *formatter* - _optional object of an formatters classes._
-- *buffered* - _the flag enabling the use of a buffered messaging strategy._
+- **name** - _optional string name, should usually be copied from `LoggerEngine.name`._
+- **formatter** - _optional object of an formatters classes._
+- **buffered** - _the flag enabling the use of a buffered messaging strategy._
 
 ### Public methods
 ```
@@ -421,13 +424,13 @@ from jsktoolbox.logstool.engines import LoggerEngineSyslog
 
 ### Constructor
 ```
-LoggerEngineSyslog(name: Optional[str], formatter: Optional[LogFormatter*], buffered: bool = False)
+LoggerEngineSyslog(name: Optional[str], formatter: Optional[LogFormatter**], buffered: bool = False)
 ```
 
 Arguments:
-- *name* - _optional string name, should usually be copied from `LoggerEngine.name`._
-- *formatter* - _optional object of an formatters classes._
-- *buffered* - _the flag enabling the use of a buffered messaging strategy._
+- **name** - _optional string name, should usually be copied from `LoggerEngine.name`._
+- **formatter** - _optional object of an formatters classes._
+- **buffered** - _the flag enabling the use of a buffered messaging strategy._
 
 ### Public methods
 ```
@@ -467,16 +470,16 @@ The setter thet allows you to assign an name string or `None`.
 ```
 
 Sets syslog facility.
-- *int* key from `.libs.base_log.SysLogKeys.facility_keys.values()` list
-- *str* key from `.libs.base_log.SysLogKeys.facility_keys` list
+- **int** key from `.libs.base_log.SysLogKeys.facility_keys.values()` list
+- **str** key from `.libs.base_log.SysLogKeys.facility_keys` list
 
 ```
 .level = Union[int, str]
 ```
 
 Sets syslog level.
-- *int* key from `.libs.base_log.SysLogKeys.level_keys.values()` list
-- *str* key from `.libs.base_log.SysLogKeys.level_keys` list
+- **int** key from `.libs.base_log.SysLogKeys.level_keys.values()` list
+- **str** key from `.libs.base_log.SysLogKeys.level_keys` list
 
 # Formatter classes
 ## LogFormatterNull
@@ -499,8 +502,8 @@ LogFormatterNull()
 .format(message: str, name: str = None) -> str:
 ```
 Arguments:
-- *message* [str] - message string to format,
-- *name* Optional[str] - optional name string from `LoggerEngine` class.
+- **message** [str] - _message string to format_,
+- **name** Optional[str] - _optional name string from `LoggerEngine` class_.
 
 The method returns formatted message string.
 
@@ -526,8 +529,8 @@ LogFormatterDateTime()
 .format(message: str, name: str = None) -> str:
 ```
 Arguments:
-- *message* [str] - message string to format,
-- *name* Optional[str] - optional name string from `LoggerEngine` class.
+- **message** [str] - _message string to format_,
+- **name** Optional[str] - _optional name string from `LoggerEngine` class_.
 
 The method returns formatted message string.
 
@@ -553,8 +556,8 @@ LogFormatterTime()
 .format(message: str, name: str = None) -> str:
 ```
 Arguments:
-- *message* [str] - message string to format,
-- *name* Optional[str] - optional name string from `LoggerEngine` class.
+- **message** [str] - _message string to format_,
+- **name** Optional[str] - _optional name string from `LoggerEngine` class_.
 
 The method returns formatted message string.
 
@@ -580,8 +583,8 @@ LogFormatterTimestamp()
 .format(message: str, name: str = None) -> str:
 ```
 Arguments:
-- *message* [str] - message string to format,
-- *name* Optional[str] - optional name string from `LoggerEngine` class.
+- **message** [str] - _message string to format_,
+- **name** Optional[str] - _optional name string from `LoggerEngine` class_.
 
 The method returns formatted message string.
 
@@ -611,7 +614,7 @@ Gets the queue item as a tuple(log_level: str, message: str) or `None` if the qu
 .put(message: str, log_level: str = .libs.base_log.LogsLevelKeys.INFO)
 ```
 Arguments:
-- *message* [str] - formatted message string.
-- *log_level* [str] - logging level string from `.libs.base_log.LogsLevelKeys.keys` tuple.
+- **message** [str] - _formatted message string_.
+- **log_level** [str] - _logging level string from `.libs.base_log.LogsLevelKeys.keys` tuple_.
 
 Queues a formatted message string with the specified logging level.
