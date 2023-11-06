@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "jsktoolbox"
-version = "1.0.0"
-description = "Small sets of base classes for varoius operations."
-authors = ["Jacek Kotlarski <szumak@virthost.pl>"]
-maintainers = ["Jacek Kotlarski <szumak@virthost.pl>"]
+version = "1.0.6"
+description = "Small sets of classes for varoius operations."
+authors = ["Jacek 'Szumak' Kotlarski <szumak@virthost.pl>"]
+maintainers = ["Jacek 'Szumak' Kotlarski <szumak@virthost.pl>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Szumak75/JskToolBox"
