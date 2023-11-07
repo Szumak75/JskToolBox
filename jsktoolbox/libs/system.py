@@ -28,16 +28,17 @@ class _Keys(object, metaclass=ReadOnlyClass):
     ARGS = "__args__"
     CONFIGURED_ARGS = "__cargs__"
     DESC_OPTS = "__desc_opts__"
-    SHORT_OPTS = "__short_opts__"
+    EXAMPLE_OPTS = "__ex_opts__"
+    EXISTS = "__exists__"
+    ISDIR = "__is_dir__"
+    ISFILE = "__is_file__"
+    ISSYMLINK = "__is_symlink__"
+    LIST = "__list__"
     LONG_OPTS = "__long_opts__"
     PATHNAME = "__pathname__"
-    SPLIT = "__split__"
-    LIST = "__list__"
-    EXISTS = "__exists__"
-    ISFILE = "__is_file__"
-    ISDIR = "__is_dir__"
-    ISSYMLINK = "__is_symlink__"
     POSIXPATH = "__posix_path__"
+    SHORT_OPTS = "__short_opts__"
+    SPLIT = "__split__"
 
 
 class CommandLineParser(BData, NoDynamicAttributes):
@@ -54,6 +55,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
         long_arg: str,
         desc_arg: Optional[Union[str, List, Tuple]] = None,
         has_value: bool = False,
+        example_value: Optional[str] = None,
     ) -> None:
         """Application command line argument configuration method and its description."""
         if _Keys.SHORT_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
@@ -62,6 +64,19 @@ class CommandLineParser(BData, NoDynamicAttributes):
             self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS] = []
         if _Keys.DESC_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
             self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS] = []
+        if _Keys.EXAMPLE_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS] = []
+
+        if not short_arg:
+            short_arg = "_"
+
+        if not long_arg:
+            raise Raise.error(
+                f"Long argument name is required.",
+                AttributeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
 
         self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS] += short_arg + (
             ":" if has_value else ""
@@ -69,30 +84,35 @@ class CommandLineParser(BData, NoDynamicAttributes):
         self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS].append(
             long_arg + ("=" if has_value else "")
         )
+
+        tmp = ""
         if desc_arg:
             if isinstance(desc_arg, str):
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS].append(
-                    desc_arg
-                )
+                tmp = desc_arg
             elif isinstance(desc_arg, (Tuple, List)):
                 tmp = []
                 for desc in desc_arg:
                     tmp.append(desc)
                 if not tmp:
                     tmp = ""
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS].append(
-                    tmp
-                )
             else:
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS].append(
-                    str(desc_arg)
-                )
+                tmp = str(desc_arg)
+        self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS].append(tmp)
 
-        else:
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS].append("")
+        tmp = ""
+        if example_value:
+            if isinstance(example_value, str):
+                tmp = example_value
+
+        self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS].append(tmp)
 
     def parse_arguments(self) -> None:
         """Command line arguments parser."""
+        # replace ':' if exists in short option string
+        short_mod = str(
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
+        ).replace(":", "")
+
         try:
             opts, _ = getopt.getopt(
                 sys.argv[1:],
@@ -105,7 +125,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
 
         for opt, value in opts:
             for short_arg, long_arg in zip(
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS],
+                short_mod,
                 self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS],
             ):
                 if opt in ("-" + short_arg, "--" + long_arg):
@@ -114,6 +134,30 @@ class CommandLineParser(BData, NoDynamicAttributes):
     def get_option(self, option: str) -> Optional[str]:
         """Get value of the option or None if it doesn't exist."""
         return self.args.get(option)
+
+    def dump(self) -> Dict:
+        """Dump configured data structure as Dict:
+        {'long opt name':{'short':str, 'has_value':bool, 'description':str, 'example':str}}
+        """
+        out = {}
+        short_mod = str(
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
+        ).replace(":", "")
+
+        for short_arg, long_arg, desc_arg, ex_arg in zip(
+            short_mod,
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS],
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS],
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS],
+        ):
+            print(f"{short_arg}:{long_arg}:{desc_arg}:{ex_arg}")
+            out[long_arg] = {
+                "short": short_arg if short_arg != "_" else "",
+                "has_value": True if long_arg[-1] == "=" else False,
+                "description": desc_arg,
+                "example": ex_arg,
+            }
+        return out
 
     @property
     def args(self) -> Dict:
