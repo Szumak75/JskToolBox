@@ -9,10 +9,10 @@
 """
 
 import socket
-import struct
+
 from copy import deepcopy
 from inspect import currentframe
-from typing import TypeVar, Union, List, Optional
+from typing import TypeVar, Union, List
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
