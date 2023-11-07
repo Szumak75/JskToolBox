@@ -12,7 +12,7 @@ from inspect import currentframe
 
 from typing import Optional
 
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_logs import (
     BLoggerQueue,
@@ -22,6 +22,16 @@ from jsktoolbox.libs.base_logs import (
 )
 from jsktoolbox.libs.base_th import ThBaseObject
 from jsktoolbox.logstool.engines import *
+
+
+class _Keys(object, metaclass=ReadOnlyClass):
+    """Keys definition class.
+
+    For internal purpose only.
+    """
+
+    LEO = "__LEO__"
+    LCO = "__LCO__"
 
 
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):
@@ -263,9 +273,9 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
     @property
     def logger_engine(self) -> Optional[LoggerEngine]:
         """Return LoggerEngine object if any."""
-        if "__LEO__" not in self._data:
-            self._data["__LEO__"] = None
-        return self._data["__LEO__"]
+        if _Keys.LEO not in self._data:
+            self._data[_Keys.LEO] = None
+        return self._data[_Keys.LEO]
 
     @logger_engine.setter
     def logger_engine(self, obj: LoggerEngine) -> None:
@@ -277,16 +287,16 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        self._data["__LEO__"] = obj
+        self._data[_Keys.LEO] = obj
         if self.logger_client is not None:
             self.logger_client.logs_queue = self.logger_engine.logs_queue
 
     @property
     def logger_client(self) -> Optional[LoggerClient]:
         """Return LoggerClient object if any."""
-        if "__LCO__" not in self._data:
-            self._data["__LCO__"] = None
-        return self._data["__LCO__"]
+        if _Keys.LCO not in self._data:
+            self._data[_Keys.LCO] = None
+        return self._data[_Keys.LCO]
 
     @logger_client.setter
     def logger_client(self, obj: LoggerClient) -> None:
@@ -298,7 +308,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        self._data["__LCO__"] = obj
+        self._data[_Keys.LCO] = obj
         if self.logger_engine is not None and obj.logs_queue is None:
             self.logger_client.logs_queue = self.logger_engine.logs_queue
 
