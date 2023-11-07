@@ -8,23 +8,19 @@
 
 from inspect import currentframe
 from typing import List, Optional
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.libs.system import PathChecker
 
 
-class Keys(NoDynamicAttributes):
+class _Keys(object, metaclass=ReadOnlyClass):
     """Keys definition class.
 
     For internal purpose only.
     """
 
-    @classmethod
-    @property
-    def FILE(self) -> str:
-        """Return FILE key."""
-        return "__file__"
+    FILE = "__file__"
 
 
 class FileProcessor(BData, NoDynamicAttributes):
@@ -36,21 +32,21 @@ class FileProcessor(BData, NoDynamicAttributes):
     @property
     def file(self) -> Optional[str]:
         """Return config file path."""
-        if Keys.FILE not in self._data:
-            self._data[Keys.FILE] = None
-        if isinstance(self._data[Keys.FILE], PathChecker):
-            return self._data[Keys.FILE].path
-        return self._data[Keys.FILE]
+        if _Keys.FILE not in self._data:
+            self._data[_Keys.FILE] = None
+        if isinstance(self._data[_Keys.FILE], PathChecker):
+            return self._data[_Keys.FILE].path
+        return self._data[_Keys.FILE]
 
     @file.setter
     def file(self, path: str) -> None:
         """Set file name."""
-        self._data[Keys.FILE] = PathChecker(path)
+        self._data[_Keys.FILE] = PathChecker(path)
 
     @property
     def file_exists(self) -> bool:
         """Check if the file exists and is a file."""
-        obj: PathChecker = self._data[Keys.FILE]
+        obj: PathChecker = self._data[_Keys.FILE]
         return (
             obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
         )
@@ -59,7 +55,7 @@ class FileProcessor(BData, NoDynamicAttributes):
         """Try to create file."""
         if self.file_exists:
             return True
-        obj: PathChecker = self._data[Keys.FILE]
+        obj: PathChecker = self._data[_Keys.FILE]
         if obj.exists and obj.is_dir:
             raise Raise.error(
                 f"Given path: {obj.path} exists and is a directory.",

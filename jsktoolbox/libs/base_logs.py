@@ -11,188 +11,56 @@ import syslog
 from inspect import currentframe
 from typing import Optional, Tuple, List, Dict, Any
 
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 
 
-class Keys(NoDynamicAttributes):
+class Keys(object, metaclass=ReadOnlyClass):
     """Keys definition class.
 
     For internal purpose only.
     """
 
-    @classmethod
-    @property
-    def BUFFERED(cls) -> str:
-        """Return BUFFERED Key."""
-        return "__buffered__"
-
-    @classmethod
-    @property
-    def CONF(cls) -> str:
-        """Return CONF Key."""
-        return "__conf__"
-
-    @classmethod
-    @property
-    def DIR(cls) -> str:
-        """Return DIR Key."""
-        return "__dir__"
-
-    @classmethod
-    @property
-    def FILE(cls) -> str:
-        """Return FILE Key."""
-        return "__file__"
-
-    @classmethod
-    @property
-    def FORMATTER(cls) -> str:
-        """Return FORMATTER Key."""
-        return "__formatter__"
-
-    @classmethod
-    @property
-    def FACILITY(cls) -> str:
-        """Return FACILITY Key."""
-        return "__facility__"
-
-    @classmethod
-    @property
-    def LEVEL(cls) -> str:
-        """Return LEVEL Key."""
-        return "__level__"
-
-    @classmethod
-    @property
-    def NAME(cls) -> str:
-        """Return NAME Key."""
-        return "__name__"
-
-    @classmethod
-    @property
-    def NO_CONF(cls) -> str:
-        """Return NO_CONF Key."""
-        return "__noconf__"
-
-    @classmethod
-    @property
-    def QUEUE(cls) -> str:
-        """Return QUEUE Key."""
-        return "__queue__"
-
-    @classmethod
-    @property
-    def SYSLOG(cls) -> str:
-        """Return SYSLOG Key."""
-        return "__syslog__"
+    BUFFERED = "__buffered__"
+    CONF = "__conf__"
+    DIR = "__dir__"
+    FILE = "__file__"
+    FORMATTER = "__formatter__"
+    FACILITY = "__facility__"
+    LEVEL = "__level__"
+    NAME = "__name__"
+    NO_CONF = "__noconf__"
+    QUEUE = "__queue__"
+    SYSLOG = "__syslog__"
 
 
-class SysLogKeys(NoDynamicAttributes):
+class SysLogKeys(object, metaclass=ReadOnlyClass):
     """SysLog keys definition container class."""
 
-    class __Levels(NoDynamicAttributes):
-        @classmethod
-        @property
-        def NOTICE(cls) -> int:
-            return syslog.LOG_NOTICE
+    class __Levels(object, metaclass=ReadOnlyClass):
+        ALERT = syslog.LOG_ALERT
+        CRITICAL = syslog.LOG_CRIT
+        DEBUG = syslog.LOG_DEBUG
+        EMERGENCY = syslog.LOG_EMERG
+        ERROR = syslog.LOG_ERR
+        INFO = syslog.LOG_INFO
+        NOTICE = syslog.LOG_NOTICE
+        WARNING = syslog.LOG_WARNING
 
-        @classmethod
-        @property
-        def EMERGENCY(cls) -> int:
-            return syslog.LOG_EMERG
-
-        @classmethod
-        @property
-        def ALERT(cls) -> int:
-            return syslog.LOG_ALERT
-
-        @classmethod
-        @property
-        def CRITICAL(cls) -> int:
-            return syslog.LOG_CRIT
-
-        @classmethod
-        @property
-        def INFO(cls) -> int:
-            return syslog.LOG_INFO
-
-        @classmethod
-        @property
-        def DEBUG(cls) -> int:
-            return syslog.LOG_DEBUG
-
-        @classmethod
-        @property
-        def WARNING(cls) -> int:
-            return syslog.LOG_WARNING
-
-        @classmethod
-        @property
-        def ERROR(cls) -> int:
-            return syslog.LOG_ERR
-
-    class __Facilities(NoDynamicAttributes):
-        @classmethod
-        @property
-        def DAEMON(cls) -> int:
-            return syslog.LOG_DAEMON
-
-        @classmethod
-        @property
-        def USER(cls) -> int:
-            return syslog.LOG_USER
-
-        @classmethod
-        @property
-        def LOCAL0(cls) -> int:
-            return syslog.LOG_LOCAL0
-
-        @classmethod
-        @property
-        def LOCAL1(cls) -> int:
-            return syslog.LOG_LOCAL1
-
-        @classmethod
-        @property
-        def LOCAL2(cls) -> int:
-            return syslog.LOG_LOCAL2
-
-        @classmethod
-        @property
-        def LOCAL3(cls) -> int:
-            return syslog.LOG_LOCAL3
-
-        @classmethod
-        @property
-        def LOCAL4(cls) -> int:
-            return syslog.LOG_LOCAL4
-
-        @classmethod
-        @property
-        def LOCAL5(cls) -> int:
-            return syslog.LOG_LOCAL5
-
-        @classmethod
-        @property
-        def LOCAL6(cls) -> int:
-            return syslog.LOG_LOCAL6
-
-        @classmethod
-        @property
-        def LOCAL7(cls) -> int:
-            return syslog.LOG_LOCAL7
-
-        @classmethod
-        @property
-        def MAIL(cls) -> int:
-            return syslog.LOG_MAIL
-
-        @classmethod
-        @property
-        def SYSLOG(cls) -> int:
-            return syslog.LOG_SYSLOG
+    class __Facilities(object, metaclass=ReadOnlyClass):
+        DAEMON = syslog.LOG_DAEMON
+        USER = syslog.LOG_USER
+        LOCAL0 = syslog.LOG_LOCAL0
+        LOCAL1 = syslog.LOG_LOCAL1
+        LOCAL2 = syslog.LOG_LOCAL2
+        LOCAL3 = syslog.LOG_LOCAL3
+        LOCAL4 = syslog.LOG_LOCAL4
+        LOCAL5 = syslog.LOG_LOCAL5
+        LOCAL6 = syslog.LOG_LOCAL6
+        LOCAL7 = syslog.LOG_LOCAL7
+        MAIL = syslog.LOG_MAIL
+        SYSLOG = syslog.LOG_SYSLOG
 
     @classmethod
     @property
@@ -241,8 +109,17 @@ class SysLogKeys(NoDynamicAttributes):
         }
 
 
-class LogsLevelKeys(NoDynamicAttributes):
+class LogsLevelKeys(object, metaclass=ReadOnlyClass):
     """LogsLevelKeys container class."""
+
+    ALERT = "ALERT"
+    CRITICAL = "CRITICAL"
+    DEBUG = "DEBUG"
+    EMERGENCY = "EMERGENCY"
+    ERROR = "ERROR"
+    INFO = "INFO"
+    NOTICE = "NOTICE"
+    WARNING = "WARNING"
 
     @classmethod
     @property
@@ -260,54 +137,6 @@ class LogsLevelKeys(NoDynamicAttributes):
                 LogsLevelKeys.WARNING,
             ]
         )
-
-    @classmethod
-    @property
-    def ALERT(cls) -> str:
-        """Return ALERT Key."""
-        return "ALERT"
-
-    @classmethod
-    @property
-    def CRITICAL(cls) -> str:
-        """Return CRITICAL Key."""
-        return "CRITICAL"
-
-    @classmethod
-    @property
-    def DEBUG(cls) -> str:
-        """Return DEBUG Key."""
-        return "DEBUG"
-
-    @classmethod
-    @property
-    def EMERGENCY(cls) -> str:
-        """Return EMERGENCY Key."""
-        return "EMERGENCY"
-
-    @classmethod
-    @property
-    def ERROR(cls) -> str:
-        """Return ERROR Key."""
-        return "ERROR"
-
-    @classmethod
-    @property
-    def INFO(cls) -> str:
-        """Return INFO Key."""
-        return "INFO"
-
-    @classmethod
-    @property
-    def NOTICE(cls) -> str:
-        """Return NOTICE Key."""
-        return "NOTICE"
-
-    @classmethod
-    @property
-    def WARNING(cls) -> str:
-        """Return WARNING Key."""
-        return "WARNING"
 
 
 class LoggerQueue(NoDynamicAttributes):
