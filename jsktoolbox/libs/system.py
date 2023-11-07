@@ -150,7 +150,6 @@ class CommandLineParser(BData, NoDynamicAttributes):
             self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS],
             self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS],
         ):
-            print(f"{short_arg}:{long_arg}:{desc_arg}:{ex_arg}")
             out[long_arg] = {
                 "short": short_arg if short_arg != "_" else "",
                 "has_value": True if long_arg[-1] == "=" else False,
