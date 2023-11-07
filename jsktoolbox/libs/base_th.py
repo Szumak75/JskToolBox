@@ -22,6 +22,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
     ARGS = "_args"
     DAEMONIC = "_daemonic"
+    DEBUG = "_debug"
     IDENT = "_ident"
     INVOKE_EXCEPTHOOK = "_invoke_excepthook"
     IS_STOPPED = "_is_stopped"
@@ -112,6 +113,23 @@ class ThBaseObject(BData, NoDynamicAttributes):
                 currentframe(),
             )
         self._data[_Keys.DAEMONIC] = value
+
+    @property
+    def _debug(self) -> Optional[bool]:
+        if _Keys.DEBUG not in self._data:
+            self._data[_Keys.DEBUG] = None
+        return self._data[_Keys.DEBUG]
+
+    @_debug.setter
+    def _debug(self, value: bool) -> None:
+        if not isinstance(value, bool):
+            raise Raise.error(
+                f"Boolean type expected, '{type(value)}' received.",
+                TypeError,
+                self.__class__.__name__,
+                currentframe(),
+            )
+        self._data[_Keys.DEBUG] = value
 
     @property
     def _ident(self) -> Optional[int]:

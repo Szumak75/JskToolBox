@@ -34,8 +34,12 @@ from jsktoolbox.logstool.logs import ThLoggerProcessor
 
 ### Constructor
 ```
-ThLoggerProcessor()
+ThLoggerProcessor(debug: bool = False)
 ```
+
+Arguments:
+- **debug** [bool] - _debug flag for additional logging messages_
+
 
 ### Public methods
 ```
