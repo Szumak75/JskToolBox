@@ -66,4 +66,16 @@ class NoDynamicAttributes:
         super().__setattr__(name, value)
 
 
+class ReadOnlyClass(type):
+    """ReadOnlyClass - metaclass for creating read only classes.
+
+    example:
+    class A(object, metaclass=ReadOnlyClass):
+          foo = "don't change me"
+    """
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        raise ValueError(f"Read only attribute: {name}.")
+
+
 # #[EOF]#######################################################################
