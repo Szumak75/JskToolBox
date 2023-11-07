@@ -252,10 +252,11 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
 class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
     """LoggerProcessor thread class."""
 
-    def __init__(self) -> None:
+    def __init__(self, debug: bool = False) -> None:
         """Constructor."""
         threading.Thread.__init__(self, name=self.__class__.__name__)
         self._stop_event = threading.Event()
+        self._debug = debug
         self.daemon = True
         self.sleep_period = 0.2
 
@@ -318,18 +319,20 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-
-        self.logger_client.message_debug = f"Start."
+        if self._debug:
+            self.logger_client.message_debug = f"Start."
         # run
         while not self.stopped:
             self.logger_engine.send()
             time.sleep(self.sleep_period)
-        self.logger_client.message_debug = f"Stop."
+        if self._debug:
+            self.logger_client.message_debug = f"Stop."
         self.logger_engine.send()
 
     def stop(self) -> None:
         """Set stop event."""
-        self.logger_client.message_debug = "stopping..."
+        if self._debug:
+            self.logger_client.message_debug = "stopping..."
         self._stop_event.set()
 
     @property
