@@ -10,6 +10,22 @@
 import unittest
 
 
+class TestReadOnlyClass(unittest.TestCase):
+    """Testing ReadOnlyClass."""
+
+    def test_01_readonlyclass(self) -> None:
+        """Test nr 01."""
+        from jsktoolbox.attribtool import ReadOnlyClass
+
+        class A(object, metaclass=ReadOnlyClass):
+            VAR = 1
+
+        self.assertTrue(A.VAR, 1)
+
+        with self.assertRaises(ValueError):
+            A.VAR = 2
+
+
 class TestNoNewAttributes(unittest.TestCase):
     """Testing NoNewAttributes class."""
 
