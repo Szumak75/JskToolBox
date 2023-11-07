@@ -9,102 +9,33 @@
 import re
 from inspect import currentframe
 from typing import List, Dict, Optional, Any
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.configtool.libs.file import FileProcessor
 from jsktoolbox.configtool.libs.data import DataProcessor
 
 
-class Keys(NoDynamicAttributes):
+class _Keys(object, metaclass=ReadOnlyClass):
     """Keys definition class.
 
     For internal purpose only.
     """
 
-    @classmethod
-    @property
-    def VARNAME(self) -> str:
-        """Return FP key."""
-        return "__varname__"
-
-    @classmethod
-    @property
-    def VALUE(self) -> str:
-        """Return FP key."""
-        return "__value__"
-
-    @classmethod
-    @property
-    def DESC(self) -> str:
-        """Return FP key."""
-        return "__desc__"
-
-    @classmethod
-    @property
-    def FP(self) -> str:
-        """Return FP key."""
-        return "__file_processor__"
-
-    @classmethod
-    @property
-    def DP(self) -> str:
-        """Return DP key."""
-        return "__data_processor__"
-
-    @classmethod
-    @property
-    def RE_SECTION(self) -> str:
-        """Return RE_SECTION key."""
-        return "__re_section__"
-
-    @classmethod
-    @property
-    def RE_VAR(self) -> str:
-        """Return RE_VAR key."""
-        return "__re_variable__"
-
-    @classmethod
-    @property
-    def RE_DESC(self) -> str:
-        """Return RE_DESC key."""
-        return "__re_description__"
-
-    @classmethod
-    @property
-    def RE_INT(self) -> str:
-        """Return RE_INT key."""
-        return "__re_integer__"
-
-    @classmethod
-    @property
-    def RE_FLOAT(self) -> str:
-        """Return RE_FLOAT key."""
-        return "__re_float__"
-
-    @classmethod
-    @property
-    def RE_BOOL(self) -> str:
-        """Return RE_BOOL key."""
-        return "__re_bool__"
-
-    @classmethod
-    @property
-    def RE_TRUE(self) -> str:
-        """Return RE_TRUE key."""
-        return "__re_true__"
-
-    @classmethod
-    @property
-    def RE_FALSE(self) -> str:
-        """Return RE_FALSE key."""
-        return "__re_false__"
-
-    @classmethod
-    @property
-    def RE_LIST(self) -> str:
-        """Return RE_LIST key."""
-        return "__re_list__"
+    DESC = "__desc__"
+    DP = "__data_processor__"
+    FP = "__file_processor__"
+    RE_BOOL = "__re_bool__"
+    RE_DESC = "__re_description__"
+    RE_FALSE = "__re_false__"
+    RE_FLOAT = "__re_float__"
+    RE_INT = "__re_integer__"
+    RE_LIST = "__re_list__"
+    RE_SECTION = "__re_section__"
+    RE_TRUE = "__re_true__"
+    RE_VAR = "__re_variable__"
+    VALUE = "__value__"
+    VARNAME = "__varname__"
 
 
 class Config(BData, NoDynamicAttributes):
@@ -117,35 +48,35 @@ class Config(BData, NoDynamicAttributes):
         auto_create: bool = False,
     ) -> None:
         """Constructor."""
-        self._data[Keys.FP] = FileProcessor()
-        self._data[Keys.DP] = DataProcessor()
+        self._data[_Keys.FP] = FileProcessor()
+        self._data[_Keys.DP] = DataProcessor()
         self.__fp.file = filename
         self.__dp.main_section = main_section_name
         if auto_create:
             if not self.__fp.file_exists:
                 self.__fp.file_create()
         # compile regex
-        self._data[Keys.RE_SECTION] = re.compile(r"\s{0,}\[.*\]\s{0,}")
-        self._data[Keys.RE_DESC] = re.compile(r"\s{0,}#")
-        self._data[Keys.RE_VAR] = re.compile(r"\s{0,}\S{1,}\s{0,}=")
-        self._data[Keys.RE_INT] = re.compile(r"^\d{1,}$")
-        self._data[Keys.RE_FLOAT] = re.compile(r"^\d{1,}\.\d{1,}$")
-        self._data[Keys.RE_BOOL] = re.compile(
+        self._data[_Keys.RE_SECTION] = re.compile(r"\s{0,}\[.*\]\s{0,}")
+        self._data[_Keys.RE_DESC] = re.compile(r"\s{0,}#")
+        self._data[_Keys.RE_VAR] = re.compile(r"\s{0,}\S{1,}\s{0,}=")
+        self._data[_Keys.RE_INT] = re.compile(r"^\d{1,}$")
+        self._data[_Keys.RE_FLOAT] = re.compile(r"^\d{1,}\.\d{1,}$")
+        self._data[_Keys.RE_BOOL] = re.compile(
             r"^true|false|yes|no$", re.IGNORECASE
         )
-        self._data[Keys.RE_TRUE] = re.compile(r"^true|yes$", re.IGNORECASE)
-        self._data[Keys.RE_FALSE] = re.compile(r"^false|no$", re.IGNORECASE)
-        self._data[Keys.RE_LIST] = re.compile(r"^\[.*\]$")
+        self._data[_Keys.RE_TRUE] = re.compile(r"^true|yes$", re.IGNORECASE)
+        self._data[_Keys.RE_FALSE] = re.compile(r"^false|no$", re.IGNORECASE)
+        self._data[_Keys.RE_LIST] = re.compile(r"^\[.*\]$")
 
     @property
     def __fp(self) -> FileProcessor:
         """Return FileProcessor object."""
-        return self._data[Keys.FP]
+        return self._data[_Keys.FP]
 
     @property
     def __dp(self) -> DataProcessor:
         """Return DataProcessor object."""
-        return self._data[Keys.DP]
+        return self._data[_Keys.DP]
 
     @property
     def file_exists(self) -> bool:
@@ -154,13 +85,13 @@ class Config(BData, NoDynamicAttributes):
 
     def __value_parser(self, item: str) -> Any:
         """Return proper type of value."""
-        if self._data[Keys.RE_BOOL].match(item):
-            return True if self._data[Keys.RE_TRUE].match(item) else False
-        elif self._data[Keys.RE_INT].match(item):
+        if self._data[_Keys.RE_BOOL].match(item):
+            return True if self._data[_Keys.RE_TRUE].match(item) else False
+        elif self._data[_Keys.RE_INT].match(item):
             return int(item)
-        elif self._data[Keys.RE_FLOAT].match(item):
+        elif self._data[_Keys.RE_FLOAT].match(item):
             return float(item)
-        elif self._data[Keys.RE_LIST].match(item):
+        elif self._data[_Keys.RE_LIST].match(item):
             out = []
             tmp = [x.strip() for x in item.strip("[]").split(",")]
             for item in tmp:
@@ -171,9 +102,9 @@ class Config(BData, NoDynamicAttributes):
     def __var_parser(self, line: str) -> Dict:
         """Return Dict[varname, value, desc]."""
         out = {
-            Keys.VARNAME: None,
-            Keys.VALUE: None,
-            Keys.DESC: None,
+            _Keys.VARNAME: None,
+            _Keys.VALUE: None,
+            _Keys.DESC: None,
         }
         tmp = line.split("=", 1)
         if len(tmp) != 2:
@@ -183,14 +114,14 @@ class Config(BData, NoDynamicAttributes):
                 self.__class__.__name__,
                 currentframe(),
             )
-        out[Keys.VARNAME] = tmp[0].strip()
+        out[_Keys.VARNAME] = tmp[0].strip()
         if len(tmp[1]) > 0:
             tmp = tmp[1].split("#", 1)
             # desc
             if len(tmp) == 2 and len(tmp[1]) > 0:
-                out[Keys.DESC] = tmp[1].strip()
+                out[_Keys.DESC] = tmp[1].strip()
             # value
-            out[Keys.VALUE] = self.__value_parser(tmp[0].strip())
+            out[_Keys.VALUE] = self.__value_parser(tmp[0].strip())
 
         return out
 
@@ -202,19 +133,19 @@ class Config(BData, NoDynamicAttributes):
         section_name: str = self.__dp.main_section
         for line in file:
             # check section
-            if self._data[Keys.RE_SECTION].match(line):
+            if self._data[_Keys.RE_SECTION].match(line):
                 section_name = self.__dp.add_section(line)
             # check description
-            elif self._data[Keys.RE_DESC].match(line):
+            elif self._data[_Keys.RE_DESC].match(line):
                 self.__dp.set(section_name, desc=line.strip("# "))
             # check var
-            elif self._data[Keys.RE_VAR].match(line):
+            elif self._data[_Keys.RE_VAR].match(line):
                 out = self.__var_parser(line)
                 self.__dp.set(
                     section=section_name,
-                    varname=out[Keys.VARNAME],
-                    value=out[Keys.VALUE],
-                    desc=out[Keys.DESC],
+                    varname=out[_Keys.VARNAME],
+                    value=out[_Keys.VALUE],
+                    desc=out[_Keys.DESC],
                 )
             else:
                 self.__dp.set(section_name, desc=line)

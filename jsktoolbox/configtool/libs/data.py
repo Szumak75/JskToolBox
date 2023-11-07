@@ -10,60 +10,26 @@ from inspect import currentframe
 from typing import List, Tuple, Optional, Union, Any, TypeVar
 from abc import ABC, abstractmethod
 from copy import copy
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 
 TVariableModel = TypeVar("TVariableModel", bound="VariableModel")
 
 
-class Keys(NoDynamicAttributes):
+class _Keys(object, metaclass=ReadOnlyClass):
     """Keys definition class.
 
     For internal purpose only.
     """
 
-    @classmethod
-    @property
-    def DATA(self) -> str:
-        """Return data key."""
-        return "__data__"
-
-    @classmethod
-    @property
-    def DESC(self) -> str:
-        """Return desc key."""
-        return "__desc__"
-
-    @classmethod
-    @property
-    def DESCRIPTION(self) -> str:
-        """Return description key."""
-        return "__description__"
-
-    @classmethod
-    @property
-    def MAIN(self) -> str:
-        """Return main key."""
-        return "__main__"
-
-    @classmethod
-    @property
-    def NAME(self) -> str:
-        """Return name key."""
-        return "__name__"
-
-    @classmethod
-    @property
-    def VALUE(self) -> str:
-        """Return value key."""
-        return "__value__"
-
-    @classmethod
-    @property
-    def VARIABLES(self) -> str:
-        """Return variables key."""
-        return "__variables__"
+    DATA = "__data__"
+    DESC = "__desc__"
+    DESCRIPTION = "__description__"
+    MAIN = "__main__"
+    NAME = "__name__"
+    VALUE = "__value__"
+    VARIABLES = "__variables__"
 
 
 class IModel(ABC):
@@ -103,9 +69,9 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         desc: Optional[str] = None,
     ) -> None:
         """Constructor."""
-        self._data[Keys.NAME] = name
-        self._data[Keys.VALUE] = value
-        self._data[Keys.DESC] = desc
+        self._data[_Keys.NAME] = name
+        self._data[_Keys.VALUE] = value
+        self._data[_Keys.DESC] = desc
 
     def __repr__(self) -> str:
         """Return representation class string."""
@@ -147,12 +113,12 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     @property
     def desc(self) -> Optional[str]:
         """Get descrption property."""
-        return self._data[Keys.DESC]
+        return self._data[_Keys.DESC]
 
     @desc.setter
     def desc(self, desc: Optional[str]) -> None:
         """Set description property."""
-        self._data[Keys.DESC] = desc
+        self._data[_Keys.DESC] = desc
 
     @property
     def dump(self) -> TVariableModel:
@@ -162,12 +128,12 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     @property
     def name(self) -> Optional[str]:
         """Get name property."""
-        return self._data[Keys.NAME]
+        return self._data[_Keys.NAME]
 
     @name.setter
     def name(self, name: Optional[str]) -> None:
         """Set name property."""
-        self._data[Keys.NAME] = name.strip()
+        self._data[_Keys.NAME] = name.strip()
 
     def parser(self, value: str) -> None:
         """Parser method."""
@@ -179,14 +145,14 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     @property
     def value(self) -> Optional[Union[str, int, float, bool, List]]:
         """Get value property."""
-        return self._data[Keys.VALUE]
+        return self._data[_Keys.VALUE]
 
     @value.setter
     def value(
         self, value: Optional[Union[str, int, float, bool, List]]
     ) -> None:
         """Set value property."""
-        self._data[Keys.VALUE] = value
+        self._data[_Keys.VALUE] = value
 
 
 class SectionModel(BData, IModel, NoDynamicAttributes):
@@ -194,8 +160,8 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
 
     def __init__(self, name: Optional[str] = None) -> None:
         """Constructor."""
-        self._data[Keys.NAME] = None
-        self._data[Keys.VARIABLES]: List[VariableModel] = []
+        self._data[_Keys.NAME] = None
+        self._data[_Keys.VARIABLES]: List[VariableModel] = []
         self.parser(name)
 
     def __repr__(self) -> str:
@@ -211,7 +177,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         """Dump data."""
         tmp = []
         tmp.append(self)
-        for item in self._data[Keys.VARIABLES]:
+        for item in self._data[_Keys.VARIABLES]:
             tmp.append(item.dump())
         return copy(tmp)
 
@@ -221,7 +187,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
             return
         tmp = f"{value}".strip("[] \n")
         if tmp:
-            self._data[Keys.NAME] = tmp
+            self._data[_Keys.NAME] = tmp
         else:
             raise Raise.error(
                 f"String name expected, '{tmp}' received.",
@@ -237,7 +203,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     @property
     def name(self) -> Optional[str]:
         """Get name property."""
-        return self._data[Keys.NAME]
+        return self._data[_Keys.NAME]
 
     @name.setter
     def name(self, name: str) -> None:
@@ -247,7 +213,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     def get_variable(self, name: str) -> Optional[VariableModel]:
         """Search and return VariableModel if exists."""
         name = str(name)
-        for item in self._data[Keys.VARIABLES]:
+        for item in self._data[_Keys.VARIABLES]:
             if item.name == name:
                 return item
         return None
@@ -270,12 +236,12 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         # add new VariableModel
         if name is None and value is not None:
             return
-        self._data[Keys.VARIABLES].append(VariableModel(name, value, desc))
+        self._data[_Keys.VARIABLES].append(VariableModel(name, value, desc))
 
     @property
     def variables(self) -> List[VariableModel]:
         """Return list of VariableModel."""
-        return self._data[Keys.VARIABLES]
+        return self._data[_Keys.VARIABLES]
 
 
 class DataProcessor(BData, NoDynamicAttributes):
@@ -283,28 +249,28 @@ class DataProcessor(BData, NoDynamicAttributes):
 
     def __init__(self) -> None:
         """Constructor."""
-        self._data[Keys.DATA] = []
+        self._data[_Keys.DATA] = []
 
     @property
     def main_section(self) -> Optional[str]:
         """Return main section name."""
-        if Keys.MAIN not in self._data:
-            self._data[Keys.MAIN] = None
-        return self._data[Keys.MAIN]
+        if _Keys.MAIN not in self._data:
+            self._data[_Keys.MAIN] = None
+        return self._data[_Keys.MAIN]
 
     @main_section.setter
     def main_section(self, name: str) -> None:
         """Set main section name."""
         if not isinstance(name, str):
             name = str(name)
-        self._data[Keys.MAIN] = name
+        self._data[_Keys.MAIN] = name
         self.add_section(name)
 
     @property
     def sections(self) -> Tuple:
         """Return sections keys tuple."""
         out = []
-        for item in self._data[Keys.DATA]:
+        for item in self._data[_Keys.DATA]:
             out.append(item.name)
         return tuple(sorted(out))
 
@@ -315,13 +281,13 @@ class DataProcessor(BData, NoDynamicAttributes):
         """
         sm = SectionModel(str(name))
         if sm.name not in self.sections:
-            self._data[Keys.DATA].append(sm)
+            self._data[_Keys.DATA].append(sm)
         return sm.name
 
     def get_section(self, name: str) -> Optional[SectionModel]:
         """Get section object if exists."""
         sm = SectionModel(name)
-        for item in self._data[Keys.DATA]:
+        for item in self._data[_Keys.DATA]:
             if item.name == sm.name:
                 return item
         return None
