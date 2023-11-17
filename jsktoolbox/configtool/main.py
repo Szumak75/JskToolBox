@@ -175,5 +175,30 @@ class Config(BData, NoDynamicAttributes):
         """Set data."""
         self.__dp.set(section, varname, value, desc)
 
+    def has_section(self, section_name: str) -> bool:
+        """Check section name in config file."""
+        if not isinstance(section_name, str):
+            raise Raise(
+                f"Expected String type, received: '{type(section_name)}'.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        return self.__dp.get_section(section_name) is not None
+
+    def has_varname(self, section_name: str, var_name: str) -> bool:
+        """Check varname in section."""
+        if not isinstance(var_name, str):
+            raise Raise(
+                f"Expected String type, received: '{type(var_name)}'.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        if self.has_section(section_name):
+            found_section = self.__dp.get_section(section_name)
+            return found_section.get_variable(var_name) is not None
+        return False
+
 
 # #[EOF]#######################################################################
