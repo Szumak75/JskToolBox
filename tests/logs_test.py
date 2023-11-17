@@ -8,6 +8,7 @@
 """
 
 import time
+import sys
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.logstool.logs import (
@@ -81,6 +82,7 @@ class B(BLoggerQueue, NoDynamicAttributes):
 
 
 if __name__ == "__main__":
+    print(f"sys.argv: {sys.argv}")
     obj_a = ThLoggerProcessor()
 
     obj_a.logger_engine = LoggerEngine()

@@ -106,12 +106,15 @@ class CommandLineParser(BData, NoDynamicAttributes):
 
         self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS].append(tmp)
 
-    def parse_arguments(self) -> None:
+    def parse_arguments(self) -> bool:
         """Command line arguments parser."""
         # replace ':' if exists in short option string
         short_mod = str(
             self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
         ).replace(":", "")
+        long_mod = []
+        for item in self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS]:
+            long_mod.append(item.replace("=", ""))
 
         try:
             opts, _ = getopt.getopt(
@@ -121,19 +124,23 @@ class CommandLineParser(BData, NoDynamicAttributes):
             )
         except getopt.GetoptError as ex:
             print(f"Command line argument error: {ex}")
-            sys.exit(2)
+            return False
 
         for opt, value in opts:
             for short_arg, long_arg in zip(
                 short_mod,
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS],
+                long_mod,
             ):
                 if opt in ("-" + short_arg, "--" + long_arg):
                     self.args[long_arg] = value
+        return True
 
     def get_option(self, option: str) -> Optional[str]:
         """Get value of the option or None if it doesn't exist."""
-        return self.args.get(option)
+        out = self.args.get(option)
+        if out is None:
+            return None
+        return str(self.args.get(option))
 
     def dump(self) -> Dict:
         """Dump configured data structure as Dict:
