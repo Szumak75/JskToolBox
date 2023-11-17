@@ -64,9 +64,9 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         """Set LoggerClient name string."""
         if name and not isinstance(name, str):
             raise Raise.error(
-                f"name as string expected, '{type(name)}' received.",
+                f"Expected 'name' as string type, received: '{type(name)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[Keys.NAME] = name
@@ -77,16 +77,16 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         """Send message to logging subsystem."""
         if not isinstance(log_level, str):
             raise Raise.error(
-                f"log_level as string type expected, '{type(log_level)}' received.",
+                f"Expected 'log_level' as string type, received: '{type(log_level)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if log_level not in LogsLevelKeys.keys:
             raise Raise.error(
-                f"log_level as key from .base_logs.LogsLevelKeys.keys expected, '{log_level}' received.",
+                f"Expected 'log_level' as key from .base_logs.LogsLevelKeys.keys, received: '{log_level}'.",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if not isinstance(message, str):
@@ -205,16 +205,16 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         """
         if not isinstance(log_level, str):
             raise Raise.error(
-                f"Key as string expected, '{type(log_level)}' received.'",
+                f"Expected 'log_level' as string type, received: '{type(log_level)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if not isinstance(engine, ILoggerEngine):
             raise Raise.error(
-                f"ILoggerEngine type expected, '{type(engine)}' received.",
+                f"Expected ILoggerEngine type, received: '{type(engine)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if Keys.CONF not in self._data:
@@ -264,7 +264,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
 
     def __init__(self, debug: bool = False) -> None:
         """Constructor."""
-        threading.Thread.__init__(self, name=self.__class__.__name__)
+        threading.Thread.__init__(self, name=self._c_name)
         self._stop_event = threading.Event()
         self._debug = debug
         self.daemon = True
@@ -282,9 +282,9 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         """Set LoggerEngine object."""
         if not isinstance(obj, LoggerEngine):
             raise Raise.error(
-                f"LoggerEngine type object expected, '{type(obj)}' received.",
+                f"Excpected LoggerEngine type, received: '{type(obj)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.LEO] = obj
@@ -303,9 +303,9 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         """Set LoggerEngine object."""
         if not isinstance(obj, LoggerClient):
             raise Raise.error(
-                f"LoggerClient type object expected, '{type(obj)}' received.",
+                f"Expected LoggerClient type, received: '{type(obj)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.LCO] = obj
@@ -319,30 +319,32 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
             raise Raise.error(
                 "LoggerEngine not set.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if self.logger_client is None:
             raise Raise.error(
                 "LoggerClient not set.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if self._debug:
-            self.logger_client.message_debug = f"Start."
+            self.logger_client.message_debug = f"[{self._c_name}] Start."
         # run
         while not self.stopped:
             self.logger_engine.send()
             time.sleep(self.sleep_period)
         if self._debug:
-            self.logger_client.message_debug = f"Stop."
+            self.logger_client.message_debug = f"[{self._c_name}] Stop."
         self.logger_engine.send()
 
     def stop(self) -> None:
         """Set stop event."""
         if self._debug:
-            self.logger_client.message_debug = "stopping..."
+            self.logger_client.message_debug = (
+                f"[{self._c_name}] stopping..."
+            )
         self._stop_event.set()
 
     @property

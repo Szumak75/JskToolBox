@@ -13,7 +13,7 @@ from typing import Optional, Tuple, List, Dict, Any
 
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
+from jsktoolbox.libs.base_data import BData, BClasses
 
 
 class Keys(object, metaclass=ReadOnlyClass):
@@ -139,7 +139,7 @@ class LogsLevelKeys(object, metaclass=ReadOnlyClass):
         )
 
 
-class LoggerQueue(NoDynamicAttributes):
+class LoggerQueue(BClasses, NoDynamicAttributes):
     """LoggerQueue simple class."""
 
     __queue: List[str] = None
@@ -160,7 +160,7 @@ class LoggerQueue(NoDynamicAttributes):
         except Exception as ex:
             raise Raise.error(
                 f"Unexpected exception was thrown: {ex}",
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -170,7 +170,7 @@ class LoggerQueue(NoDynamicAttributes):
             raise Raise.error(
                 f"logs_level key not found, '{log_level}' received.",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self.__queue.append(
@@ -196,8 +196,8 @@ class BLoggerQueue(BData, NoDynamicAttributes):
         """Set LoggerQueue object."""
         if not isinstance(obj, LoggerQueue):
             raise Raise.error(
-                f"LoggerQueue type object expected, '{type(obj)}' received.",
-                self.__class__.__name__,
+                f"Expected LoggerQueue type, received: '{type(obj)}'.",
+                self._c_name,
                 currentframe(),
             )
         self._data[Keys.QUEUE] = obj
@@ -260,18 +260,6 @@ class BLogFormatter(NoDynamicAttributes):
     @_forms_.setter
     def _forms_(self, item: Any) -> None:
         """Set forms list."""
-        # assigning function to a variable
-        # def a(): print('test')
-        # var=a
-        # var()
-        ####
-        # >>> x._forms_[2].__class__
-        # <class 'builtin_function_or_method'>
-        # >>> x._forms_[1].__class__
-        # <class 'float'>
-        # >>> x._forms_[0].__class__
-        # <class 'str'>
-
         self.__forms.append(item)
 
 

@@ -63,9 +63,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _name(self, value: Optional[str]) -> None:
         if value is not None and not isinstance(value, str):
             raise Raise.error(
-                f"String type expected, '{type(value)}' received.",
+                f"Expected String type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.NAME] = value
@@ -90,9 +90,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _kwargs(self, value: Dict) -> None:
         if value is not None and not isinstance(value, Dict):
             raise Raise.error(
-                f"Dict type expected, '{type(value)}' received.",
+                f"Expected Dict type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.KWARGS] = value
@@ -107,9 +107,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _daemonic(self, value: bool) -> None:
         if not isinstance(value, bool):
             raise Raise.error(
-                f"Boolean type expected, '{type(value)}' received.",
+                f"Expected Boolean type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.DAEMONIC] = value
@@ -124,9 +124,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _debug(self, value: bool) -> None:
         if not isinstance(value, bool):
             raise Raise.error(
-                f"Boolean type expected, '{type(value)}' received.",
+                f"Expected Boolean type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.DEBUG] = value
@@ -141,9 +141,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _ident(self, value: Optional[int]) -> None:
         if value is not None and not isinstance(value, int):
             raise Raise.error(
-                f"Integer type expected, '{type(value)}' received.",
+                f"Expected Integer type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.IDENT] = value
@@ -158,9 +158,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _native_id(self, value: Optional[int]) -> None:
         if value is not None and not isinstance(value, int):
             raise Raise.error(
-                f"Integer type expected, '{type(value)}' received.",
+                f"Expected Integer type, received '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.NATIVE_ID] = value
@@ -185,9 +185,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _started(self, value: Event) -> None:
         if value is not None and not isinstance(value, Event):
             raise Raise.error(
-                f"threading.Event type expected, '{type(value)}' received.",
+                f"Expected threading.Event type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.STARTED] = value
@@ -202,9 +202,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _is_stopped(self, value: bool) -> None:
         if not isinstance(value, bool):
             raise Raise.error(
-                f"Boolean type expected, '{type(value)}' received.",
+                f"Expected Boolean type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.IS_STOPPED] = value
@@ -239,9 +239,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
     def _stop_event(self, obj: Event) -> None:
         if obj is not None and not isinstance(obj, Event):
             raise Raise.error(
-                f"threading.Event type expected, '{type(obj)}' received.",
+                f"Expected threading.Event type, received: '{type(obj)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.STOP_EVENT] = obj
@@ -266,9 +266,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
         """Set sleepperiod value."""
         if not isinstance(value, float):
             raise Raise.error(
-                f"Positive float type expected, '{value}' received.",
+                f"Expected positive float type, received: '{value}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.SLEEP_PERIOD] = value

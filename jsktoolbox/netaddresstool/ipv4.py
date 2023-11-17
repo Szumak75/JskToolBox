@@ -16,11 +16,12 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from .libs.octets import Octet
 from jsktoolbox.libs.interfaces.comparators import IComparators
+from jsktoolbox.libs.base_data import BClasses
 
 TAddress = TypeVar("TAddress", bound="Address")
 
 
-class Address(IComparators, NoDynamicAttributes):
+class Address(IComparators, BClasses, NoDynamicAttributes):
     """Address class for representing IPv4 adresses.
 
     Constructor arguments:
@@ -82,14 +83,14 @@ class Address(IComparators, NoDynamicAttributes):
             raise Raise.error(
                 "Empty list received.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if len(value) != 4:
             raise Raise.error(
                 f"Expected list with four elements, len({len(value)}) received.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -104,7 +105,7 @@ class Address(IComparators, NoDynamicAttributes):
             raise Raise.error(
                 f"IP-int out of range (0-4294967295), received: {value}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -121,7 +122,7 @@ class Address(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"{self.__class__.__name__}('{str(self)}')"
+        return f"{self._c_name}('{str(self)}')"
 
     @property
     def octets(self) -> List[Octet]:
@@ -141,15 +142,15 @@ class Address(IComparators, NoDynamicAttributes):
             self.__set_octets_from_str(value)
         else:
             raise Raise.error(
-                f"String or Integer or List type expected, {type(value)} received.",
+                f"Expected String or Integer or List type, received: {type(value)}.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
 
 # netmask
-class Netmask(NoDynamicAttributes):
+class Netmask(BClasses, NoDynamicAttributes):
     """Netmask class for IPv4 addresses.
 
     Constructor argument:
@@ -182,9 +183,9 @@ class Netmask(NoDynamicAttributes):
             self.octets = str(Address(addr))
         else:
             raise Raise.error(
-                f"String, integer or list expected, '{type(addr)}' received.",
+                f"Expected String, Integer or List type, received: '{type(addr)}'.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -198,7 +199,7 @@ class Netmask(NoDynamicAttributes):
         )
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.cidr})"
+        return f"{self._c_name}({self.cidr})"
 
     def __cidr_validator(self, cidr: int) -> None:
         """Check and set cidr."""
@@ -208,7 +209,7 @@ class Netmask(NoDynamicAttributes):
             raise Raise.error(
                 f"CIDR is out of range (0-32), received: {cidr}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -268,7 +269,7 @@ class Netmask(NoDynamicAttributes):
             raise Raise.error(
                 f"Invalid mask, received: {str(Address(addr))}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self.cidr = sum(
@@ -288,15 +289,15 @@ class Netmask(NoDynamicAttributes):
             self.__cidr_validator(value)
         else:
             raise Raise.error(
-                f"Digit string or int expected. Received: {value}",
+                f"Expected Digit string or Int, received: {value}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
 
 # Network
-class Network(NoDynamicAttributes):
+class Network(BClasses, NoDynamicAttributes):
     """Network IPv4 class.
 
     Constructor argument:
@@ -324,9 +325,9 @@ class Network(NoDynamicAttributes):
             self.__network_from_list(addr)
         else:
             raise Raise.error(
-                f"IP network string or list expected, '{type(addr)}' received.",
+                f"Expected IP network string or list type, received: '{type(addr)}'.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -336,7 +337,7 @@ class Network(NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return  string representation of class object."""
-        return f"{self.__class__.__name__}({str(self)})"
+        return f"{self._c_name}({str(self)})"
 
     def __network_from_str(self, addr: str) -> None:
         """Build configuration from string."""
@@ -346,9 +347,9 @@ class Network(NoDynamicAttributes):
             self.__mask = Netmask(tmp[1])
         else:
             raise Raise.error(
-                f"Expected network address in 'ip/mask' format string, received '{addr}'",
+                f"Expected network address in 'ip/mask' format string, received: '{addr}'.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -356,9 +357,9 @@ class Network(NoDynamicAttributes):
         """Build configuration from list."""
         if len(addr) != 2:
             raise Raise.error(
-                "Two element list expected ['ip','netmask']",
+                "Expected two element list ['ip','netmask']",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if isinstance(addr[0], Address):
@@ -431,7 +432,7 @@ class Network(NoDynamicAttributes):
 
 
 # SubNetwork
-class SubNetwork(NoDynamicAttributes):
+class SubNetwork(BClasses, NoDynamicAttributes):
     """SubNetwork calculator class.
 
     Constructor argument:
@@ -458,14 +459,14 @@ class SubNetwork(NoDynamicAttributes):
                         f"Received: {int(network.mask)} and {int(mask)}"
                     ),
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         else:
             raise Raise.error(
-                f"Argument of (Network, Netmask) expected, ({type(network)},{type(mask)}) received.",
+                f"Expected argument of (Network, Netmask), received: ({type(network)},{type(mask)}).",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 

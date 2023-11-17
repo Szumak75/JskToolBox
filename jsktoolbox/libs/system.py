@@ -74,7 +74,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
             raise Raise.error(
                 f"Long argument name is required.",
                 AttributeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -106,12 +106,15 @@ class CommandLineParser(BData, NoDynamicAttributes):
 
         self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS].append(tmp)
 
-    def parse_arguments(self) -> None:
+    def parse_arguments(self) -> bool:
         """Command line arguments parser."""
         # replace ':' if exists in short option string
         short_mod = str(
             self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
         ).replace(":", "")
+        long_mod = []
+        for item in self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS]:
+            long_mod.append(item.replace("=", ""))
 
         try:
             opts, _ = getopt.getopt(
@@ -121,19 +124,23 @@ class CommandLineParser(BData, NoDynamicAttributes):
             )
         except getopt.GetoptError as ex:
             print(f"Command line argument error: {ex}")
-            sys.exit(2)
+            return False
 
         for opt, value in opts:
             for short_arg, long_arg in zip(
                 short_mod,
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS],
+                long_mod,
             ):
                 if opt in ("-" + short_arg, "--" + long_arg):
                     self.args[long_arg] = value
+        return True
 
     def get_option(self, option: str) -> Optional[str]:
         """Get value of the option or None if it doesn't exist."""
-        return self.args.get(option)
+        out = self.args.get(option)
+        if out is None:
+            return None
+        return str(self.args.get(option))
 
     def dump(self) -> Dict:
         """Dump configured data structure as Dict:
@@ -150,7 +157,6 @@ class CommandLineParser(BData, NoDynamicAttributes):
             self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS],
             self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS],
         ):
-            print(f"{short_arg}:{long_arg}:{desc_arg}:{ex_arg}")
             out[long_arg] = {
                 "short": short_arg if short_arg != "_" else "",
                 "has_value": True if long_arg[-1] == "=" else False,
@@ -188,23 +194,23 @@ class PathChecker(BData, NoDynamicAttributes):
         """Constructor."""
         if pathname is None:
             raise Raise.error(
-                "pathname as string expected, not None.",
+                "Expected 'pathname' as string, not None.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if not isinstance(pathname, str):
             raise Raise.error(
-                f"pathname as string expected, '{type(pathname)}' received.",
+                f"Expected 'pathname' as string, received: '{type(pathname)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if isinstance(pathname, str) and len(pathname) == 0:
             raise Raise.error(
-                "pathname cannot be an empty string.",
+                "'pathname' cannot be an empty string.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.PATHNAME] = pathname
@@ -284,7 +290,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -297,7 +303,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -310,7 +316,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -323,7 +329,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 

@@ -6,13 +6,30 @@
   Purpose: BData container base class.
 """
 
-import inspect
+from inspect import currentframe
 from typing import Dict, Optional
+
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 
 
-class BData(NoDynamicAttributes):
+class BClasses(NoDynamicAttributes):
+    """Base class for projects."""
+
+    @property
+    def _c_name(self) -> str:
+        """Return class name."""
+        return self.__class__.__name__
+
+    @property
+    def _f_name(self) -> str:
+        """Return current method name."""
+        frame = currentframe().f_back
+        method_name = frame.f_code.co_name
+        return method_name
+
+
+class BData(BClasses):
     """BData container class."""
 
     __data: Optional[Dict] = None
@@ -35,10 +52,10 @@ class BData(NoDynamicAttributes):
                 self.__data[key] = value[key]
         else:
             raise Raise.error(
-                f"Dict type expected, '{type(value)}' received.",
+                f"Expected Dict type, received: '{type(value)}'.",
                 AttributeError,
-                self.__class__.__name__,
-                inspect.currentframe,
+                self._c_name,
+                currentframe(),
             )
 
 
