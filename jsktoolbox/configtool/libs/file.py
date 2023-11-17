@@ -60,7 +60,7 @@ class FileProcessor(BData, NoDynamicAttributes):
             raise Raise.error(
                 f"Given path: {obj.path} exists and is a directory.",
                 OSError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         return obj.create()

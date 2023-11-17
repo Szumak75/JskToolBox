@@ -18,11 +18,12 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 from .libs.words import Word16
 from jsktoolbox.libs.interfaces.comparators import IComparators
+from jsktoolbox.libs.base_data import BClasses
 
 TAddress6 = TypeVar("TAddress6", bound="Address6")
 
 
-class Address6(IComparators, NoDynamicAttributes):
+class Address6(IComparators, BClasses, NoDynamicAttributes):
     """Address6 class for representing IPv6 adresses.
 
     Constructor arguments:
@@ -128,7 +129,7 @@ class Address6(IComparators, NoDynamicAttributes):
             raise Raise.error(
                 f"Expected list of eight elements.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         tmp = (
@@ -151,7 +152,7 @@ class Address6(IComparators, NoDynamicAttributes):
             raise Raise.error(
                 f"IP-int out of range (0-340282366920938463463374607431768211455), received: {value}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -162,7 +163,7 @@ class Address6(IComparators, NoDynamicAttributes):
             raise Raise.error(
                 f"IPv6 address is invalid: {value}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -176,7 +177,7 @@ class Address6(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"{self.__class__.__name__}('{str(self)}')"
+        return f"{self._c_name}('{str(self)}')"
 
     @property
     def words(self) -> List[Word16]:
@@ -205,9 +206,9 @@ class Address6(IComparators, NoDynamicAttributes):
             self.__set_words_from_str(value)
         else:
             raise Raise.error(
-                f"String or Integer or List type expected, {type(value)} received.",
+                f"Expected String or Integer or List type, received: {type(value)}.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -218,7 +219,7 @@ class Address6(IComparators, NoDynamicAttributes):
 TPrefix6 = TypeVar("TPrefix6", bound="Prefix6")
 
 
-class Prefix6(IComparators, NoDynamicAttributes):
+class Prefix6(IComparators, BClasses, NoDynamicAttributes):
     """Prefix6 class for IPv6 addresses.
 
     Constructor argument:
@@ -271,7 +272,7 @@ class Prefix6(IComparators, NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return Prefix6 representation string."""
-        return f"{self.__class__.__name__}({int(self)})"
+        return f"{self._c_name}({int(self)})"
 
     def __range_validator(self, value: int) -> bool:
         """Proper range validator."""
@@ -279,7 +280,7 @@ class Prefix6(IComparators, NoDynamicAttributes):
             raise Raise.error(
                 f"Prefix out of range (0-128), received: {value}",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         return True
@@ -311,20 +312,20 @@ class Prefix6(IComparators, NoDynamicAttributes):
                 raise Raise.error(
                     f"Expected proper integer string, '{value}' received.",
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         else:
             raise Raise.error(
-                f"String or integer expected, '{type(value)}' received.",
+                f"Expected String or Integer type, received: '{type(value)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
 
 # Network
-class Network6(NoDynamicAttributes):
+class Network6(BClasses, NoDynamicAttributes):
     """Network6 IPv6 class.
 
     Constructor argument:
@@ -351,9 +352,9 @@ class Network6(NoDynamicAttributes):
             self.__network_from_list(addr)
         else:
             raise Raise.error(
-                f"IP network string or list expected, '{type(addr)}' received.",
+                f"Expected IP network string or list type, received: '{type(addr)}'.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -363,7 +364,7 @@ class Network6(NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return  string representation of class object."""
-        return f"{self.__class__.__name__}('{str(self)}')"
+        return f"{self._c_name}('{str(self)}')"
 
     def __network_from_str(self, addr: str) -> None:
         """Build configuration from string."""
@@ -373,9 +374,9 @@ class Network6(NoDynamicAttributes):
             self.__prefix = Prefix6(tmp[1])
         else:
             raise Raise.error(
-                f"Expected network address in 'ipv6/prefix' format string, received '{addr}'",
+                f"Expected network address in 'ipv6/prefix' format string, received: '{addr}'.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -385,7 +386,7 @@ class Network6(NoDynamicAttributes):
             raise Raise.error(
                 "A list of two elements was expected: ['ipv6','prefix']",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if isinstance(addr[0], Address6):
@@ -445,7 +446,7 @@ class Network6(NoDynamicAttributes):
 
 
 # SubNetwork
-class SubNetwork6(NoDynamicAttributes):
+class SubNetwork6(BClasses, NoDynamicAttributes):
     """SubNetwork6 calculator class.
 
     Constructor argument:
@@ -472,14 +473,14 @@ class SubNetwork6(NoDynamicAttributes):
                         f"Received: {int(network.prefix)} and {int(prefix)}"
                     ),
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         else:
             raise Raise.error(
                 f"Argument of (Network6, Prefix6) expected, ({type(network)},{type(prefix)}) received.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 

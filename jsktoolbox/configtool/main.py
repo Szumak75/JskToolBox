@@ -111,7 +111,7 @@ class Config(BData, NoDynamicAttributes):
             raise Raise.error(
                 f"Unexpected config line format: '{line}'",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         out[_Keys.VARNAME] = tmp[0].strip()

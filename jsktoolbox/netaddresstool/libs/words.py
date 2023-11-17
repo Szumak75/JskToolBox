@@ -12,11 +12,12 @@ from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
 
 from jsktoolbox.libs.interfaces.comparators import IComparators
+from jsktoolbox.libs.base_data import BClasses
 
 TWord16 = TypeVar("TWord16", bound="Word16")
 
 
-class Word16(IComparators, NoDynamicAttributes):
+class Word16(IComparators, BClasses, NoDynamicAttributes):
     """Class for representing ipv6 16-bits word.
 
     Constructor arguments:
@@ -68,7 +69,7 @@ class Word16(IComparators, NoDynamicAttributes):
 
     def __repr__(self):
         """Return representation of object."""
-        return f"{self.__class__.__name__}({self.value})"
+        return f"{self._c_name}({self.value})"
 
     @staticmethod
     def __check_range(value: int) -> bool:
@@ -105,7 +106,7 @@ class Word16(IComparators, NoDynamicAttributes):
                 raise Raise.error(
                     f"Received value '{args}' out of range(0-65535).",
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         elif isinstance(args, str):
@@ -121,7 +122,7 @@ class Word16(IComparators, NoDynamicAttributes):
                     raise Raise.error(
                         f"Received value '{args}' out of range(0-65535).",
                         ValueError,
-                        self.__class__.__name__,
+                        self._c_name,
                         currentframe(),
                     )
         elif isinstance(args, Word16):
@@ -129,9 +130,9 @@ class Word16(IComparators, NoDynamicAttributes):
             self.__value = tmp.value
             return
         raise Raise.error(
-            f"Integer or String expected, {type(args)} received.",
+            f"Expected Integer or String type, received: '{type(args)}'.",
             TypeError,
-            self.__class__.__name__,
+            self._c_name,
             currentframe(),
         )
 

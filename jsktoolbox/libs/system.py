@@ -74,7 +74,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
             raise Raise.error(
                 f"Long argument name is required.",
                 AttributeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -194,23 +194,23 @@ class PathChecker(BData, NoDynamicAttributes):
         """Constructor."""
         if pathname is None:
             raise Raise.error(
-                "pathname as string expected, not None.",
+                "Expected 'pathname' as string, not None.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if not isinstance(pathname, str):
             raise Raise.error(
-                f"pathname as string expected, '{type(pathname)}' received.",
+                f"Expected 'pathname' as string, received: '{type(pathname)}'.",
                 TypeError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         if isinstance(pathname, str) and len(pathname) == 0:
             raise Raise.error(
-                "pathname cannot be an empty string.",
+                "'pathname' cannot be an empty string.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         self._data[_Keys.PATHNAME] = pathname
@@ -290,7 +290,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -303,7 +303,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -316,7 +316,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -329,7 +329,7 @@ class PathChecker(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Unexpected exception",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 

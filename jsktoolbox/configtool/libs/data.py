@@ -88,7 +88,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
                 f"value='{self.value}', " if self.value is not None else ""
             )
         tmp += f"desc='{self.desc}'" if self.desc is not None else ""
-        return f"{self.__class__.__name__}({tmp})"
+        return f"{self._c_name}({tmp})"
 
     def __str__(self) -> str:
         """Return formated string."""
@@ -166,7 +166,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return representation class string."""
-        return f"{self.__class__.__name__}(name='{self.name}')"
+        return f"{self._c_name}(name='{self.name}')"
 
     def __str__(self) -> str:
         """Return formated string."""
@@ -190,9 +190,9 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
             self._data[_Keys.NAME] = tmp
         else:
             raise Raise.error(
-                f"String name expected, '{tmp}' received.",
+                f"Expected String name, received: '{tmp}'.",
                 ValueError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -333,7 +333,7 @@ class DataProcessor(BData, NoDynamicAttributes):
             raise Raise.error(
                 f"Given section name: '{section}' not found.",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
 
@@ -352,7 +352,7 @@ class DataProcessor(BData, NoDynamicAttributes):
             raise Raise.error(
                 f"Section name: '{section}' not found.",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         return out
@@ -367,7 +367,7 @@ class DataProcessor(BData, NoDynamicAttributes):
             raise Raise.error(
                 "Main section is not set.",
                 KeyError,
-                self.__class__.__name__,
+                self._c_name,
                 currentframe(),
             )
         out = self.__dump(self.main_section)

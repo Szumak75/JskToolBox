@@ -49,9 +49,9 @@ class LoggerEngineStdout(
                 self._data[Keys.FORMATTER] = formatter
             else:
                 raise Raise.error(
-                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
                     TypeError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
 
@@ -87,9 +87,9 @@ class LoggerEngineStderr(
                 self._data[Keys.FORMATTER] = formatter
             else:
                 raise Raise.error(
-                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
                     TypeError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
 
@@ -125,9 +125,9 @@ class LoggerEngineFile(
                 self._data[Keys.FORMATTER] = formatter
             else:
                 raise Raise.error(
-                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
                     TypeError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
 
@@ -137,9 +137,9 @@ class LoggerEngineFile(
             message = self._data[Keys.FORMATTER].format(message, self.name)
             if self.logfile is None:
                 raise Raise.error(
-                    f"The {self.__class__.__name__} is not configured correctly.",
+                    f"The {self._c_name} is not configured correctly.",
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
             with open(os.path.join(self.logdir, self.logfile), "a") as file:
@@ -185,9 +185,9 @@ class LoggerEngineFile(
         if ld.exists:
             if not ld.is_file:
                 raise Raise.error(
-                    f"The filename passed: '{filename}' is a directory.",
+                    f"The 'filename' passed: '{filename}', is a directory.",
                     FileExistsError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         else:
@@ -195,7 +195,7 @@ class LoggerEngineFile(
                 raise Raise.error(
                     f"I cannot create a file: {ld.path}",
                     PermissionError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         self.logdir = ld.dirname
@@ -226,9 +226,9 @@ class LoggerEngineSyslog(
                 self._data[Keys.FORMATTER] = formatter
             else:
                 raise Raise.error(
-                    f"LogFormatter type expected, '{type(formatter)}' received.",
+                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
                     TypeError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
 
@@ -254,7 +254,7 @@ class LoggerEngineSyslog(
                 raise Raise.error(
                     f"Syslog facility: '{value}' not found.",
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         if isinstance(value, str):
@@ -264,7 +264,7 @@ class LoggerEngineSyslog(
                 raise Raise.error(
                     f"Syslog facility name not found: '{value}'",
                     KeyError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         try:
@@ -288,7 +288,7 @@ class LoggerEngineSyslog(
                 raise Raise.error(
                     f"Syslog level: '{value}' not found.",
                     ValueError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         if isinstance(value, str):
@@ -298,7 +298,7 @@ class LoggerEngineSyslog(
                 raise Raise.error(
                     f"Syslog level name not found: '{value}'",
                     KeyError,
-                    self.__class__.__name__,
+                    self._c_name,
                     currentframe(),
                 )
         try:
