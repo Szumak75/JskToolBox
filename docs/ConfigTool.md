@@ -3,7 +3,7 @@
 The project contains classes that enable common operations on configuration files.
 
 ## Public classes
-1. [Config](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md#config)
+1. [Config](https://github.com/Szumak75/JskToolBox/blob/1.0.9/docs/ConfigTool.md#config)
 
 ## Config
 
