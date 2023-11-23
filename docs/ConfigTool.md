@@ -22,12 +22,18 @@ Config(filename: str, main_section_name: str, auto_create: bool = False)
 - main_section_name [str] -- *name of main configuration section in config file*
 - auto_create [bool] -- *automatic file creation flag, attempts to create the file if it does not exist when the class object is created. Default value: False*
 
-### Public methods
+### Public properties
 ```
-.file_exists() -> bool
+.file_exists -> bool
 ```
 Returns True if config file exists.
 
+```
+.main_section_name -> Optional[str]
+```
+Returns main section name string or None.
+
+### Public methods
 ```
 .load() -> bool
 ```
@@ -69,6 +75,16 @@ Comments:
 - setting 'varname' without defining the 'value' and 'desc' removes the variable value and description, if this data was previously assigned in the configuration file,
 - setting 'varname' without defining the 'value' or the 'desc' updates the defined argument,
 - providing a value without specifying 'varname' makes no sense and such an item will not be included in the configuration file.
+
+```
+.has_section(section: str) -> bool
+```
+Returns True if given 'section' exists.
+
+```
+.has_varname(section: str, varname: str) -> bool
+```
+Returns True if given 'varname' exists in 'section'.
 
 ### Usage example
 

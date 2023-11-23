@@ -114,6 +114,8 @@ label=
         try:
             obj = Config(filename, main_section)
             self.assertTrue(obj.load())
+            self.assertTrue(obj.has_section(main_section))
+            self.assertTrue(obj.has_varname(main_section, "test01"))
             test = obj.get(main_section, varname="test01")
             self.assertIsInstance(test, str, msg=f"get:{test}")
             self.assertTrue(test == "test", msg=f"get:{test}")
