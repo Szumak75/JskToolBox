@@ -175,30 +175,35 @@ class Config(BData, NoDynamicAttributes):
         """Set data."""
         self.__dp.set(section, varname, value, desc)
 
-    def has_section(self, section_name: str) -> bool:
+    def has_section(self, section: str) -> bool:
         """Check section name in config file."""
-        if not isinstance(section_name, str):
+        if not isinstance(section, str):
             raise Raise(
-                f"Expected String type, received: '{type(section_name)}'.",
+                f"Expected String type, received: '{type(section)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
             )
-        return self.__dp.get_section(section_name) is not None
+        return self.__dp.get_section(section) is not None
 
-    def has_varname(self, section_name: str, var_name: str) -> bool:
+    def has_varname(self, section_name: str, varname: str) -> bool:
         """Check varname in section."""
-        if not isinstance(var_name, str):
+        if not isinstance(varname, str):
             raise Raise(
-                f"Expected String type, received: '{type(var_name)}'.",
+                f"Expected String type, received: '{type(varname)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
             )
         if self.has_section(section_name):
             found_section = self.__dp.get_section(section_name)
-            return found_section.get_variable(var_name) is not None
+            return found_section.get_variable(varname) is not None
         return False
+
+    @property
+    def main_section_name(self) -> Optional[str]:
+        """Return main section name string."""
+        return self.__dp.main_section
 
 
 # #[EOF]#######################################################################
