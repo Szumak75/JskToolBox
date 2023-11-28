@@ -345,9 +345,7 @@ class DataProcessor(BData, NoDynamicAttributes):
             out += f"{found_section}\n"
             for item in found_section.variables:
                 out += f"{item}\n"
-            out += (
-                f"# :::::<End of section: '{found_section.name}'>:::::\n\n"
-            )
+            out += f"# -----<End of section: '{found_section.name}'>-----\n"
         else:
             raise Raise.error(
                 f"Section name: '{section}' not found.",
