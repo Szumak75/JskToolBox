@@ -10,6 +10,7 @@ import time
 from datetime import datetime
 
 from jsktoolbox.libs.base_logs import BLogFormatter
+from jsktoolbox.datetool import Timestamp
 
 
 class LogFormatterNull(BLogFormatter):
@@ -56,12 +57,9 @@ class LogFormatterTimestamp(BLogFormatter):
     def __init__(self) -> None:
         """Constructor."""
         BLogFormatter.__init__(self)
-        self._forms_.append(self.__get_timestamp__)
+        self._forms_.append(Timestamp.now)
         self._forms_.append("{message}")
         self._forms_.append("[{name}]: {message}")
-
-    def __get_timestamp__(self) -> int:
-        return int(time.time())
 
 
 # #[EOF]#######################################################################
