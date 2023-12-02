@@ -47,9 +47,7 @@ class FileProcessor(BData, NoDynamicAttributes):
     def file_exists(self) -> bool:
         """Check if the file exists and is a file."""
         obj: PathChecker = self._data[_Keys.FILE]
-        return (
-            obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
-        )
+        return obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
 
     def file_create(self) -> bool:
         """Try to create file."""
@@ -80,7 +78,7 @@ class FileProcessor(BData, NoDynamicAttributes):
             with open(self.file, "r") as file:
                 tmp = file.readlines()
                 for line in tmp:
-                    if line.find("<End of section") > 0:
+                    if line.find("<end of section") > 0:
                         continue
                     out.append(line.strip())
         return out

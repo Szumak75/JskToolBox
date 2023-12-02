@@ -27,13 +27,13 @@ list = [10, 20, 30]
 level = 7 # value of level
 # example section comments nr 01
 # example section comments nr 02
-# :::::<End of section: 'first'>:::::
+# -----<end of section: 'first'>-----
 
 [second]
 # section 'second'
 value = 18k
 label=
-# :::::<End of section: 'second'>:::::
+# -----<end of section: 'second'>-----
 
 """
         # create config file
@@ -132,9 +132,7 @@ label=
             self.assertIsInstance(test[1], int, msg=f"get:{test[1]}")
             self.assertIsInstance(test[2], float, msg=f"get:{test[2]}")
             self.assertIsInstance(test[3], bool, msg=f"get:{test[3]}")
-            self.assertTrue(
-                test == ["a", 13, 45.18, True], msg=f"get:{test}"
-            )
+            self.assertTrue(test == ["a", 13, 45.18, True], msg=f"get:{test}")
             test = obj.get(main_section, varname="test05")
             self.assertIsInstance(test, bool, msg=f"get:{test}")
             self.assertTrue(test == False)
