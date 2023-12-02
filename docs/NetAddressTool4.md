@@ -3,11 +3,11 @@
 The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
-1. [Octet](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#octet)(**value**: Union[str, int, Octet])
-1. [Address](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#address)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
-1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#netmask)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
-1. [Network](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#network)(**addr**: Union[str, List])
-1. [SubNetwork](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#subnetwork)(**network**: Network, **mask**: Netmask)
+1. [Octet](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool4.md#octet)(**value**: Union[str, int, Octet])
+1. [Address](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool4.md#address)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
+1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool4.md#netmask)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
+1. [Network](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool4.md#network)(**addr**: Union[str, List])
+1. [SubNetwork](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool4.md#subnetwork)(**network**: Network, **mask**: Netmask)
 
 ## Octet
 

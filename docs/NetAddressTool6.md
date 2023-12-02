@@ -3,11 +3,11 @@
 The project contains sets of base classes for operations on IPv6 addresses.
 
 ## Public Classes
-1. [Word16](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#word16)(**value**: Union[str, int, Word16])
-1. [Address6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#address6)(**addr**: Union[str, int, List[Union[int, str, Word16]]])
-1. [Prefix6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#prefix6)(**addr**: Union[str, int, List[Union[int, str, Word16]]])
-1. [Network6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#network6)(**addr**: Union[str, List])
-1. [SubNetwork6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#subnetwork6)(**network**: Network6, **prefix**: Prefix6)
+1. [Word16](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool6.md#word16)(**value**: Union[str, int, Word16])
+1. [Address6](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool6.md#address6)(**addr**: Union[str, int, List[Union[int, str, Word16]]])
+1. [Prefix6](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool6.md#prefix6)(**addr**: Union[str, int, List[Union[int, str, Word16]]])
+1. [Network6](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool6.md#network6)(**addr**: Union[str, List])
+1. [SubNetwork6](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/NetAddressTool6.md#subnetwork6)(**network**: Network6, **prefix**: Prefix6)
 
 ## Word16
 

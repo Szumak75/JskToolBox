@@ -3,8 +3,8 @@
 The project contains several classes that return common date/time structures.
 
 ## Public classes
-1. [DateTime](https://github.com/Szumak75/JskToolBox/blob/master/docs/DateTool.md#datetime)
-1. [Timestamp](https://github.com/Szumak75/JskToolBox/blob/master/docs/DateTool.md#timestamp)
+1. [DateTime](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/DateTool.md#datetime)
+1. [Timestamp](https://github.com/Szumak75/JskToolBox/blob/1.0.13/docs/DateTool.md#timestamp)
 
 ## DateTime
 
