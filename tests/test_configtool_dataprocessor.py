@@ -55,18 +55,14 @@ class TestDataProcessor(unittest.TestCase):
         """Test nr 04."""
         self.dp.main_section = "TEST"
         try:
-            self.dp.set(
-                section="TEST", varname="var01", value="To jest test 1"
-            )
+            self.dp.set(section="TEST", varname="var01", value="To jest test 1")
             self.dp.set(
                 section="TEST",
                 varname="var02",
                 value="To jest test 2",
                 desc="comment",
             )
-            self.dp.set(
-                section="TEST", varname="var01", value="To jest test 3"
-            )
+            self.dp.set(section="TEST", varname="var01", value="To jest test 3")
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
         # self.fail(msg=f"{self.dp._data}")
@@ -85,9 +81,7 @@ class TestDataProcessor(unittest.TestCase):
         self.dp.main_section = "TEST"
         try:
             self.dp.set(section="TEST", varname="var01", value=1)
-            self.dp.set(
-                section="TEST", varname="var02", value=2, desc="comment"
-            )
+            self.dp.set(section="TEST", varname="var02", value=2, desc="comment")
             self.dp.set(section="TEST", varname="var01", value=3)
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
@@ -102,16 +96,10 @@ class TestDataProcessor(unittest.TestCase):
         """Test nr 07."""
         self.dp.main_section = "TEST"
         try:
-            self.dp.set(
-                section="TEST", desc="Example comment for section TEST."
-            )
+            self.dp.set(section="TEST", desc="Example comment for section TEST.")
             self.dp.set(section="TEST", desc="Second line comment.")
-            self.dp.set(
-                section="TEST", varname="var01", value=1, desc="comment 01"
-            )
-            self.dp.set(
-                section="TEST", varname="var02", value=2, desc="comment 02"
-            )
+            self.dp.set(section="TEST", varname="var01", value=1, desc="comment 01")
+            self.dp.set(section="TEST", varname="var02", value=2, desc="comment 02")
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
 
@@ -143,27 +131,21 @@ class TestDataProcessor(unittest.TestCase):
 # Second line comment.
 var01 = 1
 var02 = 2 # comment 02
-# -----<End of section: 'TEST'>-----
+# -----<end of section: 'TEST'>-----
 [TEST2]
 var01 = 1
 var02 = 2 # comment 02
-# -----<End of section: 'TEST2'>-----
+# -----<end of section: 'TEST2'>-----
 """
         self.dp.main_section = "TEST"
         try:
-            self.dp.set(
-                section="TEST", desc="Example comment for section TEST."
-            )
+            self.dp.set(section="TEST", desc="Example comment for section TEST.")
             self.dp.set(section="TEST", desc="Second line comment.")
             self.dp.set(section="TEST", varname="var01", value=1)
-            self.dp.set(
-                section="TEST", varname="var02", value=2, desc="comment 02"
-            )
+            self.dp.set(section="TEST", varname="var02", value=2, desc="comment 02")
             self.dp.add_section("TEST2")
             self.dp.set(section="TEST2", varname="var01", value=1)
-            self.dp.set(
-                section="TEST2", varname="var02", value=2, desc="comment 02"
-            )
+            self.dp.set(section="TEST2", varname="var02", value=2, desc="comment 02")
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
 

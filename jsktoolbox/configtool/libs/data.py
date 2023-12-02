@@ -80,13 +80,9 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         if isinstance(self.value, (int, float, bool)):
             tmp += f"value={self.value}, " if self.value is not None else ""
         elif isinstance(self.value, List):
-            tmp += (
-                f"value=[{self.value}], " if self.value is not None else ""
-            )
+            tmp += f"value=[{self.value}], " if self.value is not None else ""
         else:
-            tmp += (
-                f"value='{self.value}', " if self.value is not None else ""
-            )
+            tmp += f"value='{self.value}', " if self.value is not None else ""
         tmp += f"desc='{self.desc}'" if self.desc is not None else ""
         return f"{self._c_name}({tmp})"
 
@@ -100,9 +96,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
             tmp += f"{self.value}" if self.value is not None else ""
         else:
             tmp += (
-                '"{}"'.format(self.value.strip("\"'"))
-                if self.value is not None
-                else ""
+                '"{}"'.format(self.value.strip("\"'")) if self.value is not None else ""
             )
         if tmp:
             tmp += f" # {self.desc}" if self.desc is not None else ""
@@ -148,9 +142,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         return self._data[_Keys.VALUE]
 
     @value.setter
-    def value(
-        self, value: Optional[Union[str, int, float, bool, List]]
-    ) -> None:
+    def value(self, value: Optional[Union[str, int, float, bool, List]]) -> None:
         """Set value property."""
         self._data[_Keys.VALUE] = value
 
@@ -345,7 +337,7 @@ class DataProcessor(BData, NoDynamicAttributes):
             out += f"{found_section}\n"
             for item in found_section.variables:
                 out += f"{item}\n"
-            out += f"# -----<End of section: '{found_section.name}'>-----\n"
+            out += f"# -----<end of section: '{found_section.name}'>-----\n"
         else:
             raise Raise.error(
                 f"Section name: '{section}' not found.",
