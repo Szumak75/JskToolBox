@@ -122,7 +122,7 @@ The structure of the created configuration file:
 # This is example configuration file,
 # showing how to use the 'Config' class.
 test01 = [1, 'a', True] # a list value
-# :::::<End of section: 'TEST'>:::::
+# -----<end of section: 'TEST'>-----
 
 [SUBTEST]
 # This is subsection description
@@ -130,7 +130,7 @@ test01 = 1
 test02 = 3.14 # PI number
 test03 = "example string"
 test04 = False
-# :::::<End of section: 'SUBTEST'>:::::
+# -----<end of section: 'SUBTEST'>-----
 
 ```
 
