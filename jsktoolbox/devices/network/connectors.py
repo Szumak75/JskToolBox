@@ -3,8 +3,9 @@
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
   Created: 25.08.2023
 
-  Purpose:
+  Purpose: Connector interfaces module.
 """
+
 from abc import ABC, abstractmethod
 from typing import List, Union
 
