@@ -363,7 +363,7 @@ class DataProcessor(BData, NoDynamicAttributes):
         out = self.__dump(self.main_section)
 
         # other sections
-        for section in tuple(set(self.sections) ^ set([self.main_section])):
+        for section in sorted(tuple(set(self.sections) ^ set([self.main_section]))):
             out += self.__dump(section)
 
         return out
