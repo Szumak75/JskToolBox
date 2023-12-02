@@ -14,6 +14,12 @@ The project contains classes that enable common operations on configuration file
 
 [ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md)
 
+## DateTool
+
+The project contains classes for various date/time operations.
+
+[DateTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/DateTool.md)
+
 ## LogsTool
 
 The project contains several classes that create a logging subsystem for the designed solutions.
