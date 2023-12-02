@@ -7,7 +7,7 @@ echo ${MASTER}
 echo ${BRANCHES}
 
 foreach i (${BRANCHES})
-    echo "----[Merge ${i} branch from ${MASTER}]----"
+    echo "\033[31m----[\033[39mMerge \033[32m${i}\033[39m branch from \033[32m${MASTER}\033[39m\033[31m]----\033[39m"
     git switch ${i}
     git pull
     git merge ${MASTER}
