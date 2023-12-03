@@ -8,17 +8,6 @@ The message can be formatted with information about the class, method, and line 
 ```
 Raise.message(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> str
 Raise.error(message:str, exception:Exception, class_name:Optional[str], currentframe:Optional[FrameType])-> Exception
-
-[deprecated methods]
-Raise.attribute_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> AttributeError
-Raise.connection_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> ConnectionError
-Raise.index_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> IndexError
-Raise.key_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> KeyError
-Raise.not_implemented_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> NotImplementedError
-Raise.os_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> OSError
-Raise.syntax_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> SyntaxError
-Raise.type_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> TypeError
-Raise.value_error(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> ValueError
 ```
 
 ## Usage examples

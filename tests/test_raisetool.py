@@ -53,42 +53,44 @@ class TestRaise(unittest.TestCase):
 
     def test_returning_attribute_error(self):
         """Test nr 4."""
-        self.assertIsInstance(Raise.attribute_error("test"), AttributeError)
+        self.assertIsInstance(
+            Raise.error("test", AttributeError), AttributeError
+        )
 
     def test_returning_connection_error(self):
         """Test nr 5."""
         self.assertIsInstance(
-            Raise.connection_error("test"), ConnectionError
+            Raise.error("test", ConnectionError), ConnectionError
         )
 
     def test_returning_key_error(self):
         """Test nr 6."""
-        self.assertIsInstance(Raise.key_error("test"), KeyError)
+        self.assertIsInstance(Raise.error("test", KeyError), KeyError)
 
     def test_returning_os_error(self):
         """Test nr 7."""
-        self.assertIsInstance(Raise.os_error("test"), OSError)
+        self.assertIsInstance(Raise.error("test", OSError), OSError)
 
     def test_returning_syntax_error(self):
         """Test nr 8."""
-        self.assertIsInstance(Raise.syntax_error("test"), SyntaxError)
+        self.assertIsInstance(Raise.error("test", SyntaxError), SyntaxError)
 
     def test_returning_type_error(self):
         """Test nr 9."""
-        self.assertIsInstance(Raise.type_error("test"), TypeError)
+        self.assertIsInstance(Raise.error("test", TypeError), TypeError)
 
     def test_returning_value_error(self):
         """Test nr 10."""
-        self.assertIsInstance(Raise.value_error("test"), ValueError)
+        self.assertIsInstance(Raise.error("test", ValueError), ValueError)
 
     def test_returning_index_error(self):
         """Test nr 11."""
-        self.assertIsInstance(Raise.index_error("test"), IndexError)
+        self.assertIsInstance(Raise.error("test", IndexError), IndexError)
 
     def test_returning_not_implemented_error(self):
         """Test nr 12."""
         self.assertIsInstance(
-            Raise.not_implemented_error("test"), NotImplementedError
+            Raise.error("test", NotImplementedError), NotImplementedError
         )
 
     def test_returning_custom_error(self):
