@@ -27,13 +27,14 @@ class TestConnectors(unittest.TestCase):
     def test_02_host(self):
         """Test nr 02."""
         for obj in (API(), SSH()):
-            obj.host = Address("192.168.1.1")
-            self.assertIsInstance(obj.host, Address)
-            self.assertEqual(obj.host, Address("192.168.1.1"))
-            obj.host = Address6("1111:2222:3333:4444:5555:6666:7777:8888")
-            self.assertIsInstance(obj.host, Address6)
+            obj.address = Address("192.168.1.1")
+            self.assertIsInstance(obj.address, Address)
+            self.assertEqual(obj.address, Address("192.168.1.1"))
+            obj.address = Address6("1111:2222:3333:4444:5555:6666:7777:8888")
+            self.assertIsInstance(obj.address, Address6)
             self.assertEqual(
-                obj.host, Address6("1111:2222:3333:4444:5555:6666:7777:8888")
+                obj.address,
+                Address6("1111:2222:3333:4444:5555:6666:7777:8888"),
             )
 
     def test_03_port(self):
@@ -61,15 +62,17 @@ class TestConnectors(unittest.TestCase):
         """Test nr 06."""
         try:
             obj = API(
-                host=Address("10.5.5.254"),
+                ip_address=Address("10.5.5.254"),
                 port=8728,
                 login="devel",
                 password="mojehaslo",
             )
             self.assertTrue(obj.connect(), msg="connection error")
+            self.assertTrue(obj.is_alive, msg="broken connection")
             self.assertTrue(obj.disconnect(), msg="disconnection error")
         except Exception as ex:
             self.fail(msg=f"Exception was thrown: {ex}")
+        self.assertEqual(len(obj.errors()), 0, msg=f"{obj.errors()}")
 
 
 # #[EOF]#######################################################################
