@@ -129,6 +129,8 @@ class API(IConnector, BData):
         password: Optional[str] = None,
         timeout: float = 60.0,
         use_ssl: bool = False,
+        debug: bool = False,
+        verbose: bool = False,
     ):
         """Constructor."""
         self._data[_Keys.OPTIONS] = "+cet1024w"
