@@ -69,6 +69,7 @@ class TestConnectors(unittest.TestCase):
             )
             self.assertTrue(obj.connect(), msg="connection error")
             self.assertTrue(obj.is_alive, msg="broken connection")
+            self.assertTrue(obj.execute("/system/identity/print"))
             self.assertTrue(obj.disconnect(), msg="disconnection error")
         except Exception as ex:
             self.fail(msg=f"Exception was thrown: {ex}")

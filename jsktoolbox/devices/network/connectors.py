@@ -16,7 +16,7 @@ import select
 import hashlib
 
 from abc import ABC, abstractmethod
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Tuple
 from inspect import currentframe
 
 
@@ -25,6 +25,8 @@ from jsktoolbox.raisetool import Raise
 from jsktoolbox.netaddresstool.ipv4 import Address
 from jsktoolbox.netaddresstool.ipv6 import Address6
 from jsktoolbox.attribtool import ReadOnlyClass
+
+from jsktoolbox.devices.libs.converters import B64Converter
 
 
 class IConnector(ABC):
@@ -72,7 +74,7 @@ class IConnector(ABC):
         """Set login property."""
 
     @abstractmethod
-    def outputs(self) -> List:
+    def outputs(self) -> Tuple:
         """Get list of results after executed commands."""
 
     @property
@@ -116,6 +118,9 @@ class _Keys(object, metaclass=ReadOnlyClass):
     SOCKET = "__socket__"
     ERRORS = "__err__"
     SSL = "__ssl__"
+    STDIN = "__stdin__"
+    STDERR = "__stderr__"
+    STDOUT = "__stdout__"
 
 
 class API(IConnector, BData):
@@ -136,7 +141,11 @@ class API(IConnector, BData):
         self._data[_Keys.OPTIONS] = "+cet1024w"
         self._data[_Keys.TIMEOUT] = float(timeout)
         self._data[_Keys.ERRORS] = []
+        self._data[_Keys.STDIN] = []
+        self._data[_Keys.STDERR] = []
+        self._data[_Keys.STDOUT] = []
         self._data[_Keys.SSL] = use_ssl
+        self._data[_Keys.SOCKET] = None
         if ip_address:
             self.address = ip_address
         if port is not None:
@@ -145,6 +154,99 @@ class API(IConnector, BData):
             self.login = login
         if password is not None:
             self.password = password
+
+    def __del__(self) -> None:
+        """"""
+        self.disconnect()
+
+    @property
+    def __stdin(self) -> List:
+        """Returns stdin list."""
+        return self._data[_Keys.STDIN]
+
+    @property
+    def __stderr(self) -> List:
+        """Returns stderr list."""
+        return self._data[_Keys.STDERR]
+
+    @property
+    def __stdout(self) -> List:
+        """Returns stdout list."""
+        return self._data[_Keys.STDOUT]
+
+    @property
+    def __socket(self) -> Optional[socket.socket]:
+        """Returns connection socket."""
+        return self._data[_Keys.SOCKET]
+
+    @__socket.setter
+    def __socket(self, connection_socket: Optional[socket.socket]) -> None:
+        """Sets connection socket."""
+        if connection_socket is not None and not isinstance(
+            connection_socket, socket.socket
+        ):
+            raise Raise.error(
+                "Expected socket.socket type.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        self._data[_Keys.SOCKET] = connection_socket
+
+    def __command_translator(self, command: str) -> List:
+        """Method for translate mikrotik CLI commands to format accepted
+        by API
+
+        Keyword arguments:
+        command -- type of string, for examples:
+         '/ping address=10.0.0.1 count=3'
+
+        Return: translated list with command and attributes, for example:
+        ['/ping', '=address=10.0.0.1', '=count=3"']
+        """
+        com = []
+        buf = command.split()
+        attr = False
+        where = False
+        unset = False
+        where_count = 0
+        for line in buf:
+            if line.find("where") > -1:
+                where = True
+                attr = False
+                continue
+            elif where:
+                com.append(f"?{line}")
+                where_count += 1
+            elif line.find("=b'") > -1:
+                attr = True
+                c, a = line.split("=", 1)
+                a = B64Converter.base64_to_string(
+                    bytes(a.strip("b'"), "ascii")
+                )
+                com.append(f"={c}={a}")
+            elif line.find("=") > -1 or line.find("detail") > -1 or attr:
+                # i have an attribute
+                attr = True
+                if line.find("\\s") > -1:
+                    line = line.replace("\\s", " ")
+                if unset and line.find("*") == -1:
+                    com.append(f"=value-name={line}")
+                else:
+                    com.append(f"={line}")
+            else:
+                # i have a command member
+                if line == "pr":
+                    line = "print"
+                elif line == "unset":
+                    unset = True
+                if len(com) == 0:
+                    com.append(line)
+                else:
+                    com[0] += "/" + line
+        if where and where_count > 1:
+            com.append("?#&")
+        return com
 
     def __talk(self, words: List) -> Optional[List]:
         if self.__write_sentence(words) == 0:
@@ -268,7 +370,7 @@ class API(IConnector, BData):
     def __write_str(self, string: str) -> None:
         n = 0
         while n < len(string):
-            r = self._data[_Keys.SOCKET].send(bytes(string[n:], "UTF-8"))
+            r = self.__socket.send(bytes(string[n:], "UTF-8"))
             if r == 0:
                 raise Raise.error(
                     "connection closed by remote end",
@@ -281,7 +383,7 @@ class API(IConnector, BData):
     def __write_byte(self, string: bytes) -> None:
         n = 0
         while n < len(string):
-            r = self._data[_Keys.SOCKET].send(string[n:])
+            r = self.__socket.send(string[n:])
             if r == 0:
                 raise Raise.error(
                     "connection closed by remote end",
@@ -294,7 +396,7 @@ class API(IConnector, BData):
     def __read_str(self, length: int) -> Union[str, bytes]:
         ret = ""
         while len(ret) < length:
-            s = self._data[_Keys.SOCKET].recv(length - len(ret))
+            s = self.__socket.recv(length - len(ret))
             if s == b"":
                 raise Raise.error(
                     "connection closed by remote end",
@@ -321,11 +423,11 @@ class API(IConnector, BData):
         try:
             skt = socket.socket(af, socktype, proto)
         except socket.error as ex:
-            self._data[_Keys.SOCKET] = None
+            self.__socket = None
             self._data[_Keys.ERRORS].append(f"socket creation error: {ex}")
             return False
         except Exception as ex:
-            self._data[_Keys.SOCKET] = None
+            self.__socket = None
             self._data[_Keys.ERRORS].append(f"socket creation error: {ex}")
             return False
 
@@ -334,24 +436,24 @@ class API(IConnector, BData):
             context = ssl.create_default_context()
             context.check_hostname = False
             context.verify_mode = ssl.CERT_NONE
-            self._data[_Keys.SOCKET] = context.wrap_socket(skt)
-            # self._data[_Keys.SOCKET] = ssl.wrap_socket(
+            self.__socket = context.wrap_socket(skt)
+            # self.__socket = ssl.wrap_socket(
             # skt,
             # ssl_version=ssl.PROTOCOL_TLSv1_2,
             # ciphers="ECDHE-RSA-AES256-GCM-SHA384",
             # )
         else:
-            self._data[_Keys.SOCKET] = skt
+            self.__socket = skt
 
         # try to connect
         try:
-            self._data[_Keys.SOCKET].connect(sa)
+            self.__socket.connect(sa)
         except socket.error as ex:
-            self._data[_Keys.SOCKET] = None
+            self.__socket = None
             self._data[_Keys.ERRORS].append(f"socket connection error: {ex}")
             return False
         except Exception as ex:
-            self._data[_Keys.SOCKET] = None
+            self.__socket = None
             self._data[_Keys.ERRORS].append(f"socket connection error: {ex}")
             return False
         return True
@@ -393,6 +495,10 @@ class API(IConnector, BData):
                 ):
                     if repl2 == "!trap":
                         return False
+                    elif repl2 == "!done":
+                        return True
+            elif repl == "!done":
+                return True
 
         return True
 
@@ -425,7 +531,7 @@ class API(IConnector, BData):
     def disconnect(self) -> bool:
         """Terminate connection."""
         try:
-            self._data[_Keys.SOCKET].close()
+            self.__socket.close()
             return True
         except Exception as ex:
             self._data[_Keys.ERRORS].append(f'close error: "{ex}"')
@@ -438,6 +544,45 @@ class API(IConnector, BData):
 
     def execute(self, commands: Union[str, List]) -> bool:
         """Execute commands."""
+        # cleanup lists
+        self.__stdin.clear()
+        self.__stderr.clear()
+        self.__stdout.clear()
+        # init local variables
+        ret = True
+        comms = list()
+        if isinstance(commands, str):
+            comms.append(commands)
+        elif isinstance(commands, List):
+            comms = commands
+        else:
+            raise Raise.error(
+                f"Expected string or list type, received: '{type(commands)}'.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        # test connection
+        if not self.is_alive:
+            self.disconnect()
+            if not self.connect():
+                return False
+        for com in comms:
+            self.__stdin.append([])
+            self.__stderr.append([])
+            self.__stdout.append([])
+            for repl, attrs in self.__talk(self.__command_translator(com)):
+                tmp = {}
+                for key in attrs:
+                    tmp[key.strip("=")] = attrs[key]
+                if repl == "!trap":
+                    self.__stderr[len(self.__stderr) - 1].append(tmp)
+                    ret = False
+                elif repl == "!re":
+                    # if ".id" in tmp:
+                    # tmp[".id"].replace("*", "")
+                    self.__stdout[len(self.__stdin) - 1].append(tmp)
+        return ret
 
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
@@ -464,7 +609,7 @@ class API(IConnector, BData):
     def is_alive(self) -> bool:
         """Get alive flag from connected protocol."""
         try:
-            self._data[_Keys.SOCKET].settimeout(2)
+            self.__socket.settimeout(2)
         except Exception:
             # socket is closed
             return False
@@ -477,6 +622,7 @@ class API(IConnector, BData):
             )
             self.disconnect()
             return False
+        self.__socket.settimeout(self._data[_Keys.TIMEOUT])
         return True
 
     @property
@@ -498,8 +644,9 @@ class API(IConnector, BData):
             )
         self._data[_Keys.USER] = username
 
-    def outputs(self) -> List:
+    def outputs(self) -> Tuple:
         """Get list of results after executed commands."""
+        return self.__stdout, self.__stderr
 
     @property
     def password(self) -> Optional[str]:
@@ -623,7 +770,7 @@ class SSH(IConnector, BData):
             )
         self._data[_Keys.USER] = username
 
-    def outputs(self) -> List:
+    def outputs(self) -> Tuple:
         """Get list of results after executed commands."""
 
     @property
