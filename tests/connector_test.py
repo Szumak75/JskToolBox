@@ -18,7 +18,10 @@ if __name__ == "__main__":
         password="mojehaslo",
     )
     obj.connect()
-    print(obj.execute("/ip/route/print"))
+    print(obj.execute("/system/routerboard/print"))
+    print(obj.outputs())
+    print(obj.errors())
+    print(obj.execute("/system/resource/cpu/print"))
     print(obj.outputs())
     print(obj.errors())
 

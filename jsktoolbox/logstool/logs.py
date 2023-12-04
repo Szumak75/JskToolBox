@@ -93,7 +93,8 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
             message = f"{message}"
         if self.name is not None:
             message = f"[{self.name}] {message}"
-        self.logs_queue.put(message, log_level)
+        if self.logs_queue:
+            self.logs_queue.put(message, log_level)
 
     @property
     def message_alert(self) -> None:

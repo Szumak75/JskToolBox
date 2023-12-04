@@ -1,0 +1,2 @@
+[logstool]
+* LoggerClient with qlog==None, check qlog and skip queue if not exists
