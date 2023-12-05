@@ -12,9 +12,9 @@ from abc import ABC, abstractmethod
 class IElement(ABC):
     """"""
 
-    @abstractmethod
-    def get(self) -> bool:
-        """"""
+    # @abstractmethod
+    # def load(self) -> bool:
+    # """"""
 
 
 # #[EOF]#######################################################################

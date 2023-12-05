@@ -33,6 +33,8 @@ from jsktoolbox.netaddresstool.ipv6 import (
 class _Keys(object, metaclass=ReadOnlyClass):
     """"""
 
+    ATTRIB = "__attrib__"
+
 
 class BElement(BData):
     """"""
@@ -40,9 +42,9 @@ class BElement(BData):
     @property
     def attrib(self) -> Dict:
         """"""
-        if "attrib" not in self._data:
-            self._data["attrib"] = {}
-        return self._data["attrib"]
+        if _Keys.ATTRIB not in self._data:
+            self._data[_Keys.ATTRIB] = {}
+        return self._data[_Keys.ATTRIB]
 
 
 # #[EOF]#######################################################################

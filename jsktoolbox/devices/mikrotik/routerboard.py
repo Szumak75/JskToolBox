@@ -9,7 +9,7 @@
 from typing import Dict, List, Optional, Union, Tuple, Any
 from inspect import currentframe
 
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
 
@@ -30,7 +30,16 @@ from jsktoolbox.netaddresstool.ipv6 import (
 from jsktoolbox.devices.mikrotik.base import BRouterOS
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
+from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
 from jsktoolbox.devices.mikrotik.elements.system import System
+
+
+class _Elements(object, metaclass=ReadOnlyClass):
+    """"""
+
+    SYSTEM = "system"
+    IP = "ip"
+    INTERFACE = "interface"
 
 
 class RouterBoard(BRouterOS):
@@ -54,13 +63,18 @@ class RouterBoard(BRouterOS):
             verbose,
         )
         self.path = "/"
-        self.system = System(
+
+        # add elements
+        self.elements[_Elements.SYSTEM] = System(
             parent=self,
             connector=self._ch,
-            qlog=qlog,
-            debug=False,
-            verbose=False,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
         )
+
+        # load data
+        # self.load(None)
 
 
 # #[EOF]#######################################################################
