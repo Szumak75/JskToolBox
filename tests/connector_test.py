@@ -31,5 +31,6 @@ if __name__ == "__main__":
 
     rb = RouterBoard(connector=ch, qlog=q, debug=True, verbose=True)
     rb.load(None)
+    rb.dump()
 
 # #[EOF]#######################################################################

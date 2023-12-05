@@ -73,8 +73,5 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
 
-        # load data
-        # self.load(None)
-
 
 # #[EOF]#######################################################################

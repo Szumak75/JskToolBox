@@ -27,6 +27,8 @@ from jsktoolbox.netaddresstool.ipv6 import (
     SubNetwork6,
 )
 
+from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
+from jsktoolbox.devices.mikrotik.elements.base import BElement
 from jsktoolbox.devices.libs.base import BDev
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
@@ -39,7 +41,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     ELEMENTS = "__elements__"
 
 
-class BRouterOS(BDev):
+class BRouterOS(BDev, BElement):
     """"""
 
     def __init__(
@@ -57,6 +59,18 @@ class BRouterOS(BDev):
         self.debug = debug
         self.verbose = verbose
 
+    def __str__(self) -> str:
+        """"""
+        return f"{self._c_name}(elements='{self.elements}', attrib='{self.attrib}')"
+
+    def dump(self):
+        """"""
+        print(self.path)
+        if self.attrib:
+            print(self.attrib)
+        for item in self.elements.values():
+            item.dump()
+
     @property
     def elements(self) -> Dict:
         """"""
@@ -67,14 +81,22 @@ class BRouterOS(BDev):
     def load(self, path: str) -> bool:
         """"""
         if path is not None:
-            print(f"Path: {path}")
+            # print(f"Path: {path}")
             ret = self._ch.execute(f"{path}print")
-            print(ret)
-
-        # for key, item in self.elements.items():
-        # print(f"Key: {key}")
-        # element: TRouterOs = item
-        # element.load()
+            # print(ret)
+            if ret:
+                out, err = self._ch.outputs()
+                if (
+                    out
+                    and isinstance(out, List)
+                    and out[0]
+                    and isinstance(out[0], list)
+                    and out[0][0]
+                    and isinstance(out[0][0], Dict)
+                ):
+                    self.attrib.update(out[0][0])
+                if err[0]:
+                    self.logs.message_warning = f"{out[0][0]}"
 
 
 # #[EOF]#######################################################################
