@@ -34,6 +34,7 @@ from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
 
 from jsktoolbox.devices.mikrotik.elements.system import System
 from jsktoolbox.devices.mikrotik.elements.ip import Ip
+from jsktoolbox.devices.mikrotik.elements.interface import Interface
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -75,6 +76,13 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
         self.elements[_Elements.SYSTEM] = System(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.INTERFACE] = Interface(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue,
