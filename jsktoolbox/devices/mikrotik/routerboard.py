@@ -31,7 +31,9 @@ from jsktoolbox.devices.mikrotik.base import BRouterOS
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
 from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
+
 from jsktoolbox.devices.mikrotik.elements.system import System
+from jsktoolbox.devices.mikrotik.elements.ip import Ip
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -65,6 +67,13 @@ class RouterBoard(BRouterOS):
         self.path = "/"
 
         # add elements
+        self.elements[_Elements.IP] = Ip(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
         self.elements[_Elements.SYSTEM] = System(
             parent=self,
             connector=self._ch,

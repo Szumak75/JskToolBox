@@ -67,7 +67,11 @@ class BRouterOS(BDev, BElement):
         """"""
         print(self.path)
         if self.attrib:
-            print(self.attrib)
+            print(f"attrib: {self.attrib}")
+        if self.list:
+            # print(f"list: {self.list}")
+            for item in self.list:
+                print(f"list: {item}")
         for item in self.elements.values():
             item.dump()
 
@@ -87,14 +91,23 @@ class BRouterOS(BDev, BElement):
             if ret:
                 out, err = self._ch.outputs()
                 if (
-                    out
-                    and isinstance(out, List)
-                    and out[0]
-                    and isinstance(out[0], list)
-                    and out[0][0]
+                    out[0]
+                    and isinstance(out[0], List)
+                    and len(out[0]) == 1
                     and isinstance(out[0][0], Dict)
                 ):
                     self.attrib.update(out[0][0])
+                elif (
+                    out[0]
+                    and isinstance(out[0], List)
+                    and len(out[0]) > 1
+                    and isinstance(out[0][0], Dict)
+                ):
+                    for item in out[0]:
+                        self.list.append(item)
+                else:
+                    if out[0]:
+                        print(f"DEBUG_: {out}")
                 if err[0]:
                     self.logs.message_warning = f"{out[0][0]}"
 

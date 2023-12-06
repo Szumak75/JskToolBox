@@ -34,6 +34,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     """"""
 
     ATTRIB = "__attrib__"
+    LIST = "__list__"
 
 
 class BElement(BData):
@@ -45,6 +46,13 @@ class BElement(BData):
         if _Keys.ATTRIB not in self._data:
             self._data[_Keys.ATTRIB] = {}
         return self._data[_Keys.ATTRIB]
+
+    @property
+    def list(self) -> List:
+        """"""
+        if _Keys.LIST not in self._data:
+            self._data[_Keys.LIST] = []
+        return self._data[_Keys.LIST]
 
 
 # #[EOF]#######################################################################

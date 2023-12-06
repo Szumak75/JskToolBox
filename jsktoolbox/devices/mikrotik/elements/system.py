@@ -39,6 +39,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
 class _Elements(object, metaclass=ReadOnlyClass):
     """"""
 
+    SYSTEM = "system"
     IDENTITY = "identity"
     RESOURCE = "resource"
     ROUTERBOARD = "routerboard"
@@ -49,7 +50,6 @@ class _Elements(object, metaclass=ReadOnlyClass):
     NTP = "ntp"
     SCHEDULER = "scheduler"
     SCRIPT = "script"
-    SYSTEM = "system"
     UPGRADE = "upgrade"
     WATCHDOG = "watchdog"
     # resource
