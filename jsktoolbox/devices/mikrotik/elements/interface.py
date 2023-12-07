@@ -101,8 +101,5 @@ class RBInterface(BRouterOS):
                 verbose=self.verbose,
             )
 
-        # load data
-        self.load(self.path)
-
 
 # #[EOF]#######################################################################

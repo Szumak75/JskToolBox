@@ -22,15 +22,14 @@ if __name__ == "__main__":
     )
     ch.connect()
     q = LoggerQueue()
-    # print(obj.execute("/system/routerboard/print"))
-    # print(obj.outputs())
-    # print(obj.errors())
-    # print(obj.execute("/system/resource/cpu/print"))
-    # print(obj.outputs())
-    # print(obj.errors())
 
     rb = RouterBoard(connector=ch, qlog=q, debug=True, verbose=True)
-    rb.load(None)
     rb.dump()
+    # print("Check element return")
+    # out = rb.element("/system/routerboard/settings/")
+    # print(out)
+    # print(out.path)
+    # print(out.get())
+    # print(out)
 
 # #[EOF]#######################################################################

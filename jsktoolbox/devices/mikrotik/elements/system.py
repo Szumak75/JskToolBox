@@ -44,10 +44,16 @@ class _Elements(object, metaclass=ReadOnlyClass):
     RESOURCE = "resource"
     ROUTERBOARD = "routerboard"
     CLOCK = "clock"
+    DEVICE_MODE = "device-mode"
     HEALTH = "health"
+    HISTORY = "history"
+    LEDS = "leds"
     LICENSE = "license"
     LOGGING = "logging"
+    NOTE = "note"
     NTP = "ntp"
+    PACKAGE = "package"
+    UPDATE = "update"
     SCHEDULER = "scheduler"
     SCRIPT = "script"
     UPGRADE = "upgrade"
@@ -67,6 +73,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     CLIENT = "client"
     KEY = "key"
     SERVER = "server"
+    SERVERS = "servers"
     # script
     ENVIRONMENT = "environment"
     JOB = "job"
@@ -95,9 +102,21 @@ class RBSystem(BRouterOS):
 
         # add elements
         elements = [
+            _Elements.CLOCK,
+            _Elements.DEVICE_MODE,
+            _Elements.HEALTH,
+            _Elements.HISTORY,
             _Elements.IDENTITY,
+            _Elements.LEDS,
             _Elements.LICENSE,
+            _Elements.LOGGING,
+            _Elements.NOTE,
+            _Elements.NTP,
+            _Elements.PACKAGE,
+            _Elements.RESOURCE,
+            _Elements.ROUTERBOARD,
             _Elements.SCHEDULER,
+            _Elements.SCRIPT,
             _Elements.UPGRADE,
             _Elements.WATCHDOG,
         ]
@@ -111,713 +130,43 @@ class RBSystem(BRouterOS):
                 debug=self.debug,
                 verbose=self.verbose,
             )
-        self.elements[_Elements.RESOURCE] = Resource(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.ROUTERBOARD] = RouterBoard(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.CLOCK] = Clock(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.HEALTH] = Health(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.LOGGING] = Logging(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.NTP] = Ntp(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.SCRIPT] = Script(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-
-class Identity(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.IDENTITY}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Resource(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.RESOURCE}/"
-
-        # add elements
-        self.elements[_Elements.CPU] = Cpu(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.IRQ] = Irq(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.PCI] = Pci(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.USB] = Usb(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class RouterBoard(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.ROUTERBOARD}/"
-
-        # add elements
-        self.elements[_Elements.SETTINGS] = Settings(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class Clock(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.CLOCK}/"
-
-        # add elements
-        self.elements[_Elements.MANUAL] = Manual(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class Health(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.HEALTH}/"
-
-        # add elements
-        self.elements[_Elements.SETTINGS] = Settings(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class Logging(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.LOGGING}/"
-
-        # add elements
-        self.elements[_Elements.ACTION] = Action(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class Ntp(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.NTP}/"
-
-        # add elements
-        self.elements[_Elements.CLIENT] = Client(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.KEY] = Key(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.SERVER] = Server(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class Script(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.SCRIPT}/"
-
-        # add elements
-        self.elements[_Elements.ENVIRONMENT] = Environment(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.JOB] = Job(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-
-        # load data
-        self.load(self.path)
-
-
-class Upgrade(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.UPGRADE}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Cpu(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.CPU}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Irq(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.IRQ}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Pci(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.PCI}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Usb(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.USB}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Settings(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.SETTINGS}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Manual(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.MANUAL}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Action(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.ACTION}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Client(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.CLIENT}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Key(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.KEY}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Server(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.SERVER}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Environment(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.ENVIRONMENT}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Job(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.JOB}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
+        # subelements
+        elements = {
+            _Elements.CLOCK: [_Elements.MANUAL],
+            _Elements.HEALTH: [_Elements.SETTINGS],
+            _Elements.LEDS: [_Elements.SETTINGS],
+            _Elements.LOGGING: [_Elements.ACTION],
+            _Elements.NTP: [
+                _Elements.CLIENT,
+                _Elements.KEY,
+                _Elements.SERVER,
+            ],
+            f"{_Elements.NTP}/{_Elements.CLIENT}": [_Elements.SERVERS],
+            _Elements.PACKAGE: [_Elements.UPDATE],
+            _Elements.RESOURCE: [
+                _Elements.CPU,
+                _Elements.IRQ,
+                _Elements.PCI,
+                _Elements.USB,
+            ],
+            f"{_Elements.RESOURCE}/{_Elements.USB}": [_Elements.SETTINGS],
+            _Elements.ROUTERBOARD: [_Elements.SETTINGS],
+            _Elements.SCRIPT: [_Elements.ENVIRONMENT, _Elements.JOB],
+        }
+        for key in sorted(elements.keys()):
+            # print(key)
+            obj: Element = self.element(f"{self.path}{key}")
+            if obj:
+                for key2 in elements[key]:
+                    obj._add_element(
+                        key=key2,
+                        btype=Element,
+                        parent=obj,
+                        connector=self._ch,
+                        qlog=self.logs.logs_queue,
+                        debug=self.debug,
+                        verbose=self.verbose,
+                    )
 
 
 # #[EOF]#######################################################################

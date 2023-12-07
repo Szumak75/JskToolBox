@@ -27,8 +27,8 @@ from jsktoolbox.netaddresstool.ipv6 import (
     SubNetwork6,
 )
 
-from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
-from jsktoolbox.devices.mikrotik.elements.base import BElement
+from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
+from jsktoolbox.devices.mikrotik.elements.libs.base import BElement
 from jsktoolbox.devices.libs.base import BDev
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
@@ -40,6 +40,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     """"""
 
     ELEMENTS = "__elements__"
+    LOADED = "__loaded__"
 
 
 class BRouterOS(BDev, BElement):
@@ -59,10 +60,11 @@ class BRouterOS(BDev, BElement):
         self.logs = logs
         self.debug = debug
         self.verbose = verbose
+        self._data[_Keys.LOADED] = False
 
     def __str__(self) -> str:
         """"""
-        return f"{self._c_name}(elements='{self.elements}', attrib='{self.attrib}')"
+        return f"{self._c_name}(path='{self.path}', elements='{self.elements}', attrib='{self.attrib}')"
 
     def _add_element(
         self,
@@ -73,7 +75,7 @@ class BRouterOS(BDev, BElement):
         qlog: LoggerQueue,
         debug: bool,
         verbose: bool,
-    ):
+    ) -> None:
         """Add child class to elemets dict."""
         self.elements[key] = btype(
             key=key,
@@ -85,8 +87,9 @@ class BRouterOS(BDev, BElement):
         )
 
     def dump(self):
-        """"""
+        """Dump all dataset."""
         print(self.path)
+        self.load(self.path)
         if self.attrib:
             print(f"attrib: {self.attrib}")
         if self.list:
@@ -96,16 +99,46 @@ class BRouterOS(BDev, BElement):
         for item in self.elements.values():
             item.dump()
 
+    def element(
+        self, path: str, auto_load: bool = False
+    ) -> Optional[TElement]:
+        """Returns Element object for coresponding path."""
+        # check if first and last char in path is '/'
+        if path:
+            if path[0] != "/":
+                path = f"/{path}"
+            if path[-1:] != "/":
+                path = f"{path}/"
+        for key in self.elements.keys():
+            element: Element = self.elements[key]
+            if element.path == path:
+                if auto_load:
+                    element.load(path)
+                return element
+            element2: Element = element.element(path, auto_load)
+            if element2 is not None:
+                return element2
+        return None
+
     @property
     def elements(self) -> Dict:
-        """"""
+        """Return elements dict."""
         if _Keys.ELEMENTS not in self._data:
             self._data[_Keys.ELEMENTS] = {}
         return self._data[_Keys.ELEMENTS]
 
+    def get(self) -> bool:
+        """Gets config for current element."""
+        return self.load(self.path)
+
+    @property
+    def is_loaded(self) -> bool:
+        """Returns True if loaded."""
+        return self._data[_Keys.LOADED]
+
     def load(self, path: str) -> bool:
-        """"""
-        if path is not None:
+        """Gets element config from RB."""
+        if path is not None and not self._data[_Keys.LOADED]:
             # print(f"Path: {path}")
             ret = self._ch.execute(f"{path}print")
             # print(ret)
@@ -118,6 +151,7 @@ class BRouterOS(BDev, BElement):
                     and isinstance(out[0][0], Dict)
                 ):
                     self.attrib.update(out[0][0])
+                    self._data[_Keys.LOADED] = True
                 elif (
                     out[0]
                     and isinstance(out[0], List)
@@ -126,11 +160,15 @@ class BRouterOS(BDev, BElement):
                 ):
                     for item in out[0]:
                         self.list.append(item)
+                    self._data[_Keys.LOADED] = True
                 else:
                     if out[0]:
                         print(f"DEBUG_: {out}")
                 if err[0]:
                     self.logs.message_warning = f"{out[0][0]}"
+                    return False
+                return True
+        return False
 
 
 class Element(BRouterOS):
@@ -154,11 +192,6 @@ class Element(BRouterOS):
             verbose,
         )
         self.path = f"{key}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
 
 
 # #[EOF]#######################################################################

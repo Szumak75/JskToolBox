@@ -31,7 +31,7 @@ from jsktoolbox.devices.mikrotik.base import BRouterOS, Element
 
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
-from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
+from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
 
 from jsktoolbox.devices.mikrotik.elements.system import RBSystem
 from jsktoolbox.devices.mikrotik.elements.ip import RBIp
@@ -69,13 +69,13 @@ class RouterBoard(BRouterOS):
         self.path = "/"
 
         # add elements
-        # self.elements[_Elements.IP] = RBIp(
-        # parent=self,
-        # connector=self._ch,
-        # qlog=self.logs.logs_queue,
-        # debug=self.debug,
-        # verbose=self.verbose,
-        # )
+        self.elements[_Elements.IP] = RBIp(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
         self.elements[_Elements.SYSTEM] = RBSystem(
             parent=self,
             connector=self._ch,
