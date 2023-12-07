@@ -142,7 +142,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     INTERFACES = "interfaces"
 
 
-class Ip(BRouterOS):
+class RBIp(BRouterOS):
     """"""
 
     def __init__(
@@ -1554,7 +1554,7 @@ class WalledGarden(BRouterOS):
         self.path = f"{_Elements.WALLED_GARDEN}/"
 
         # add elements
-        self.elements[_Elements.IP] = Ip(
+        self.elements[_Elements.IP] = RBIp(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue,

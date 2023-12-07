@@ -27,7 +27,7 @@ from jsktoolbox.netaddresstool.ipv6 import (
     SubNetwork6,
 )
 
-from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
+from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev, Element
 
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
@@ -72,7 +72,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     JOB = "job"
 
 
-class System(BRouterOS):
+class RBSystem(BRouterOS):
     """"""
 
     def __init__(
@@ -94,13 +94,23 @@ class System(BRouterOS):
         self.path = f"{_Elements.SYSTEM}/"
 
         # add elements
-        self.elements[_Elements.IDENTITY] = Identity(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
+        elements = [
+            _Elements.IDENTITY,
+            _Elements.LICENSE,
+            _Elements.SCHEDULER,
+            _Elements.UPGRADE,
+            _Elements.WATCHDOG,
+        ]
+        for element in elements:
+            self._add_element(
+                key=element,
+                btype=Element,
+                parent=self,
+                connector=self._ch,
+                qlog=self.logs.logs_queue,
+                debug=self.debug,
+                verbose=self.verbose,
+            )
         self.elements[_Elements.RESOURCE] = Resource(
             parent=self,
             connector=self._ch,
@@ -129,13 +139,6 @@ class System(BRouterOS):
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.LICENSE] = License(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
         self.elements[_Elements.LOGGING] = Logging(
             parent=self,
             connector=self._ch,
@@ -150,28 +153,7 @@ class System(BRouterOS):
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.SCHEDULER] = Scheduler(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
         self.elements[_Elements.SCRIPT] = Script(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.UPGRADE] = Upgrade(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.WATCHDOG] = Watchdog(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue,
@@ -364,33 +346,6 @@ class Health(BRouterOS):
         self.load(self.path)
 
 
-class License(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.LICENSE}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
 class Logging(BRouterOS):
     """"""
 
@@ -473,33 +428,6 @@ class Ntp(BRouterOS):
         self.load(self.path)
 
 
-class Scheduler(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.SCHEDULER}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
 class Script(BRouterOS):
     """"""
 
@@ -561,33 +489,6 @@ class Upgrade(BRouterOS):
             verbose,
         )
         self.path = f"{_Elements.UPGRADE}/"
-
-        # add elements
-
-        # load data
-        self.load(self.path)
-
-
-class Watchdog(BRouterOS):
-    """"""
-
-    def __init__(
-        self,
-        parent: BDev,
-        connector: IConnector,
-        qlog: LoggerQueue = None,
-        debug: bool = False,
-        verbose: bool = False,
-    ):
-        """Constructor."""
-        super().__init__(
-            parent,
-            connector,
-            LoggerClient(queue=qlog, name=self._c_name),
-            debug,
-            verbose,
-        )
-        self.path = f"{_Elements.WATCHDOG}/"
 
         # add elements
 

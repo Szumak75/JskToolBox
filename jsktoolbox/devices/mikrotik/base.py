@@ -33,6 +33,7 @@ from jsktoolbox.devices.libs.base import BDev
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
 TRouterOs = TypeVar("TRouterOs", bound="BRouterOs")
+TElement = TypeVar("TElement", bound="Element")
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -62,6 +63,26 @@ class BRouterOS(BDev, BElement):
     def __str__(self) -> str:
         """"""
         return f"{self._c_name}(elements='{self.elements}', attrib='{self.attrib}')"
+
+    def _add_element(
+        self,
+        key: str,
+        btype: TElement,
+        parent: TRouterOs,
+        connector: IConnector,
+        qlog: LoggerQueue,
+        debug: bool,
+        verbose: bool,
+    ):
+        """Add child class to elemets dict."""
+        self.elements[key] = btype(
+            key=key,
+            parent=parent,
+            connector=connector,
+            qlog=qlog,
+            debug=debug,
+            verbose=verbose,
+        )
 
     def dump(self):
         """"""
@@ -110,6 +131,34 @@ class BRouterOS(BDev, BElement):
                         print(f"DEBUG_: {out}")
                 if err[0]:
                     self.logs.message_warning = f"{out[0][0]}"
+
+
+class Element(BRouterOS):
+    """MiktoTik Element class."""
+
+    def __init__(
+        self,
+        key: str,
+        parent: BDev,
+        connector: IConnector,
+        qlog: LoggerQueue = None,
+        debug: bool = False,
+        verbose: bool = False,
+    ):
+        """Constructor."""
+        super().__init__(
+            parent,
+            connector,
+            LoggerClient(queue=qlog, name=key),
+            debug,
+            verbose,
+        )
+        self.path = f"{key}/"
+
+        # add elements
+
+        # load data
+        self.load(self.path)
 
 
 # #[EOF]#######################################################################

@@ -27,14 +27,15 @@ from jsktoolbox.netaddresstool.ipv6 import (
     SubNetwork6,
 )
 
-from jsktoolbox.devices.mikrotik.base import BRouterOS
+from jsktoolbox.devices.mikrotik.base import BRouterOS, Element
+
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
 from jsktoolbox.devices.mikrotik.elements.interfaces import IElement
 
-from jsktoolbox.devices.mikrotik.elements.system import System
-from jsktoolbox.devices.mikrotik.elements.ip import Ip
-from jsktoolbox.devices.mikrotik.elements.interface import Interface
+from jsktoolbox.devices.mikrotik.elements.system import RBSystem
+from jsktoolbox.devices.mikrotik.elements.ip import RBIp
+from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -68,27 +69,27 @@ class RouterBoard(BRouterOS):
         self.path = "/"
 
         # add elements
-        self.elements[_Elements.IP] = Ip(
+        # self.elements[_Elements.IP] = RBIp(
+        # parent=self,
+        # connector=self._ch,
+        # qlog=self.logs.logs_queue,
+        # debug=self.debug,
+        # verbose=self.verbose,
+        # )
+        self.elements[_Elements.SYSTEM] = RBSystem(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.SYSTEM] = System(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.INTERFACE] = Interface(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
+        # self.elements[_Elements.INTERFACE] = RBInterface(
+        # parent=self,
+        # connector=self._ch,
+        # qlog=self.logs.logs_queue,
+        # debug=self.debug,
+        # verbose=self.verbose,
+        # )
 
 
 # #[EOF]#######################################################################
