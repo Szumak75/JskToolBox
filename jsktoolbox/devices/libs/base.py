@@ -33,14 +33,17 @@ TDev = TypeVar("TDev", bound="BDev")
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
-    """"""
+    """Keys definition class.
+
+    For internal purpose only.
+    """
 
     CH = "__connector_handler__"
     LC = "__logs_client__"
     DEBUG = "__debug__"
     VERBOSE = "__verbose__"
     PARENT = "__parent__"
-    PATH = "__path__"
+    ROOT = "__root__"
 
 
 class BDebug(BData):
@@ -113,19 +116,19 @@ class BDev(BDebug):
         self._data[_Keys.LC] = value
 
     @property
-    def path(self) -> str:
-        """"""
-        if _Keys.PATH not in self._data:
-            self._data[_Keys.PATH] = ""
-        tmp = self._data[_Keys.PATH]
+    def root(self) -> str:
+        """Gets RouterOS command root."""
+        if _Keys.ROOT not in self._data:
+            self._data[_Keys.ROOT] = ""
+        tmp = self._data[_Keys.ROOT]
         item: BDev = self.parent
         if item:
-            tmp = f"{item.path}{tmp}"
+            tmp = f"{item.root}{tmp}"
         return tmp
 
-    @path.setter
-    def path(self, value: str) -> None:
-        """"""
+    @root.setter
+    def root(self, value: str) -> None:
+        """Sets RouterOS command root."""
         if not isinstance(value, str):
             raise Raise.error(
                 f"Expected string type, received: '{type(value)}'",
@@ -133,18 +136,18 @@ class BDev(BDebug):
                 self._c_name,
                 currentframe(),
             )
-        self._data[_Keys.PATH] = value
+        self._data[_Keys.ROOT] = value
 
     @property
-    def parent(self) -> TDev:
-        """"""
+    def parent(self) -> Optional[TDev]:
+        """Returns parent for current object."""
         if _Keys.PARENT not in self._data:
             self._data[_Keys.PARENT] = None
         return self._data[_Keys.PARENT]
 
     @parent.setter
     def parent(self, value: Optional[TDev]) -> None:
-        """"""
+        """Sets parent for current object."""
         if value is not None and not isinstance(value, BDev):
             raise Raise.error(
                 f"Expected BDev type, received: '{type(value)}'",

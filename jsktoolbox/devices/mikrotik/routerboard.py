@@ -29,13 +29,14 @@ from jsktoolbox.netaddresstool.ipv6 import (
 
 from jsktoolbox.devices.mikrotik.base import BRouterOS, Element
 
-from jsktoolbox.devices.network.connectors import IConnector, API, SSH
+from jsktoolbox.devices.network.connectors import IConnector
 
 from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
 
 from jsktoolbox.devices.mikrotik.elements.system import RBSystem
 from jsktoolbox.devices.mikrotik.elements.ip import RBIp
 from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
+from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -44,6 +45,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     SYSTEM = "system"
     IP = "ip"
     INTERFACE = "interface"
+    MPLS = "mpls"
 
 
 class RouterBoard(BRouterOS):
@@ -66,7 +68,7 @@ class RouterBoard(BRouterOS):
             debug,
             verbose,
         )
-        self.path = "/"
+        self.root = "/"
 
         # add elements
         self.elements[_Elements.IP] = RBIp(
@@ -83,13 +85,20 @@ class RouterBoard(BRouterOS):
             debug=self.debug,
             verbose=self.verbose,
         )
-        # self.elements[_Elements.INTERFACE] = RBInterface(
-        # parent=self,
-        # connector=self._ch,
-        # qlog=self.logs.logs_queue,
-        # debug=self.debug,
-        # verbose=self.verbose,
-        # )
+        self.elements[_Elements.INTERFACE] = RBInterface(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.MPLS] = RBMpls(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
 
 
 # #[EOF]#######################################################################

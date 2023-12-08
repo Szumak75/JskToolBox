@@ -37,14 +37,17 @@ TElement = TypeVar("TElement", bound="Element")
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
-    """"""
+    """Keys definition class.
+
+    For internal purpose only.
+    """
 
     ELEMENTS = "__elements__"
     LOADED = "__loaded__"
 
 
 class BRouterOS(BDev, BElement):
-    """"""
+    """Base class for RouterOS."""
 
     def __init__(
         self,
@@ -63,33 +66,33 @@ class BRouterOS(BDev, BElement):
         self._data[_Keys.LOADED] = False
 
     def __str__(self) -> str:
-        """"""
-        return f"{self._c_name}(path='{self.path}', elements='{self.elements}', attrib='{self.attrib}')"
+        """Returns a string representing the object."""
+        return f"{self._c_name}(path='{self.root}', elements='{self.elements}', attrib='{self.attrib}', list='{self.list}')"
 
-    def _add_element(
-        self,
-        key: str,
-        btype: TElement,
-        parent: TRouterOs,
-        connector: IConnector,
-        qlog: LoggerQueue,
-        debug: bool,
-        verbose: bool,
-    ) -> None:
-        """Add child class to elemets dict."""
-        self.elements[key] = btype(
-            key=key,
-            parent=parent,
-            connector=connector,
-            qlog=qlog,
-            debug=debug,
-            verbose=verbose,
-        )
+    def _add_elements(self, parent: TRouterOs, elements_dict: Dict) -> None:
+        """Add childs from configuration dict."""
+        for key in elements_dict.keys():
+            if key in self.elements:
+                # duplicate
+                if self.debug:
+                    self.logs.message_debug = f'duplicate key found: "{key}"'
+                    continue
+            obj = Element(
+                key=key,
+                parent=parent,
+                connector=parent._ch,
+                qlog=parent.logs.logs_queue,
+                debug=parent.debug,
+                verbose=parent.verbose,
+            )
+            self.elements[key] = obj
+            if elements_dict[key]:
+                self._add_elements(obj, elements_dict[key])
 
     def dump(self):
         """Dump all dataset."""
-        print(self.path)
-        self.load(self.path)
+        print(self.root)
+        self.load(self.root)
         if self.attrib:
             print(f"attrib: {self.attrib}")
         if self.list:
@@ -100,22 +103,22 @@ class BRouterOS(BDev, BElement):
             item.dump()
 
     def element(
-        self, path: str, auto_load: bool = False
+        self, root: str, auto_load: bool = False
     ) -> Optional[TElement]:
-        """Returns Element object for coresponding path."""
+        """Returns the Element object for corresponding path."""
         # check if first and last char in path is '/'
-        if path:
-            if path[0] != "/":
-                path = f"/{path}"
-            if path[-1:] != "/":
-                path = f"{path}/"
+        if root:
+            if root[0] != "/":
+                root = f"/{root}"
+            if root[-1:] != "/":
+                root = f"{root}/"
         for key in self.elements.keys():
             element: Element = self.elements[key]
-            if element.path == path:
+            if element.root == root:
                 if auto_load:
-                    element.load(path)
+                    element.load(root)
                 return element
-            element2: Element = element.element(path, auto_load)
+            element2: Element = element.element(root, auto_load)
             if element2 is not None:
                 return element2
         return None
@@ -129,19 +132,17 @@ class BRouterOS(BDev, BElement):
 
     def get(self) -> bool:
         """Gets config for current element."""
-        return self.load(self.path)
+        return self.load(self.root)
 
     @property
     def is_loaded(self) -> bool:
         """Returns True if loaded."""
         return self._data[_Keys.LOADED]
 
-    def load(self, path: str) -> bool:
+    def load(self, root: str) -> bool:
         """Gets element config from RB."""
-        if path is not None and not self._data[_Keys.LOADED]:
-            # print(f"Path: {path}")
-            ret = self._ch.execute(f"{path}print")
-            # print(ret)
+        if root is not None and not self._data[_Keys.LOADED]:
+            ret = self._ch.execute(f"{root}print")
             if ret:
                 out, err = self._ch.outputs()
                 if (
@@ -191,7 +192,7 @@ class Element(BRouterOS):
             debug,
             verbose,
         )
-        self.path = f"{key}/"
+        self.root = f"{key}/"
 
 
 # #[EOF]#######################################################################

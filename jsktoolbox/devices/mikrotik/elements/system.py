@@ -28,18 +28,23 @@ from jsktoolbox.netaddresstool.ipv6 import (
 )
 
 from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev, Element
-
-from jsktoolbox.devices.network.connectors import IConnector, API, SSH
+from jsktoolbox.devices.network.connectors import IConnector
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
-    """"""
+    """Keys definition class.
+
+    For internal purpose only.
+    """
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
-    """"""
+    """Keys definition class.
 
-    SYSTEM = "system"
+    For internal purpose only.
+    """
+
+    ROOT = "system"
     IDENTITY = "identity"
     RESOURCE = "resource"
     ROUTERBOARD = "routerboard"
@@ -80,7 +85,10 @@ class _Elements(object, metaclass=ReadOnlyClass):
 
 
 class RBSystem(BRouterOS):
-    """"""
+    """System class
+
+    For command root: /system/
+    """
 
     def __init__(
         self,
@@ -98,75 +106,57 @@ class RBSystem(BRouterOS):
             debug,
             verbose,
         )
-        self.path = f"{_Elements.SYSTEM}/"
+        self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = [
-            _Elements.CLOCK,
-            _Elements.DEVICE_MODE,
-            _Elements.HEALTH,
-            _Elements.HISTORY,
-            _Elements.IDENTITY,
-            _Elements.LEDS,
-            _Elements.LICENSE,
-            _Elements.LOGGING,
-            _Elements.NOTE,
-            _Elements.NTP,
-            _Elements.PACKAGE,
-            _Elements.RESOURCE,
-            _Elements.ROUTERBOARD,
-            _Elements.SCHEDULER,
-            _Elements.SCRIPT,
-            _Elements.UPGRADE,
-            _Elements.WATCHDOG,
-        ]
-        for element in elements:
-            self._add_element(
-                key=element,
-                btype=Element,
-                parent=self,
-                connector=self._ch,
-                qlog=self.logs.logs_queue,
-                debug=self.debug,
-                verbose=self.verbose,
-            )
-        # subelements
         elements = {
-            _Elements.CLOCK: [_Elements.MANUAL],
-            _Elements.HEALTH: [_Elements.SETTINGS],
-            _Elements.LEDS: [_Elements.SETTINGS],
-            _Elements.LOGGING: [_Elements.ACTION],
-            _Elements.NTP: [
-                _Elements.CLIENT,
-                _Elements.KEY,
-                _Elements.SERVER,
-            ],
-            f"{_Elements.NTP}/{_Elements.CLIENT}": [_Elements.SERVERS],
-            _Elements.PACKAGE: [_Elements.UPDATE],
-            _Elements.RESOURCE: [
-                _Elements.CPU,
-                _Elements.IRQ,
-                _Elements.PCI,
-                _Elements.USB,
-            ],
-            f"{_Elements.RESOURCE}/{_Elements.USB}": [_Elements.SETTINGS],
-            _Elements.ROUTERBOARD: [_Elements.SETTINGS],
-            _Elements.SCRIPT: [_Elements.ENVIRONMENT, _Elements.JOB],
+            _Elements.CLOCK: {
+                _Elements.MANUAL: {},
+            },
+            _Elements.DEVICE_MODE: {},
+            _Elements.HEALTH: {
+                _Elements.SETTINGS: {},
+            },
+            _Elements.HISTORY: {},
+            _Elements.IDENTITY: {},
+            _Elements.LEDS: {
+                _Elements.SETTINGS: {},
+            },
+            _Elements.LICENSE: {},
+            _Elements.LOGGING: {
+                _Elements.ACTION: {},
+            },
+            _Elements.NOTE: {},
+            _Elements.NTP: {
+                _Elements.CLIENT: {
+                    _Elements.SERVERS: {},
+                },
+                _Elements.KEY: {},
+                _Elements.SERVER: {},
+            },
+            _Elements.PACKAGE: {
+                _Elements.UPDATE: {},
+            },
+            _Elements.RESOURCE: {
+                _Elements.CPU: {},
+                _Elements.IRQ: {},
+                _Elements.PCI: {},
+                _Elements.USB: {
+                    _Elements.SETTINGS: {},
+                },
+            },
+            _Elements.ROUTERBOARD: {
+                _Elements.SETTINGS: {},
+            },
+            _Elements.SCHEDULER: {},
+            _Elements.SCRIPT: {
+                _Elements.ENVIRONMENT: {},
+                _Elements.JOB: {},
+            },
+            _Elements.UPGRADE: {},
+            _Elements.WATCHDOG: {},
         }
-        for key in sorted(elements.keys()):
-            # print(key)
-            obj: Element = self.element(f"{self.path}{key}")
-            if obj:
-                for key2 in elements[key]:
-                    obj._add_element(
-                        key=key2,
-                        btype=Element,
-                        parent=obj,
-                        connector=self._ch,
-                        qlog=self.logs.logs_queue,
-                        debug=self.debug,
-                        verbose=self.verbose,
-                    )
+        self._add_elements(self, elements)
 
 
 # #[EOF]#######################################################################

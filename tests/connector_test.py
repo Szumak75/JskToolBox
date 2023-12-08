@@ -26,9 +26,10 @@ if __name__ == "__main__":
     rb = RouterBoard(connector=ch, qlog=q, debug=True, verbose=True)
     rb.dump()
     # print("Check element return")
-    # out = rb.element("/system/routerboard/settings/")
+    # out = rb.element("/ip/firewall/address-list/")
+    # out = rb.element("/interface/ethernet/")
     # print(out)
-    # print(out.path)
+    # print(out.root)
     # print(out.get())
     # print(out)
 

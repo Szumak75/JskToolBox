@@ -34,13 +34,19 @@ from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
-    """"""
+    """Keys definition class.
+
+    For internal purpose only.
+    """
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
-    """"""
+    """Keys definition class.
 
-    INTERFACE = "interface"
+    For internal purpose only.
+    """
+
+    ROOT = "interface"
     BONDING = "bonding"
     BRIDGE = "bridge"
     EOIP = "eoip"
@@ -52,6 +58,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     VPLS = "vpls"
     VRRP = "vrrp"
     WIREGUARD = "wireguard"
+    PEERS = "peers"
     WIRELESS = "wireless"
     POE = "poe"
     SWITCH = "switch"
@@ -71,10 +78,31 @@ class _Elements(object, metaclass=ReadOnlyClass):
     DEVICE = "device"
     APN = "apn"
     ESIM = "esim"
+    ACCESS_LIST = "access-list"
+    ALIGN = "align"
+    CAP = "cap"
+    CHANNELS = "channels"
+    CONNECT_LIST = "connect-list"
+    INFO = "info"
+    INTERWORKING_PROFILES = "interworking-profiles"
+    MANUAL_TX_POWER_TABLE = "manual-tx-power-table"
+    NSTREME = "nstreme"
+    NSTREME_DUAL = "nstreme-dual"
+    REGISTRATION_TABLE = "registration-table"
+    SECURITY_PROFILES = "security-profiles"
+    SNIFFER = "sniffer"
+    SNOOPER = "snooper"
+    WDS = "wds"
+    PACKET = "packet"
+    W60G = "w60g"
+    STATION = "station"
 
 
 class RBInterface(BRouterOS):
-    """"""
+    """Interface class
+
+    For command root: /interface/
+    """
 
     def __init__(
         self,
@@ -92,32 +120,78 @@ class RBInterface(BRouterOS):
             debug,
             verbose,
         )
-        self.path = f"{_Elements.INTERFACE}/"
+        self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = [
-            _Elements.BONDING,
-            _Elements.BRIDGE,
-            _Elements.EOIP,
-            _Elements.ETHERNET,
-            _Elements.GRE,
-            _Elements.IPIP,
-            _Elements.LTE,
-            _Elements.VLAN,
-            _Elements.VPLS,
-            _Elements.WIREGUARD,
-            _Elements.WIRELESS,
-        ]
-        for element in elements:
-            self._add_element(
-                key=element,
-                btype=Element,
-                parent=self,
-                connector=self._ch,
-                qlog=self.logs.logs_queue,
-                debug=self.debug,
-                verbose=self.verbose,
-            )
+        elements = {
+            _Elements.BONDING: {},
+            _Elements.BRIDGE: {
+                _Elements.CALEA: {},
+                _Elements.FILTER: {},
+                _Elements.HOST: {},
+                _Elements.MDB: {},
+                _Elements.MSTI: {},
+                _Elements.NAT: {},
+                _Elements.PORT: {
+                    _Elements.MST_OVERRIDE: {},
+                },
+                _Elements.PORT_CONTROLLER: {
+                    _Elements.DEVICE: {},
+                    _Elements.PORT: {
+                        _Elements.POE: {},
+                    },
+                },
+                _Elements.PORT_EXTENDER: {},
+                _Elements.SETTINGS: {},
+                _Elements.VLAN: {},
+            },
+            _Elements.EOIP: {},
+            _Elements.ETHERNET: {
+                _Elements.SWITCH: {
+                    _Elements.HOST: {},
+                    _Elements.PORT: {},
+                    _Elements.PORT_ISOLATION: {},
+                    _Elements.RULE: {},
+                    _Elements.VLAN: {},
+                },
+            },
+            _Elements.GRE: {},
+            _Elements.IPIP: {},
+            _Elements.LTE: {
+                _Elements.APN: {},
+                _Elements.ESIM: {},
+                _Elements.SETTINGS: {},
+            },
+            _Elements.VLAN: {},
+            _Elements.VPLS: {},
+            _Elements.WIREGUARD: {
+                _Elements.PEERS: {},
+            },
+            _Elements.WIRELESS: {
+                _Elements.ACCESS_LIST: {},
+                _Elements.ALIGN: {},
+                _Elements.CAP: {},
+                _Elements.CHANNELS: {},
+                _Elements.CONNECT_LIST: {},
+                _Elements.INFO: {},
+                _Elements.INTERWORKING_PROFILES: {},
+                _Elements.MANUAL_TX_POWER_TABLE: {},
+                _Elements.NSTREME: {},
+                _Elements.NSTREME_DUAL: {},
+                _Elements.REGISTRATION_TABLE: {},
+                _Elements.SECURITY_PROFILES: {},
+                _Elements.SNIFFER: {
+                    _Elements.PACKET: {},
+                },
+                _Elements.SNOOPER: {},
+                _Elements.WDS: {},
+            },
+            _Elements.W60G: {
+                _Elements.STATION: {},
+            },
+        }
+        # configure elements
+        self._add_elements(self, elements)
 
 
 # #[EOF]#######################################################################
