@@ -194,5 +194,40 @@ class Element(BRouterOS):
         )
         self.root = f"{key}/"
 
+    def search(self, search_dict: Dict) -> Optional[Union[List, Dict]]:
+        """Returns optional Dict or List[Dict] with found results."""
+        # search_dict = {
+        # key1: value1,
+        # key2: None,
+        # }
+        if self.attrib:
+            test = True
+            for key, value in search_dict.items():
+                if value:
+                    if key in self.attrib and self.attrib[key] != value:
+                        test = False
+                elif key not in self.attrib:
+                    test = False
+            if test:
+                return self.attrib
+            return None
+
+        if self.list:
+            out = []
+            for item in self.list:
+                test = True
+                for key, value in search_dict.items():
+                    if value:
+                        if key in item and item[key] != value:
+                            test = False
+                    elif key not in item:
+                        test = False
+                if test:
+                    out.append(item)
+            if out:
+                return out
+
+        return None
+
 
 # #[EOF]#######################################################################
