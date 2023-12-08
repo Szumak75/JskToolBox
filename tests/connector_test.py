@@ -28,12 +28,13 @@ if __name__ == "__main__":
     # rb.dump()
     # print("Check element return")
     # out = rb.element("/ip/firewall/address-list/")
-    out = rb.element("/routing/stats/")
+    out = rb.element("/ip/firewall/address-list/")
     # out.dump()
     # print(out)
     # print(out.root)
     print(out.get())
     # print(out)
     out.dump()
+    print(q.get())
 
 # #[EOF]#######################################################################
