@@ -16,6 +16,7 @@ from jsktoolbox.devices.mikrotik.routerboard import RouterBoard
 if __name__ == "__main__":
     ch = API(
         ip_address=Address("10.5.5.254"),
+        # ip_address=Address("10.255.53.118"),
         port=8728,
         login="devel",
         password="mojehaslo",
@@ -24,13 +25,15 @@ if __name__ == "__main__":
     q = LoggerQueue()
 
     rb = RouterBoard(connector=ch, qlog=q, debug=True, verbose=True)
-    rb.dump()
+    # rb.dump()
     # print("Check element return")
     # out = rb.element("/ip/firewall/address-list/")
-    # out = rb.element("/interface/ethernet/")
+    out = rb.element("/routing/stats/")
+    # out.dump()
     # print(out)
     # print(out.root)
-    # print(out.get())
+    print(out.get())
     # print(out)
+    out.dump()
 
 # #[EOF]#######################################################################

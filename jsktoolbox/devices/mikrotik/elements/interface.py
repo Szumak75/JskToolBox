@@ -96,6 +96,8 @@ class _Elements(object, metaclass=ReadOnlyClass):
     PACKET = "packet"
     W60G = "w60g"
     STATION = "station"
+    BGP_VPLS = "bgp-vpls"
+    CISCO_BGP_VPLS = "cisco-bgp-vpls"
 
 
 class RBInterface(BRouterOS):
@@ -154,6 +156,7 @@ class RBInterface(BRouterOS):
                     _Elements.RULE: {},
                     _Elements.VLAN: {},
                 },
+                _Elements.POE: {},
             },
             _Elements.GRE: {},
             _Elements.IPIP: {},
@@ -163,7 +166,10 @@ class RBInterface(BRouterOS):
                 _Elements.SETTINGS: {},
             },
             _Elements.VLAN: {},
-            _Elements.VPLS: {},
+            _Elements.VPLS: {
+                _Elements.BGP_VPLS: {},
+                _Elements.CISCO_BGP_VPLS: {},
+            },
             _Elements.WIREGUARD: {
                 _Elements.PEERS: {},
             },

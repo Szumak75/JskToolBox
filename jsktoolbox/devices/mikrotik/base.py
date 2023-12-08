@@ -87,7 +87,7 @@ class BRouterOS(BDev, BElement):
             )
             self.elements[key] = obj
             if elements_dict[key]:
-                self._add_elements(obj, elements_dict[key])
+                obj._add_elements(obj, elements_dict[key])
 
     def dump(self):
         """Dump all dataset."""

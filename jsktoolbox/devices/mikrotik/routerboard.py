@@ -37,6 +37,8 @@ from jsktoolbox.devices.mikrotik.elements.system import RBSystem
 from jsktoolbox.devices.mikrotik.elements.ip import RBIp
 from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
 from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
+from jsktoolbox.devices.mikrotik.elements.radius import RBRadius
+from jsktoolbox.devices.mikrotik.elements.routing import RBRouting
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -46,6 +48,8 @@ class _Elements(object, metaclass=ReadOnlyClass):
     IP = "ip"
     INTERFACE = "interface"
     MPLS = "mpls"
+    RADIUS = "radius"
+    ROUTING = "routing"
 
 
 class RouterBoard(BRouterOS):
@@ -93,6 +97,20 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
         self.elements[_Elements.MPLS] = RBMpls(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.RADIUS] = RBRadius(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.ROUTING] = RBRouting(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue,

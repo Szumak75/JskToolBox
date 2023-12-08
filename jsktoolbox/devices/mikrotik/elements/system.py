@@ -82,6 +82,10 @@ class _Elements(object, metaclass=ReadOnlyClass):
     # script
     ENVIRONMENT = "environment"
     JOB = "job"
+    BACKUP = "backup"
+    CLOUD = "cloud"
+    CONSOLE = "console"
+    GAUGES = "gauges"
 
 
 class RBSystem(BRouterOS):
@@ -110,12 +114,17 @@ class RBSystem(BRouterOS):
 
         # add elements
         elements = {
+            _Elements.BACKUP: {
+                _Elements.CLOUD: {},
+            },
             _Elements.CLOCK: {
                 _Elements.MANUAL: {},
             },
+            _Elements.CONSOLE: {},
             _Elements.DEVICE_MODE: {},
             _Elements.HEALTH: {
                 _Elements.SETTINGS: {},
+                _Elements.GAUGES: {},
             },
             _Elements.HISTORY: {},
             _Elements.IDENTITY: {},

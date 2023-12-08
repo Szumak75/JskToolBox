@@ -133,6 +133,12 @@ class _Elements(object, metaclass=ReadOnlyClass):
     TARGET = "target"
     # UPNP
     INTERFACES = "interfaces"
+    ACCOUNTING = "accounting"
+    SNAPSHOT = "snapshot"
+    UNCOUNTED = "uncounted"
+    WEB_ACCESS = "web-access"
+    NEXTHOP = "nexthop"
+    RULE = "rule"
 
 
 class RBIp(BRouterOS):
@@ -161,6 +167,11 @@ class RBIp(BRouterOS):
 
         # add elements
         elements = {
+            _Elements.ACCOUNTING: {
+                _Elements.SNAPSHOT: {},
+                _Elements.UNCOUNTED: {},
+                _Elements.WEB_ACCESS: {},
+            },
             _Elements.ADDRESS: {},
             _Elements.ARP: {},
             _Elements.CLOUD: {
@@ -248,7 +259,12 @@ class RBIp(BRouterOS):
                 _Elements.LOOKUPS: {},
                 _Elements.REFRESHES: {},
             },
-            _Elements.ROUTE: {},
+            _Elements.ROUTE: {
+                _Elements.CACHE: {},
+                _Elements.NEXTHOP: {},
+                _Elements.RULE: {},
+                _Elements.VRF: {},
+            },
             _Elements.SERVICE: {},
             _Elements.SETTINGS: {},
             _Elements.SMB: {
