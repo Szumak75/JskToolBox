@@ -7,7 +7,7 @@
 """
 
 from copy import copy
-from typing import Dict
+from typing import Dict, Optional
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import ReadOnlyClass
 
@@ -22,11 +22,7 @@ class RBQuery(BData):
         """Constructor."""
         self._data[RBQuery.Keys.SEARCH] = {}
 
-    def add_attrib(self, attrib: str) -> None:
-        """"""
-        self._data[RBQuery.Keys.SEARCH][attrib] = None
-
-    def add_attrib_with_value(self, attrib: str, value: str) -> None:
+    def add_attrib(self, attrib: str, value: Optional[str] = None) -> None:
         """"""
         self._data[RBQuery.Keys.SEARCH][attrib] = value
 

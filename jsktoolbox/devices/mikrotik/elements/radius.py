@@ -32,8 +32,8 @@ class _Elements(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    ROOT = "radius"
     INCOMING = "incoming"
+    ROOT = "radius"
 
 
 class RBRadius(BRouterOS):

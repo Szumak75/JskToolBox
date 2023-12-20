@@ -32,7 +32,7 @@ from jsktoolbox.devices.mikrotik.elements.libs.base import BElement
 from jsktoolbox.devices.libs.base import BDev
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
-TRouterOs = TypeVar("TRouterOs", bound="BRouterOs")
+TRouterOs = TypeVar("TRouterOs", bound="BRouterOS")
 TElement = TypeVar("TElement", bound="Element")
 
 
@@ -102,9 +102,7 @@ class BRouterOS(BDev, BElement):
         for item in self.elements.values():
             item.dump()
 
-    def element(
-        self, root: str, auto_load: bool = False
-    ) -> Optional[TElement]:
+    def element(self, root: str, auto_load: bool = False) -> Optional[TElement]:
         """Returns the Element object for corresponding path."""
         # check if first and last char in path is '/'
         if root:

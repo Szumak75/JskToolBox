@@ -109,18 +109,18 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    IPADDR = "host"
-    PORT = "port"
-    USER = "login"
-    PASS = "password"
-    OPTIONS = "opt"
-    TIMEOUT = "timeout"
-    SOCKET = "__socket__"
     ERRORS = "__err__"
+    IPADDR = "host"
+    OPTIONS = "opt"
+    PASS = "password"
+    PORT = "port"
+    SOCKET = "__socket__"
     SSL = "__ssl__"
-    STDIN = "__stdin__"
     STDERR = "__stderr__"
+    STDIN = "__stdin__"
     STDOUT = "__stdout__"
+    TIMEOUT = "timeout"
+    USER = "login"
 
 
 class API(IConnector, BData):
@@ -221,9 +221,7 @@ class API(IConnector, BData):
             elif line.find("=b'") > -1:
                 attr = True
                 c, a = line.split("=", 1)
-                a = B64Converter.base64_to_string(
-                    bytes(a.strip("b'"), "ascii")
-                )
+                a = B64Converter.base64_to_string(bytes(a.strip("b'"), "ascii"))
                 com.append(f"={c}={a}")
             elif line.find("=") > -1 or line.find("detail") > -1 or attr:
                 # i have an attribute
@@ -297,42 +295,24 @@ class API(IConnector, BData):
             self.__write_byte((value).to_bytes(1, sys.byteorder))
         elif value < 0x4000:
             value |= 0x8000
-            self.__write_byte(
-                ((value >> 8) & 0xFF).to_bytes(1, sys.byteorder)
-            )
+            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
             self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
         elif value < 0x200000:
             value |= 0xC00000
-            self.__write_byte(
-                ((value >> 16) & 0xFF).to_bytes(1, sys.byteorder)
-            )
-            self.__write_byte(
-                ((value >> 8) & 0xFF).to_bytes(1, sys.byteorder)
-            )
+            self.__write_byte(((value >> 16) & 0xFF).to_bytes(1, sys.byteorder))
+            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
             self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
         elif value < 0x10000000:
             value |= 0xE0000000
-            self.__write_byte(
-                ((value >> 24) & 0xFF).to_bytes(1, sys.byteorder)
-            )
-            self.__write_byte(
-                ((value >> 16) & 0xFF).to_bytes(1, sys.byteorder)
-            )
-            self.__write_byte(
-                ((value >> 8) & 0xFF).to_bytes(1, sys.byteorder)
-            )
+            self.__write_byte(((value >> 24) & 0xFF).to_bytes(1, sys.byteorder))
+            self.__write_byte(((value >> 16) & 0xFF).to_bytes(1, sys.byteorder))
+            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
             self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
         else:
             self.__write_byte((0xF0).to_bytes(1, sys.byteorder))
-            self.__write_byte(
-                ((value >> 24) & 0xFF).to_bytes(1, sys.byteorder)
-            )
-            self.__write_byte(
-                ((value >> 16) & 0xFF).to_bytes(1, sys.byteorder)
-            )
-            self.__write_byte(
-                ((value >> 8) & 0xFF).to_bytes(1, sys.byteorder)
-            )
+            self.__write_byte(((value >> 24) & 0xFF).to_bytes(1, sys.byteorder))
+            self.__write_byte(((value >> 16) & 0xFF).to_bytes(1, sys.byteorder))
+            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
             self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
 
     def __read_len(self) -> int:
@@ -476,9 +456,7 @@ class API(IConnector, BData):
             if repl == "!trap":
                 return False
             elif "=ret" in attrs.keys():
-                chal = binascii.unhexlify(
-                    (attrs["=ret"]).encode(sys.stdout.encoding)
-                )
+                chal = binascii.unhexlify((attrs["=ret"]).encode(sys.stdout.encoding))
                 md = hashlib.md5()
                 md.update(b"\x00")
                 md.update(self._data[_Keys.PASS].encode(sys.stdout.encoding))
@@ -488,9 +466,7 @@ class API(IConnector, BData):
                         "/login",
                         f"=name={self._data[_Keys.USER]}",
                         "=response=00"
-                        + binascii.hexlify(md.digest()).decode(
-                            sys.stdout.encoding
-                        ),
+                        + binascii.hexlify(md.digest()).decode(sys.stdout.encoding),
                     ]
                 ):
                     if repl2 == "!trap":

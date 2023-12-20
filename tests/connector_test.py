@@ -26,8 +26,8 @@ if __name__ == "__main__":
     ch.connect()
     q = LoggerQueue()
     query = RBQuery()
-    query.add_attrib_with_value("list", "allowed-devices3")
-    query.add_attrib_with_value("address", "10.30.32.9")
+    query.add_attrib("list", "allowed-devices3")
+    query.add_attrib("address", "10.30.32.9")
     print(query.query)
 
     rb = RouterBoard(connector=ch, qlog=q, debug=True, verbose=True)

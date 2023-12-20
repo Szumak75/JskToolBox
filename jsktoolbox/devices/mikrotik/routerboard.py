@@ -44,12 +44,12 @@ from jsktoolbox.devices.mikrotik.elements.routing import RBRouting
 class _Elements(object, metaclass=ReadOnlyClass):
     """"""
 
-    SYSTEM = "system"
-    IP = "ip"
     INTERFACE = "interface"
+    IP = "ip"
     MPLS = "mpls"
     RADIUS = "radius"
     ROUTING = "routing"
+    SYSTEM = "system"
 
 
 class RouterBoard(BRouterOS):

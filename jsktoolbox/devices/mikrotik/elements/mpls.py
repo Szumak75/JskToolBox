@@ -31,19 +31,19 @@ class _Elements(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    ROOT = "mpls"
+    ACCEPT_FILTER = "accept-filter"
+    ADVERTISE_FILTER = "advertise-filter"
+    FLOW = "flow"
     FORWARDING_TABLE = "forwarding-table"
     INTERFACE = "interface"
     LDP = "ldp"
-    SETTINGS = "settings"
-    TRAFFIC_ENG = "traffic-eng"
-    ACCEPT_FILTER = "accept-filter"
-    ADVERTISE_FILTER = "advertise-filter"
     LOCAL_MAPPING = "local-mapping"
     NEIGHBOR = "neighbor"
-    REMOTE_MAPPING = "remote-mapping"
-    FLOW = "flow"
     PATH = "path"
+    REMOTE_MAPPING = "remote-mapping"
+    ROOT = "mpls"
+    SETTINGS = "settings"
+    TRAFFIC_ENG = "traffic-eng"
     TUNNEL = "tunnel"
 
 
