@@ -38,9 +38,7 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
 
     __varint: int = 0
 
-    def __init__(
-        self, addr: Union[str, int, List[Union[int, str, Word16]]]
-    ) -> None:
+    def __init__(self, addr: Union[str, int, List[Union[int, str, Word16]]]) -> None:
         """Constructor."""
         self.words = addr
 
@@ -81,16 +79,16 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
             return ipv6_address
 
         # Podziel adres na dwie części, przed '::' i po '::'
-        parts = ipv6_address.split("::", 1)
-        head = Address6.__check_groups(parts[0].split(":"))
-        tail = Address6.__check_groups(parts[1].split(":"))
+        parts: list[str] = ipv6_address.split("::", 1)
+        head: List[str] = Address6.__check_groups(parts[0].split(":"))
+        tail: List[str] = Address6.__check_groups(parts[1].split(":"))
 
         # Oblicz ile zer należy dodać, aby osiągnąć 8 części
-        missing_zeros = 8 - (len(head) + len(tail))
+        missing_zeros: int = 8 - (len(head) + len(tail))
         zero_part = "0000"
 
         # Połącz części przed '::' i po '::', wstawiając brakujące zera
-        expanded_parts = ":".join(head + [zero_part] * missing_zeros + tail)
+        expanded_parts: str = ":".join(head + [zero_part] * missing_zeros + tail)
 
         return expanded_parts
 
@@ -108,8 +106,8 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
     def __int_to_ip(ipint: int) -> str:
         """Convert ip int representation to ipv6 str."""
         # W przypadku adresu IPv6 zawsze przekształcamy go na 16 bajtów (128 bitów)
-        binary_ip = ipint.to_bytes(16, byteorder="big")
-        ipv6_address = socket.inet_ntop(socket.AF_INET6, binary_ip)
+        binary_ip: bytes = ipint.to_bytes(16, byteorder="big")
+        ipv6_address: str = socket.inet_ntop(socket.AF_INET6, binary_ip)
 
         return ipv6_address
 
@@ -117,9 +115,9 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
     def __ip_to_int(ipstr: str) -> int:
         """Convert ipv6 str representation to ip int."""
         # Używamy socket.inet_pton, aby przekształcić adres IPv6 w postać binarną
-        packed_ip = socket.inet_pton(socket.AF_INET6, ipstr)
+        packed_ip: bytes = socket.inet_pton(socket.AF_INET6, ipstr)
         # Następnie przekształcamy binarny adres IPv6 na liczbę całkowitą (integer)
-        int_ip = int.from_bytes(packed_ip, byteorder="big")
+        int_ip: int = int.from_bytes(packed_ip, byteorder="big")
 
         return int_ip
 
@@ -132,7 +130,7 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        tmp = (
+        tmp: str = (
             f"{str(Word16(value[0]))}:"
             f"{str(Word16(value[1]))}:"
             f"{str(Word16(value[2]))}:"
@@ -175,14 +173,14 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
         """Return string representation of address."""
         return Address6.__int_to_ip(self.__varint)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return representation of object."""
         return f"{self._c_name}('{str(self)}')"
 
     @property
     def words(self) -> List[Word16]:
         """Return words list of eight Word16."""
-        tmp = Address6.__expand_ipv6(str(self)).split(":")
+        tmp: list[str] = Address6.__expand_ipv6(str(self)).split(":")
         return [
             Word16(tmp[0]),
             Word16(tmp[1]),
@@ -195,9 +193,7 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
         ]
 
     @words.setter
-    def words(
-        self, value: Union[str, int, List[Union[int, str, Word16]]]
-    ) -> None:
+    def words(self, value: Union[str, int, List[Union[int, str, Word16]]]) -> None:
         if isinstance(value, List):
             self.__set_words_from_list(value)
         elif isinstance(value, int):
@@ -304,9 +300,7 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
         if isinstance(value, int) and self.__range_validator(value):
             self.__prefix_int = value
         elif isinstance(value, str):
-            if Prefix6.__is_integer(value) and self.__range_validator(
-                int(value)
-            ):
+            if Prefix6.__is_integer(value) and self.__range_validator(int(value)):
                 self.__prefix_int = int(value)
             else:
                 raise Raise.error(
@@ -369,7 +363,7 @@ class Network6(BClasses, NoDynamicAttributes):
     def __network_from_str(self, addr: str) -> None:
         """Build configuration from string."""
         if addr.find("/") > 0:
-            tmp = addr.split("/")
+            tmp: list[str] = addr.split("/")
             self.__address = Address6(tmp[0])
             self.__prefix = Prefix6(tmp[1])
         else:
@@ -426,8 +420,8 @@ class Network6(BClasses, NoDynamicAttributes):
     def min(self) -> Address6:
         """Return first IPv6 address from subnet."""
         ip = int(self.address)
-        mask = (1 << 128 - int(self.prefix)) - 1
-        net = ip & ~mask
+        mask: int = (1 << 128 - int(self.prefix)) - 1
+        net: int = ip & ~mask
         subnet_address = []
         for _ in range(8):
             subnet_address.insert(0, format(net & 0xFFFF, "x"))
@@ -490,7 +484,7 @@ class SubNetwork6(BClasses, NoDynamicAttributes):
         tmp: List[Network6] = []
         nstart = int(self.__network.min)
         nend = int(self.__network.max)
-        start = nstart
+        start: int = nstart
         while True:
             subnet = Network6([Address6(start), self.__prefix])
             tmp.append(subnet)

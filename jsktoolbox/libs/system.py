@@ -109,9 +109,9 @@ class CommandLineParser(BData, NoDynamicAttributes):
     def parse_arguments(self) -> bool:
         """Command line arguments parser."""
         # replace ':' if exists in short option string
-        short_mod = str(
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
-        ).replace(":", "")
+        short_mod = str(self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]).replace(
+            ":", ""
+        )
         long_mod = []
         for item in self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS]:
             long_mod.append(item.replace("=", ""))
@@ -147,9 +147,9 @@ class CommandLineParser(BData, NoDynamicAttributes):
         {'long opt name':{'short':str, 'has_value':bool, 'description':str, 'example':str}}
         """
         out = {}
-        short_mod = str(
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
-        ).replace(":", "")
+        short_mod = str(self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]).replace(
+            ":", ""
+        )
 
         for short_arg, long_arg, desc_arg, ex_arg in zip(
             short_mod,
@@ -236,7 +236,7 @@ class PathChecker(BData, NoDynamicAttributes):
 
         if self._data[_Keys.SPLIT]:
             # split and analyse
-            tmp = ""
+            tmp: str = ""
             for item in self.path.split(os.sep):
                 if item == "":
                     continue
@@ -264,7 +264,7 @@ class PathChecker(BData, NoDynamicAttributes):
     def dirname(self) -> Optional[str]:
         """Return dirname from path."""
         if self.exists:
-            last = None
+            last: Optional[str] = None
             for item in self._data[_Keys.LIST]:
                 if item.is_dir:
                     last = item.path
@@ -275,7 +275,7 @@ class PathChecker(BData, NoDynamicAttributes):
     def filename(self) -> Optional[str]:
         """Return filename from path."""
         if self.exists and self.is_file:
-            tmp = self.path.split(os.sep)
+            tmp: list[str] = self.path.split(os.sep)
             if len(tmp) > 0:
                 if tmp[-1] != "":
                     return tmp[-1]
@@ -347,7 +347,7 @@ class PathChecker(BData, NoDynamicAttributes):
 
     def create(self) -> bool:
         """Create path procedure."""
-        test_path = self.path
+        test_path: str = self.path
         file = True
         if self.path[-1] == os.sep:
             file = False

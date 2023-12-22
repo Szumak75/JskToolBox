@@ -10,7 +10,7 @@ import time
 import threading
 from inspect import currentframe
 
-from typing import Optional
+from typing import Optional, Tuple
 
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
@@ -30,8 +30,8 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    LEO = "__LEO__"
     LCO = "__LCO__"
+    LEO = "__LEO__"
 
 
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):
@@ -71,9 +71,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
             )
         self._data[Keys.NAME] = name
 
-    def message(
-        self, message: str, log_level: str = LogsLevelKeys.INFO
-    ) -> None:
+    def message(self, message: str, log_level: str = LogsLevelKeys.INFO) -> None:
         """Send message to logging subsystem."""
         if not isinstance(log_level, str):
             raise Raise.error(
@@ -179,15 +177,9 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         # default logs level configuration
         self._data[Keys.NO_CONF] = {}
         self._data[Keys.NO_CONF][LogsLevelKeys.INFO] = [LoggerEngineStdout()]
-        self._data[Keys.NO_CONF][LogsLevelKeys.WARNING] = [
-            LoggerEngineStdout()
-        ]
-        self._data[Keys.NO_CONF][LogsLevelKeys.NOTICE] = [
-            LoggerEngineStdout()
-        ]
-        self._data[Keys.NO_CONF][LogsLevelKeys.DEBUG] = [
-            LoggerEngineStderr()
-        ]
+        self._data[Keys.NO_CONF][LogsLevelKeys.WARNING] = [LoggerEngineStdout()]
+        self._data[Keys.NO_CONF][LogsLevelKeys.NOTICE] = [LoggerEngineStdout()]
+        self._data[Keys.NO_CONF][LogsLevelKeys.DEBUG] = [LoggerEngineStderr()]
         self._data[Keys.NO_CONF][LogsLevelKeys.ERROR] = [
             LoggerEngineStdout(),
             LoggerEngineStderr(),
@@ -242,7 +234,7 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         For sending messages to the configured logging subsystem.
         """
         while True:
-            item = self.logs_queue.get()
+            item: Tuple[str, str] | None = self.logs_queue.get()
             if item is None:
                 return
             # get tuple(log_level, message)
@@ -343,9 +335,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
     def stop(self) -> None:
         """Set stop event."""
         if self._debug:
-            self.logger_client.message_debug = (
-                f"[{self._c_name}] stopping..."
-            )
+            self.logger_client.message_debug = f"[{self._c_name}] stopping..."
         self._stop_event.set()
 
     @property

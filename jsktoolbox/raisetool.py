@@ -30,7 +30,7 @@ class Raise(NoDynamicAttributes):
 
         Return: formatted message string
         """
-        template = f"{message}"
+        template: str = f"{message}"
         if currentframe and isinstance(currentframe, FrameType):
             template = f"{currentframe.f_code.co_name} [line:{currentframe.f_lineno}]: {template}"
         elif isinstance(class_name, str) and class_name != "":

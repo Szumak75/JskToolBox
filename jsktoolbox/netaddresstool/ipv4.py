@@ -36,9 +36,7 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
 
     __varint: int = 0
 
-    def __init__(
-        self, addr: Union[str, int, List[Union[int, str, Octet]]]
-    ) -> None:
+    def __init__(self, addr: Union[str, int, List[Union[int, str, Octet]]]) -> None:
         """Constructor."""
         self.octets = addr
 
@@ -76,9 +74,7 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
         """Convert ipv4 str representation to ip int."""
         return struct.unpack("!L", socket.inet_aton(ipstr))[0]
 
-    def __set_octets_from_list(
-        self, value: List[Union[int, str, Octet]]
-    ) -> None:
+    def __set_octets_from_list(self, value: List[Union[int, str, Octet]]) -> None:
         if not value:
             raise Raise.error(
                 "Empty list received.",
@@ -127,13 +123,11 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
     @property
     def octets(self) -> List[Octet]:
         """Return octets list of four Octets."""
-        tmp = str(self).split(".")
+        tmp: list[str] = str(self).split(".")
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
     @octets.setter
-    def octets(
-        self, value: Union[str, int, List[Union[int, str, Octet]]]
-    ) -> None:
+    def octets(self, value: Union[str, int, List[Union[int, str, Octet]]]) -> None:
         if isinstance(value, List):
             self.__set_octets_from_list(value)
         elif isinstance(value, int):
@@ -168,9 +162,7 @@ class Netmask(BClasses, NoDynamicAttributes):
     # CIDR format
     __cidr: int = 0
 
-    def __init__(
-        self, addr: Union[str, int, List[Union[int, str, Octet]]]
-    ) -> None:
+    def __init__(self, addr: Union[str, int, List[Union[int, str, Octet]]]) -> None:
         """Constructor."""
         if isinstance(addr, int):
             self.cidr = addr
@@ -216,7 +208,7 @@ class Netmask(BClasses, NoDynamicAttributes):
     @staticmethod
     def __octets_validator(octets: int) -> bool:
         """Check if given octets list is valid."""
-        test = [
+        test: list[int] = [
             0,  # '0.0.0.0'
             2147483648,  # "128.0.0.0",
             3221225472,  # "192.0.0.0",
@@ -258,7 +250,7 @@ class Netmask(BClasses, NoDynamicAttributes):
     @property
     def octets(self) -> List[Octet]:
         """Return octets list of four Octets."""
-        tmp = str(self).split(".")
+        tmp: list[str] = str(self).split(".")
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
     @octets.setter
@@ -272,9 +264,7 @@ class Netmask(BClasses, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        self.cidr = sum(
-            [bin(x.value).count("1") for x in Address(addr).octets]
-        )
+        self.cidr = sum([bin(x.value).count("1") for x in Address(addr).octets])
 
     @property
     def cidr(self) -> str:
@@ -342,7 +332,7 @@ class Network(BClasses, NoDynamicAttributes):
     def __network_from_str(self, addr: str) -> None:
         """Build configuration from string."""
         if addr.find("/") > 0:
-            tmp = addr.split("/")
+            tmp: list[str] = addr.split("/")
             self.__address = Address(tmp[0])
             self.__mask = Netmask(tmp[1])
         else:
@@ -381,7 +371,7 @@ class Network(BClasses, NoDynamicAttributes):
         """Return broadcast address."""
         ip = int(self.address)
         mask = int(Address(self.mask.octets))
-        broadcast = ip | (mask ^ (1 << 32) - 1)
+        broadcast: int = ip | (mask ^ (1 << 32) - 1)
         return Address(broadcast)
 
     @property
@@ -419,7 +409,7 @@ class Network(BClasses, NoDynamicAttributes):
         """Return first host address in network range."""
         net = int(self.network)
         broadcast = int(self.broadcast)
-        ip = net + 1
+        ip: int = net + 1
         return Address(ip) if ip < broadcast else self.network
 
     @property
@@ -427,7 +417,7 @@ class Network(BClasses, NoDynamicAttributes):
         """Return network address."""
         ip = int(self.address)
         mask = int(Address(self.mask.octets))
-        net = ip & mask
+        net: int = ip & mask
         return Address(net)
 
 
@@ -476,7 +466,7 @@ class SubNetwork(BClasses, NoDynamicAttributes):
         tmp: List[Network] = []
         nstart = int(self.__network.network)
         nend = int(self.__network.broadcast)
-        start = nstart
+        start: int = nstart
         while True:
             subnet = Network([Address(start), self.__mask])
             tmp.append(subnet)

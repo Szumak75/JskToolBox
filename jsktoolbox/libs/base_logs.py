@@ -25,9 +25,9 @@ class Keys(object, metaclass=ReadOnlyClass):
     BUFFERED = "__buffered__"
     CONF = "__conf__"
     DIR = "__dir__"
+    FACILITY = "__facility__"
     FILE = "__file__"
     FORMATTER = "__formatter__"
-    FACILITY = "__facility__"
     LEVEL = "__level__"
     NAME = "__name__"
     NO_CONF = "__noconf__"
@@ -50,7 +50,6 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
 
     class __Facilities(object, metaclass=ReadOnlyClass):
         DAEMON = syslog.LOG_DAEMON
-        USER = syslog.LOG_USER
         LOCAL0 = syslog.LOG_LOCAL0
         LOCAL1 = syslog.LOG_LOCAL1
         LOCAL2 = syslog.LOG_LOCAL2
@@ -61,6 +60,7 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
         LOCAL7 = syslog.LOG_LOCAL7
         MAIL = syslog.LOG_MAIL
         SYSLOG = syslog.LOG_SYSLOG
+        USER = syslog.LOG_USER
 
     @classmethod
     @property
@@ -79,14 +79,14 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
     def level_keys(cls) -> Dict:
         """Returns level keys property."""
         return {
-            "NOTICE": SysLogKeys.level.NOTICE,
-            "INFO": SysLogKeys.level.INFO,
-            "DEBUG": SysLogKeys.level.DEBUG,
-            "WARNING": SysLogKeys.level.WARNING,
-            "ERROR": SysLogKeys.level.ERROR,
-            "EMERGENCY": SysLogKeys.level.EMERGENCY,
             "ALERT": SysLogKeys.level.ALERT,
             "CRITICAL": SysLogKeys.level.CRITICAL,
+            "DEBUG": SysLogKeys.level.DEBUG,
+            "EMERGENCY": SysLogKeys.level.EMERGENCY,
+            "ERROR": SysLogKeys.level.ERROR,
+            "INFO": SysLogKeys.level.INFO,
+            "NOTICE": SysLogKeys.level.NOTICE,
+            "WARNING": SysLogKeys.level.WARNING,
         }
 
     @classmethod
@@ -95,7 +95,6 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
         """Returns Facility keys property."""
         return {
             "DAEMON": SysLogKeys.facility.DAEMON,
-            "USER": SysLogKeys.facility.USER,
             "LOCAL0": SysLogKeys.facility.LOCAL0,
             "LOCAL1": SysLogKeys.facility.LOCAL1,
             "LOCAL2": SysLogKeys.facility.LOCAL2,
@@ -106,6 +105,7 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
             "LOCAL7": SysLogKeys.facility.LOCAL7,
             "MAIL": SysLogKeys.facility.MAIL,
             "SYSLOG": SysLogKeys.facility.SYSLOG,
+            "USER": SysLogKeys.facility.USER,
         }
 
 
@@ -144,7 +144,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
 
     __queue: List[str] = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Constructor."""
         self.__queue = []
 
@@ -236,7 +236,7 @@ class BLogFormatter(NoDynamicAttributes):
         message [str]: log string to send
         name [str]: optional name of apps,
         """
-        out = ""
+        out: str = ""
         for item in self._forms_:
             if callable(item):
                 out += f"{item()} "

@@ -73,7 +73,7 @@ class DateTime(NoNewAttributes):
                 cls.__qualname__,
                 currentframe(),
             )
-        out = cls.now(tz=tz) - datetime.fromtimestamp(seconds, tz=tz)
+        out: timedelta = cls.now(tz=tz) - datetime.fromtimestamp(seconds, tz=tz)
         return timedelta(days=out.days, seconds=out.seconds)
 
 
