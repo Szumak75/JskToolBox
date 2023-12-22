@@ -65,7 +65,7 @@ class FileProcessor(BData, NoDynamicAttributes):
 
     def read(self) -> str:
         """Try to read config file."""
-        out = ""
+        out: str = ""
         if self.file_exists:
             with open(self.file, "r") as file:
                 out = file.read()
@@ -85,7 +85,7 @@ class FileProcessor(BData, NoDynamicAttributes):
 
     def write(self, data: str) -> None:
         """Try to write data to config file."""
-        test = self.file_exists
+        test: bool = self.file_exists
         if not test:
             test = self.file_create()
         if test:

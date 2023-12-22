@@ -14,6 +14,7 @@ from jsktoolbox.raisetool import Raise
 from jsktoolbox.libs.base_data import BData
 from jsktoolbox.configtool.libs.file import FileProcessor
 from jsktoolbox.configtool.libs.data import DataProcessor
+from jsktoolbox.configtool.libs.data import SectionModel
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -61,9 +62,7 @@ class Config(BData, NoDynamicAttributes):
         self._data[_Keys.RE_VAR] = re.compile(r"\s{0,}\S{1,}\s{0,}=")
         self._data[_Keys.RE_INT] = re.compile(r"^\d{1,}$")
         self._data[_Keys.RE_FLOAT] = re.compile(r"^\d{1,}\.\d{1,}$")
-        self._data[_Keys.RE_BOOL] = re.compile(
-            r"^true|false|yes|no$", re.IGNORECASE
-        )
+        self._data[_Keys.RE_BOOL] = re.compile(r"^true|false|yes|no$", re.IGNORECASE)
         self._data[_Keys.RE_TRUE] = re.compile(r"^true|yes$", re.IGNORECASE)
         self._data[_Keys.RE_FALSE] = re.compile(r"^false|no$", re.IGNORECASE)
         self._data[_Keys.RE_LIST] = re.compile(r"^\[.*\]$")
@@ -93,7 +92,7 @@ class Config(BData, NoDynamicAttributes):
             return float(item)
         elif self._data[_Keys.RE_LIST].match(item):
             out = []
-            tmp = [x.strip() for x in item.strip("[]").split(",")]
+            tmp: list[str] = [x.strip() for x in item.strip("[]").split(",")]
             for item in tmp:
                 out.append(self.__value_parser(item))
             return out
@@ -106,7 +105,7 @@ class Config(BData, NoDynamicAttributes):
             _Keys.VALUE: None,
             _Keys.DESC: None,
         }
-        tmp = line.split("=", 1)
+        tmp: list[str] = line.split("=", 1)
         if len(tmp) != 2:
             raise Raise.error(
                 f"Unexpected config line format: '{line}'",
@@ -196,7 +195,7 @@ class Config(BData, NoDynamicAttributes):
                 currentframe(),
             )
         if self.has_section(section_name):
-            found_section = self.__dp.get_section(section_name)
+            found_section: SectionModel = self.__dp.get_section(section_name)
             return found_section.get_variable(varname) is not None
         return False
 

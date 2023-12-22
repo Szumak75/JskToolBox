@@ -8,6 +8,7 @@
 
 from inspect import currentframe
 from typing import Dict, Optional
+from types import FrameType
 
 from jsktoolbox.attribtool import NoDynamicAttributes
 from jsktoolbox.raisetool import Raise
@@ -24,9 +25,11 @@ class BClasses(NoDynamicAttributes):
     @property
     def _f_name(self) -> str:
         """Return current method name."""
-        frame = currentframe().f_back
-        method_name = frame.f_code.co_name
-        return method_name
+        frame: FrameType | None = currentframe().f_back
+        if frame is not None:
+            method_name: str = frame.f_code.co_name
+            return method_name
+        return ""
 
 
 class BData(BClasses):
@@ -46,7 +49,7 @@ class BData(BClasses):
         """Set data dict."""
         if value is None:
             self.__data = {}
-            return
+            return None
         if isinstance(value, Dict):
             for key in value.keys():
                 self.__data[key] = value[key]

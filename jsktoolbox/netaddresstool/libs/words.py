@@ -67,7 +67,7 @@ class Word16(IComparators, BClasses, NoDynamicAttributes):
         """Return a hexadecimal string representing a word without the leading '0x'."""
         return hex(self.value)[2:]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return representation of object."""
         return f"{self._c_name}({self.value})"
 
