@@ -67,7 +67,7 @@ class Octet(IComparators, BClasses, NoDynamicAttributes):
         """Return string representation of octet."""
         return str(self.value)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return representation of object."""
         return f"{self._c_name}({self.value})"
 

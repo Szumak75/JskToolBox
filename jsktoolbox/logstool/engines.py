@@ -28,9 +28,7 @@ from jsktoolbox.logstool.formatters import BLogFormatter
 # https://www.geeksforgeeks.org/python-testing-output-to-stdout/
 
 
-class LoggerEngineStdout(
-    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
-):
+class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
     """STDOUT Logger engine."""
 
     def __init__(
@@ -66,9 +64,7 @@ class LoggerEngineStdout(
             sys.stdout.flush()
 
 
-class LoggerEngineStderr(
-    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
-):
+class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
     """STDERR Logger engine."""
 
     def __init__(
@@ -104,9 +100,7 @@ class LoggerEngineStderr(
             sys.stderr.flush()
 
 
-class LoggerEngineFile(
-    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
-):
+class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
     """FILE Logger engine."""
 
     def __init__(
@@ -202,9 +196,7 @@ class LoggerEngineFile(
         self._data[Keys.FILE] = ld.filename
 
 
-class LoggerEngineSyslog(
-    ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes
-):
+class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
     """SYSLOG Logger engine."""
 
     def __init__(
@@ -232,7 +224,7 @@ class LoggerEngineSyslog(
                     currentframe(),
                 )
 
-    def __del__(self):
+    def __del__(self) -> None:
         try:
             self._data[Keys.SYSLOG].closelog()
         except:
@@ -313,12 +305,8 @@ class LoggerEngineSyslog(
             message = self._data[Keys.FORMATTER].format(message, self.name)
         if self._data[Keys.SYSLOG] is None:
             self._data[Keys.SYSLOG] = syslog
-            self._data[Keys.SYSLOG].openlog(
-                facility=self._data[Keys.FACILITY]
-            )
-        self._data[Keys.SYSLOG].syslog(
-            priority=self._data[Keys.LEVEL], message=message
-        )
+            self._data[Keys.SYSLOG].openlog(facility=self._data[Keys.FACILITY])
+        self._data[Keys.SYSLOG].syslog(priority=self._data[Keys.LEVEL], message=message)
 
 
 # #[EOF]#######################################################################

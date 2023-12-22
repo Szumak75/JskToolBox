@@ -75,7 +75,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
 
     def __repr__(self) -> str:
         """Return representation class string."""
-        tmp = ""
+        tmp: str = ""
         tmp += f"name='{self.name}', " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
             tmp += f"value={self.value}, " if self.value is not None else ""
@@ -88,7 +88,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
 
     def __str__(self) -> str:
         """Return formated string."""
-        tmp = ""
+        tmp: str = ""
         tmp += f"{self.name} = " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
             tmp += f"{self.value}" if self.value is not None else ""
@@ -292,8 +292,8 @@ class DataProcessor(BData, NoDynamicAttributes):
         desc: Optional[str] = None,
     ) -> None:
         """Set data to [SectionModel]->[VariableModel]."""
-        section_name = self.add_section(section)
-        found_section = self.get_section(section_name)
+        section_name: str = self.add_section(section)
+        found_section: SectionModel = self.get_section(section_name)
         found_section.set_variable(varname, value, desc)
 
     def get(
@@ -302,9 +302,9 @@ class DataProcessor(BData, NoDynamicAttributes):
         """Return value."""
         sm = SectionModel(section)
         if sm.name in self.sections:
-            found_section = self.get_section(section)
+            found_section: SectionModel = self.get_section(section)
             if varname is not None:
-                found_var = found_section.get_variable(varname)
+                found_var: VariableModel | None = found_section.get_variable(varname)
                 if found_var is not None:
                     if desc:
                         # Return description for varname
@@ -331,9 +331,9 @@ class DataProcessor(BData, NoDynamicAttributes):
 
     def __dump(self, section: str) -> str:
         """Return formatted configuration data for section name."""
-        out = ""
+        out: str = ""
         if section in self.sections:
-            found_section = self.get_section(section)
+            found_section: SectionModel = self.get_section(section)
             out += f"{found_section}\n"
             for item in found_section.variables:
                 out += f"{item}\n"
@@ -350,7 +350,7 @@ class DataProcessor(BData, NoDynamicAttributes):
     @property
     def dump(self) -> str:
         """Return formated configuration data string."""
-        out = ""
+        out: str = ""
 
         # first section is a main section
         if self.main_section is None:
