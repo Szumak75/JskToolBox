@@ -60,7 +60,7 @@ class RBMpls(BRouterOS):
         qlog: LoggerQueue = None,
         debug: bool = False,
         verbose: bool = False,
-    ):
+    ) -> None:
         """Constructor."""
         super().__init__(
             parent,

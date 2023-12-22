@@ -89,7 +89,7 @@ class BRouterOS(BDev, BElement):
             if elements_dict[key]:
                 obj._add_elements(obj, elements_dict[key])
 
-    def dump(self):
+    def dump(self) -> None:
         """Dump all dataset."""
         print(self.root)
         self.load(self.root)
@@ -140,7 +140,7 @@ class BRouterOS(BDev, BElement):
     def load(self, root: str) -> bool:
         """Gets element config from RB."""
         if root is not None and not self._data[_Keys.LOADED]:
-            ret = self._ch.execute(f"{root}print")
+            ret: bool = self._ch.execute(f"{root}print")
             if ret:
                 out, err = self._ch.outputs()
                 if (
@@ -181,7 +181,7 @@ class Element(BRouterOS):
         qlog: LoggerQueue = None,
         debug: bool = False,
         verbose: bool = False,
-    ):
+    ) -> None:
         """Constructor."""
         super().__init__(
             parent,

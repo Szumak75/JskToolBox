@@ -38,13 +38,13 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
+
     CH = "__connector_handler__"
-    LC = "__logs_client__"
     DEBUG = "__debug__"
-    VERBOSE = "__verbose__"
+    LC = "__logs_client__"
     PARENT = "__parent__"
     ROOT = "__root__"
-
+    VERBOSE = "__verbose__"
 
 class BDebug(BData):
     """Base class for debug flags."""
@@ -120,7 +120,7 @@ class BDev(BDebug):
         """Gets RouterOS command root."""
         if _Keys.ROOT not in self._data:
             self._data[_Keys.ROOT] = ""
-        tmp = self._data[_Keys.ROOT]
+        tmp:str = self._data[_Keys.ROOT]
         item: BDev = self.parent
         if item:
             tmp = f"{item.root}{tmp}"

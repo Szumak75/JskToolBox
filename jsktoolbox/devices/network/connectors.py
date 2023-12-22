@@ -136,7 +136,7 @@ class API(IConnector, BData):
         use_ssl: bool = False,
         debug: bool = False,
         verbose: bool = False,
-    ):
+    ) -> None:
         """Constructor."""
         self._data[_Keys.OPTIONS] = "+cet1024w"
         self._data[_Keys.TIMEOUT] = float(timeout)
@@ -156,7 +156,7 @@ class API(IConnector, BData):
             self.password = password
 
     def __del__(self) -> None:
-        """"""
+        """Destructor."""
         self.disconnect()
 
     @property
@@ -193,7 +193,7 @@ class API(IConnector, BData):
             )
         self._data[_Keys.SOCKET] = connection_socket
 
-    def __command_translator(self, command: str) -> List:
+    def __command_translator(self, command: str) -> List[str]:
         """Method for translate mikrotik CLI commands to format accepted
         by API
 
@@ -204,67 +204,68 @@ class API(IConnector, BData):
         Return: translated list with command and attributes, for example:
         ['/ping', '=address=10.0.0.1', '=count=3"']
         """
-        com = []
-        buf = command.split()
-        attr = False
-        where = False
-        unset = False
+        com_list = []
+        buf_list: list[str] = command.split()
+        attr_flag = False
+        where_flag = False
+        unset_flag = False
         where_count = 0
-        for line in buf:
+        for line in buf_list:
             if line.find("where") > -1:
-                where = True
-                attr = False
+                where_flag = True
+                attr_flag = False
                 continue
-            elif where:
-                com.append(f"?{line}")
+            elif where_flag:
+                com_list.append(f"?{line}")
                 where_count += 1
             elif line.find("=b'") > -1:
-                attr = True
-                c, a = line.split("=", 1)
-                a = B64Converter.base64_to_string(bytes(a.strip("b'"), "ascii"))
-                com.append(f"={c}={a}")
-            elif line.find("=") > -1 or line.find("detail") > -1 or attr:
+                attr_flag = True
+                cmd, attr = line.split("=", 1)
+                attr = B64Converter.base64_to_string(bytes(attr.strip("b'"), "ascii"))
+                com_list.append(f"={cmd}={attr}")
+            elif line.find("=") > -1 or line.find("detail") > -1 or attr_flag:
                 # i have an attribute
-                attr = True
+                attr_flag = True
                 if line.find("\\s") > -1:
                     line = line.replace("\\s", " ")
-                if unset and line.find("*") == -1:
-                    com.append(f"=value-name={line}")
+                if unset_flag and line.find("*") == -1:
+                    com_list.append(f"=value-name={line}")
                 else:
-                    com.append(f"={line}")
+                    com_list.append(f"={line}")
             else:
                 # i have a command member
                 if line == "pr":
                     line = "print"
                 elif line == "unset":
-                    unset = True
-                if len(com) == 0:
-                    com.append(line)
+                    unset_flag = True
+                if len(com_list) == 0:
+                    com_list.append(line)
                 else:
-                    com[0] += "/" + line
-        if where and where_count > 1:
-            com.append("?#&")
-        return com
+                    com_list[0] += "/" + line
+        if where_flag and where_count > 1:
+            com_list.append("?#&")
+        return com_list
 
     def __talk(self, words: List) -> Optional[List]:
         if self.__write_sentence(words) == 0:
-            return
-        r = []
+            return None
+        ret = []
         while 1:
-            i = self.__read_sentence()
-            if len(i) == 0:
+            items_list = self.__read_sentence()
+            if len(items_list) == 0:
                 continue
-            reply = i[0]
+            reply = items_list[0]
             attrs = {}
-            for w in i[1:]:
-                j = w.find("=", 1)
-                if j == -1:
-                    attrs[w] = ""
+            for word in items_list[1:]:
+                idx = word.find("=", 1)
+                if idx == -1:
+                    attrs[word] = ""
                 else:
-                    attrs[w[:j]] = w[j + 1 :]
-            r.append((reply, attrs))
+                    attrs[word[:idx]] = word[idx + 1 :]
+            ret.append((reply, attrs))
             if reply == "!done":
-                return r
+                return ret
+        return None
 
     def __write_sentence(self, words: List) -> int:
         ret = 0
@@ -275,12 +276,12 @@ class API(IConnector, BData):
         return ret
 
     def __read_sentence(self) -> List:
-        r = []
+        ret_list = []
         while 1:
-            w = self.__read_word()
-            if w == "":
-                return r
-            r.append(w)
+            word = self.__read_word()
+            if word == "":
+                return ret_list
+            ret_list.append(word)
 
     def __write_word(self, word: str) -> None:
         self.__write_len(len(word))
@@ -316,7 +317,7 @@ class API(IConnector, BData):
             self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
 
     def __read_len(self) -> int:
-        char = ord(self.__read_str(1))
+        char: int = ord(self.__read_str(1))
         if (char & 0x80) == 0x00:
             pass
         elif (char & 0xC0) == 0x80:
@@ -348,45 +349,45 @@ class API(IConnector, BData):
         return char
 
     def __write_str(self, string: str) -> None:
-        n = 0
-        while n < len(string):
-            r = self.__socket.send(bytes(string[n:], "UTF-8"))
-            if r == 0:
+        number = 0
+        while number < len(string):
+            ret: int = self.__socket.send(bytes(string[number:], "UTF-8"))
+            if ret == 0:
                 raise Raise.error(
                     "connection closed by remote end",
                     RuntimeError,
                     self._c_name,
                     currentframe(),
                 )
-            n += r
+            number += ret
 
     def __write_byte(self, string: bytes) -> None:
-        n = 0
-        while n < len(string):
-            r = self.__socket.send(string[n:])
-            if r == 0:
+        number = 0
+        while number < len(string):
+            ret: int = self.__socket.send(string[number:])
+            if ret == 0:
                 raise Raise.error(
                     "connection closed by remote end",
                     RuntimeError,
                     self._c_name,
                     currentframe(),
                 )
-            n += r
+            number += ret
 
     def __read_str(self, length: int) -> Union[str, bytes]:
-        ret = ""
+        ret: str = ""
         while len(ret) < length:
-            s = self.__socket.recv(length - len(ret))
-            if s == b"":
+            soc_ret: bytes = self.__socket.recv(length - len(ret))
+            if soc_ret == b"":
                 raise Raise.error(
                     "connection closed by remote end",
                     RuntimeError,
                     self._c_name,
                     currentframe(),
                 )
-            if s >= (128).to_bytes(1, "big"):
-                return s
-            ret += s.decode(sys.stdout.encoding, "replace")
+            if soc_ret >= (128).to_bytes(1, "big"):
+                return soc_ret
+            ret += soc_ret.decode(sys.stdout.encoding, "replace")
         return ret
 
     def __get_socket(self) -> bool:
@@ -413,7 +414,7 @@ class API(IConnector, BData):
 
         # set ssl if needed
         if self._data[_Keys.SSL]:
-            context = ssl.create_default_context()
+            context: ssl.SSLContext = ssl.create_default_context()
             context.check_hostname = False
             context.verify_mode = ssl.CERT_NONE
             self.__socket = context.wrap_socket(skt)
@@ -456,8 +457,10 @@ class API(IConnector, BData):
             if repl == "!trap":
                 return False
             elif "=ret" in attrs.keys():
-                chal = binascii.unhexlify((attrs["=ret"]).encode(sys.stdout.encoding))
-                md = hashlib.md5()
+                chal: bytes = binascii.unhexlify(
+                    (attrs["=ret"]).encode(sys.stdout.encoding)
+                )
+                md: hashlib._Hash = hashlib.md5()
                 md.update(b"\x00")
                 md.update(self._data[_Keys.PASS].encode(sys.stdout.encoding))
                 md.update(chal)
@@ -508,9 +511,10 @@ class API(IConnector, BData):
         """Terminate connection."""
         try:
             self.__socket.close()
-            return True
         except Exception as ex:
             self._data[_Keys.ERRORS].append(f'close error: "{ex}"')
+        else:
+            return True
 
         return False
 
@@ -530,7 +534,7 @@ class API(IConnector, BData):
         if isinstance(commands, str):
             comms.append(commands)
         elif isinstance(commands, List):
-            comms = commands
+            comms.extend(commands)
         else:
             raise Raise.error(
                 f"Expected string or list type, received: '{type(commands)}'.",
@@ -613,7 +617,7 @@ class API(IConnector, BData):
         """Set login property."""
         if username is not None and not isinstance(username, str):
             raise Raise.error(
-                f"Expected int type, received: '{type(username)}'.",
+                f"Expected str type, received: '{type(username)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -636,7 +640,7 @@ class API(IConnector, BData):
         """Set password property."""
         if passwd is not None and not isinstance(passwd, str):
             raise Raise.error(
-                f"Expected int type, received: '{type(passwd)}'.",
+                f"Expected str type, received: '{type(passwd)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -666,7 +670,7 @@ class API(IConnector, BData):
 
     @property
     def prototype(self) -> str:
-        """Get protocol type property."""
+        """Returns protocol type."""
         return "API"
 
 
@@ -679,7 +683,7 @@ class SSH(IConnector, BData):
         port: Optional[int] = None,
         login: Optional[str] = None,
         password: Optional[str] = None,
-    ):
+    ) -> None:
         """Constructor."""
         if ip_address:
             self.address = ip_address
@@ -739,7 +743,7 @@ class SSH(IConnector, BData):
         """Set login property."""
         if username is not None and not isinstance(username, str):
             raise Raise.error(
-                f"Expected int type, received: '{type(username)}'.",
+                f"Expected str type, received: '{type(username)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -761,7 +765,7 @@ class SSH(IConnector, BData):
         """Set password property."""
         if passwd is not None and not isinstance(passwd, str):
             raise Raise.error(
-                f"Expected int type, received: '{type(passwd)}'.",
+                f"Expected str type, received: '{type(passwd)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -791,7 +795,7 @@ class SSH(IConnector, BData):
 
     @property
     def prototype(self) -> str:
-        """Get protocol type property."""
+        """Returns protocol type."""
         return "SSH"
 
 
