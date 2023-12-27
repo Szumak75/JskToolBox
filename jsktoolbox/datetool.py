@@ -37,21 +37,19 @@ class DateTime(NoNewAttributes):
         if not isinstance(timestamp_seconds, (int, float)):
             raise Raise.error(
                 f"Expected int or float type, received: '{type(timestamp_seconds)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 cls.__qualname__,
                 currentframe(),
             )
         return datetime.fromtimestamp(timestamp_seconds, tz=tz)
 
     @classmethod
-    def elapsed_time_from_seconds(
-        cls, seconds: Union[int, float]
-    ) -> timedelta:
+    def elapsed_time_from_seconds(cls, seconds: Union[int, float]) -> timedelta:
         """Convert given seconds to timedelta structure."""
         if not isinstance(seconds, (int, float)):
             raise Raise.error(
                 f"Expected int or float type, received: '{type(seconds)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 cls.__qualname__,
                 currentframe(),
             )
@@ -69,7 +67,7 @@ class DateTime(NoNewAttributes):
         if not isinstance(seconds, (int, float)):
             raise Raise.error(
                 f"Expected int or float type, received: '{type(seconds)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 cls.__qualname__,
                 currentframe(),
             )
