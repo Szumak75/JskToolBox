@@ -13,27 +13,27 @@ from jsktoolbox.configtool.libs.data import DataProcessor
 class TestDataProcessor(unittest.TestCase):
     """Tests for DataProcessor class."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test."""
         try:
             self.dp = DataProcessor()
         except Exception as ex:
             self.fail(ex)
 
-    def test_01_add_section(self):
+    def test_01_add_section(self) -> None:
         """Test nr 01."""
         try:
             self.dp.main_section = "TEST"
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
 
-    def test_02_get_sections_tuple(self):
+    def test_02_get_sections_tuple(self) -> None:
         """Test nr 02."""
         self.dp.main_section = "TEST"
         test = tuple(["TEST"])
         self.assertEqual(self.dp.sections, test)
 
-    def test_03_add_section(self):
+    def test_03_add_section(self) -> None:
         """Test nr 03."""
         self.dp.main_section = "TEST"
         try:
@@ -51,7 +51,7 @@ class TestDataProcessor(unittest.TestCase):
         test = tuple(sorted(["TEST", "S1", "S2", "S3", "S4"]))
         self.assertEqual(self.dp.sections, test, msg=f"{self.dp._data}")
 
-    def test_04_add_value_to_section(self):
+    def test_04_add_value_to_section(self) -> None:
         """Test nr 04."""
         self.dp.main_section = "TEST"
         try:
@@ -67,7 +67,7 @@ class TestDataProcessor(unittest.TestCase):
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
         # self.fail(msg=f"{self.dp._data}")
 
-    def test_05_add_section_comment(self):
+    def test_05_add_section_comment(self) -> None:
         """Test nr 05."""
         self.dp.main_section = "TEST"
         try:
@@ -76,7 +76,7 @@ class TestDataProcessor(unittest.TestCase):
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
         # self.fail(msg=f"{self.dp._data}")
 
-    def test_06_get_value(self):
+    def test_06_get_value(self) -> None:
         """Test nr 06."""
         self.dp.main_section = "TEST"
         try:
@@ -92,7 +92,7 @@ class TestDataProcessor(unittest.TestCase):
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
 
-    def test_07_get_description(self):
+    def test_07_get_description(self) -> None:
         """Test nr 07."""
         self.dp.main_section = "TEST"
         try:
@@ -124,7 +124,7 @@ class TestDataProcessor(unittest.TestCase):
         # self.fail(msg=f"dump:{self.dp._data}")
         # self.fail(msg=f"dump:{value}")
 
-    def test_08_dump_data(self):
+    def test_08_dump_data(self) -> None:
         """Test nr 08."""
         expectation = """[TEST]
 # Example comment for section TEST.

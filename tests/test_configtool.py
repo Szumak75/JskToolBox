@@ -45,7 +45,7 @@ label=
         except Exception as ex:
             self.fail(msg=f"{ex}")
 
-    def test_01_create_object(self):
+    def test_01_create_object(self) -> None:
         """Test nr 01."""
         file: str = "/tmp/test/config.01.ini"
         sname: str = "TEST"
@@ -54,7 +54,7 @@ label=
         except Exception:
             self.fail("somenting is very wrong.")
 
-    def test_02_config_read(self):
+    def test_02_config_read(self) -> None:
         """Test nr 02."""
         obj = None
         try:
@@ -68,7 +68,7 @@ label=
         except Exception as ex:
             self.fail(msg=f"{ex}")
 
-    def test_03_save_and_read_check_types(self):
+    def test_03_save_and_read_check_types(self) -> None:
         """Test nr 03."""
         filename = "/tmp/test.ini"
         main_section = "TEST"

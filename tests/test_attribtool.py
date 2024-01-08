@@ -8,6 +8,7 @@
 """
 
 import unittest
+from typing import Optional, Any
 
 
 class TestReadOnlyClass(unittest.TestCase):
@@ -39,11 +40,11 @@ class TestNoNewAttributes(unittest.TestCase):
             __variable = None
 
             @property
-            def variable(self):
+            def variable(self) -> Optional[Any]:
                 return self.__variable
 
             @variable.setter
-            def variable(self, value):
+            def variable(self, value) -> None:
                 self.__variable = value
 
         self.workclass = Example()
@@ -79,11 +80,11 @@ class TestNoDynamicAttributes(unittest.TestCase):
             __variable = None
 
             @property
-            def variable(self):
+            def variable(self) -> Optional[Any]:
                 return self.__variable
 
             @variable.setter
-            def variable(self, value):
+            def variable(self, value) -> None:
                 self.__variable = value
 
         self.workclass = Example()

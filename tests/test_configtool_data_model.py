@@ -13,7 +13,7 @@ from jsktoolbox.configtool.libs.data import SectionModel, VariableModel
 class TestDataModel(unittest.TestCase):
     """Test for Data Model classes."""
 
-    def test_01_create_object(self):
+    def test_01_create_object(self) -> None:
         """Test nr 01."""
         try:
             obj = SectionModel()
@@ -25,7 +25,7 @@ class TestDataModel(unittest.TestCase):
         except Exception as ex:
             self.fail(msg=f"{ex}\n{obj}")
 
-    def test_02_SectionModel_creation_error(self):
+    def test_02_SectionModel_creation_error(self) -> None:
         """Test nr 02."""
         with self.assertRaises(ValueError):
             SectionModel("")
@@ -35,14 +35,14 @@ class TestDataModel(unittest.TestCase):
             obj = SectionModel()
             obj.name = " [] \n"
 
-    def test_03_name_check(self):
+    def test_03_name_check(self) -> None:
         """Test nr 03."""
         src = "[TEST]\n"
         expectation = "TEST"
         obj = SectionModel(src)
         self.assertEqual(obj.name, expectation)
 
-    def test_04_search(self):
+    def test_04_search(self) -> None:
         """Test nr 04."""
         src = "[TEST]"
         name = "TEST"

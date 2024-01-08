@@ -38,7 +38,7 @@ class A(BLoggerQueue, NoDynamicAttributes):
 
     __le = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Constructor."""
         name = self.__class__.__name__
         le = LoggerEngine()
@@ -58,7 +58,7 @@ class A(BLoggerQueue, NoDynamicAttributes):
         le.add_engine(LogsLevelKeys.DEBUG, lff)
         self.__le = le
 
-    def send(self):
+    def send(self) -> None:
         """"""
         self.__le.send()
 
@@ -68,7 +68,7 @@ class B(BLoggerQueue, NoDynamicAttributes):
 
     msg = None
 
-    def __init__(self, logger: LoggerClient):
+    def __init__(self, logger: LoggerClient) -> None:
         """Constructor."""
         self.msg = logger
         self.msg.message_debug = "coś się stało"
