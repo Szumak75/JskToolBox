@@ -16,14 +16,14 @@ from jsktoolbox.datetool import Timestamp, DateTime
 class TestDateTool(unittest.TestCase):
     """Test class for DateTool module."""
 
-    def test_01_Timestamp(self):
+    def test_01_Timestamp(self) -> None:
         """Test nr 01."""
         self.assertIsInstance(Timestamp.now, int)
         tnow = Timestamp.now
         now = int(time.time())
         self.assertTrue(tnow < now + 2 and tnow > now - 2)
 
-    def test_02_datetime_from_timestamp(self):
+    def test_02_datetime_from_timestamp(self) -> None:
         """Test nr 02."""
         self.assertIsInstance(
             DateTime.datetime_from_timestamp(Timestamp.now), datetime.datetime
@@ -40,11 +40,11 @@ class TestDateTool(unittest.TestCase):
             and (dtime.second == dtest.second or dtime.second == dtest.second + 1)
         )
 
-    def test_03_datetime_now(self):
+    def test_03_datetime_now(self) -> None:
         """Test nr 03."""
         self.assertIsInstance(DateTime.now(), datetime.datetime)
 
-    def test_04_datetime_elapsed_time_from_seconds(self):
+    def test_04_datetime_elapsed_time_from_seconds(self) -> None:
         """Test nr 04."""
         self.assertIsInstance(
             DateTime.elapsed_time_from_seconds(10.01), datetime.timedelta
@@ -55,7 +55,7 @@ class TestDateTool(unittest.TestCase):
         with self.assertRaises(TypeError):
             DateTime.elapsed_time_from_seconds("20")
 
-    def test_05_datetime_elapsed_time_from_timestamp(self):
+    def test_05_datetime_elapsed_time_from_timestamp(self) -> None:
         """Test nr 05."""
         self.assertIsInstance(
             DateTime.elapsed_time_from_seconds(Timestamp.now), datetime.timedelta

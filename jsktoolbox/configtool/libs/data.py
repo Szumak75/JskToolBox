@@ -304,7 +304,7 @@ class DataProcessor(BData, NoDynamicAttributes):
         if sm.name in self.sections:
             found_section: SectionModel = self.get_section(section)
             if varname is not None:
-                found_var: VariableModel | None = found_section.get_variable(varname)
+                found_var: Optional[VariableModel] = found_section.get_variable(varname)
                 if found_var is not None:
                     if desc:
                         # Return description for varname

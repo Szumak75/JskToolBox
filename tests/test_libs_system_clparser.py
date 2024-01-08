@@ -15,7 +15,7 @@ from jsktoolbox.libs.system import CommandLineParser
 class TestCommandLineParser(unittest.TestCase):
     """Test for CommandLineParser class."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up tests."""
         self.parser = CommandLineParser()
         self.parser.configure_argument(None, "avar", "a var desc")
@@ -34,14 +34,14 @@ class TestCommandLineParser(unittest.TestCase):
             "g", "gvar", "g var desc", has_value=True
         )
 
-    def test_01_create_parser(self):
+    def test_01_create_parser(self) -> None:
         """Test nr 01."""
         try:
             CommandLineParser()
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: '{ex}'")
 
-    def test_02_getting_single_args_undefined(self):
+    def test_02_getting_single_args_undefined(self) -> None:
         """Test nr 02."""
         self.parser.parse_arguments()
         self.assertTrue(self.parser.get_option("avar") is None)
@@ -52,7 +52,7 @@ class TestCommandLineParser(unittest.TestCase):
         self.assertTrue(self.parser.get_option("fvar") is None)
         self.assertTrue(self.parser.get_option("gvar") is None)
 
-    def test_02_getting_single_args_undefined(self):
+    def test_02_getting_single_args_undefined(self) -> None:
         """Test nr 02."""
         sys.argv.append("--bvar")
         sys.argv.append("-c")
@@ -65,7 +65,7 @@ class TestCommandLineParser(unittest.TestCase):
         self.assertTrue(self.parser.get_option("fvar") is None)
         self.assertTrue(self.parser.get_option("gvar") is None)
 
-    def test_03_getting_short_args_with_value(self):
+    def test_03_getting_short_args_with_value(self) -> None:
         """Test nr 03."""
         sys.argv.append("-d")
         sys.argv.append(10)
@@ -79,7 +79,7 @@ class TestCommandLineParser(unittest.TestCase):
         self.assertTrue(self.parser.get_option("fvar") is None)
         self.assertTrue(self.parser.get_option("gvar") is None)
 
-    def test_04_getting_long_args_with_value(self):
+    def test_04_getting_long_args_with_value(self) -> None:
         """Test nr 04."""
         sys.argv.append("--evar=20")
         sys.argv.append("--fvar=/tmp/for test case.txt")
