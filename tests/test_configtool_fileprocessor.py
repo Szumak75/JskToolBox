@@ -13,14 +13,14 @@ from jsktoolbox.configtool.libs.file import FileProcessor
 class TestFileProcessor(unittest.TestCase):
     """Tests for FileProcessor class."""
 
-    def test_01_create_object(self):
+    def test_01_create_object(self) -> None:
         """Test nr 01."""
         try:
             FileProcessor()
         except Exception:
             self.fail("somenting is very wrong.")
 
-    def test_02_file(self):
+    def test_02_file(self) -> None:
         """Test nr 02."""
         file: str = "/tmp/test/config.02.ini"
         obj = FileProcessor()
@@ -32,7 +32,7 @@ class TestFileProcessor(unittest.TestCase):
 
         self.assertEqual(obj.file, file)
 
-    def test_03_check_and_create_file(self):
+    def test_03_check_and_create_file(self) -> None:
         """Test nr 03."""
         file: str = "/tmp/test/config.03.ini"
         obj = FileProcessor()
@@ -49,7 +49,7 @@ class TestFileProcessor(unittest.TestCase):
             self.fail(ex)
         self.assertTrue(obj.file_exists)
 
-    def test_04_write_and_read_file(self):
+    def test_04_write_and_read_file(self) -> None:
         """Test nr 04."""
         data = """[TEST]
 # description nr 1

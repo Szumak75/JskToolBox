@@ -233,7 +233,7 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         For sending messages to the configured logging subsystem.
         """
         while True:
-            item: Tuple[str, str] | None = self.logs_queue.get()
+            item: Optional[Tuple[str, str]] = self.logs_queue.get()
             if item is None:
                 return
             # get tuple(log_level, message)

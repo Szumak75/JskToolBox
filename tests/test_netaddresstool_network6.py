@@ -16,42 +16,42 @@ from jsktoolbox.netaddresstool.ipv6 import Network6, Address6, Prefix6
 class TestNetwork6(unittest.TestCase):
     """Class rof testing IPv6 Network."""
 
-    def test_01_network_create(self):
+    def test_01_network_create(self) -> None:
         """Test nr 1."""
         try:
             Network6("fd00::1/125")
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: {ex}")
 
-    def test_02_network(self):
+    def test_02_network(self) -> None:
         """Test nr 2."""
         self.assertEqual(str(Network6("fd00::1/125")), "fd00::/125")
 
-    def test_03_network_prefix(self):
+    def test_03_network_prefix(self) -> None:
         """Test nr 3."""
         self.assertEqual(int(Network6("fd00::1/125").prefix), 125)
 
-    def test_04_network_address(self):
+    def test_04_network_address(self) -> None:
         """Test nr 4."""
         self.assertEqual(str(Network6("fd00::1/125").address), "fd00::1")
 
-    def test_05_network_min_host(self):
+    def test_05_network_min_host(self) -> None:
         """Test nr 5."""
         self.assertEqual(str(Network6("fd00::1/125").min), "fd00::")
 
-    def test_06_network_max_host(self):
+    def test_06_network_max_host(self) -> None:
         """Test nr 6."""
         self.assertEqual(str(Network6("fd00::1/125").max), "fd00::7")
 
-    def test_07_network_count(self):
+    def test_07_network_count(self) -> None:
         """Test nr 7."""
         self.assertEqual(Network6("fd00::1/125").count, 8)
 
-    def test_08_network_network(self):
+    def test_08_network_network(self) -> None:
         """Test nr 8."""
         self.assertEqual(str(Network6("fd00::1/125").network), "fd00::")
 
-    def test_09_network_hosts(self):
+    def test_09_network_hosts(self) -> None:
         """Test nr 9."""
         self.assertEqual(
             len(Network6("fd00::1/125").hosts),
@@ -63,7 +63,7 @@ class TestNetwork6(unittest.TestCase):
                 == Address6(f"fd00::{idx}")
             )
 
-    def test_10_network_create_from_list(self):
+    def test_10_network_create_from_list(self) -> None:
         """Test nr 10."""
         try:
             Network6(["fd00::1", "125"])
