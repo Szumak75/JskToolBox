@@ -60,10 +60,10 @@ class RouterBoard(BRouterOS):
     def __init__(
         self,
         connector: IConnector,
-        qlog: LoggerQueue = None,
+        qlog: Optional[LoggerQueue] = None,
         debug: bool = False,
         verbose: bool = False,
-    ):
+    ) -> None:
         """Constructor."""
         super().__init__(
             None,
@@ -75,45 +75,47 @@ class RouterBoard(BRouterOS):
         self.root = "/"
 
         # add elements
+        if self._ch is None:
+            return None
         self.elements[_Elements.IP] = RBIp(
             parent=self,
             connector=self._ch,
-            qlog=self.logs.logs_queue,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
         self.elements[_Elements.SYSTEM] = RBSystem(
             parent=self,
             connector=self._ch,
-            qlog=self.logs.logs_queue,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
         self.elements[_Elements.INTERFACE] = RBInterface(
             parent=self,
             connector=self._ch,
-            qlog=self.logs.logs_queue,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
         self.elements[_Elements.MPLS] = RBMpls(
             parent=self,
             connector=self._ch,
-            qlog=self.logs.logs_queue,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
         self.elements[_Elements.RADIUS] = RBRadius(
             parent=self,
             connector=self._ch,
-            qlog=self.logs.logs_queue,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
         self.elements[_Elements.ROUTING] = RBRouting(
             parent=self,
             connector=self._ch,
-            qlog=self.logs.logs_queue,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )

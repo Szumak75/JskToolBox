@@ -129,7 +129,7 @@ class API(IConnector, BData):
     def __init__(
         self,
         ip_address: Optional[Union[Address, Address6]] = None,
-        port: Optional[int] = 8728,
+        port: int = 8728,
         login: Optional[str] = None,
         password: Optional[str] = None,
         timeout: float = 60.0,
@@ -146,10 +146,9 @@ class API(IConnector, BData):
         self._data[_Keys.STDOUT] = []
         self._data[_Keys.SSL] = use_ssl
         self._data[_Keys.SOCKET] = None
+        self.port = port
         if ip_address:
             self.address = ip_address
-        if port is not None:
-            self.port = port
         if login is not None:
             self.login = login
         if password is not None:
@@ -187,7 +186,7 @@ class API(IConnector, BData):
         ):
             raise Raise.error(
                 "Expected socket.socket type.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -246,10 +245,10 @@ class API(IConnector, BData):
             com_list.append("?#&")
         return com_list
 
-    def __talk(self, words: List) -> Optional[List]:
-        if self.__write_sentence(words) == 0:
-            return None
+    def __talk(self, words: List) -> List:
         ret = []
+        if self.__write_sentence(words) == 0:
+            return ret
         while 1:
             items_list = self.__read_sentence()
             if len(items_list) == 0:
@@ -265,7 +264,7 @@ class API(IConnector, BData):
             ret.append((reply, attrs))
             if reply == "!done":
                 return ret
-        return None
+        return ret
 
     def __write_sentence(self, words: List) -> int:
         ret = 0
@@ -282,6 +281,7 @@ class API(IConnector, BData):
             if word == "":
                 return ret_list
             ret_list.append(word)
+        return ret_list
 
     def __write_word(self, word: str) -> None:
         self.__write_len(len(word))
@@ -350,12 +350,14 @@ class API(IConnector, BData):
 
     def __write_str(self, string: str) -> None:
         number = 0
+        if self.__socket is None:
+            return None
         while number < len(string):
             ret: int = self.__socket.send(bytes(string[number:], "UTF-8"))
             if ret == 0:
                 raise Raise.error(
                     "connection closed by remote end",
-                    RuntimeError,
+                    RuntimeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )
@@ -363,12 +365,14 @@ class API(IConnector, BData):
 
     def __write_byte(self, string: bytes) -> None:
         number = 0
+        if self.__socket is None:
+            return None
         while number < len(string):
             ret: int = self.__socket.send(string[number:])
             if ret == 0:
                 raise Raise.error(
                     "connection closed by remote end",
-                    RuntimeError,
+                    RuntimeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )
@@ -376,12 +380,14 @@ class API(IConnector, BData):
 
     def __read_str(self, length: int) -> Union[str, bytes]:
         ret: str = ""
+        if self.__socket is None:
+            return ret
         while len(ret) < length:
             soc_ret: bytes = self.__socket.recv(length - len(ret))
             if soc_ret == b"":
                 raise Raise.error(
                     "connection closed by remote end",
-                    RuntimeError,
+                    RuntimeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )
@@ -486,22 +492,22 @@ class API(IConnector, BData):
         if self.address is None:
             raise Raise.error(
                 f"Host IP address is not set.",
-                ValueError,
+                ValueError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
         if self.port is None:
             raise Raise.error(
-                "Port is not set.", ValueError, self._c_name, currentframe()
+                "Port is not set.", ValueError, self._c_name, currentframe()  # type: ignore
             )
         if self.login is None:
             raise Raise.error(
-                "Login is not set.", ValueError, self._c_name, currentframe()
+                "Login is not set.", ValueError, self._c_name, currentframe()  # type: ignore
             )
         if self.password is None:
             raise Raise.error(
                 "Password is not set.",
-                ValueError,
+                ValueError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -509,6 +515,8 @@ class API(IConnector, BData):
 
     def disconnect(self) -> bool:
         """Terminate connection."""
+        if self.__socket is None:
+            return True
         try:
             self.__socket.close()
         except Exception as ex:
@@ -538,7 +546,7 @@ class API(IConnector, BData):
         else:
             raise Raise.error(
                 f"Expected string or list type, received: '{type(commands)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -580,7 +588,7 @@ class API(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected Address or Address6 type, received: '{type(ip_address)}'",
-                    TypeError,
+                    TypeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )
@@ -588,6 +596,8 @@ class API(IConnector, BData):
     @property
     def is_alive(self) -> bool:
         """Get alive flag from connected protocol."""
+        if self.__socket is None:
+            return False
         try:
             self.__socket.settimeout(2)
         except Exception:
@@ -595,7 +605,7 @@ class API(IConnector, BData):
             return False
 
         try:
-            self.__talk("/system/identity/print")
+            self.__talk(["/system/identity/print"])
         except (socket.timeout, IndexError, BrokenPipeError):
             self._data[_Keys.ERRORS].append(
                 "RouterOS does not respond, closing socket."
@@ -618,7 +628,7 @@ class API(IConnector, BData):
         if username is not None and not isinstance(username, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(username)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -641,7 +651,7 @@ class API(IConnector, BData):
         if passwd is not None and not isinstance(passwd, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(passwd)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -663,7 +673,7 @@ class API(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected int type, received: '{type(port)}'.",
-                    TypeError,
+                    TypeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )
@@ -696,15 +706,19 @@ class SSH(IConnector, BData):
 
     def connect(self) -> bool:
         """Try to connect."""
+        return False
 
     def disconnect(self) -> bool:
         """Terminate connection."""
+        return False
 
     def errors(self) -> List:
         """Get list or errors after executed commands."""
+        return []
 
     def execute(self, commands: Union[str, List]) -> bool:
         """Execute commands."""
+        return False
 
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
@@ -722,7 +736,7 @@ class SSH(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected Address or Address6 type, received: '{type(ip_address)}'",
-                    TypeError,
+                    TypeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )
@@ -730,6 +744,7 @@ class SSH(IConnector, BData):
     @property
     def is_alive(self) -> bool:
         """Get alive flag from connected protocol."""
+        return False
 
     @property
     def login(self) -> Optional[str]:
@@ -744,7 +759,7 @@ class SSH(IConnector, BData):
         if username is not None and not isinstance(username, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(username)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -752,6 +767,7 @@ class SSH(IConnector, BData):
 
     def outputs(self) -> Tuple:
         """Get list of results after executed commands."""
+        return tuple()
 
     @property
     def password(self) -> Optional[str]:
@@ -766,7 +782,7 @@ class SSH(IConnector, BData):
         if passwd is not None and not isinstance(passwd, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(passwd)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -788,7 +804,7 @@ class SSH(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected int type, received: '{type(port)}'.",
-                    TypeError,
+                    TypeError,  # type: ignore
                     self._c_name,
                     currentframe(),
                 )

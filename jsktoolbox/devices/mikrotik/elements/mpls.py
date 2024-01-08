@@ -57,7 +57,7 @@ class RBMpls(BRouterOS):
         self,
         parent: BDev,
         connector: IConnector,
-        qlog: LoggerQueue = None,
+        qlog: Optional[LoggerQueue] = None,
         debug: bool = False,
         verbose: bool = False,
     ) -> None:

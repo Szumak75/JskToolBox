@@ -51,7 +51,7 @@ class BRouterOS(BDev, BElement):
 
     def __init__(
         self,
-        parent: BDev,
+        parent: Optional[BDev],
         connector: IConnector,
         logs: LoggerClient,
         debug: bool,
@@ -71,17 +71,19 @@ class BRouterOS(BDev, BElement):
 
     def _add_elements(self, parent: TRouterOs, elements_dict: Dict) -> None:
         """Add childs from configuration dict."""
+        if parent._ch is None:
+            return None
         for key in elements_dict.keys():
             if key in self.elements:
                 # duplicate
-                if self.debug:
+                if self.debug and self.logs is not None:
                     self.logs.message_debug = f'duplicate key found: "{key}"'
                     continue
             obj = Element(
                 key=key,
                 parent=parent,
                 connector=parent._ch,
-                qlog=parent.logs.logs_queue,
+                qlog=parent.logs.logs_queue if parent.logs is not None else None,
                 debug=parent.debug,
                 verbose=parent.verbose,
             )
@@ -115,10 +117,10 @@ class BRouterOS(BDev, BElement):
             if element.root == root:
                 if auto_load:
                     element.load(root)
-                return element
-            element2: Element = element.element(root, auto_load)
+                return element  # type: ignore
+            element2: Element = element.element(root, auto_load)  # type: ignore
             if element2 is not None:
-                return element2
+                return element2  # type: ignore
         return None
 
     @property
@@ -139,6 +141,8 @@ class BRouterOS(BDev, BElement):
 
     def load(self, root: str) -> bool:
         """Gets element config from RB."""
+        if self._ch is None:
+            return False
         if root is not None and not self._data[_Keys.LOADED]:
             ret: bool = self._ch.execute(f"{root}print")
             if ret:
@@ -163,7 +167,7 @@ class BRouterOS(BDev, BElement):
                 else:
                     if out[0]:
                         print(f"DEBUG_: {out}")
-                if err[0]:
+                if err[0] and self.logs is not None:
                     self.logs.message_warning = f"{out[0][0]}"
                     return False
                 return True
@@ -178,7 +182,7 @@ class Element(BRouterOS):
         key: str,
         parent: BDev,
         connector: IConnector,
-        qlog: LoggerQueue = None,
+        qlog: Optional[LoggerQueue] = None,
         debug: bool = False,
         verbose: bool = False,
     ) -> None:
