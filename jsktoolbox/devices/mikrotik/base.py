@@ -32,7 +32,7 @@ from jsktoolbox.devices.mikrotik.elements.libs.base import BElement
 from jsktoolbox.devices.libs.base import BDev
 from jsktoolbox.devices.network.connectors import IConnector, API, SSH
 
-TRouterOs = TypeVar("TRouterOs", bound="BRouterOS")
+TRouterOS = TypeVar("TRouterOS", bound="BRouterOS")
 TElement = TypeVar("TElement", bound="Element")
 
 
@@ -69,7 +69,7 @@ class BRouterOS(BDev, BElement):
         """Returns a string representing the object."""
         return f"{self._c_name}(path='{self.root}', elements='{self.elements}', attrib='{self.attrib}', list='{self.list}')"
 
-    def _add_elements(self, parent: TRouterOs, elements_dict: Dict) -> None:
+    def _add_elements(self, parent: TRouterOS, elements_dict: Dict) -> None:
         """Add childs from configuration dict."""
         if parent._ch is None:
             return None
