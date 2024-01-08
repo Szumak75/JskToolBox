@@ -38,13 +38,13 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-
     CH = "__connector_handler__"
     DEBUG = "__debug__"
     LC = "__logs_client__"
     PARENT = "__parent__"
     ROOT = "__root__"
     VERBOSE = "__verbose__"
+
 
 class BDebug(BData):
     """Base class for debug flags."""
@@ -90,7 +90,7 @@ class BDev(BDebug):
         if not isinstance(value, IConnector):
             raise Raise.error(
                 f"Expected IConnector derived type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -109,7 +109,7 @@ class BDev(BDebug):
         if not isinstance(value, LoggerClient):
             raise Raise.error(
                 f"Expected LoggerClient type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -120,9 +120,9 @@ class BDev(BDebug):
         """Gets RouterOS command root."""
         if _Keys.ROOT not in self._data:
             self._data[_Keys.ROOT] = ""
-        tmp:str = self._data[_Keys.ROOT]
-        item: BDev = self.parent
-        if item:
+        tmp: str = self._data[_Keys.ROOT]
+        if self.parent is not None:
+            item: BDev = self.parent
             tmp = f"{item.root}{tmp}"
         return tmp
 
@@ -132,7 +132,7 @@ class BDev(BDebug):
         if not isinstance(value, str):
             raise Raise.error(
                 f"Expected string type, received: '{type(value)}'",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -151,7 +151,7 @@ class BDev(BDebug):
         if value is not None and not isinstance(value, BDev):
             raise Raise.error(
                 f"Expected BDev type, received: '{type(value)}'",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
