@@ -73,7 +73,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
         if not long_arg:
             raise Raise.error(
                 f"Long argument name is required.",
-                AttributeError,
+                AttributeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -178,13 +178,19 @@ class Env(NoDynamicAttributes):
     @property
     def home(cls) -> str:
         """Return home dir name."""
-        return os.getenv("HOME")
+        tmp: Optional[str] = os.getenv("HOME")
+        if tmp:
+            return tmp
+        return ""
 
     @classmethod
     @property
     def username(cls) -> str:
         """Return login name."""
-        return os.getenv("USER")
+        tmp: Optional[str] = os.getenv("USER")
+        if tmp:
+            return tmp
+        return ""
 
 
 class PathChecker(BData, NoDynamicAttributes):
@@ -195,27 +201,27 @@ class PathChecker(BData, NoDynamicAttributes):
         if pathname is None:
             raise Raise.error(
                 "Expected 'pathname' as string, not None.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
         if not isinstance(pathname, str):
             raise Raise.error(
                 f"Expected 'pathname' as string, received: '{type(pathname)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
         if isinstance(pathname, str) and len(pathname) == 0:
             raise Raise.error(
                 "'pathname' cannot be an empty string.",
-                ValueError,
+                ValueError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
         self._data[_Keys.PATHNAME] = pathname
         self._data[_Keys.SPLIT] = check_deep
-        self._data[_Keys.LIST]: List = []
+        self._data[_Keys.LIST] = []
         # analysis
         self.__run__()
 
@@ -289,7 +295,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,
+                KeyError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -302,7 +308,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,
+                KeyError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -315,7 +321,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,
+                KeyError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -328,7 +334,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,
+                KeyError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
