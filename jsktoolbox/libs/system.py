@@ -334,7 +334,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,  # type: ignore
+                KeyError,   
                 self._c_name,
                 currentframe(),
             )

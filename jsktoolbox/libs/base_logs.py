@@ -148,7 +148,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
     #     """Constructor."""
     #     self.__queue = []
 
-    def get(self) -> Optional[tuple]:
+    def get(self) -> Optional[tuple[str, ...]]:
         """Get item from queue.
 
         Returs queue tuple[log_level:str, message:str] or None if empty.
@@ -160,7 +160,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
         except Exception as ex:
             raise Raise.error(
                 f"Unexpected exception was thrown: {ex}",
-                Exception,  # type: ignore
+                Exception,
                 self._c_name,
                 currentframe(),
             )
@@ -198,7 +198,7 @@ class BLoggerQueue(BData, NoDynamicAttributes):
         if not isinstance(obj, LoggerQueue):
             raise Raise.error(
                 f"Expected LoggerQueue type, received: '{type(obj)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )

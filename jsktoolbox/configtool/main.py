@@ -100,7 +100,7 @@ class Config(BData, NoDynamicAttributes):
 
     def __var_parser(self, line: str) -> Dict:
         """Return Dict[varname, value, desc]."""
-        out = {
+        out: dict[str, Any] = {
             _Keys.VARNAME: None,
             _Keys.VALUE: None,
             _Keys.DESC: None,
@@ -129,7 +129,9 @@ class Config(BData, NoDynamicAttributes):
         test = False
         # 1. load file into list
         file: List[str] = self.__fp.readlines()
-        section_name: str = self.__dp.main_section
+        section_name: str = ""
+        if self.__dp.main_section is not None:
+            section_name = self.__dp.main_section
         for line in file:
             # check section
             if self._data[_Keys.RE_SECTION].match(line):
@@ -177,7 +179,7 @@ class Config(BData, NoDynamicAttributes):
     def has_section(self, section: str) -> bool:
         """Check section name in config file."""
         if not isinstance(section, str):
-            raise Raise(
+            raise Raise.error(
                 f"Expected String type, received: '{type(section)}'.",
                 TypeError,
                 self._c_name,
@@ -188,15 +190,17 @@ class Config(BData, NoDynamicAttributes):
     def has_varname(self, section_name: str, varname: str) -> bool:
         """Check varname in section."""
         if not isinstance(varname, str):
-            raise Raise(
+            raise Raise.error(
                 f"Expected String type, received: '{type(varname)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
             )
         if self.has_section(section_name):
-            found_section: SectionModel = self.__dp.get_section(section_name)
-            return found_section.get_variable(varname) is not None
+            tmp: Optional[SectionModel] = self.__dp.get_section(section_name)
+            if tmp is not None:
+                found_section: SectionModel = tmp
+                return found_section.get_variable(varname) is not None
         return False
 
     @property

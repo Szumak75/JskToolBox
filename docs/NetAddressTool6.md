@@ -4,8 +4,8 @@ The project contains sets of base classes for operations on IPv6 addresses.
 
 ## Public Classes
 1. [Word16](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#word16)(**value**: Union[str, int, Word16])
-1. [Address6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#address6)(**addr**: Union[str, int, List[Union[int, str, Word16]]])
-1. [Prefix6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#prefix6)(**addr**: Union[str, int, List[Union[int, str, Word16]]])
+1. [Address6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#address6)(**addr**: Union[str, int, Union[List[int], List[str], List[Word16]]])
+1. [Prefix6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#prefix6)(**addr**: Union[str, int, Union[List[int], List[str], List[Word16]]])
 1. [Network6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#network6)(**addr**: Union[str, List])
 1. [SubNetwork6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#subnetwork6)(**network**: Network6, **prefix**: Prefix6)
 
@@ -54,7 +54,7 @@ from jsktoolbox.netaddresstool.ipv6 import Address6
 
 ### Constructor
 ```
-Address6(addr: Union[str, int, List[Union[int, str, Word16]]])
+Address6(addr: Union[str, int, Union[List[int], List[str], List[Word16]]])
 ```
 The addr argument takes values such as the `.words` property described in the head **Public setters**.
 
@@ -66,7 +66,7 @@ Returns a list of eight Word16 objects representing the stored address. The list
 
 ### Public setters
 ```
-.words: Union[str, int, List[Union[int, str, Word16]]]
+.words: Union[str, int, Union[List[int], List[str], List[Word16]]]
 ```
 Allows you to configure the network address by accepting input data in one of the selected formats:
 - **"2000::FF"** -- *as a string*

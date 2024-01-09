@@ -136,7 +136,8 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
                     self._c_name,
                     currentframe(),
                 )
-            with open(os.path.join(self.logdir, self.logfile), "a") as file:
+            logdir: str = self.logdir if self.logdir else ""
+            with open(os.path.join(logdir, self.logfile), "a") as file:
                 if file.writable:
                     file.write(message)
                     file.write("\n")
@@ -192,7 +193,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
                     self._c_name,
                     currentframe(),
                 )
-        self.logdir = ld.dirname
+        self.logdir = ld.dirname if ld.dirname else ""
         self._data[Keys.FILE] = ld.filename
 
 

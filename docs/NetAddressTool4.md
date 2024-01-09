@@ -4,8 +4,8 @@ The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
 1. [Octet](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#octet)(**value**: Union[str, int, Octet])
-1. [Address](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#address)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
-1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#netmask)(**addr**: Union[str, int, List[Union[int, str, Octet]]])
+1. [Address](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#address)(**addr**: Union[str, int, Union[List[str], List[int], List[Octet]]])
+1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#netmask)(**addr**: Union[str, int, Union[List[str], List[int], List[Octet]]])
 1. [Network](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#network)(**addr**: Union[str, List])
 1. [SubNetwork](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#subnetwork)(**network**: Network, **mask**: Netmask)
 
@@ -54,7 +54,7 @@ from jsktoolbox.netaddresstool.ipv4 import Address
 
 ### Constructor
 ```
-Address(addr: Union[str, int, List[Union[int, str, Octet]]])
+Address(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 ```
 The addr argument takes values such as the `.octets` property described in the head **Public setters**.
 
@@ -66,7 +66,7 @@ Returns a list of four Octet objects representing the stored address. The list i
 
 ### Public setters
 ```
-.octets: Union[str, int, List[Union[int, str, Octet]]]
+.octets: Union[str, int, Union[List[str], List[int], List[Octet]]]
 ```
 Allows you to configure the network address by accepting input data in one of the selected formats:
 - **"192.168.0.1"** -- *as a string*
@@ -94,7 +94,7 @@ from jsktoolbox.netaddresstool.ipv4 import Netmask
 
 ### Constructor
 ```
-Netmask(addr: Union[str, int, List[Union[int, str, Octet]]])
+Netmask(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 ```
 The addr argument takes values in several formats:
 - **16** -- *as an integer in range at 0 to 32 (CIDR format)*
@@ -117,7 +117,7 @@ Returns the netmask in CIDR format.
 ### Public setters
 
 ```
-.octets: List[Union[int, str, Octet]]
+.octets: Union[List[str], List[int], List[Octet]]
 ```
 Takes values as list:
 - **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
