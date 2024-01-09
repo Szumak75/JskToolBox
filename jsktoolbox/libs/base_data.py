@@ -25,7 +25,7 @@ class BClasses(NoDynamicAttributes):
     @property
     def _f_name(self) -> str:
         """Return current method name."""
-        frame: FrameType | None = currentframe().f_back
+        frame: Optional[FrameType] = currentframe().f_back  # type: ignore
         if frame is not None:
             method_name: str = frame.f_code.co_name
             return method_name
