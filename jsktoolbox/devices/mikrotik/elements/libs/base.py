@@ -10,10 +10,10 @@
 from typing import Dict, List, Optional, Union, Tuple, Any
 from inspect import currentframe
 
+from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
-from jsktoolbox.libs.base_data import BData
 
 from jsktoolbox.netaddresstool.ipv4 import (
     Address,
