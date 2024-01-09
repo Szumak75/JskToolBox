@@ -25,7 +25,7 @@ class BClasses(NoDynamicAttributes):
     @property
     def _f_name(self) -> str:
         """Return current method name."""
-        frame: Optional[FrameType] = currentframe().f_back
+        frame: FrameType | None = currentframe().f_back
         if frame is not None:
             method_name: str = frame.f_code.co_name
             return method_name
@@ -52,11 +52,11 @@ class BData(BClasses):
             return None
         if isinstance(value, Dict):
             for key in value.keys():
-                self.__data[key] = value[key]
+                self.__data[key] = value[key]  # type: ignore
         else:
             raise Raise.error(
                 f"Expected Dict type, received: '{type(value)}'.",
-                AttributeError,
+                AttributeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
