@@ -91,7 +91,8 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
             message = f"{message}"
         if self.name is not None:
             message = f"[{self.name}] {message}"
-        self.logs_queue.put(message, log_level)
+        if self.logs_queue:
+            self.logs_queue.put(message, log_level)
 
     @property
     def message_alert(self) -> None:
@@ -106,7 +107,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     def message_critical(self) -> None:
         """Do nothing, for defining setter only."""
 
-    @message_alert.setter
+    @message_critical.setter
     def message_critical(self, message: str) -> None:
         """Property for sending messages with CRITICAL level."""
         self.message(message, LogsLevelKeys.CRITICAL)
@@ -233,22 +234,26 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         For sending messages to the configured logging subsystem.
         """
         while True:
-            item: Optional[Tuple[str, str]] = self.logs_queue.get()
-            if item is None:
-                return
-            # get tuple(log_level, message)
-            log_level, message = item
-            # check if has have configured logging subsystem
-            if Keys.CONF in self._data and len(self._data[Keys.CONF]) > 0:
-                if log_level in self._data[Keys.CONF]:
-                    for item in self._data[Keys.CONF][log_level]:
-                        engine: ILoggerEngine = item
-                        engine.send(message)
+            if self.logs_queue is not None:
+                item: Optional[tuple[str, ...]] = self.logs_queue.get()
+                if item is not None:
+                    # get tuple(log_level, message)
+                    log_level, message = item
+                    # check if has have configured logging subsystem
+                    if Keys.CONF in self._data and len(self._data[Keys.CONF]) > 0:
+                        if log_level in self._data[Keys.CONF]:
+                            for leng in self._data[Keys.CONF][log_level]:
+                                engine: ILoggerEngine = leng
+                                engine.send(message)
+                    else:
+                        if log_level in self._data[Keys.NO_CONF]:
+                            for leng in self._data[Keys.NO_CONF][log_level]:
+                                engine: ILoggerEngine = leng
+                                engine.send(message)
+                else:
+                    return
             else:
-                if log_level in self._data[Keys.NO_CONF]:
-                    for item in self._data[Keys.NO_CONF][log_level]:
-                        engine: ILoggerEngine = item
-                        engine.send(message)
+                return
 
 
 class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
@@ -280,7 +285,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 currentframe(),
             )
         self._data[_Keys.LEO] = obj
-        if self.logger_client is not None:
+        if self.logger_client and self.logger_engine and self.logger_engine.logs_queue:
             self.logger_client.logs_queue = self.logger_engine.logs_queue
 
     @property
@@ -301,7 +306,12 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 currentframe(),
             )
         self._data[_Keys.LCO] = obj
-        if self.logger_engine is not None and obj.logs_queue is None:
+        if (
+            self.logger_engine
+            and self.logger_engine.logs_queue
+            and self.logger_client
+            and obj.logs_queue is None
+        ):
             self.logger_client.logs_queue = self.logger_engine.logs_queue
 
     def run(self) -> None:
@@ -333,14 +343,17 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
 
     def stop(self) -> None:
         """Set stop event."""
-        if self._debug:
+        if self._debug and self.logger_client:
             self.logger_client.message_debug = f"[{self._c_name}] stopping..."
-        self._stop_event.set()
+        if self._stop_event:
+            self._stop_event.set()
 
     @property
     def stopped(self) -> bool:
         """Return stop flag."""
-        return self._stop_event.is_set()
+        if self._stop_event:
+            return self._stop_event.is_set()
+        return True
 
 
 # #[EOF]#######################################################################

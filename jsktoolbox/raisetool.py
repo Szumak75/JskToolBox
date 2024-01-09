@@ -45,14 +45,14 @@ class Raise(NoDynamicAttributes):
     def error(
         cls,
         message: str,
-        exception: Exception = Exception,
+        exception: type[Exception] = Exception,
         class_name: str = "",
         currentframe: Optional[FrameType] = None,
     ) -> Exception:
         """Return exception with formatted string.
 
         message: str - message to format
-        exception: Exception - custom exception to return
+        exception: type[Exception] - custom exception to return
         class_name: str - caller class name (self.__class__.__name__)
         currentframe: FrameType - object from inspect.currentframe()
 

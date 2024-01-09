@@ -7,7 +7,7 @@ The message can be formatted with information about the class, method, and line 
 ## Public methods
 ```
 Raise.message(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> str
-Raise.error(message:str, exception:Exception, class_name:Optional[str], currentframe:Optional[FrameType])-> Exception
+Raise.error(message:str, exception:type[Exception], class_name:Optional[str], currentframe:Optional[FrameType])-> Exception
 ```
 
 ## Usage examples

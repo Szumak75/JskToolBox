@@ -9,9 +9,9 @@
 from inspect import currentframe
 from typing import Any, Optional, Tuple, Dict
 from threading import Event
+from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -252,7 +252,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
 
     @property
     def started(self) -> bool:
-        return self._started.is_set()
+        if self._started is not None:
+            return self._started.is_set()
+        return False
 
     @property
     def sleep_period(self) -> float:

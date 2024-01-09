@@ -79,9 +79,7 @@ class SimpleCrypto(NoDynamicAttributes):
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = salt % chars_len
-        transtable: Dict = str.maketrans(
-            chars, chars[shift:] + chars[:shift]
-        )
+        transtable: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
 
         return message.translate(transtable)
 
@@ -111,9 +109,7 @@ class SimpleCrypto(NoDynamicAttributes):
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = chars_len - (salt % chars_len)
-        transtable: Dict = str.maketrans(
-            chars, chars[shift:] + chars[:shift]
-        )
+        transtable: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
 
         return message.translate(transtable)
 
@@ -133,7 +129,7 @@ class SimpleCrypto(NoDynamicAttributes):
                 currentframe(),
             )
         codec = lambda s: getencoder("rot13")(s)[0]
-        return codec(message)
+        return codec(message)  # type: ignore
 
     @classmethod
     def b64_encrypt(cls, message: str) -> str:
@@ -185,9 +181,7 @@ class SimpleCrypto(NoDynamicAttributes):
                 cls.__qualname__,
                 currentframe(),
             )
-        return cls.b64_encrypt(
-            cls.caesar_encrypt(salt, cls.rot13_codec(message))
-        )
+        return cls.b64_encrypt(cls.caesar_encrypt(salt, cls.rot13_codec(message)))
 
     @classmethod
     def multiple_decrypt(cls, salt: int, message: str) -> str:
@@ -205,9 +199,7 @@ class SimpleCrypto(NoDynamicAttributes):
                 cls.__qualname__,
                 currentframe(),
             )
-        return cls.rot13_codec(
-            cls.caesar_decrypt(salt, cls.b64_decrypt(message))
-        )
+        return cls.rot13_codec(cls.caesar_decrypt(salt, cls.b64_decrypt(message)))
 
 
 # #[EOF]#######################################################################

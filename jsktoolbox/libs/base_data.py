@@ -25,10 +25,12 @@ class BClasses(NoDynamicAttributes):
     @property
     def _f_name(self) -> str:
         """Return current method name."""
-        frame: Optional[FrameType] = currentframe().f_back
-        if frame is not None:
-            method_name: str = frame.f_code.co_name
-            return method_name
+        tmp: Optional[FrameType] = currentframe()
+        if tmp is not None:
+            frame: Optional[FrameType] = tmp.f_back
+            if frame is not None:
+                method_name: str = frame.f_code.co_name
+                return method_name
         return ""
 
 
@@ -50,7 +52,7 @@ class BData(BClasses):
         if value is None:
             self.__data = {}
             return None
-        if isinstance(value, Dict):
+        if isinstance(value, Dict) and self.__data is not None:
             for key in value.keys():
                 self.__data[key] = value[key]
         else:

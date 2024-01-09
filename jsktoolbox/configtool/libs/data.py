@@ -7,7 +7,7 @@
 """
 
 from inspect import currentframe
-from typing import List, Tuple, Optional, Union, Any, TypeVar
+from typing import List, Tuple, Optional, Union, Any, TypeVar, Generic
 from abc import ABC, abstractmethod
 from copy import copy
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
@@ -117,7 +117,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     @property
     def dump(self) -> TVariableModel:
         """Dump data."""
-        return self
+        return self  # type: ignore
 
     @property
     def name(self) -> Optional[str]:
@@ -127,6 +127,8 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
     @name.setter
     def name(self, name: Optional[str]) -> None:
         """Set name property."""
+        if name is None:
+            return
         self._data[_Keys.NAME] = name.strip()
 
     def parser(self, value: str) -> None:
@@ -153,7 +155,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     def __init__(self, name: Optional[str] = None) -> None:
         """Constructor."""
         self._data[_Keys.NAME] = None
-        self._data[_Keys.VARIABLES]: List[VariableModel] = []
+        self._data[_Keys.VARIABLES] = []
         self.parser(name)
 
     def __repr__(self) -> str:
@@ -167,17 +169,17 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     @property
     def dump(self) -> List[Any]:
         """Dump data."""
-        tmp = []
+        tmp: List = []
         tmp.append(self)
         for item in self._data[_Keys.VARIABLES]:
             tmp.append(item.dump())
         return copy(tmp)
 
-    def parser(self, value: str) -> None:
+    def parser(self, value: Optional[str]) -> None:
         """Parser method."""
         if value is None:
             return
-        tmp = f"{value}".strip("[] \n")
+        tmp: str = f"{value}".strip("[] \n")
         if tmp:
             self._data[_Keys.NAME] = tmp
         else:
@@ -218,8 +220,9 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
     ) -> None:
         """Add or update VariableModel."""
         if name is not None:
-            item: VariableModel = self.get_variable(name)
-            if item is not None:
+            tmp: Optional[VariableModel] = self.get_variable(name)
+            if tmp is not None:
+                item: VariableModel = tmp
                 if value is not None or (value is None and desc is None):
                     item.value = value
                 if desc is not None or (desc is None and value is None):
@@ -274,7 +277,7 @@ class DataProcessor(BData, NoDynamicAttributes):
         sm = SectionModel(str(name))
         if sm.name not in self.sections:
             self._data[_Keys.DATA].append(sm)
-        return sm.name
+        return f"{sm.name}"
 
     def get_section(self, name: str) -> Optional[SectionModel]:
         """Get section object if exists."""
@@ -293,8 +296,10 @@ class DataProcessor(BData, NoDynamicAttributes):
     ) -> None:
         """Set data to [SectionModel]->[VariableModel]."""
         section_name: str = self.add_section(section)
-        found_section: SectionModel = self.get_section(section_name)
-        found_section.set_variable(varname, value, desc)
+        tmp: Optional[SectionModel] = self.get_section(section_name)
+        if tmp is not None:
+            found_section: SectionModel = tmp
+            found_section.set_variable(varname, value, desc)
 
     def get(
         self, section: str, varname: Optional[str] = None, desc: bool = False
@@ -302,25 +307,29 @@ class DataProcessor(BData, NoDynamicAttributes):
         """Return value."""
         sm = SectionModel(section)
         if sm.name in self.sections:
-            found_section: SectionModel = self.get_section(section)
-            if varname is not None:
-                found_var: Optional[VariableModel] = found_section.get_variable(varname)
-                if found_var is not None:
-                    if desc:
-                        # Return description for varname
-                        return found_var.desc
+            tmp: Optional[SectionModel] = self.get_section(section)
+            if tmp is not None:
+                found_section: SectionModel = tmp
+                if varname is not None:
+                    found_var: Optional[VariableModel] = found_section.get_variable(
+                        varname
+                    )
+                    if found_var is not None:
+                        if desc:
+                            # Return description for varname
+                            return found_var.desc
+                        else:
+                            # Return value for varname
+                            return found_var.value
                     else:
-                        # Return value for varname
-                        return found_var.value
+                        return None
                 else:
-                    return None
-            else:
-                # Return list od description for section
-                out = []
-                for item in found_section.variables:
-                    if item.name is None and item.desc is not None:
-                        out.append(item.desc)
-                return out
+                    # Return list od description for section
+                    out: List[str] = []
+                    for item in found_section.variables:
+                        if item.name is None and item.desc is not None:
+                            out.append(item.desc)
+                    return out
         else:
             raise Raise.error(
                 f"Given section name: '{section}' not found.",
@@ -333,11 +342,13 @@ class DataProcessor(BData, NoDynamicAttributes):
         """Return formatted configuration data for section name."""
         out: str = ""
         if section in self.sections:
-            found_section: SectionModel = self.get_section(section)
-            out += f"{found_section}\n"
-            for item in found_section.variables:
-                out += f"{item}\n"
-            out += f"# -----<end of section: '{found_section.name}'>-----\n"
+            tmp: Optional[SectionModel] = self.get_section(section)
+            if tmp is not None:
+                found_section: SectionModel = tmp
+                out += f"{found_section}\n"
+                for item in found_section.variables:
+                    out += f"{item}\n"
+                out += f"# -----<end of section: '{found_section.name}'>-----\n"
         else:
             raise Raise.error(
                 f"Section name: '{section}' not found.",
