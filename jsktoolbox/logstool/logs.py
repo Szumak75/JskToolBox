@@ -251,9 +251,9 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
                                 engine: ILoggerEngine = leng
                                 engine.send(message)
                 else:
-                    return
+                    return None
             else:
-                return
+                return None
 
 
 class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
