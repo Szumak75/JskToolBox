@@ -18,7 +18,6 @@ class LogFormatterNull(BLogFormatter):
 
     def __init__(self) -> None:
         """Constructor."""
-        BLogFormatter.__init__(self)
         self._forms_.append("{message}")
         self._forms_.append("[{name}]: {message}")
 
@@ -28,7 +27,6 @@ class LogFormatterDateTime(BLogFormatter):
 
     def __init__(self) -> None:
         """Constructor."""
-        BLogFormatter.__init__(self)
         self._forms_.append(self.__get_formated_date__)
         self._forms_.append("{message}")
         self._forms_.append("[{name}]: {message}")
@@ -42,7 +40,6 @@ class LogFormatterTime(BLogFormatter):
 
     def __init__(self) -> None:
         """Constructor."""
-        BLogFormatter.__init__(self)
         self._forms_.append(self.__get_formated_time__)
         self._forms_.append("{message}")
         self._forms_.append("[{name}]: {message}")
@@ -56,7 +53,6 @@ class LogFormatterTimestamp(BLogFormatter):
 
     def __init__(self) -> None:
         """Constructor."""
-        BLogFormatter.__init__(self)
         self._forms_.append(Timestamp.now)
         self._forms_.append("{message}")
         self._forms_.append("[{name}]: {message}")

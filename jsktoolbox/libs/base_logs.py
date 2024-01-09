@@ -144,9 +144,9 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
 
     __queue: List[List[str]] = []
 
-    # def __init__(self) -> None:
-    #     """Constructor."""
-    #     self.__queue = []
+    def __init__(self) -> None:
+        """Constructor."""
+        self.__queue = []
 
     def get(self) -> Optional[tuple[str, ...]]:
         """Get item from queue.
@@ -225,11 +225,7 @@ class BLogFormatter(NoDynamicAttributes):
     """Log formatter base class."""
 
     __template: Optional[str] = None
-    __forms: List = []
-
-    # def __init__(self) -> None:
-    #     """Constructor."""
-    #     self.__forms = []
+    __forms: Optional[List] = None
 
     def format(self, message: str, name: Optional[str] = None) -> str:
         """Method for format message string.
@@ -257,12 +253,14 @@ class BLogFormatter(NoDynamicAttributes):
     @property
     def _forms_(self) -> List:
         """Get forms list."""
+        if self.__forms is None:
+            self.__forms = []
         return self.__forms
 
     @_forms_.setter
     def _forms_(self, item: Any) -> None:
         """Set forms list."""
-        self.__forms.append(item)
+        self._forms_.append(item)
 
 
 # #[EOF]#######################################################################
