@@ -1,2 +1,8 @@
 [logstool]
 * LoggerClient with qlog==None, check qlog and skip queue if not exists
+
+[base_th]
+* tests for classes
+
+[base_logs]
+* test for class LoggerQueue, BLogFormatter
