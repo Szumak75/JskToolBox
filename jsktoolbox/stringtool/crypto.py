@@ -10,7 +10,7 @@ import string
 from typing import Dict
 
 from base64 import b64decode, b64encode
-from codecs import getencoder, _Encoder
+from codecs import getencoder
 from inspect import currentframe
 from random import randrange
 
