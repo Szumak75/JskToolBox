@@ -9,9 +9,9 @@
 from inspect import currentframe
 from typing import Any, Optional, Tuple, Dict
 from threading import Event
+from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -64,7 +64,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if value is not None and not isinstance(value, str):
             raise Raise.error(
                 f"Expected String type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -91,7 +91,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if value is not None and not isinstance(value, Dict):
             raise Raise.error(
                 f"Expected Dict type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -108,7 +108,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if not isinstance(value, bool):
             raise Raise.error(
                 f"Expected Boolean type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -125,7 +125,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if not isinstance(value, bool):
             raise Raise.error(
                 f"Expected Boolean type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -142,7 +142,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if value is not None and not isinstance(value, int):
             raise Raise.error(
                 f"Expected Integer type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -159,7 +159,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if value is not None and not isinstance(value, int):
             raise Raise.error(
                 f"Expected Integer type, received '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -186,7 +186,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if value is not None and not isinstance(value, Event):
             raise Raise.error(
                 f"Expected threading.Event type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -203,7 +203,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if not isinstance(value, bool):
             raise Raise.error(
                 f"Expected Boolean type, received: '{type(value)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -240,7 +240,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if obj is not None and not isinstance(obj, Event):
             raise Raise.error(
                 f"Expected threading.Event type, received: '{type(obj)}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -252,7 +252,9 @@ class ThBaseObject(BData, NoDynamicAttributes):
 
     @property
     def started(self) -> bool:
-        return self._started.is_set()
+        if self._started is not None:
+            return self._started.is_set()
+        return False
 
     @property
     def sleep_period(self) -> float:
@@ -267,7 +269,7 @@ class ThBaseObject(BData, NoDynamicAttributes):
         if not isinstance(value, float):
             raise Raise.error(
                 f"Expected positive float type, received: '{value}'.",
-                TypeError,
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )

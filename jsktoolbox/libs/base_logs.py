@@ -11,9 +11,9 @@ import syslog
 from inspect import currentframe
 from typing import Optional, Tuple, List, Dict, Any
 
+from jsktoolbox.libs.base_data import BData, BClasses
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData, BClasses
 
 
 class Keys(object, metaclass=ReadOnlyClass):
@@ -64,13 +64,13 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
 
     @classmethod
     @property
-    def level(cls):
+    def level(cls) -> type[__Levels]:
         """Returns Levels keys property."""
         return cls.__Levels
 
     @classmethod
     @property
-    def facility(cls):
+    def facility(cls) -> type[__Facilities]:
         """Returns Facility keys property."""
         return cls.__Facilities
 
@@ -123,7 +123,7 @@ class LogsLevelKeys(object, metaclass=ReadOnlyClass):
 
     @classmethod
     @property
-    def keys(cls) -> Tuple[str]:
+    def keys(cls) -> tuple:
         """Return tuple of avaiable keys."""
         return tuple(
             [
@@ -142,13 +142,13 @@ class LogsLevelKeys(object, metaclass=ReadOnlyClass):
 class LoggerQueue(BClasses, NoDynamicAttributes):
     """LoggerQueue simple class."""
 
-    __queue: List[str] = None
+    __queue: List[List[str]] = []
 
-    def __init__(self) -> None:
-        """Constructor."""
-        self.__queue = []
+    # def __init__(self) -> None:
+    #     """Constructor."""
+    #     self.__queue = []
 
-    def get(self) -> Optional[Tuple[str, str]]:
+    def get(self) -> Optional[tuple]:
         """Get item from queue.
 
         Returs queue tuple[log_level:str, message:str] or None if empty.
@@ -160,6 +160,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
         except Exception as ex:
             raise Raise.error(
                 f"Unexpected exception was thrown: {ex}",
+                Exception,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -169,7 +170,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
         if log_level not in LogsLevelKeys.keys:
             raise Raise.error(
                 f"logs_level key not found, '{log_level}' received.",
-                KeyError,
+                KeyError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -197,6 +198,7 @@ class BLoggerQueue(BData, NoDynamicAttributes):
         if not isinstance(obj, LoggerQueue):
             raise Raise.error(
                 f"Expected LoggerQueue type, received: '{type(obj)}'.",
+                TypeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
@@ -223,13 +225,13 @@ class BLogFormatter(NoDynamicAttributes):
     """Log formatter base class."""
 
     __template: Optional[str] = None
-    __forms: Optional[List] = None
+    __forms: List = []
 
-    def __init__(self) -> None:
-        """Constructor."""
-        self.__forms = []
+    # def __init__(self) -> None:
+    #     """Constructor."""
+    #     self.__forms = []
 
-    def format(self, message: str, name: str = None) -> str:
+    def format(self, message: str, name: Optional[str] = None) -> str:
         """Method for format message string.
 
         Arguments:
