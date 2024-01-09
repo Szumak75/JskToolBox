@@ -67,20 +67,24 @@ class FileProcessor(BData, NoDynamicAttributes):
         """Try to read config file."""
         out: str = ""
         if self.file_exists:
-            with open(self.file, "r") as file:
-                out = file.read()
+            filepath: Optional[str] = self.file
+            if filepath is not None:
+                with open(filepath, "r") as file:
+                    out = file.read()
         return out
 
     def readlines(self) -> List[str]:
         """Try to read config file and create list of strings."""
         out: List[str] = []
         if self.file_exists:
-            with open(self.file, "r") as file:
-                tmp = file.readlines()
-                for line in tmp:
-                    if line.find("<end of section") > 0:
-                        continue
-                    out.append(line.strip())
+            filepath: Optional[str] = self.file
+            if filepath is not None:
+                with open(filepath, "r") as file:
+                    tmp = file.readlines()
+                    for line in tmp:
+                        if line.find("<end of section") > 0:
+                            continue
+                        out.append(line.strip())
         return out
 
     def write(self, data: str) -> None:
@@ -89,8 +93,10 @@ class FileProcessor(BData, NoDynamicAttributes):
         if not test:
             test = self.file_create()
         if test:
-            with open(self.file, "w") as file:
-                file.write(data)
+            filepath: Optional[str] = self.file
+            if filepath is not None:
+                with open(filepath, "w") as file:
+                    file.write(data)
 
 
 # #[EOF]#######################################################################

@@ -178,13 +178,19 @@ class Env(NoDynamicAttributes):
     @property
     def home(cls) -> str:
         """Return home dir name."""
-        return os.getenv("HOME")
+        tmp: Optional[str] = os.getenv("HOME")
+        if tmp:
+            return tmp
+        return ""
 
     @classmethod
     @property
     def username(cls) -> str:
         """Return login name."""
-        return os.getenv("USER")
+        tmp: Optional[str] = os.getenv("USER")
+        if tmp:
+            return tmp
+        return ""
 
 
 class PathChecker(BData, NoDynamicAttributes):
@@ -215,7 +221,7 @@ class PathChecker(BData, NoDynamicAttributes):
             )
         self._data[_Keys.PATHNAME] = pathname
         self._data[_Keys.SPLIT] = check_deep
-        self._data[_Keys.LIST]: List = []
+        self._data[_Keys.LIST] = []
         # analysis
         self.__run__()
 
@@ -328,7 +334,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,
+                KeyError,   
                 self._c_name,
                 currentframe(),
             )

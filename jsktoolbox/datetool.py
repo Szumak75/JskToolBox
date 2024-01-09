@@ -44,9 +44,7 @@ class DateTime(NoNewAttributes):
         return datetime.fromtimestamp(timestamp_seconds, tz=tz)
 
     @classmethod
-    def elapsed_time_from_seconds(
-        cls, seconds: Union[int, float]
-    ) -> timedelta:
+    def elapsed_time_from_seconds(cls, seconds: Union[int, float]) -> timedelta:
         """Convert given seconds to timedelta structure."""
         if not isinstance(seconds, (int, float)):
             raise Raise.error(

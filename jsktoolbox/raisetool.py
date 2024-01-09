@@ -45,7 +45,7 @@ class Raise(NoDynamicAttributes):
     def error(
         cls,
         message: str,
-        exception: type[Exception] = Exception,  # type: ignore
+        exception: type[Exception] = Exception,
         class_name: str = "",
         currentframe: Optional[FrameType] = None,
     ) -> Exception:

@@ -38,7 +38,9 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
 
     __varint: int = 0
 
-    def __init__(self, addr: Union[str, int, List[Union[int, str, Word16]]]) -> None:
+    def __init__(
+        self, addr: Union[str, int, Union[List[int], List[str], List[Word16]]]
+    ) -> None:
         """Constructor."""
         self.words = addr
 
@@ -121,7 +123,9 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
 
         return int_ip
 
-    def __set_words_from_list(self, value: Union[int, str, Word16]) -> None:
+    def __set_words_from_list(
+        self, value: Union[List[int], List[str], List[Word16]]
+    ) -> None:
         """Set address from list."""
         if len(value) != 8:
             raise Raise.error(
@@ -193,7 +197,9 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
         ]
 
     @words.setter
-    def words(self, value: Union[str, int, List[Union[int, str, Word16]]]) -> None:
+    def words(
+        self, value: Union[str, int, Union[List[int], List[str], List[Word16]]]
+    ) -> None:
         if isinstance(value, List):
             self.__set_words_from_list(value)
         elif isinstance(value, int):
@@ -335,8 +341,8 @@ class Network6(BClasses, NoDynamicAttributes):
     min: Address6 -- Return min address of host in network range.
     """
 
-    __address: Address6 = None
-    __prefix: Prefix6 = None
+    __address: Address6 = None  # type: ignore
+    __prefix: Prefix6 = None  # type: ignore
 
     def __init__(self, addr: Union[str, List]) -> None:
         """Constructor."""
@@ -451,8 +457,8 @@ class SubNetwork6(BClasses, NoDynamicAttributes):
     subnets: List[Network6] -- Subnet list.
     """
 
-    __network: Network6 = None
-    __prefix: Prefix6 = None
+    __network: Network6 = None  # type: ignore
+    __prefix: Prefix6 = None  # type: ignore
 
     def __init__(self, network: Network6, prefix: Prefix6) -> None:
         """Constructor."""
