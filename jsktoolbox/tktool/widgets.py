@@ -9,34 +9,38 @@
   VerticalScrolledFrame: https://gist.github.com/novel-yet-trivial/3eddfce704db3082e38c84664fc1fdf8
 """
 
-# try:
-#     import tkinter as tk
-# except ImportError:
-#     import Tkinter as tk
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Toplevel, ttk
 from typing import Any, Optional, List, Tuple, Union, Dict
 
 from jsktoolbox.tktool.base import TkBase
 
 
 class CreateToolTip(TkBase):
-    """Create a tooltip for a given widget."""
+    """Create a tooltip for a given widget.
+
+    Constructor:
+    widget: tk.Misc -- Parent widget handler,
+    text: Union[str, List[str], Tuple[str], tk.StringVar] -- text displayed in tooltip,
+    wait_time: int -- delay of displaying tooltip [ms],
+    wrap_length: int -- Limit the number of characters on each line to the specified value.
+                    The default value of 0 means that lines will only be broken on newlines.
+    """
 
     __id: Optional[str] = None
     __tw: Optional[tk.Toplevel] = None
     __waittime: int = None  # type: ignore
     __widget: tk.Misc = None  # type: ignore
     __wraplength: int = None  # type: ignore
-    __text: Union[str, List, Tuple] = None  # type: ignore
+    __text: Union[str, List[str], Tuple[str]] = None  # type: ignore
     __textvariable: tk.StringVar = None  # type: ignore
     __label_attr: Dict[str, Any] = None  # type: ignore
 
     def __init__(
         self,
         widget: tk.Misc,
-        text: Union[str, List, Tuple, tk.StringVar] = "widget info",
+        text: Union[str, List[str], Tuple[str], tk.StringVar] = "widget info",
         wait_time: int = 500,
         wrap_length: int = 0,
         **kwargs,
@@ -79,7 +83,7 @@ class CreateToolTip(TkBase):
 
     def __unschedule(self) -> None:
         """Unschedule method."""
-        __id = self.__id
+        __id: Optional[str] = self.__id
         self.__id = None
         if __id:
             self.__widget.after_cancel(__id)
@@ -112,7 +116,7 @@ class CreateToolTip(TkBase):
 
     def __hidetip(self) -> None:
         """Hide tooltip."""
-        __tw = self.__tw
+        __tw: Optional[Toplevel] = self.__tw
         self.__tw = None
         if __tw:
             __tw.destroy()
@@ -133,7 +137,7 @@ class CreateToolTip(TkBase):
             return self.__textvariable
 
     @text.setter
-    def text(self, value: Union[str, List, Tuple, tk.StringVar]) -> None:
+    def text(self, value: Union[str, List[str], Tuple[str], tk.StringVar]) -> None:
         """Set text message object."""
         if isinstance(value, tk.StringVar):
             self.__textvariable = value
