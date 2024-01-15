@@ -13,7 +13,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from jsktoolbox.tktool.widgets import (
-    VerticalScrolledFrame,
+    VerticalScrolledTkFrame,
     VerticalScrolledTtkFrame,
     CreateToolTip,
 )
@@ -32,6 +32,7 @@ if __name__ == "__main__":
         borderwidth=2,
         relief=tk.SUNKEN,  # background="light gray"
     )
+    print(f"{frame}")
     # frame.grid(column=0, row=0, sticky=tk.E)  # fixed size
     frame.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.TRUE)  # fill window
 
