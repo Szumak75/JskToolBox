@@ -5,22 +5,28 @@
   Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 15.01.2024, 10:54:49
   
-  Purpose: 
+  Purpose: testing tkinter widget classes.
 """
 
 import os
 
 import tkinter as tk
 from tkinter import ttk
-from jsktoolbox.tktool.widgets import VerticalScrolledFrame, VerticalScrolledTkFrame
+from jsktoolbox.tktool.widgets import (
+    VerticalScrolledFrame,
+    VerticalScrolledTtkFrame,
+    CreateToolTip,
+)
 
 
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Scrollbar Test")
     root.geometry("400x500")
+    root.minsize(width=300, height=400)
+    root.maxsize(width=900, height=900)
 
-    frame = VerticalScrolledTkFrame(
+    frame = VerticalScrolledTtkFrame(
         root,
         width=300,
         borderwidth=2,
@@ -39,6 +45,9 @@ if __name__ == "__main__":
         # label.grid(column=0, row=i, sticky=tk.W)
 
         text = tk.Entry(line, textvariable=tk.StringVar(value="text"))
+        sv = tk.StringVar(value=f"text nr {i}")
+        CreateToolTip(text, text=sv)
+        sv.set(f"text nr {i+1}")
         text.pack(side=tk.RIGHT, expand=tk.TRUE, fill=tk.X)
         # text.grid(column=1, row=i, sticky=tk.EW)
     # for i in range(30):

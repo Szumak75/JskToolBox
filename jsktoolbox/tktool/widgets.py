@@ -16,7 +16,129 @@
 
 import tkinter as tk
 from tkinter import ttk
-from typing import Any, Optional
+from typing import Any, Optional, List, Tuple, Union, Dict
+
+from jsktoolbox.tktool.base import TkBase
+
+
+class CreateToolTip(TkBase):
+    """Create a tooltip for a given widget."""
+
+    __id: Optional[str] = None
+    __tw: Optional[tk.Toplevel] = None
+    __waittime: int = None  # type: ignore
+    __widget: tk.Misc = None  # type: ignore
+    __wraplength: int = None  # type: ignore
+    __text: Union[str, List, Tuple] = None  # type: ignore
+    __textvariable: tk.StringVar = None  # type: ignore
+    __label_attr: Dict[str, Any] = None  # type: ignore
+
+    def __init__(
+        self,
+        widget: tk.Misc,
+        text: Union[str, List, Tuple, tk.StringVar] = "widget info",
+        wait_time: int = 500,
+        wrap_length: int = 0,
+        **kwargs,
+    ) -> None:
+        """Create class object."""
+        # set default attributes
+        self.__label_attr = {
+            "justify": tk.LEFT,
+            "bg": "white",
+            "relief": tk.SOLID,
+            "borderwidth": 1,
+        }
+        # update attributes
+        if kwargs:
+            self.__label_attr.update(kwargs)
+
+        self.__waittime = wait_time
+        self.__wraplength = wrap_length
+        self.__widget = widget
+
+        # set message
+        self.text = text
+        self.__widget.bind("<Enter>", self.__enter)
+        self.__widget.bind("<Leave>", self.__leave)
+        self.__widget.bind("<ButtonPress>", self.__leave)
+
+    def __enter(self, event: Optional[tk.Event] = None) -> None:
+        """Call on <Enter> event."""
+        self.__schedule()
+
+    def __leave(self, event: Optional[tk.Event] = None) -> None:
+        """Call on <Leave> event."""
+        self.__unschedule()
+        self.__hidetip()
+
+    def __schedule(self) -> None:
+        """Schedule method."""
+        self.__unschedule()
+        self.__id = self.__widget.after(self.__waittime, self.__showtip)
+
+    def __unschedule(self) -> None:
+        """Unschedule method."""
+        __id = self.__id
+        self.__id = None
+        if __id:
+            self.__widget.after_cancel(__id)
+
+    def __showtip(self, event: Optional[tk.Event] = None) -> None:
+        """Show tooltip."""
+        __x: int = 0
+        __y: int = 0
+        __cx: int
+        __cy: int
+        __x, __y, __cx, __cy = self.__widget.bbox("insert")  # type: ignore
+        __x += self.__widget.winfo_rootx() + 25
+        __y += self.__widget.winfo_rooty() + 20
+        # creates a toplevel window
+        self.__tw = tk.Toplevel(self.__widget)
+        # Leaves only the label and removes the app window
+        self.__tw.wm_overrideredirect(True)
+        self.__tw.wm_geometry(f"+{__x}+{__y}")
+        label = tk.Label(
+            self.__tw,
+            wraplength=self.__wraplength,
+        )
+        for key in self.__label_attr.keys():
+            label[key.lower()] = self.__label_attr[key]
+        if isinstance(self.text, tk.StringVar):
+            label["textvariable"] = self.text
+        else:
+            label["text"] = self.text
+        label.pack(ipadx=1)
+
+    def __hidetip(self) -> None:
+        """Hide tooltip."""
+        __tw = self.__tw
+        self.__tw = None
+        if __tw:
+            __tw.destroy()
+
+    @property
+    def text(self) -> Union[str, tk.StringVar]:
+        """Return text message."""
+        if self.__text is None and self.__textvariable is None:
+            self.__text = ""
+        if self.__textvariable is None:
+            if isinstance(self.__text, (List, Tuple)):
+                tmp: str = ""
+                for msg in self.__text:
+                    tmp += msg if not tmp else f"\n{msg}"
+                return tmp
+            return self.__text
+        else:
+            return self.__textvariable
+
+    @text.setter
+    def text(self, value: Union[str, List, Tuple, tk.StringVar]) -> None:
+        """Set text message object."""
+        if isinstance(value, tk.StringVar):
+            self.__textvariable = value
+        else:
+            self.__text = value
 
 
 class VerticalScrolledFrame(tk.Misc):
@@ -105,12 +227,17 @@ class VerticalScrolledFrame(tk.Misc):
         return str(self.outer)
 
 
-class VerticalScrolledTkFrame(tk.Frame):
+class VerticalScrolledTkFrame(tk.Frame, TkBase):
     """A pure Tkinter scrollable frame that actually works!
     * Use the 'interior' property to place widgets inside the scrollable frame.
     * Construct and pack/place/grid normally.
     * This frame only allows vertical scrolling.
     """
+
+    __vscrollbar: tk.Scrollbar = None  # type: ignore
+    __canvas: tk.Canvas = None  # type: ignore
+    __interior: tk.Frame = None  # type: ignore
+    __interior_id: int = None  # type: ignore
 
     def __init__(self, parent: tk.Misc, *args, **kw) -> None:
         tk.Frame.__init__(self, parent, *args, **kw)
@@ -194,12 +321,17 @@ class VerticalScrolledTkFrame(tk.Frame):
             self.__canvas.yview_scroll(1, "units")
 
 
-class VerticalScrolledTtkFrame(ttk.Frame):
+class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
     """A pure Tkinter scrollable frame that actually works!
     * Use the 'interior' property to place widgets inside the scrollable frame.
     * Construct and pack/place/grid normally.
     * This frame only allows vertical scrolling.
     """
+
+    __vscrollbar: ttk.Scrollbar = None  # type: ignore
+    __canvas: tk.Canvas = None  # type: ignore
+    __interior: ttk.Frame = None  # type: ignore
+    __interior_id: int = None  # type: ignore
 
     def __init__(self, parent: tk.Misc, *args, **kw) -> None:
         ttk.Frame.__init__(self, parent, *args, **kw)
