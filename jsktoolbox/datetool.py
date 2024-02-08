@@ -76,7 +76,7 @@ class DateTime(NoNewAttributes):
 
 
 class Timestamp(NoNewAttributes):
-    """Timestamp class for geting current timestamp."""
+    """Timestamp class for getting current timestamp."""
 
     @classmethod
     @property
