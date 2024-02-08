@@ -87,7 +87,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         return f"{self._c_name}({tmp})"
 
     def __str__(self) -> str:
-        """Return formated string."""
+        """Return formatted string."""
         tmp: str = ""
         tmp += f"{self.name} = " if self.name is not None else ""
         if isinstance(self.value, (int, float, bool)):
@@ -106,7 +106,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
 
     @property
     def desc(self) -> Optional[str]:
-        """Get descrption property."""
+        """Get description property."""
         return self._data[_Keys.DESC]
 
     @desc.setter
@@ -163,7 +163,7 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         return f"{self._c_name}(name='{self.name}')"
 
     def __str__(self) -> str:
-        """Return formated string."""
+        """Return formatted string."""
         return f"[{self.name}]"
 
     @property
@@ -360,7 +360,7 @@ class DataProcessor(BData, NoDynamicAttributes):
 
     @property
     def dump(self) -> str:
-        """Return formated configuration data string."""
+        """Return formatted configuration data string."""
         out: str = ""
 
         # first section is a main section
