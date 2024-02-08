@@ -79,9 +79,9 @@ class SimpleCrypto(NoDynamicAttributes):
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = salt % chars_len
-        transtable: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
+        trans_table: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
 
-        return message.translate(transtable)
+        return message.translate(trans_table)
 
     @classmethod
     def caesar_decrypt(cls, salt: int, message: str) -> str:
@@ -109,9 +109,9 @@ class SimpleCrypto(NoDynamicAttributes):
         chars: str = cls.chars_table_generator()
         chars_len: int = len(chars)
         shift: int = chars_len - (salt % chars_len)
-        transtable: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
+        trans_table: Dict = str.maketrans(chars, chars[shift:] + chars[:shift])
 
-        return message.translate(transtable)
+        return message.translate(trans_table)
 
     @classmethod
     def rot13_codec(cls, message: str) -> str:
