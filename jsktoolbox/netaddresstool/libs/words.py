@@ -90,7 +90,7 @@ class Word16(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def value(self) -> int:
-        """Rerutn value of Word16 as int."""
+        """Return value of Word16 as int."""
         return self.__value
 
     @value.setter
