@@ -3,6 +3,7 @@
 The project contains classes useful for tkinter-based projects.
 
 ## Public classes
+
 1. [CreateToolTip](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#createtooltip)
 1. [VerticalScrolledTkFrame](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#verticalscrolledtkframe)
 1. [VerticalScrolledTtkFrame](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#verticalscrolledttkframe)
@@ -12,13 +13,13 @@ The project contains classes useful for tkinter-based projects.
 Creates a tooltip for a given widget.
 
 ### Import
-```
-from jsktoolbox.tktool.widgets import CreateToolTip
+
+```from jsktoolbox.tktool.widgets import CreateToolTip
 ```
 
 ### Constructor
-```
-CreateToolTip(
+
+```CreateToolTip(
     widget: tk.Misc, 
     text: Union[str, List[str], Tuple[str], tk.StringVar] = "widget info", 
     wait_time: int = 500, 
@@ -28,6 +29,7 @@ CreateToolTip(
 ```
 
 Arguments:
+
 - **widget** [tk.Misc] - _Parent widget handler_
 - **text** [Union[str, List[str], Tuple[str], tk.StringVar]] - _text displayed in tooltip_
 - **wait_time** [int] - _delay of displaying tooltip [ms]_
@@ -35,8 +37,8 @@ Arguments:
                 The default value of 0 means that lines will only be broken on newlines_
 
 ### Example
-```
-import tkinter as tk
+
+```import tkinter as tk
 from jsktoolbox.tktool.widgets import CreateToolTip
 
 root = tk.Tk()
@@ -55,13 +57,13 @@ root.mainloop()
 Creates vertical scrolled Frame derived from tk.Frame
 
 ### Import
-```
-from jsktoolbox.tktool.widgets import VerticalScrolledTkFrame
+
+```from jsktoolbox.tktool.widgets import VerticalScrolledTkFrame
 ```
 
 ## Example
-```
-import tkinter as tk
+
+```import tkinter as tk
 from jsktoolbox.tktool.widgets import (
     VerticalScrolledTkFrame,
     CreateToolTip,
@@ -101,13 +103,13 @@ if __name__ == "__main__":
 Creates vertical scrolled Frame derived from ttk.Frame
 
 ### Import
-```
-from jsktoolbox.tktool.widgets import VerticalScrolledTtkFrame
+
+```from jsktoolbox.tktool.widgets import VerticalScrolledTtkFrame
 ```
 
 ### Example
-```
-import tkinter as tk
+
+```import tkinter as tk
 from tkinter import ttk
 from jsktoolbox.tktool.widgets import (
     VerticalScrolledTtkFrame,
