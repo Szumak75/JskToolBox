@@ -26,16 +26,16 @@ class _Keys(object, metaclass=ReadOnlyClass):
     """
 
     ARGS = "__args__"
-    CONFIGURED_ARGS = "__cargs__"
+    CONFIGURED_ARGS = "__conf_args__"
     DESC_OPTS = "__desc_opts__"
     EXAMPLE_OPTS = "__ex_opts__"
     EXISTS = "__exists__"
-    ISDIR = "__is_dir__"
-    ISFILE = "__is_file__"
-    ISSYMLINK = "__is_symlink__"
+    IS_DIR = "__is_dir__"
+    IS_FILE = "__is_file__"
+    IS_SYMLINK = "__is_symlink__"
     LIST = "__list__"
     LONG_OPTS = "__long_opts__"
-    PATHNAME = "__pathname__"
+    PATH_NAME = "__pathname__"
     POSIXPATH = "__posix_path__"
     SHORT_OPTS = "__short_opts__"
     SPLIT = "__split__"
@@ -85,7 +85,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
             long_arg + ("=" if has_value else "")
         )
 
-        tmp = ""
+        tmp: Union[str, List] = ""
         if desc_arg:
             if isinstance(desc_arg, str):
                 tmp = desc_arg
@@ -219,7 +219,7 @@ class PathChecker(BData, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        self._data[_Keys.PATHNAME] = pathname
+        self._data[_Keys.PATH_NAME] = pathname
         self._data[_Keys.SPLIT] = check_deep
         self._data[_Keys.LIST] = []
         # analysis
@@ -227,16 +227,16 @@ class PathChecker(BData, NoDynamicAttributes):
 
     def __run__(self) -> None:
         """Path analysis procedure."""
-        query = Path(self._data[_Keys.PATHNAME])
+        query = Path(self._data[_Keys.PATH_NAME])
         # check exists
         self._data[_Keys.EXISTS] = query.exists()
         if self._data[_Keys.EXISTS]:
-            # check isfile
-            self._data[_Keys.ISFILE] = query.is_file()
-            # check isdir
-            self._data[_Keys.ISDIR] = query.is_dir()
-            # check issymlink
-            self._data[_Keys.ISSYMLINK] = query.is_symlink()
+            # check if is file
+            self._data[_Keys.IS_FILE] = query.is_file()
+            # check if is dir
+            self._data[_Keys.IS_DIR] = query.is_dir()
+            # check if is symlink
+            self._data[_Keys.IS_SYMLINK] = query.is_symlink()
             # resolve symlink
             self._data[_Keys.POSIXPATH] = str(query.resolve())
 
@@ -302,9 +302,9 @@ class PathChecker(BData, NoDynamicAttributes):
 
     @property
     def is_dir(self) -> bool:
-        """Return path isdir flag."""
-        if _Keys.ISDIR in self._data:
-            return self._data[_Keys.ISDIR]
+        """Return path is_dir flag."""
+        if _Keys.IS_DIR in self._data:
+            return self._data[_Keys.IS_DIR]
         else:
             raise Raise.error(
                 "Unexpected exception",
@@ -315,9 +315,9 @@ class PathChecker(BData, NoDynamicAttributes):
 
     @property
     def is_file(self) -> bool:
-        """Return path isfile flag."""
-        if _Keys.ISFILE in self._data:
-            return self._data[_Keys.ISFILE]
+        """Return path is_file flag."""
+        if _Keys.IS_FILE in self._data:
+            return self._data[_Keys.IS_FILE]
         else:
             raise Raise.error(
                 "Unexpected exception",
@@ -328,13 +328,13 @@ class PathChecker(BData, NoDynamicAttributes):
 
     @property
     def is_symlink(self) -> bool:
-        """Return path issymlink flag."""
-        if _Keys.ISSYMLINK in self._data:
-            return self._data[_Keys.ISSYMLINK]
+        """Return path is_symlink flag."""
+        if _Keys.IS_SYMLINK in self._data:
+            return self._data[_Keys.IS_SYMLINK]
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,   
+                KeyError,
                 self._c_name,
                 currentframe(),
             )
@@ -342,7 +342,7 @@ class PathChecker(BData, NoDynamicAttributes):
     @property
     def path(self) -> str:
         """Return path string."""
-        return self._data[_Keys.PATHNAME]
+        return self._data[_Keys.PATH_NAME]
 
     @property
     def posixpath(self) -> Optional[str]:
