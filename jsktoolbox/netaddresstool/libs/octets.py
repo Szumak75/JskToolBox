@@ -87,7 +87,7 @@ class Octet(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def value(self) -> int:
-        """Rerutn value of Octet as int."""
+        """Return value of Octet as int."""
         return self.__value
 
     @value.setter
