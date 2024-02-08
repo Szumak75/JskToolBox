@@ -5,6 +5,7 @@ The project contains base classes that limit the possibility of adding new attri
 Classes throw an AttributeError exception when trying to add an undefined attribute to a derived class or its object.
 
 ## Public classes
+
 1. [NoDynamicAttributes](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#nodynamicattributes)
 1. [NoNewAttributes](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#nonewattributes)
 1. [ReadOnlyClass](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#readonlyclass)
@@ -12,8 +13,8 @@ Classes throw an AttributeError exception when trying to add an undefined attrib
 ## Usage examples
 
 ### NoDynamicAttributes
-```
-from jsktoolbox.attribtool import NoDynamicAttributes
+
+```from jsktoolbox.attribtool import NoDynamicAttributes
 
 class Example(NoDynamicAttributes):
     __name = None
@@ -27,8 +28,8 @@ if __name__ == "__main__":
 ```
 
 Output:
-```
-% ./example.py
+
+```% ./example.py
 Traceback (most recent call last):
   File "/home/szumak/Projects/jsktoolbox/AttribTool/./example.py", line 22, in <module>
     obj.data = "abc"
@@ -38,8 +39,8 @@ AttributeError: Cannot add new attribute 'data' to Example object
 ```
 
 ### NoNewAttributes
-```
-from jsktoolbox.attribtool import NoNewAttributes
+
+```from jsktoolbox.attribtool import NoNewAttributes
 
 class Example(NoNewAttributes):
     __name = None
@@ -53,8 +54,8 @@ if __name__ == "__main__":
 ```
 
 Output:
-```
-% ./example.py
+
+```% ./example.py
 Traceback (most recent call last):
   File "/home/szumak/Projects/jsktoolbox/AttribTool/./example.py", line 22, in <module>
     obj = Example()
@@ -66,8 +67,8 @@ AttributeError: Undefined attribute _Example__data cannot be added to <__main__.
 ```
 
 ### ReadOnlyClass
-```
-#!/usr/bin/env python3
+
+```#!/usr/bin/env python3
 from jsktoolbox.attribtool import ReadOnlyClass
 
 
@@ -81,8 +82,8 @@ if __name__ == "__main__":
 ```
 
 Output:
-```
-% ./example.py
+
+```% ./example.py
 don't change me
 Traceback (most recent call last):
   File "/home/szumak/Projects/JskToolBox/./example.py", line 11, in <module>
