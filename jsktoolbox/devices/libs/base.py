@@ -90,7 +90,7 @@ class BDev(BDebug):
         if not isinstance(value, IConnector):
             raise Raise.error(
                 f"Expected IConnector derived type, received: '{type(value)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -109,7 +109,7 @@ class BDev(BDebug):
         if not isinstance(value, LoggerClient):
             raise Raise.error(
                 f"Expected LoggerClient type, received: '{type(value)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -132,7 +132,7 @@ class BDev(BDebug):
         if not isinstance(value, str):
             raise Raise.error(
                 f"Expected string type, received: '{type(value)}'",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -151,7 +151,7 @@ class BDev(BDebug):
         if value is not None and not isinstance(value, BDev):
             raise Raise.error(
                 f"Expected BDev type, received: '{type(value)}'",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )

@@ -30,7 +30,7 @@ from jsktoolbox.devices.libs.converters import B64Converter
 
 
 class IConnector(ABC):
-    """Conection class interface."""
+    """Connection class interface."""
 
     @abstractmethod
     def connect(self) -> bool:
@@ -84,7 +84,7 @@ class IConnector(ABC):
 
     @password.setter
     @abstractmethod
-    def password(self, passwordstring: str) -> None:
+    def password(self, password_string: str) -> None:
         """Set password property."""
 
     @property
@@ -186,7 +186,7 @@ class API(IConnector, BData):
         ):
             raise Raise.error(
                 "Expected socket.socket type.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -357,7 +357,7 @@ class API(IConnector, BData):
             if ret == 0:
                 raise Raise.error(
                     "connection closed by remote end",
-                    RuntimeError,  # type: ignore
+                    RuntimeError,
                     self._c_name,
                     currentframe(),
                 )
@@ -372,7 +372,7 @@ class API(IConnector, BData):
             if ret == 0:
                 raise Raise.error(
                     "connection closed by remote end",
-                    RuntimeError,  # type: ignore
+                    RuntimeError,
                     self._c_name,
                     currentframe(),
                 )
@@ -387,7 +387,7 @@ class API(IConnector, BData):
             if soc_ret == b"":
                 raise Raise.error(
                     "connection closed by remote end",
-                    RuntimeError,  # type: ignore
+                    RuntimeError,
                     self._c_name,
                     currentframe(),
                 )
@@ -492,22 +492,22 @@ class API(IConnector, BData):
         if self.address is None:
             raise Raise.error(
                 f"Host IP address is not set.",
-                ValueError,  # type: ignore
+                ValueError,
                 self._c_name,
                 currentframe(),
             )
         if self.port is None:
             raise Raise.error(
-                "Port is not set.", ValueError, self._c_name, currentframe()  # type: ignore
+                "Port is not set.", ValueError, self._c_name, currentframe()
             )
         if self.login is None:
             raise Raise.error(
-                "Login is not set.", ValueError, self._c_name, currentframe()  # type: ignore
+                "Login is not set.", ValueError, self._c_name, currentframe()
             )
         if self.password is None:
             raise Raise.error(
                 "Password is not set.",
-                ValueError,  # type: ignore
+                ValueError,
                 self._c_name,
                 currentframe(),
             )
@@ -546,7 +546,7 @@ class API(IConnector, BData):
         else:
             raise Raise.error(
                 f"Expected string or list type, received: '{type(commands)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -588,7 +588,7 @@ class API(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected Address or Address6 type, received: '{type(ip_address)}'",
-                    TypeError,  # type: ignore
+                    TypeError,
                     self._c_name,
                     currentframe(),
                 )
@@ -628,7 +628,7 @@ class API(IConnector, BData):
         if username is not None and not isinstance(username, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(username)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -651,7 +651,7 @@ class API(IConnector, BData):
         if passwd is not None and not isinstance(passwd, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(passwd)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -673,7 +673,7 @@ class API(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected int type, received: '{type(port)}'.",
-                    TypeError,  # type: ignore
+                    TypeError,
                     self._c_name,
                     currentframe(),
                 )
@@ -736,7 +736,7 @@ class SSH(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected Address or Address6 type, received: '{type(ip_address)}'",
-                    TypeError,  # type: ignore
+                    TypeError,
                     self._c_name,
                     currentframe(),
                 )
@@ -759,7 +759,7 @@ class SSH(IConnector, BData):
         if username is not None and not isinstance(username, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(username)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -782,7 +782,7 @@ class SSH(IConnector, BData):
         if passwd is not None and not isinstance(passwd, str):
             raise Raise.error(
                 f"Expected str type, received: '{type(passwd)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
@@ -804,7 +804,7 @@ class SSH(IConnector, BData):
             else:
                 raise Raise.error(
                     f"Expected int type, received: '{type(port)}'.",
-                    TypeError,  # type: ignore
+                    TypeError,
                     self._c_name,
                     currentframe(),
                 )

@@ -72,7 +72,7 @@ class RBMpls(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = {
+        elements: Dict[str, Any] = {
             _Elements.FORWARDING_TABLE: {},
             _Elements.INTERFACE: {},
             _Elements.LDP: {

@@ -125,7 +125,7 @@ class RBRouting(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = {
+        elements: Dict[str, Any] = {
             _Elements.BFD: {
                 _Elements.INTERFACE: {},
                 _Elements.NEIGHBOR: {},

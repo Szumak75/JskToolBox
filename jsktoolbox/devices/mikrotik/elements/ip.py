@@ -144,7 +144,7 @@ class RBIp(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = {
+        elements: Dict[str, Any] = {
             _Elements.ACCOUNTING: {
                 _Elements.SNAPSHOT: {},
                 _Elements.UNCOUNTED: {},

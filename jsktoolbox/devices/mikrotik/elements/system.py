@@ -107,7 +107,7 @@ class RBSystem(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = {
+        elements: Dict[str, Any] = {
             _Elements.BACKUP: {
                 _Elements.CLOUD: {},
             },
