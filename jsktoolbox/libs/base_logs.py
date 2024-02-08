@@ -30,7 +30,7 @@ class Keys(object, metaclass=ReadOnlyClass):
     FORMATTER = "__formatter__"
     LEVEL = "__level__"
     NAME = "__name__"
-    NO_CONF = "__noconf__"
+    NO_CONF = "__no_conf__"
     QUEUE = "__queue__"
     SYSLOG = "__syslog__"
 
@@ -124,7 +124,7 @@ class LogsLevelKeys(object, metaclass=ReadOnlyClass):
     @classmethod
     @property
     def keys(cls) -> tuple:
-        """Return tuple of avaiable keys."""
+        """Return tuple of available keys."""
         return tuple(
             [
                 LogsLevelKeys.ALERT,
@@ -151,7 +151,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
     def get(self) -> Optional[tuple[str, ...]]:
         """Get item from queue.
 
-        Returs queue tuple[log_level:str, message:str] or None if empty.
+        Returns queue tuple[log_level:str, message:str] or None if empty.
         """
         try:
             return tuple(self.__queue.pop(0))

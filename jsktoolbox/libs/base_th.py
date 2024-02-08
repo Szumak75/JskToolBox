@@ -3,7 +3,7 @@
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
   Created: 03.11.2023
 
-  Purpose: Base class for classess derived from threading.Thread
+  Purpose: Base class for classes derived from threading.Thread
 """
 
 from inspect import currentframe
@@ -258,14 +258,14 @@ class ThBaseObject(BData, NoDynamicAttributes):
 
     @property
     def sleep_period(self) -> float:
-        """Return sleepperiod value."""
+        """Return sleep period value."""
         if _Keys.SLEEP_PERIOD not in self._data:
             self._data[_Keys.SLEEP_PERIOD] = 1.0
         return self._data[_Keys.SLEEP_PERIOD]
 
     @sleep_period.setter
     def sleep_period(self, value: float) -> None:
-        """Set sleepperiod value."""
+        """Set sleep period value."""
         if not isinstance(value, float):
             raise Raise.error(
                 f"Expected positive float type, received: '{value}'.",
