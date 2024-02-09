@@ -14,8 +14,7 @@ Creates a tooltip for a given widget.
 
 ### Import
 
-```from jsktoolbox.tktool.widgets import CreateToolTip
-```
+```from jsktoolbox.tktool.widgets import CreateToolTip```
 
 ### Constructor
 
@@ -25,8 +24,7 @@ Creates a tooltip for a given widget.
     wait_time: int = 500, 
     wrap_length: int = 0, 
     **kwargs
-)
-```
+)```
 
 Arguments:
 
