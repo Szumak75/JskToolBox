@@ -7,6 +7,8 @@
   Purpose:
 """
 
+from typing import Optional
+
 from jsktoolbox.netaddresstool.ipv4 import Address
 from jsktoolbox.logstool.logs import LoggerQueue
 
@@ -14,6 +16,7 @@ from jsktoolbox.devices.network.connectors import API
 from jsktoolbox.devices.mikrotik.routerboard import RouterBoard
 
 from jsktoolbox.devices.mikrotik.elements.libs.search import RBQuery
+from jsktoolbox.devices.mikrotik.base import Element
 
 if __name__ == "__main__":
     ch = API(
@@ -34,14 +37,16 @@ if __name__ == "__main__":
     # rb.dump()
     # print("Check element return")
     # out = rb.element("/ip/firewall/address-list/")
-    out = rb.element("/ip/firewall/address-list/", auto_load=True)
-    print(out.search(query.query))
-    # out.dump()
-    # print(out)
-    # print(out.root)
-    # print(out.get())
-    # print(out)
-    # out.dump()
+    out: Optional[Element] = rb.element("/ip/firewall/address-list/", auto_load=True)
+
+    if out:
+        print(out.search(query.query))
+        # out.dump()
+        # print(out)
+        # print(out.root)
+        # print(out.get())
+        # print(out)
+        # out.dump()
     print(q.get())
 
 # #[EOF]#######################################################################
