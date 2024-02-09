@@ -75,7 +75,7 @@ class ReadOnlyClass(type):
     """
 
     def __setattr__(self, name: str, value: Any) -> None:
-        raise ValueError(f"Read only attribute: {name}.")
+        raise AttributeError(f"Read only attribute: {name}.")
 
 
 # #[EOF]#######################################################################

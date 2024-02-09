@@ -90,6 +90,6 @@ Traceback (most recent call last):
     A.FOO = 1
     ^^^^^
   File "/home/szumak/Projects/JskToolBox/jsktoolbox/attribtool.py", line 78, in __setattr__
-    raise ValueError(f"Read only attribute: {name}.")
-ValueError: Read only attribute: FOO.
+    raise AttributeError(f"Read only attribute: {name}.")
+AttributeError: Read only attribute: FOO.
 ```
