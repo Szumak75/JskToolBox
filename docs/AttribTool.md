@@ -14,7 +14,8 @@ Classes throw an AttributeError exception when trying to add an undefined attrib
 
 ### NoDynamicAttributes
 
-```from jsktoolbox.attribtool import NoDynamicAttributes
+```
+from jsktoolbox.attribtool import NoDynamicAttributes
 
 class Example(NoDynamicAttributes):
     __name = None
@@ -29,7 +30,8 @@ if __name__ == "__main__":
 
 Output:
 
-```% python3 example.py
+```
+% python3 example.py
 Traceback (most recent call last):
   File "/home/szumak/Projects/JskToolBox/example.py", line 11, in <module>
     obj.data = "abc"
@@ -41,7 +43,8 @@ AttributeError: Cannot add new attribute 'data' to Example object
 
 ### NoNewAttributes
 
-```from jsktoolbox.attribtool import NoNewAttributes
+```
+from jsktoolbox.attribtool import NoNewAttributes
 
 class Example(NoNewAttributes):
     __name = None
@@ -56,7 +59,8 @@ if __name__ == "__main__":
 
 Output:
 
-```% python3 example.py
+```
+% python3 example.py
 Traceback (most recent call last):
   File "/home/szumak/Projects/JskToolBox/example.py", line 11, in <module>
     obj = Example()
@@ -71,7 +75,8 @@ AttributeError: Undefined attribute _Example__data cannot be added to <__main__.
 
 ### ReadOnlyClass
 
-```#!/usr/bin/env python3
+```
+#!/usr/bin/env python3
 from jsktoolbox.attribtool import ReadOnlyClass
 
 
@@ -86,7 +91,8 @@ if __name__ == "__main__":
 
 Output:
 
-```% ./example.py
+```
+% ./example.py
 don't change me
 Traceback (most recent call last):
   File "/home/szumak/Projects/JskToolBox/./example.py", line 11, in <module>
