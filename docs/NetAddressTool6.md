@@ -202,12 +202,14 @@ A calculator that generates subnet addresses in the given network address and wi
 
 ### Import
 
-```from jsktoolbox.netaddresstool.ipv6 import SubNetwork6
+```
+from jsktoolbox.netaddresstool.ipv6 import SubNetwork6
 ```
 
 ### Constructor
 
-```SubNetwork6(network: Network6, prefix: Prefix6)
+```
+SubNetwork6(network: Network6, prefix: Prefix6)
 ```
 
 It takes Network6 and Prefix6 objects as arguments.
@@ -216,7 +218,8 @@ The Prefix6 object is the prefix value for the subnets you are looking for.
 
 ### Public properties
 
-```.subnets: List[Network6]
+```
+.subnets: List[Network6]
 ```
 
 Returns a list of subnets found in the given network address with the given netmask.

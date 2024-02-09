@@ -14,12 +14,14 @@ Creates a tooltip for a given widget.
 
 ### Import
 
-```from jsktoolbox.tktool.widgets import CreateToolTip
+```
+from jsktoolbox.tktool.widgets import CreateToolTip
 ```
 
 ### Constructor
 
-```CreateToolTip(
+```
+CreateToolTip(
     widget: tk.Misc, 
     text: Union[str, List[str], Tuple[str], tk.StringVar] = "widget info", 
     wait_time: int = 500, 
@@ -38,7 +40,8 @@ Arguments:
 
 ### Example
 
-```import tkinter as tk
+```
+import tkinter as tk
 from jsktoolbox.tktool.widgets import CreateToolTip
 
 root = tk.Tk()
@@ -58,12 +61,14 @@ Creates vertical scrolled Frame derived from tk.Frame
 
 ### Import
 
-```from jsktoolbox.tktool.widgets import VerticalScrolledTkFrame
+```
+from jsktoolbox.tktool.widgets import VerticalScrolledTkFrame
 ```
 
 ## Example
 
-```import tkinter as tk
+```
+import tkinter as tk
 from jsktoolbox.tktool.widgets import (
     VerticalScrolledTkFrame,
     CreateToolTip,
@@ -104,12 +109,14 @@ Creates vertical scrolled Frame derived from ttk.Frame
 
 ### Import
 
-```from jsktoolbox.tktool.widgets import VerticalScrolledTtkFrame
+```
+from jsktoolbox.tktool.widgets import VerticalScrolledTtkFrame
 ```
 
 ### Example
 
-```import tkinter as tk
+```
+import tkinter as tk
 from tkinter import ttk
 from jsktoolbox.tktool.widgets import (
     VerticalScrolledTtkFrame,

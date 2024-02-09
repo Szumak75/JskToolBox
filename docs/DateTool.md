@@ -11,17 +11,20 @@ The project contains several classes that return common date/time structures.
 
 ### Import
 
-```from jsktoolbox.datetool import DateTool
+```
+from jsktoolbox.datetool import DateTool
 ```
 
 ### Public classmethod
 
-```.now(tz: Optional[timezone] = None) -> datetime.datetime
+```
+.now(tz: Optional[timezone] = None) -> datetime.datetime
 ```
 
 The method returns a datetime.datetime.now() object with an optional time zone specified.
 
-```.datetime_from_timestamp(
+```
+.datetime_from_timestamp(
     timestamp_seconds: Union[int, float],
     tz: Optional[timezone] = None
 ) -> datetime.datetime
@@ -29,12 +32,14 @@ The method returns a datetime.datetime.now() object with an optional time zone s
 
 The method returns a datetime.datetime object based on the provided timestamp value as an integer or floating point with an optional time zone.
 
-```.elapsed_time_from_seconds(seconds: Union[int, float]) -> datetime.timedelta
+```
+.elapsed_time_from_seconds(seconds: Union[int, float]) -> datetime.timedelta
 ```
 
 The method converts the given seconds value as an integer or float with an optional time zone to a timedelta structure.
 
-```.elapsed_time_from_timestamp(
+```
+.elapsed_time_from_timestamp(
     seconds: Union[int, float],
     tz: Optional[timezone] = None
 ) -> datetime.timedelta:
@@ -47,12 +52,14 @@ Timedelta is returned accurate to the second.
 
 ### Import
 
-```from datetool import Timestamp
+```
+from datetool import Timestamp
 ```
 
 ### Public classmethod property
 
-```.now
+```
+.now
 ```
 
 The property returns the current timestamp in seconds as an integer.
