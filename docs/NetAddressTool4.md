@@ -16,24 +16,28 @@ The class for IPv4 octet representation.
 
 ### Import
 
-```from jsktoolbox.netaddresstool.libs.octets import Octet
+```
+from jsktoolbox.netaddresstool.libs.octets import Octet
 ```
 
 ### Constructor
 
-```Octet(value: Union[str, int, Octet])
+```
+Octet(value: Union[str, int, Octet])
 ```
 
 ### Public properties
 
-```.value: int
+```
+.value: int
 ```
 
 Return octet as integer.
 
 ### Public setters
 
-```.value: Union[str, int, Octet]
+```
+.value: Union[str, int, Octet]
 ```
 
 Set octet from integer, string or other octet object.
@@ -50,26 +54,30 @@ The class for IPv4 address representation.
 
 ### Import
 
-```from jsktoolbox.netaddresstool.ipv4 import Address
+```
+from jsktoolbox.netaddresstool.ipv4 import Address
 ```
 
 ### Constructor
 
-```Address(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
+```
+Address(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 ```
 
 The addr argument takes values such as the `.octets` property described in the head **Public setters**.
 
 ### Public properties
 
-```.octets: List[Octet]
+```
+.octets: List[Octet]
 ```
 
 Returns a list of four Octet objects representing the stored address. The list is a copy of the stored value and does not allow modification of the class object.
 
 ### Public setters
 
-```.octets: Union[str, int, Union[List[str], List[int], List[Octet]]]
+```
+.octets: Union[str, int, Union[List[str], List[int], List[Octet]]]
 ```
 
 Allows you to configure the network address by accepting input data in one of the selected formats:
@@ -93,12 +101,14 @@ The class for IPv4 network mask representation.
 
 ### Import
 
-```from jsktoolbox.netaddresstool.ipv4 import Netmask
+```
+from jsktoolbox.netaddresstool.ipv4 import Netmask
 ```
 
 ### Constructor
 
-```Netmask(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
+```
+Netmask(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 ```
 
 The addr argument takes values in several formats:
@@ -111,19 +121,22 @@ The addr argument takes values in several formats:
 
 ### Public properties
 
-```.octets: List[Octet]
+```
+.octets: List[Octet]
 ```
 
 Returns the netmask as a list of four Octet objects.
 
-```.cidr: str
+```
+.cidr: str
 ```
 
 Returns the netmask in CIDR format.
 
 ### Public setters
 
-```.octets: Union[List[str], List[int], List[Octet]]
+```
+.octets: Union[List[str], List[int], List[Octet]]
 ```
 
 Takes values as list:
@@ -132,7 +145,8 @@ Takes values as list:
 - **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
 - **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
 
-```.cidr: Union[str, int]
+```
+.cidr: Union[str, int]
 ```
 
 Takes values in CIDR format:
@@ -152,12 +166,14 @@ The class for IPv4 network address representation.
 
 ### Import
 
-```from jsktoolbox.netaddresstool.ipv4 import Network
+```
+from jsktoolbox.netaddresstool.ipv4 import Network
 ```
 
 ### Constructor
 
-```Network(addr: Union[str, List])
+```
+Network(addr: Union[str, List])
 ```
 
 The addr argument takes the value as a string written in the form of the network
@@ -166,42 +182,50 @@ indicated by the netmask) or in the form of a two-element list: `[ipv4 address, 
 
 ### Public properties
 
-```.address: Address
+```
+.address: Address
 ```
 
 Returns the address passed when creating the object.
 
-```.broadcast: Address
+```
+.broadcast: Address
 ```
 
 Returns the broadcast address.
 
-```.count: int
+```
+.count: int
 ```
 
 Returns the number of host addresses in the network range.
 
-```.hosts: List[Address]
+```
+.hosts: List[Address]
 ```
 
 Returns a list of host addresses in the network range.
 
-```.mask: Netmask
+```
+.mask: Netmask
 ```
 
 Returns the network mask.
 
-```.max: Address
+```
+.max: Address
 ```
 
 Returns the last host address in the network range.
 
-```.min: Address
+```
+.min: Address
 ```
 
 Returns the first host address in the network range.
 
-```.network: Address
+```
+.network: Address
 ```
 
 Returns the network address.
@@ -224,12 +248,14 @@ A calculator that generates subnet addresses in the given network address and wi
 
 ### Import
 
-```from jsktoolbox.netaddresstool.ipv4 import SubNetwork
+```
+from jsktoolbox.netaddresstool.ipv4 import SubNetwork
 ```
 
 ### Constructor
 
-```SubNetwork(network: Network, mask: Netmask)
+```
+SubNetwork(network: Network, mask: Netmask)
 ```
 
 It takes Network and Netmask objects as arguments.
@@ -238,7 +264,8 @@ The Netmask object is the netmask value for the subnets you are looking for.
 
 ### Public properties
 
-```.subnets: List[Network]
+```
+.subnets: List[Network]
 ```
 
 Returns a list of subnets found in the given network address with the given netmask.

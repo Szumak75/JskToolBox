@@ -12,12 +12,14 @@ The main project class.
 
 ### Import
 
-```from jsktoolbox.configtool.main import Config
+```
+from jsktoolbox.configtool.main import Config
 ```
 
 ### Constructor
 
-```Config(filename: str, main_section_name: str, auto_create: bool = False)
+```
+Config(filename: str, main_section_name: str, auto_create: bool = False)
 ```
 
 - filename [str] -- *path to config file*
@@ -26,31 +28,36 @@ The main project class.
 
 ### Public properties
 
-```.file_exists -> bool
+```
+.file_exists -> bool
 ```
 
 Returns True if config file exists.
 
-```.main_section_name -> Optional[str]
+```
+.main_section_name -> Optional[str]
 ```
 
 Returns main section name string or None.
 
 ### Public methods
 
-```.load() -> bool
+```
+.load() -> bool
 ```
 
 Open the configuration file, if it exists, and load its parsed content into the internal data structure.
 The method returns True on success.
 
-```.save() -> bool
+```
+.save() -> bool
 ```
 
 Opens the configuration file, try create it if it does't exist, and saves the content from the internal data structure.
 The method returns True on success.
 
-```.get(section: str, varname: Optional[str] = None, desc: bool = False) -> Any
+```
+.get(section: str, varname: Optional[str] = None, desc: bool = False) -> Any
 ```
 
 Gets data from the configuration section.
@@ -65,7 +72,8 @@ If the 'desc' flag is set to 'True', there are two different cases for this meth
 - if the 'varname' is specified, the method will return variable description as string,
 - if the 'varname' defaults to 'None', the method will return description placed in the section, not related to any 'varname', as a list of strings.
 
-```.set(section: str, varname: Optional[str] = None, value: Optional[Any] = None, desc: Optional[str] = None)
+```
+.set(section: str, varname: Optional[str] = None, value: Optional[Any] = None, desc: Optional[str] = None)
 ```
 
 Sets data to the configuration section.
@@ -86,12 +94,14 @@ Comments:
 - setting 'varname' without defining the 'value' or the 'desc' updates the defined argument,
 - providing a value without specifying 'varname' makes no sense and such an item will not be included in the configuration file.
 
-```.has_section(section: str) -> bool
+```
+.has_section(section: str) -> bool
 ```
 
 Returns True if given 'section' exists.
 
-```.has_varname(section: str, varname: str) -> bool
+```
+.has_varname(section: str, varname: str) -> bool
 ```
 
 Returns True if given 'varname' exists in 'section'.
@@ -100,7 +110,8 @@ Returns True if given 'varname' exists in 'section'.
 
 Create configuration file from class 'Config':
 
-```from jsktoolbox.configtool.main import Config
+```
+from jsktoolbox.configtool.main import Config
 file='/tmp/example.ini'
 section='TEST'
 
@@ -128,7 +139,8 @@ obj.save()
 
 The structure of the created configuration file:
 
-```[TEST]
+```
+[TEST]
 # This is example configuration file,
 # showing how to use the 'Config' class.
 test01 = [1, 'a', True] # a list value
@@ -146,7 +158,8 @@ test04 = False
 
 Loading a previously created file:
 
-```from jsktoolbox.configtool.main import Config
+```
+from jsktoolbox.configtool.main import Config
 file='/tmp/example.ini'
 section='TEST'
 
@@ -175,7 +188,8 @@ if obj.file_exists and obj.load():
 
 Output:
 
-```var01: 1, type: <class 'int'>
+```
+var01: 1, type: <class 'int'>
 var02: 3.14, type: <class 'float'>
 var03: example string, type: <class 'str'>
 var04: False, type: <class 'bool'>

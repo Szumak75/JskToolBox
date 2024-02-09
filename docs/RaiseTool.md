@@ -6,13 +6,15 @@ The message can be formatted with information about the class, method, and line 
 
 ## Public methods
 
-```Raise.message(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> str
+```
+Raise.message(message:str, class_name:Optional[str], currentframe:Optional[FrameType])-> str
 Raise.error(message:str, exception:type[Exception], class_name:Optional[str], currentframe:Optional[FrameType])-> Exception
 ```
 
 ## Usage examples
 
-```import inspect
+```
+import inspect
 from jsktoolbox.raisetool import Raise
 
 
@@ -42,7 +44,8 @@ if __name__ == "__main__":
 
 Output:
 
-```1: example message 1
+```
+1: example message 1
 2: Example: example message 2
 3: Example.__init__ [line:12]: example message 3
 4: Example.__init__ [line:15]: [ValueError]: example message 4
