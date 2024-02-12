@@ -43,7 +43,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         """Constructor.
 
         Arguments:
-        queue [LoggerQueue] - optional LoggerQeueu class object from LoggerEngine, required, but can be set after the object is created,
+        queue [LoggerQueue] - optional LoggerQueue class object from LoggerEngine, required, but can be set after the object is created,
         name [str] - optional client name for logs decorator
         """
         # store name
@@ -242,13 +242,13 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
                     # check if has have configured logging subsystem
                     if Keys.CONF in self._data and len(self._data[Keys.CONF]) > 0:
                         if log_level in self._data[Keys.CONF]:
-                            for leng in self._data[Keys.CONF][log_level]:
-                                engine: ILoggerEngine = leng
+                            for l_eng in self._data[Keys.CONF][log_level]:
+                                engine: ILoggerEngine = l_eng
                                 engine.send(message)
                     else:
                         if log_level in self._data[Keys.NO_CONF]:
-                            for leng in self._data[Keys.NO_CONF][log_level]:
-                                engine: ILoggerEngine = leng
+                            for l_eng in self._data[Keys.NO_CONF][log_level]:
+                                engine: ILoggerEngine = l_eng
                                 engine.send(message)
                 else:
                     return None
@@ -279,7 +279,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         """Set LoggerEngine object."""
         if not isinstance(obj, LoggerEngine):
             raise Raise.error(
-                f"Excpected LoggerEngine type, received: '{type(obj)}'.",
+                f"Expected LoggerEngine type, received: '{type(obj)}'.",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -332,13 +332,13 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
                 currentframe(),
             )
         if self._debug:
-            self.logger_client.message_debug = f"[{self._c_name}] Start."
+            self.logger_client.message_debug = f"[{self._c_name}] starting..."
         # run
         while not self.stopped:
             self.logger_engine.send()
             time.sleep(self.sleep_period)
         if self._debug:
-            self.logger_client.message_debug = f"[{self._c_name}] Stop."
+            self.logger_client.message_debug = f"[{self._c_name}] stopped."
         self.logger_engine.send()
 
     def stop(self) -> None:
