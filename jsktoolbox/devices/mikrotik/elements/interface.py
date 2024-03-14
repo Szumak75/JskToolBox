@@ -7,30 +7,14 @@
 """
 
 
-from typing import Dict, List, Optional, Union, Tuple, Any
-from inspect import currentframe
+from typing import Dict, Optional, Any
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
+from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
 
+from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
 
-# from jsktoolbox.netaddresstool.ipv4 import (
-# Address,
-# Netmask,
-# Network,
-# SubNetwork,
-# )
-# from jsktoolbox.netaddresstool.ipv6 import (
-# Address6,
-# Network6,
-# Prefix6,
-# SubNetwork6,
-# )
-
-from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev, Element
-
-from jsktoolbox.devices.network.connectors import IConnector, API, SSH
+from jsktoolbox.devices.network.connectors import IConnector
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -125,7 +109,7 @@ class RBInterface(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = {
+        elements: Dict[str, Any] = {
             _Elements.BONDING: {},
             _Elements.BRIDGE: {
                 _Elements.CALEA: {},
@@ -196,6 +180,7 @@ class RBInterface(BRouterOS):
                 _Elements.STATION: {},
             },
         }
+
         # configure elements
         self._add_elements(self, elements)
 

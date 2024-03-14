@@ -4,18 +4,16 @@
   Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 22.12.2023, 12:41:06
   
-  Purpose: 
+  Purpose: RB: /user/
 """
 
-from typing import Dict, List, Optional, Union, Tuple, Any
-from inspect import currentframe
+from typing import Dict, Optional, Any
 
 from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.raisetool import Raise
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
 
 
-from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev, Element
+from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
 from jsktoolbox.devices.network.connectors import IConnector
 
 
@@ -24,6 +22,51 @@ class _Elements(object, metaclass=ReadOnlyClass):
 
     For internal purpose only.
     """
+
+    AAA: str = "aaa"
+    ACTIVE: str = "active"
+    GROUP: str = "group"
+    PRIVATE: str = "private"
+    ROOT: str = "user"
+    SETTINGS: str = "settings"
+    SSH_KEYS: str = "ssh-keys"
+
+
+class RBUser(BRouterOS):
+    """User class
+
+    For command root: /user/
+    """
+
+    def __init__(
+        self,
+        parent: BDev,
+        connector: IConnector,
+        qlog: Optional[LoggerQueue] = None,
+        debug: bool = False,
+        verbose: bool = False,
+    ) -> None:
+        """Constructor."""
+        super().__init__(
+            parent,
+            connector,
+            LoggerClient(queue=qlog, name=self._c_name),
+            debug,
+            verbose,
+        )
+        self.root = f"{_Elements.ROOT}/"
+
+        # add elements
+        elements: Dict[str, Any] = {
+            _Elements.AAA: {},
+            _Elements.ACTIVE: {},
+            _Elements.GROUP: {},
+            _Elements.SETTINGS: {},  # v7
+            _Elements.SSH_KEYS: {_Elements.PRIVATE: {}},
+        }
+
+        # configure elements
+        self._add_elements(self, elements)
 
 
 # #[EOF]#######################################################################

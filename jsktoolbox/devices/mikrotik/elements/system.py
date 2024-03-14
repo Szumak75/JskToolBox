@@ -6,28 +6,13 @@
   Purpose: RB '/system'
 """
 
-from typing import Dict, List, Optional, Union, Tuple, Any
-from inspect import currentframe
+from typing import Dict, Optional, Any
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
+from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
 
 
-from jsktoolbox.netaddresstool.ipv4 import (
-    Address,
-    Netmask,
-    Network,
-    SubNetwork,
-)
-from jsktoolbox.netaddresstool.ipv6 import (
-    Address6,
-    Network6,
-    Prefix6,
-    SubNetwork6,
-)
-
-from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev, Element
+from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
 from jsktoolbox.devices.network.connectors import IConnector
 
 
@@ -159,6 +144,8 @@ class RBSystem(BRouterOS):
             _Elements.UPGRADE: {},
             _Elements.WATCHDOG: {},
         }
+
+        # configure elements
         self._add_elements(self, elements)
 
 

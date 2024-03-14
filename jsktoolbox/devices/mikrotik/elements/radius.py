@@ -7,15 +7,13 @@
 """
 
 
-from typing import Dict, List, Optional, Union, Tuple, Any
-from inspect import currentframe
+from typing import Optional, Dict, Any
 
 from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.raisetool import Raise
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
 
 
-from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev, Element
+from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
 from jsktoolbox.devices.network.connectors import IConnector
 
 
@@ -61,9 +59,10 @@ class RBRadius(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements = {
+        elements: Dict[str, Any] = {
             _Elements.INCOMING: {},
         }
+
         # configure elements
         self._add_elements(self, elements)
 
