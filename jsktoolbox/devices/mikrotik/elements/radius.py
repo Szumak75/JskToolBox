@@ -30,8 +30,8 @@ class _Elements(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    INCOMING = "incoming"
-    ROOT = "radius"
+    INCOMING: str = "incoming"
+    ROOT: str = "radius"
 
 
 class RBRadius(BRouterOS):
