@@ -33,23 +33,31 @@ from jsktoolbox.devices.network.connectors import IConnector
 
 from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
 
-from jsktoolbox.devices.mikrotik.elements.system import RBSystem
-from jsktoolbox.devices.mikrotik.elements.ip import RBIp
 from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
+from jsktoolbox.devices.mikrotik.elements.ip import RBIp
 from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
+from jsktoolbox.devices.mikrotik.elements.queue import RBQueue
 from jsktoolbox.devices.mikrotik.elements.radius import RBRadius
 from jsktoolbox.devices.mikrotik.elements.routing import RBRouting
+from jsktoolbox.devices.mikrotik.elements.snmp import RBSnmp
+from jsktoolbox.devices.mikrotik.elements.system import RBSystem
+from jsktoolbox.devices.mikrotik.elements.tool import RBTool
+from jsktoolbox.devices.mikrotik.elements.user import RBUser
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
-    """"""
+    """Internal keys class."""
 
     INTERFACE = "interface"
     IP = "ip"
     MPLS = "mpls"
+    QUEUE: str = "queue"
     RADIUS = "radius"
     ROUTING = "routing"
+    SNMP: str = "snmp"
     SYSTEM = "system"
+    TOOL: str = "tool"
+    USER: str = "user"
 
 
 class RouterBoard(BRouterOS):
@@ -77,20 +85,6 @@ class RouterBoard(BRouterOS):
         # add elements
         if self._ch is None:
             return None
-        self.elements[_Elements.IP] = RBIp(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue if self.logs is not None else None,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
-        self.elements[_Elements.SYSTEM] = RBSystem(
-            parent=self,
-            connector=self._ch,
-            qlog=self.logs.logs_queue if self.logs is not None else None,
-            debug=self.debug,
-            verbose=self.verbose,
-        )
         self.elements[_Elements.INTERFACE] = RBInterface(
             parent=self,
             connector=self._ch,
@@ -98,7 +92,21 @@ class RouterBoard(BRouterOS):
             debug=self.debug,
             verbose=self.verbose,
         )
+        self.elements[_Elements.IP] = RBIp(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
         self.elements[_Elements.MPLS] = RBMpls(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.QUEUE] = RBQueue(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
@@ -113,6 +121,34 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
         self.elements[_Elements.ROUTING] = RBRouting(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.SNMP] = RBSnmp(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.SYSTEM] = RBSystem(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.TOOL] = RBTool(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.USER] = RBUser(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,

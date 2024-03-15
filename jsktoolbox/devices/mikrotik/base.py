@@ -6,31 +6,14 @@
   Purpose: Base classes for RouterOS
 """
 
-from typing import Dict, List, Optional, Union, Tuple, Any, TypeVar
-from inspect import currentframe
+from typing import Dict, List, Optional, Union, TypeVar
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
+from jsktoolbox.attribtool import ReadOnlyClass
 from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
 
-
-from jsktoolbox.netaddresstool.ipv4 import (
-    Address,
-    Netmask,
-    Network,
-    SubNetwork,
-)
-from jsktoolbox.netaddresstool.ipv6 import (
-    Address6,
-    Network6,
-    Prefix6,
-    SubNetwork6,
-)
-
-from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
 from jsktoolbox.devices.mikrotik.elements.libs.base import BElement
 from jsktoolbox.devices.libs.base import BDev
-from jsktoolbox.devices.network.connectors import IConnector, API, SSH
+from jsktoolbox.devices.network.connectors import IConnector
 
 TRouterOS = TypeVar("TRouterOS", bound="BRouterOS")
 TElement = TypeVar("TElement", bound="Element")
@@ -175,7 +158,7 @@ class BRouterOS(BDev, BElement):
 
 
 class Element(BRouterOS):
-    """MiktoTik Element class."""
+    """MikroTik Element class."""
 
     def __init__(
         self,
