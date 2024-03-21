@@ -3,7 +3,7 @@
   Author:  Jacek Kotlarski --<szumak@virthost.pl>
   Created: 08.12.2023
 
-  Purpose: RB '/partitions/'
+  Purpose: RB '/disk/'
 """
 
 
@@ -30,13 +30,14 @@ class _Elements(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    ROOT: str = "partitions"
+    ROOT: str = "disk"
+    SETTINGS: str = "settings"  # v7
 
 
-class RBPartitions(BRouterOS):
-    """Partitions class
+class RBDisk(BRouterOS):
+    """Disk class
 
-    For command root: /partitions/
+    For command root: /disk/
     """
 
     def __init__(
@@ -58,7 +59,9 @@ class RBPartitions(BRouterOS):
         self.root = f"{_Elements.ROOT}/"
 
         # add elements
-        elements: Dict[str, Any] = {}
+        elements: Dict[str, Any] = {
+            _Elements.SETTINGS: {},
+        }
 
         # configure elements
         self._add_elements(self, elements)
