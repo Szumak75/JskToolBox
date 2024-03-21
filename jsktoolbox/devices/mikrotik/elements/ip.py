@@ -76,6 +76,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     MATCHER: str = "matcher"
     MODE_CONFIG: str = "mode-config"
     NAT: str = "nat"
+    NAT_PMP: str = "nat-pmp"  # v7
     NEIGHBOR: str = "neighbor"
     NETWORK: str = "network"
     NEXTHOP: str = "nexthop"
@@ -218,6 +219,7 @@ class RBIp(BRouterOS):
             _Elements.KID_CONTROL: {
                 _Elements.DEVICE: {},
             },
+            _Elements.NAT_PMP: {_Elements.INTERFACES: {}},
             _Elements.NEIGHBOR: {
                 _Elements.DISCOVERY_SETTINGS: {},
             },
