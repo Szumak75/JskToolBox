@@ -44,6 +44,7 @@ from jsktoolbox.devices.mikrotik.elements.lcd import RBLcd
 from jsktoolbox.devices.mikrotik.elements.log import RBLog
 from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
 from jsktoolbox.devices.mikrotik.elements.partitions import RBPartitions
+from jsktoolbox.devices.mikrotik.elements.port import RBPort
 from jsktoolbox.devices.mikrotik.elements.ppp import RBPpp
 from jsktoolbox.devices.mikrotik.elements.queue import RBQueue
 from jsktoolbox.devices.mikrotik.elements.radius import RBRadius
@@ -67,6 +68,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     LOG: str = "log"
     MPLS: str = "mpls"
     PARTITIONS: str = "partitions"
+    PORT: str = "port"
     PPP: str = "ppp"
     QUEUE: str = "queue"
     RADIUS: str = "radius"
@@ -166,6 +168,13 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
         self.elements[_Elements.PARTITIONS] = RBPartitions(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.PORT] = RBPort(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
