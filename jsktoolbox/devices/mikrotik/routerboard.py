@@ -35,6 +35,8 @@ from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
 
 
 from jsktoolbox.devices.mikrotik.elements.certificate import RBCertificate
+from jsktoolbox.devices.mikrotik.elements.disk import RBDisk
+from jsktoolbox.devices.mikrotik.elements.file import RBFile
 from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
 from jsktoolbox.devices.mikrotik.elements.ip import RBIp
 from jsktoolbox.devices.mikrotik.elements.ipv6 import RBIpv6
@@ -50,7 +52,6 @@ from jsktoolbox.devices.mikrotik.elements.snmp import RBSnmp
 from jsktoolbox.devices.mikrotik.elements.system import RBSystem
 from jsktoolbox.devices.mikrotik.elements.tool import RBTool
 from jsktoolbox.devices.mikrotik.elements.user import RBUser
-from jsktoolbox.devices.mikrotik.elements.disk import RBDisk
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -58,6 +59,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
 
     CERTIFICATE: str = "certificate"
     DISK: str = "disk"
+    FILE: str = "file"
     INTERFACE: str = "interface"
     IP: str = "ip"
     IPV6: str = "ipv6"
@@ -108,6 +110,13 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
         self.elements[_Elements.DISK] = RBDisk(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.FILE] = RBFile(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,

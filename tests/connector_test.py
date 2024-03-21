@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # out = rb.element("/ip/firewall/address-list/")
     # out: Optional[Element] = rb.element("/ip/firewall/address-list/", auto_load=True)
     # out: Optional[Element] = rb.element("/routing/ospf/neighbor/", auto_load=True)
-    out: Optional[Element] = rb.element("/log/", auto_load=True)
+    out: Optional[Element] = rb.element("/file/", auto_load=True)
 
     if out:
         # print(out.search(query.query))
