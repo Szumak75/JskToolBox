@@ -54,11 +54,11 @@ class BData(BClasses):
             return None
         if isinstance(value, Dict) and self.__data is not None:
             for key in value.keys():
-                self.__data[key] = value[key]
+                self.__data[key] = value[key]  # type: ignore
         else:
             raise Raise.error(
                 f"Expected Dict type, received: '{type(value)}'.",
-                AttributeError,
+                AttributeError,  # type: ignore
                 self._c_name,
                 currentframe(),
             )
