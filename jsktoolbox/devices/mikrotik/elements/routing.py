@@ -38,6 +38,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     BFD: str = "bfd"
     BGP: str = "bgp"
     BSR: str = "bsr"
+    BSR_CANDIDATES: str = "bsr-candidates"
     CANDIDATE: str = "candidate"
     CHAIN: str = "chain"
     COMMUNITY_EXT_LIST: str = "community-ext-list"
@@ -45,49 +46,62 @@ class _Elements(object, metaclass=ReadOnlyClass):
     COMMUNITY_LIST: str = "community-list"
     CONFIGURATION: str = "configuration"
     CONNECTION: str = "connection"
-    FANTASY: str = "fantasy"
+    FANTASY: str = "fantasy"  # v7
     FILTER: str = "filter"
-    GMP: str = "gmp"
-    ID: str = "id"
+    GMP: str = "gmp"  # v7
+    ID: str = "id"  # v7
+    IGMP_GROUP: str = "igmp-group"
     IGMP_INTERFACE_TEMPLATE: str = "igmp-interface-template"
     IGMP_PROXY: str = "igmp-proxy"
     INSTANCE: str = "instance"
     INTERFACE: str = "interface"
     INTERFACE_TEMPLATE: str = "interface-template"
+    ISIS: str = "isis"  # v7
+    JOIN: str = "join"
     KEYS: str = "keys"
     LSA: str = "lsa"
+    LSP: str = "lsp"
     MEMORY: str = "memory"
     MFC: str = "mfc"
-    MME: str = "mme"
+    MME: str = "mme"  # v6
+    MRIB: str = "mrib"
     NBMA_NEIGHBOR: str = "nbma-neighbor"
     NEIGHBOR: str = "neighbor"
+    NEIGHBORS: str = "neighbors"
     NETWORK: str = "network"
-    NEXTHOP: str = "nexthop"
+    NEXTHOP: str = "nexthop"  # v7
     NUM_LIST: str = "num-list"
     ORIGIN: str = "origin"
     ORIGINATORS: str = "originators"
     OSPF: str = "ospf"
+    OSPF_ROUTER: str = "ospf-router"
+    OSPF_V3: str = "ospf-v3"  # v6
     PCAP: str = "pcap"
     PEER: str = "peer"
-    PIMSM: str = "pimsm"
-    PREFIX_LIST: str = "prefix-lists"
+    PIM: str = "pim"  # v6
+    PIMSM: str = "pimsm"  # v7
+    PREFIX_LIST: str = "prefix-lists"  # v6
     PROCESS: str = "process"
     RANGE: str = "range"
     RIP: str = "rip"
+    RIPNG: str = "ripng"  # v6
     ROOT: str = "routing"
-    ROUTE: str = "route"
-    RPKI: str = "rpki"
+    ROUTE: str = "route"  # v7
+    RP: str = "rp"
+    RPKI: str = "rpki"  # v7
     RP_CANDIDATE: str = "rp-candidate"
+    RP_CANDIDATES: str = "rp-candidates"
     RP_SET: str = "rp-set"
-    RULE: str = "rule"
+    RULE: str = "rule"  # v7
     SELECT_RULE: str = "select-rule"
     SESSION: str = "session"
+    SETTINGS: str = "settings"  # v7
     SHAM_LINK: str = "sham-link"
     STATIC_NEIGHBOR: str = "static-neighbor"
     STATIC_RP: str = "static-rp"
-    STATS: str = "stats"
+    STATS: str = "stats"  # v7
     STEP: str = "step"
-    TABLE: str = "table"
+    TABLE: str = "table"  # v7
     TEMPLATE: str = "template"
     UIB_G: str = "uib-g"
     UIB_SG: str = "uib-sg"
@@ -161,6 +175,13 @@ class RBRouting(BRouterOS):
                 _Elements.INTERFACE: {},
                 _Elements.MFC: {},
             },
+            _Elements.ISIS: {
+                _Elements.INSTANCE: {},
+                _Elements.INTERFACE: {},
+                _Elements.INTERFACE_TEMPLATE: {},
+                _Elements.LSP: {},
+                _Elements.NEIGHBOR: {},
+            },
             _Elements.NEXTHOP: {},
             _Elements.MME: {
                 _Elements.INTERFACE: {},
@@ -184,6 +205,30 @@ class RBRouting(BRouterOS):
                 _Elements.SHAM_LINK: {},
                 _Elements.STATIC_NEIGHBOR: {},
                 _Elements.VIRTUAL_LINK: {},
+            },
+            _Elements.OSPF_V3: {
+                _Elements.AREA: {_Elements.RANGE: {}},
+                _Elements.AS_BORDER_ROUTER: {},
+                _Elements.INSTANCE: {},
+                _Elements.INTERFACE: {},
+                _Elements.LSA: {},
+                _Elements.NBMA_NEIGHBOR: {},
+                _Elements.NEIGHBOR: {},
+                _Elements.OSPF_ROUTER: {},
+                _Elements.ROUTE: {},
+                _Elements.VIRTUAL_LINK: {},
+            },
+            _Elements.PIM: {
+                _Elements.BSR: {},
+                _Elements.BSR_CANDIDATES: {},
+                _Elements.IGMP_GROUP: {},
+                _Elements.INTERFACE: {},
+                _Elements.JOIN: {},
+                _Elements.MFC: {},
+                _Elements.MRIB: {},
+                _Elements.NEIGHBORS: {},
+                _Elements.RP: {},
+                _Elements.RP_CANDIDATES: {},
             },
             _Elements.PIMSM: {
                 _Elements.BSR: {
@@ -211,6 +256,7 @@ class RBRouting(BRouterOS):
                 _Elements.ROUTE: {},
                 _Elements.STATIC_NEIGHBOR: {},
             },
+            _Elements.RIPNG: {_Elements.INTERFACE: {}, _Elements.ROUTE: {}},
             _Elements.ROUTE: {
                 _Elements.RULE: {},
             },
@@ -218,6 +264,7 @@ class RBRouting(BRouterOS):
                 _Elements.SESSION: {},
             },
             _Elements.RULE: {},
+            _Elements.SETTINGS: {},
             _Elements.STATS: {
                 _Elements.MEMORY: {},
                 _Elements.ORIGIN: {},
