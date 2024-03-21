@@ -7,7 +7,6 @@
   Purpose:
 """
 
-from ast import Add
 from typing import Optional
 
 from jsktoolbox.netaddresstool.ipv4 import Address
@@ -41,10 +40,11 @@ if __name__ == "__main__":
     # print("Check element return")
     # out = rb.element("/ip/firewall/address-list/")
     # out: Optional[Element] = rb.element("/ip/firewall/address-list/", auto_load=True)
-    out: Optional[Element] = rb.element("/routing/ospf/neighbor/", auto_load=True)
+    # out: Optional[Element] = rb.element("/routing/ospf/neighbor/", auto_load=True)
+    out: Optional[Element] = rb.element("/log/", auto_load=True)
 
     if out:
-        print(out.search(query.query))
+        # print(out.search(query.query))
         out.dump()
         # print(out)
         # print(out.root)

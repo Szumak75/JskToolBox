@@ -39,6 +39,7 @@ from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
 from jsktoolbox.devices.mikrotik.elements.ip import RBIp
 from jsktoolbox.devices.mikrotik.elements.ipv6 import RBIpv6
 from jsktoolbox.devices.mikrotik.elements.lcd import RBLcd
+from jsktoolbox.devices.mikrotik.elements.log import RBLog
 from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
 from jsktoolbox.devices.mikrotik.elements.ppp import RBPpp
 from jsktoolbox.devices.mikrotik.elements.queue import RBQueue
@@ -58,6 +59,7 @@ class _Elements(object, metaclass=ReadOnlyClass):
     IP: str = "ip"
     IPV6: str = "ipv6"
     LCD: str = "lcd"
+    LOG: str = "log"
     MPLS: str = "mpls"
     PPP: str = "ppp"
     QUEUE: str = "queue"
@@ -123,6 +125,13 @@ class RouterBoard(BRouterOS):
             verbose=self.verbose,
         )
         self.elements[_Elements.LCD] = RBLcd(
+            parent=self,
+            connector=self._ch,
+            qlog=self.logs.logs_queue if self.logs is not None else None,
+            debug=self.debug,
+            verbose=self.verbose,
+        )
+        self.elements[_Elements.LOG] = RBLog(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
