@@ -116,6 +116,22 @@ class _Elements(object, metaclass=ReadOnlyClass):
     WIRELESS: str = "wireless"
     _6TO4_: str = "6to4"  # v7
 
+    WIFI: str = "wifi"  # v7
+    AAA: str = "aaa"
+    ACTUAL_CONFIGURATION: str = "actual-configuration"
+    CAPSMAN: str = "capsman"
+    CHANNEL: str = "channel"
+    CONFIGURATION: str = "configuration"
+    DATAPATH: str = "datapath"
+    INTERWORKING: str = "interworking"
+    PROVISIONING: str = "provisioning"
+    RADIO: str = "radio"
+    REGISTRATION_TABLE: str = "registration-table"
+    SECURITY: str = "security"
+    STEERING: str = "steering"
+    REMOTE_CAP: str = "remote-cap"
+    NEIGHBOR_GROUP: str = "neighbor-group"
+
 
 class RBInterface(BRouterOS):
     """Interface class
@@ -213,6 +229,22 @@ class RBInterface(BRouterOS):
             },
             _Elements.VRRP: {},
             _Elements.VXLAN: {_Elements.FDB: {}, _Elements.VTEPS: {}},
+            _Elements.WIFI: {
+                _Elements.AAA: {},
+                _Elements.ACCESS_LIST: {},
+                _Elements.ACTUAL_CONFIGURATION: {},
+                _Elements.CAP: {},
+                _Elements.CAPSMAN: {_Elements.REMOTE_CAP: {}},
+                _Elements.CHANNEL: {},
+                _Elements.CONFIGURATION: {},
+                _Elements.DATAPATH: {},
+                _Elements.INTERWORKING: {},
+                _Elements.PROVISIONING: {},
+                _Elements.RADIO: {},
+                _Elements.REGISTRATION_TABLE: {},
+                _Elements.SECURITY: {},
+                _Elements.STEERING: {_Elements.NEIGHBOR_GROUP: {}},
+            },
             _Elements.WIREGUARD: {
                 _Elements.PEERS: {},
             },
