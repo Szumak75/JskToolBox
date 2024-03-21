@@ -3,7 +3,7 @@
   Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 06.12.2023
 
-  Purpose:
+  Purpose: RB /interface/
 """
 
 

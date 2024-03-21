@@ -1,3 +1,9 @@
+# -*- coding: UTF-8 -*-
+"""
+  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+  Created: 06.12.2023
+"""
+
 from jsktoolbox.devices.mikrotik.elements.certificate import RBCertificate
 from jsktoolbox.devices.mikrotik.elements.disk import RBDisk
 from jsktoolbox.devices.mikrotik.elements.file import RBFile

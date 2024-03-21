@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 """
-  ppp.py
   Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 22.12.2023, 12:37:30
   

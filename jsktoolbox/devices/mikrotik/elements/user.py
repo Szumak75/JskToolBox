@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 """
-  user.py
   Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 22.12.2023, 12:41:06
   

@@ -3,7 +3,7 @@
   Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
   Created: 04.12.2023
 
-  Purpose: RB '/system'
+  Purpose: RB '/system/'
 """
 
 from typing import Dict, Optional, Any
