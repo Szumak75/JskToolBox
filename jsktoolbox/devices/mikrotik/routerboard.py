@@ -33,7 +33,25 @@ from jsktoolbox.devices.network.connectors import IConnector
 
 from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
 
-from jsktoolbox.devices.mikrotik import elements
+from jsktoolbox.devices.mikrotik.elements.certificate import RBCertificate
+from jsktoolbox.devices.mikrotik.elements.disk import RBDisk
+from jsktoolbox.devices.mikrotik.elements.file import RBFile
+from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
+from jsktoolbox.devices.mikrotik.elements.ip import RBIp
+from jsktoolbox.devices.mikrotik.elements.ipv6 import RBIpv6
+from jsktoolbox.devices.mikrotik.elements.lcd import RBLcd
+from jsktoolbox.devices.mikrotik.elements.log import RBLog
+from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
+from jsktoolbox.devices.mikrotik.elements.partitions import RBPartitions
+from jsktoolbox.devices.mikrotik.elements.port import RBPort
+from jsktoolbox.devices.mikrotik.elements.ppp import RBPpp
+from jsktoolbox.devices.mikrotik.elements.queue import RBQueue
+from jsktoolbox.devices.mikrotik.elements.radius import RBRadius
+from jsktoolbox.devices.mikrotik.elements.routing import RBRouting
+from jsktoolbox.devices.mikrotik.elements.snmp import RBSnmp
+from jsktoolbox.devices.mikrotik.elements.system import RBSystem
+from jsktoolbox.devices.mikrotik.elements.tool import RBTool
+from jsktoolbox.devices.mikrotik.elements.user import RBUser
 
 
 class _Elements(object, metaclass=ReadOnlyClass):
@@ -85,133 +103,133 @@ class RouterBoard(BRouterOS):
         # add elements
         if self._ch is None:
             return None
-        self.elements[_Elements.CERTIFICATE] = elements.RBCertificate(
+        self.elements[_Elements.CERTIFICATE] = RBCertificate(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.DISK] = elements.RBDisk(
+        self.elements[_Elements.DISK] = RBDisk(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.FILE] = elements.RBFile(
+        self.elements[_Elements.FILE] = RBFile(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.INTERFACE] = elements.RBInterface(
+        self.elements[_Elements.INTERFACE] = RBInterface(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.IP] = elements.RBIp(
+        self.elements[_Elements.IP] = RBIp(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.IPV6] = elements.RBIpv6(
+        self.elements[_Elements.IPV6] = RBIpv6(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.LCD] = elements.RBLcd(
+        self.elements[_Elements.LCD] = RBLcd(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.LOG] = elements.RBLog(
+        self.elements[_Elements.LOG] = RBLog(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.MPLS] = elements.RBMpls(
+        self.elements[_Elements.MPLS] = RBMpls(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.PARTITIONS] = elements.RBPartitions(
+        self.elements[_Elements.PARTITIONS] = RBPartitions(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.PORT] = elements.RBPort(
+        self.elements[_Elements.PORT] = RBPort(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.PPP] = elements.RBPpp(
+        self.elements[_Elements.PPP] = RBPpp(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.QUEUE] = elements.RBQueue(
+        self.elements[_Elements.QUEUE] = RBQueue(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.RADIUS] = elements.RBRadius(
+        self.elements[_Elements.RADIUS] = RBRadius(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.ROUTING] = elements.RBRouting(
+        self.elements[_Elements.ROUTING] = RBRouting(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.SNMP] = elements.RBSnmp(
+        self.elements[_Elements.SNMP] = RBSnmp(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.SYSTEM] = elements.RBSystem(
+        self.elements[_Elements.SYSTEM] = RBSystem(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.TOOL] = elements.RBTool(
+        self.elements[_Elements.TOOL] = RBTool(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
             debug=self.debug,
             verbose=self.verbose,
         )
-        self.elements[_Elements.USER] = elements.RBUser(
+        self.elements[_Elements.USER] = RBUser(
             parent=self,
             connector=self._ch,
             qlog=self.logs.logs_queue if self.logs is not None else None,
