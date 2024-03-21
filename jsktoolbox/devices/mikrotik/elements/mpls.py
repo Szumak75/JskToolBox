@@ -16,13 +16,6 @@ from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
 from jsktoolbox.devices.network.connectors import IConnector
 
 
-class _Keys(object, metaclass=ReadOnlyClass):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
-
-
 class _Elements(object, metaclass=ReadOnlyClass):
     """Keys definition class.
 
