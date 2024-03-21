@@ -19,11 +19,11 @@ class TestReadOnlyClass(unittest.TestCase):
         from jsktoolbox.attribtool import ReadOnlyClass
 
         class A(object, metaclass=ReadOnlyClass):
-            VAR = 1
+            VAR: int = 1
 
         self.assertTrue(A.VAR, 1)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(AttributeError):
             A.VAR = 2
 
 
