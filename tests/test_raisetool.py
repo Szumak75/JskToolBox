@@ -53,15 +53,11 @@ class TestRaise(unittest.TestCase):
 
     def test_returning_attribute_error(self) -> None:
         """Test nr 4."""
-        self.assertIsInstance(
-            Raise.error("test", AttributeError), AttributeError
-        )
+        self.assertIsInstance(Raise.error("test", AttributeError), AttributeError)
 
     def test_returning_connection_error(self) -> None:
         """Test nr 5."""
-        self.assertIsInstance(
-            Raise.error("test", ConnectionError), ConnectionError
-        )
+        self.assertIsInstance(Raise.error("test", ConnectionError), ConnectionError)
 
     def test_returning_key_error(self) -> None:
         """Test nr 6."""

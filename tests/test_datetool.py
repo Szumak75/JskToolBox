@@ -53,7 +53,7 @@ class TestDateTool(unittest.TestCase):
         self.assertTrue(td == DateTime.elapsed_time_from_seconds(10))
         self.assertEqual(str(DateTime.elapsed_time_from_seconds(10)), "0:00:10")
         with self.assertRaises(TypeError):
-            DateTime.elapsed_time_from_seconds("20")
+            DateTime.elapsed_time_from_seconds("20") # type: ignore
 
     def test_05_datetime_elapsed_time_from_timestamp(self) -> None:
         """Test nr 05."""
@@ -65,7 +65,7 @@ class TestDateTool(unittest.TestCase):
         self.assertTrue(td == DateTime.elapsed_time_from_timestamp(tnow))
         self.assertEqual(str(DateTime.elapsed_time_from_timestamp(tnow)), "0:00:01")
         with self.assertRaises(TypeError):
-            DateTime.elapsed_time_from_timestamp("20")
+            DateTime.elapsed_time_from_timestamp("20") # type: ignore
 
 
 # #[EOF]#######################################################################

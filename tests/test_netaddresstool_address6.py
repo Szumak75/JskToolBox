@@ -111,7 +111,7 @@ class TestAddress6(unittest.TestCase):
             Address6("2000:0:0:0:0:0:0:FF") >= Address6("2000::FF")
         )
 
-    def test_14_adress_invalid(self) -> None:
+    def test_14_address_invalid(self) -> None:
         """Test nr 14."""
         with self.assertRaises(ValueError):
             Address6("::1::1")
@@ -122,9 +122,9 @@ class TestAddress6(unittest.TestCase):
         with self.assertRaises(ValueError):
             Address6([1, 2, 3])
         with self.assertRaises(TypeError):
-            Address6(None)
+            Address6(None) # type: ignore
         with self.assertRaises(TypeError):
-            Address6({})
+            Address6({}) # type: ignore
 
 
 # #[EOF]#######################################################################
