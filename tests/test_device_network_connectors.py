@@ -16,7 +16,7 @@ from jsktoolbox.netaddresstool.ipv6 import Address6
 class TestConnectors(unittest.TestCase):
     """Tests for connectors."""
 
-    def test_01_connector(self):
+    def test_01_connector(self) -> None:
         """Test nr 01."""
         try:
             API()
@@ -24,7 +24,7 @@ class TestConnectors(unittest.TestCase):
         except Exception as ex:
             self.fail(msg=f"Exception was thrown: {ex}")
 
-    def test_02_host(self):
+    def test_02_host(self) -> None:
         """Test nr 02."""
         for obj in (API(), SSH()):
             obj.address = Address("192.168.1.1")
@@ -37,28 +37,28 @@ class TestConnectors(unittest.TestCase):
                 Address6("1111:2222:3333:4444:5555:6666:7777:8888"),
             )
 
-    def test_03_port(self):
+    def test_03_port(self) -> None:
         """Test nr 03."""
         for obj in (API(), SSH()):
             obj.port = 1234
             self.assertIsInstance(obj.port, int)
             self.assertEqual(obj.port, 1234)
 
-    def test_04_user(self):
+    def test_04_user(self) -> None:
         """Test nr 04."""
         for obj in (API(), SSH()):
             obj.login = "admin"
             self.assertIsInstance(obj.login, str)
             self.assertEqual(obj.login, "admin")
 
-    def test_05_pass(self):
+    def test_05_pass(self) -> None:
         """Test nr 05."""
         for obj in (API(), SSH()):
             obj.password = "admin"
             self.assertIsInstance(obj.password, str)
             self.assertEqual(obj.password, "admin")
 
-    def test_06_connect(self):
+    def test_06_connect(self) -> None:
         """Test nr 06."""
         try:
             obj = API(
