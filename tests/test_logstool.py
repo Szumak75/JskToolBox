@@ -16,7 +16,7 @@ from jsktoolbox.logstool.formatters import LogFormatterNull
 class TestLogsTool(TestCase):
     """TestLogsTool class."""
 
-    def test_01_loggerqueue(self) -> None:
+    def test_01_logger_queue(self) -> None:
         """Test nr 01."""
 
         qlog1 = LoggerQueue()
@@ -33,7 +33,7 @@ class TestLogsTool(TestCase):
         self.assertTrue(qlog1.get() is None)
         self.assertTrue(qlog2.get() is None)
 
-    def test_02_logformatternull(self) -> None:
+    def test_02_log_formatter_null(self) -> None:
         """Test nr 02."""
 
         lf = LogFormatterNull()

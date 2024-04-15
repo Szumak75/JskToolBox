@@ -58,7 +58,7 @@ class TestOctet(unittest.TestCase):
     def test_07_set_invalid_type_float(self) -> None:
         """Test nr 7."""
         with self.assertRaises(TypeError):
-            self.o.value = 2.1
+            self.o.value = 2.1 # type: ignore
 
     def test_08_set_invalid_type_string(self) -> None:
         """Test nr 8."""
@@ -68,7 +68,7 @@ class TestOctet(unittest.TestCase):
     def test_09_set_invalid_type_binary(self) -> None:
         """Test nr 9."""
         with self.assertRaises(TypeError):
-            self.o.value = b"1"
+            self.o.value = b"1" # type: ignore
 
     def test_10_string_representation(self) -> None:
         """Test nr 10."""
@@ -104,7 +104,7 @@ class TestOctet(unittest.TestCase):
         self.assertTrue(Octet(1) <= Octet(7))
         self.assertFalse(Octet(194) <= Octet(193))
 
-    def test_16_octets_qreater(self) -> None:
+    def test_16_octets_greater(self) -> None:
         """Test nr 16."""
         self.assertTrue(Octet(19) > Octet(14))
         self.assertFalse(Octet(1) > Octet(3))

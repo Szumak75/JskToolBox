@@ -60,7 +60,7 @@ class TestWord16(unittest.TestCase):
     def test_07_set_invalid_type_float(self) -> None:
         """Test nr 7."""
         with self.assertRaises(TypeError):
-            self.o.value = 2.1
+            self.o.value = 2.1 # type: ignore
 
     def test_08_set_invalid_type_string(self) -> None:
         """Test nr 8."""
@@ -70,7 +70,7 @@ class TestWord16(unittest.TestCase):
     def test_09_set_invalid_type_binary(self) -> None:
         """Test nr 9."""
         with self.assertRaises(TypeError):
-            self.o.value = b"1"
+            self.o.value = b"1" # type: ignore
 
     def test_10_string_representation(self) -> None:
         """Test nr 10."""
@@ -106,7 +106,7 @@ class TestWord16(unittest.TestCase):
         self.assertTrue(Word16(1) <= Word16(7))
         self.assertFalse(Word16(194) <= Word16(193))
 
-    def test_16_octets_qreater(self) -> None:
+    def test_16_octets_greater(self) -> None:
         """Test nr 16."""
         self.assertTrue(Word16(19) > Word16(14))
         self.assertFalse(Word16(1) > Word16(3))

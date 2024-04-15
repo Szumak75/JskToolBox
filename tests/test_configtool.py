@@ -52,7 +52,7 @@ label=
         try:
             Config(file, sname)
         except Exception:
-            self.fail("somenting is very wrong.")
+            self.fail("something is very wrong.")
 
     def test_02_config_read(self) -> None:
         """Test nr 02."""

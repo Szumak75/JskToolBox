@@ -18,7 +18,7 @@ class TestFileProcessor(unittest.TestCase):
         try:
             FileProcessor()
         except Exception:
-            self.fail("somenting is very wrong.")
+            self.fail("something is very wrong.")
 
     def test_02_file(self) -> None:
         """Test nr 02."""
@@ -28,7 +28,7 @@ class TestFileProcessor(unittest.TestCase):
         try:
             obj.file = file
         except Exception:
-            self.fail("somenting is very wrong.")
+            self.fail("something is very wrong.")
 
         self.assertEqual(obj.file, file)
 
@@ -40,7 +40,7 @@ class TestFileProcessor(unittest.TestCase):
         try:
             obj.file = file
         except Exception:
-            self.fail("somenting is very wrong.")
+            self.fail("something is very wrong.")
 
         try:
             if not obj.file_exists:
@@ -77,7 +77,7 @@ value01=10
 
         try:
             obj.write(data)
-            out = obj.read()
+            out: str = obj.read()
             self.assertEqual(data, out)
         except Exception as ex:
             self.fail(msg=f"{ex}")

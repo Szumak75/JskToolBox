@@ -14,7 +14,7 @@ from typing import Optional, Any
 class TestReadOnlyClass(unittest.TestCase):
     """Testing ReadOnlyClass."""
 
-    def test_01_readonlyclass(self) -> None:
+    def test_01_read_only_class(self) -> None:
         """Test nr 01."""
         from jsktoolbox.attribtool import ReadOnlyClass
 
@@ -59,8 +59,8 @@ class TestNoNewAttributes(unittest.TestCase):
     def test_set_the_wrong_attribute(self) -> None:
         """Test nr 2."""
         try:
-            self.workclass.abc = 1
-            self.workclass.abc = "test"
+            self.workclass.abc = 1 # type: ignore
+            self.workclass.abc = "test" # type: ignore
         except Exception as ex:
             self.assertTrue(isinstance(ex, AttributeError))
         else:

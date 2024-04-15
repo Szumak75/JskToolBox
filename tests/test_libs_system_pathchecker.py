@@ -21,15 +21,15 @@ class TestPathChecker(unittest.TestCase):
             self.fail(f"Unexpected exception was thrown: {ex}")
 
         with self.assertRaises(TypeError):
-            PathChecker(None)
+            PathChecker(None) # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker(10)
+            PathChecker(10) # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker([])
+            PathChecker([]) # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker({})
+            PathChecker({}) # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker()
+            PathChecker() # type: ignore
 
         with self.assertRaises(ValueError):
             PathChecker("")
