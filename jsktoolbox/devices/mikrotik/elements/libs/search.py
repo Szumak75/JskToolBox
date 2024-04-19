@@ -25,11 +25,11 @@ class RBQuery(BData):
     def add_attrib(self, attrib: str, value: Optional[str] = None) -> None:
         """Build query
 
-        Arguments:
-            attrib -- name of the attribute being searched for
+        ### Arguments:
+        * attrib -- name of the attribute being searched for
 
-        Keyword Arguments:
-            value -- optional value of the attribute being searched for (default: {None})
+        ### Keyword Arguments:
+        * value -- optional value of the attribute being searched for (default: {None})
         """
         self._data[RBQuery.Keys.SEARCH][attrib] = value
 

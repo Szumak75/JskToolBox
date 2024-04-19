@@ -69,7 +69,7 @@ class NoDynamicAttributes:
 class ReadOnlyClass(type):
     """ReadOnlyClass - metaclass for creating read only classes.
 
-    example:
+    ### example:
     class A(object, metaclass=ReadOnlyClass):
           foo = "don't change me"
     """

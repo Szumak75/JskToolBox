@@ -84,5 +84,20 @@ class TestDData(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.obj._get_data("TEST3", str, 10)
 
+    def test_09_reset_dict_with_different_types(self) -> None:
+        """Test nr 9."""
+        self.obj._set_data("test1", 12, int)
+        with self.assertRaises(TypeError):
+            self.obj._data = {"test1": "12"}
+
+    def test_10_reset_dict_with_compatible_types(self) -> None:
+        """Test nr 10."""
+        self.obj._set_data("test1", 123, int)
+        self.obj._set_data("test2", "xxx", str)
+        try:
+            self.obj._data = {"test1": 90, "test2": "aaa"}
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
 
 # #[EOF]#######################################################################
