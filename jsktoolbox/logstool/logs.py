@@ -54,22 +54,18 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @property
     def name(self) -> Optional[str]:
-        """Get LoggerClient name string."""
-        if Keys.NAME not in self._data:
-            self._data[Keys.NAME] = None
-        return self._data[Keys.NAME]
+        """Get name property."""
+        return self._get_data(key=Keys.NAME, set_default_type=Optional[str])
 
     @name.setter
     def name(self, name: Optional[str]) -> None:
-        """Set LoggerClient name string."""
-        if name and not isinstance(name, str):
-            raise Raise.error(
-                f"Expected 'name' as string type, received: '{type(name)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
+        """Set name property."""
+        if name is None:
+            self._set_data(key=Keys.NAME, value=None, set_default_type=Optional[str])
+        else:
+            self._set_data(
+                key=Keys.NAME, value=name.strip(), set_default_type=Optional[str]
             )
-        self._data[Keys.NAME] = name
 
     def message(self, message: str, log_level: str = LogsLevelKeys.INFO) -> None:
         """Send message to logging subsystem."""
@@ -269,48 +265,34 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
 
     @property
     def logger_engine(self) -> Optional[LoggerEngine]:
-        """Return LoggerEngine object if any."""
-        if _Keys.LEO not in self._data:
-            self._data[_Keys.LEO] = None
-        return self._data[_Keys.LEO]
+        """Returns LoggerEngine object if any."""
+        return self._get_data(key=_Keys.LEO, set_default_type=Optional[LoggerEngine])
 
     @logger_engine.setter
-    def logger_engine(self, obj: LoggerEngine) -> None:
-        """Set LoggerEngine object."""
-        if not isinstance(obj, LoggerEngine):
-            raise Raise.error(
-                f"Expected LoggerEngine type, received: '{type(obj)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.LEO] = obj
+    def logger_engine(self, engine: LoggerEngine) -> None:
+        """Sets LoggerEngine object."""
+        self._set_data(
+            key=_Keys.LEO, set_default_type=Optional[LoggerEngine], value=engine
+        )
         if self.logger_client and self.logger_engine and self.logger_engine.logs_queue:
             self.logger_client.logs_queue = self.logger_engine.logs_queue
 
     @property
     def logger_client(self) -> Optional[LoggerClient]:
-        """Return LoggerClient object if any."""
-        if _Keys.LCO not in self._data:
-            self._data[_Keys.LCO] = None
-        return self._data[_Keys.LCO]
+        """Returns LoggerClient object if any."""
+        return self._get_data(key=_Keys.LCO, set_default_type=Optional[LoggerClient])
 
     @logger_client.setter
-    def logger_client(self, obj: LoggerClient) -> None:
+    def logger_client(self, client: LoggerClient) -> None:
         """Set LoggerEngine object."""
-        if not isinstance(obj, LoggerClient):
-            raise Raise.error(
-                f"Expected LoggerClient type, received: '{type(obj)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.LCO] = obj
+        self._set_data(
+            key=_Keys.LCO, set_default_type=Optional[LoggerClient], value=client
+        )
         if (
             self.logger_engine
             and self.logger_engine.logs_queue
             and self.logger_client
-            and obj.logs_queue is None
+            and client.logs_queue is None
         ):
             self.logger_client.logs_queue = self.logger_engine.logs_queue
 

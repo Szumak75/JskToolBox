@@ -20,7 +20,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    FILE = "__file__"
+    FILE: str = "__file__"
 
 
 class FileProcessor(BData, NoDynamicAttributes):
@@ -32,16 +32,22 @@ class FileProcessor(BData, NoDynamicAttributes):
     @property
     def file(self) -> Optional[str]:
         """Return config file path."""
-        if _Keys.FILE not in self._data:
-            self._data[_Keys.FILE] = None
-        if isinstance(self._data[_Keys.FILE], PathChecker):
-            return self._data[_Keys.FILE].path
-        return self._data[_Keys.FILE]
+        out: Optional[PathChecker] = self._get_data(
+            key=_Keys.FILE,
+            set_default_type=Optional[PathChecker],
+        )
+        if out:
+            return out.path
+        return None
 
     @file.setter
     def file(self, path: str) -> None:
         """Set file name."""
-        self._data[_Keys.FILE] = PathChecker(path)
+        self._set_data(
+            key=_Keys.FILE,
+            set_default_type=Optional[PathChecker],
+            value=PathChecker(path),
+        )
 
     @property
     def file_exists(self) -> bool:

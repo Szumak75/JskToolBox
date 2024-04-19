@@ -49,8 +49,12 @@ class Config(BData, NoDynamicAttributes):
         auto_create: bool = False,
     ) -> None:
         """Constructor."""
-        self._data[_Keys.FP] = FileProcessor()
-        self._data[_Keys.DP] = DataProcessor()
+        self._set_data(
+            key=_Keys.FP, value=FileProcessor(), set_default_type=FileProcessor
+        )
+        self._set_data(
+            key=_Keys.DP, value=DataProcessor(), set_default_type=DataProcessor
+        )
         self.__fp.file = filename
         self.__dp.main_section = main_section_name
         if auto_create:
@@ -70,12 +74,12 @@ class Config(BData, NoDynamicAttributes):
     @property
     def __fp(self) -> FileProcessor:
         """Return FileProcessor object."""
-        return self._data[_Keys.FP]
+        return self._get_data(key=_Keys.FP, set_default_type=FileProcessor) # type: ignore
 
     @property
     def __dp(self) -> DataProcessor:
         """Return DataProcessor object."""
-        return self._data[_Keys.DP]
+        return self._get_data(key=_Keys.DP, set_default_type=DataProcessor) # type: ignore
 
     @property
     def file_exists(self) -> bool:

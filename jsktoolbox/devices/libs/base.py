@@ -52,26 +52,26 @@ class BDebug(BData):
     @property
     def debug(self) -> bool:
         """Return debug flag."""
-        if _Keys.DEBUG not in self._data:
-            self._data[_Keys.DEBUG] = False
-        return self._data[_Keys.DEBUG]
+        return self._get_data(
+            key=_Keys.DEBUG, set_default_type=bool, default_value=False
+        )  # type: ignore
 
     @debug.setter
     def debug(self, debug: bool) -> None:
         """Set debug flag."""
-        self._data[_Keys.DEBUG] = debug
+        self._set_data(key=_Keys.DEBUG, set_default_type=bool, value=debug)
 
     @property
     def verbose(self) -> bool:
         """Return verbose flag."""
-        if _Keys.VERBOSE not in self._data:
-            self._data[_Keys.VERBOSE] = False
-        return self._data[_Keys.VERBOSE]
+        return self._get_data(
+            key=_Keys.VERBOSE, set_default_type=bool, default_value=False
+        )  # type: ignore
 
     @verbose.setter
     def verbose(self, verbose: bool) -> None:
         """Set verbose flag."""
-        self._data[_Keys.VERBOSE] = verbose
+        self._set_data(key=_Keys.VERBOSE, set_default_type=bool, value=verbose)
 
 
 class BDev(BDebug):
@@ -80,40 +80,24 @@ class BDev(BDebug):
     @property
     def _ch(self) -> Optional[IConnector]:
         """Returns optional Connector object."""
-        if _Keys.CH not in self._data:
-            self._data[_Keys.CH] = None
-        return self._data[_Keys.CH]
+        return self._get_data(key=_Keys.CH, set_default_type=Optional[IConnector])
 
     @_ch.setter
     def _ch(self, value: IConnector) -> None:
         """Sets Connector object."""
-        if not isinstance(value, IConnector):
-            raise Raise.error(
-                f"Expected IConnector derived type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.CH] = value
+        self._set_data(key=_Keys.CH, value=value, set_default_type=Optional[IConnector])
 
     @property
     def logs(self) -> Optional[LoggerClient]:
         """Returns optional LoggerClient object."""
-        if _Keys.LC not in self._data:
-            self._data[_Keys.LC] = None
-        return self._data[_Keys.LC]
+        return self._get_data(key=_Keys.LC, set_default_type=Optional[LoggerClient])
 
     @logs.setter
     def logs(self, value: LoggerClient) -> None:
         """Sets Connector object."""
-        if not isinstance(value, LoggerClient):
-            raise Raise.error(
-                f"Expected LoggerClient type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.LC] = value
+        self._set_data(
+            key=_Keys.LC, value=value, set_default_type=Optional[LoggerClient]
+        )
 
     @property
     def root(self) -> str:
