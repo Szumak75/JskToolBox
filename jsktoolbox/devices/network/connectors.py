@@ -109,18 +109,18 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    ERRORS = "__err__"
-    IPADDR = "host"
-    OPTIONS = "opt"
-    PASS = "password"
-    PORT = "port"
-    SOCKET = "__socket__"
-    SSL = "__ssl__"
-    STDERR = "__stderr__"
-    STDIN = "__stdin__"
-    STDOUT = "__stdout__"
-    TIMEOUT = "timeout"
-    USER = "login"
+    ERRORS: str = "__err__"
+    IPADDR: str = "host"
+    OPTIONS: str = "opt"
+    PASS: str = "password"
+    PORT: str = "port"
+    SOCKET: str = "__socket__"
+    SSL: str = "__ssl__"
+    STDERR: str = "__stderr__"
+    STDIN: str = "__stdin__"
+    STDOUT: str = "__stdout__"
+    TIMEOUT: str = "timeout"
+    USER: str = "login"
 
 
 class API(IConnector, BData):
