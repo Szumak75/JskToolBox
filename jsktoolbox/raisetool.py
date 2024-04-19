@@ -61,22 +61,24 @@ class Raise(NoDynamicAttributes):
             if not isinstance(exception(), Exception):
                 raise cls.error(
                     f"Exception class or its derived class expected, '{exception.__qualname__}' received.",
-                    TypeError,  # type: ignore
+                    TypeError,
                     class_name,
                     currentframe,
                 )
         else:
             raise cls.error(
                 "Exception class or its derived class expected.",
-                TypeError,  # type: ignore
+                TypeError,
                 class_name,
                 currentframe,
             )
         return exception(
             cls.message(
-                f"[{exception.__qualname__}]: {message}"
-                if message
-                else f"[{exception.__qualname__}]",
+                (
+                    f"[{exception.__qualname__}]: {message}"
+                    if message
+                    else f"[{exception.__qualname__}]"
+                ),
                 class_name,
                 currentframe,
             )

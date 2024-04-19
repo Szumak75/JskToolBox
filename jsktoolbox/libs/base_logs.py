@@ -170,7 +170,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
         if log_level not in LogsLevelKeys.keys:
             raise Raise.error(
                 f"logs_level key not found, '{log_level}' received.",
-                KeyError,  # type: ignore
+                KeyError,
                 self._c_name,
                 currentframe(),
             )

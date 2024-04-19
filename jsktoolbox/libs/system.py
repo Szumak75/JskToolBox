@@ -73,7 +73,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
         if not long_arg:
             raise Raise.error(
                 f"Long argument name is required.",
-                AttributeError,  # type: ignore
+                AttributeError,
                 self._c_name,
                 currentframe(),
             )
@@ -201,21 +201,21 @@ class PathChecker(BData, NoDynamicAttributes):
         if pathname is None:
             raise Raise.error(
                 "Expected 'pathname' as string, not None.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
         if not isinstance(pathname, str):
             raise Raise.error(
                 f"Expected 'pathname' as string, received: '{type(pathname)}'.",
-                TypeError,  # type: ignore
+                TypeError,
                 self._c_name,
                 currentframe(),
             )
         if isinstance(pathname, str) and len(pathname) == 0:
             raise Raise.error(
                 "'pathname' cannot be an empty string.",
-                ValueError,  # type: ignore
+                ValueError,
                 self._c_name,
                 currentframe(),
             )
@@ -295,7 +295,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,  # type: ignore
+                KeyError,
                 self._c_name,
                 currentframe(),
             )
@@ -308,7 +308,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,  # type: ignore
+                KeyError,
                 self._c_name,
                 currentframe(),
             )
@@ -321,7 +321,7 @@ class PathChecker(BData, NoDynamicAttributes):
         else:
             raise Raise.error(
                 "Unexpected exception",
-                KeyError,  # type: ignore
+                KeyError,
                 self._c_name,
                 currentframe(),
             )

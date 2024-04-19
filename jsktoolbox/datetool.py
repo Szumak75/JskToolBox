@@ -37,7 +37,7 @@ class DateTime(NoNewAttributes):
         if not isinstance(timestamp_seconds, (int, float)):
             raise Raise.error(
                 f"Expected int or float type, received: '{type(timestamp_seconds)}'.",
-                TypeError,  # type: ignore
+                TypeError,  
                 cls.__qualname__,
                 currentframe(),
             )
@@ -49,7 +49,7 @@ class DateTime(NoNewAttributes):
         if not isinstance(seconds, (int, float)):
             raise Raise.error(
                 f"Expected int or float type, received: '{type(seconds)}'.",
-                TypeError,  # type: ignore
+                TypeError,  
                 cls.__qualname__,
                 currentframe(),
             )
@@ -67,7 +67,7 @@ class DateTime(NoNewAttributes):
         if not isinstance(seconds, (int, float)):
             raise Raise.error(
                 f"Expected int or float type, received: '{type(seconds)}'.",
-                TypeError,  # type: ignore
+                TypeError, 
                 cls.__qualname__,
                 currentframe(),
             )
