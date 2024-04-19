@@ -30,8 +30,8 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    LCO = "__LCO__"
-    LEO = "__LEO__"
+    LCO: str = "__LCO__"
+    LEO: str = "__LEO__"
 
 
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):

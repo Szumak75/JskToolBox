@@ -13,15 +13,14 @@ from jsktoolbox.libs.base_data import BData
 from jsktoolbox.attribtool import ReadOnlyClass
 
 
-
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys definition class.
 
     For internal purpose only.
     """
 
-    ATTRIB = "__attrib__"
-    LIST = "__list__"
+    ATTRIB: str = "__attrib__"
+    LIST: str = "__list__"
 
 
 class BElement(BData):

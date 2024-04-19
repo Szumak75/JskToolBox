@@ -55,7 +55,7 @@ class BData(BClasses):
     def __check_type(self, key: str, received_type: Optional[Any]) -> bool:
         """Check that the stored type matches the received type."""
         if self.__types and self.__has_type(key):
-            if isinstance(received_type, self.__types[key]):
+            if received_type == self.__types[key]:
                 return True
             return False
         raise Raise.error(
@@ -73,10 +73,10 @@ class BData(BClasses):
     ) -> Optional[Any]:
         """Gets data from internal dict.
 
-        ## ARGUMENTS:
-        - key [str] - variable name,
-        - set_default_type [Optional[Any]] - sets and restrict default type of variable if not None,
-        - default_value [Any] - returns it if variable not found
+        ### Arguments:
+        * key [str] - variable name,
+        * set_default_type [Optional[Any]] - sets and restrict default type of variable if not None,
+        * default_value [Any] - returns it if variable not found
         """
         if self.__check_keys(key):
             return self._data[key]
@@ -104,10 +104,10 @@ class BData(BClasses):
     ) -> None:
         """Sets data to internal dict.
 
-        ## ARGUMENTS:
-        - key [str] - variable name,
-        - value [Any] - value of variable
-        - set_default_type [Optional[Any]] - sets and restrict default type of variable if not None,
+        ### Arguments:
+        * key [str] - variable name,
+        * value [Any] - value of variable
+        * set_default_type [Optional[Any]] - sets and restrict default type of variable if not None,
         """
         if self.__types is None:
             self.__types = {}
@@ -127,7 +127,12 @@ class BData(BClasses):
                 if isinstance(value, set_default_type):
                     self._data[key] = value
                 else:
-                    raise Raise.error(f"", TypeError, self._c_name, currentframe())
+                    raise Raise.error(
+                        f"The type of the value does not match the type passed in the 'set_default_type' variable",
+                        TypeError,
+                        self._c_name,
+                        currentframe(),
+                    )
             else:
                 self._data[key] = value
 

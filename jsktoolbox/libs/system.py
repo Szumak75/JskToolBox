@@ -12,7 +12,7 @@ import getopt
 
 from inspect import currentframe
 from pathlib import Path
-from typing import Optional, Union, List, Tuple, Dict
+from typing import Optional, Union, List, Tuple, Dict, Any
 
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.raisetool import Raise
@@ -25,20 +25,20 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    ARGS = "__args__"
-    CONFIGURED_ARGS = "__conf_args__"
-    DESC_OPTS = "__desc_opts__"
-    EXAMPLE_OPTS = "__ex_opts__"
-    EXISTS = "__exists__"
-    IS_DIR = "__is_dir__"
-    IS_FILE = "__is_file__"
-    IS_SYMLINK = "__is_symlink__"
-    LIST = "__list__"
-    LONG_OPTS = "__long_opts__"
-    PATH_NAME = "__pathname__"
-    POSIXPATH = "__posix_path__"
-    SHORT_OPTS = "__short_opts__"
-    SPLIT = "__split__"
+    ARGS: str = "__args__"
+    CONFIGURED_ARGS: str = "__conf_args__"
+    DESC_OPTS: str = "__desc_opts__"
+    EXAMPLE_OPTS: str = "__ex_opts__"
+    EXISTS: str = "__exists__"
+    IS_DIR: str = "__is_dir__"
+    IS_FILE: str = "__is_file__"
+    IS_SYMLINK: str = "__is_symlink__"
+    LIST: str = "__list__"
+    LONG_OPTS: str = "__long_opts__"
+    PATH_NAME: str = "__pathname__"
+    POSIXPATH: str = "__posix_path__"
+    SHORT_OPTS: str = "__short_opts__"
+    SPLIT: str = "__split__"
 
 
 class CommandLineParser(BData, NoDynamicAttributes):
@@ -51,13 +51,21 @@ class CommandLineParser(BData, NoDynamicAttributes):
 
     def configure_argument(
         self,
-        short_arg: str,
+        short_arg: Optional[str],
         long_arg: str,
         desc_arg: Optional[Union[str, List, Tuple]] = None,
         has_value: bool = False,
         example_value: Optional[str] = None,
     ) -> None:
-        """Application command line argument configuration method and its description."""
+        """Application command line argument configuration method and its description.
+
+        ### Arguments:
+        * short_arg [Optional[str]] - optional one character string,
+        * long_arg [str] - required one word string,
+        * desc_arg [Optional[Union[str, List, Tuple]]] - optional argument description,
+        * has_value [bool] - flag, if 'True' argument takes a value, default = False,
+        * example_value [Optional[str]] - example value for argument description.
+        """
         if _Keys.SHORT_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
             self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS] = ""
         if _Keys.LONG_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
@@ -72,7 +80,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
 
         if not long_arg:
             raise Raise.error(
-                f"Long argument name is required.",
+                f"A long argument name is required.",
                 AttributeError,
                 self._c_name,
                 currentframe(),
@@ -137,19 +145,19 @@ class CommandLineParser(BData, NoDynamicAttributes):
 
     def get_option(self, option: str) -> Optional[str]:
         """Get value of the option or None if it doesn't exist."""
-        out = self.args.get(option)
+        out: Optional[Any] = self.args.get(option)
         if out is None:
             return None
-        return str(self.args.get(option))
+        return str(out)
 
-    def dump(self) -> Dict:
+    def dump(self) -> Dict[str, Any]:
         """Dump configured data structure as Dict:
         {'long opt name':{'short':str, 'has_value':bool, 'description':str, 'example':str}}
         """
-        out = {}
-        short_mod = str(self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]).replace(
-            ":", ""
-        )
+        out: Dict[str, Any] = {}
+        short_mod: str = str(
+            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
+        ).replace(":", "")
 
         for short_arg, long_arg, desc_arg, ex_arg in zip(
             short_mod,
@@ -166,7 +174,7 @@ class CommandLineParser(BData, NoDynamicAttributes):
         return out
 
     @property
-    def args(self) -> Dict:
+    def args(self) -> Dict[str, Any]:
         """Return parsed arguments dict."""
         return self._data[_Keys.ARGS]
 
