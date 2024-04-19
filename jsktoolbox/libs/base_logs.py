@@ -22,17 +22,17 @@ class Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    BUFFERED = "__buffered__"
-    CONF = "__conf__"
-    DIR = "__dir__"
-    FACILITY = "__facility__"
-    FILE = "__file__"
-    FORMATTER = "__formatter__"
-    LEVEL = "__level__"
-    NAME = "__name__"
-    NO_CONF = "__no_conf__"
-    QUEUE = "__queue__"
-    SYSLOG = "__syslog__"
+    BUFFERED: str = "__buffered__"
+    CONF: str = "__conf__"
+    DIR: str = "__dir__"
+    FACILITY: str = "__facility__"
+    FILE: str = "__file__"
+    FORMATTER: str = "__formatter__"
+    LEVEL: str = "__level__"
+    NAME: str = "__name__"
+    NO_CONF: str = "__no_conf__"
+    QUEUE: str = "__queue__"
+    SYSLOG: str = "__syslog__"
 
 
 class SysLogKeys(object, metaclass=ReadOnlyClass):
@@ -112,14 +112,14 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
 class LogsLevelKeys(object, metaclass=ReadOnlyClass):
     """LogsLevelKeys container class."""
 
-    ALERT = "ALERT"
-    CRITICAL = "CRITICAL"
-    DEBUG = "DEBUG"
-    EMERGENCY = "EMERGENCY"
-    ERROR = "ERROR"
-    INFO = "INFO"
-    NOTICE = "NOTICE"
-    WARNING = "WARNING"
+    ALERT: str = "ALERT"
+    CRITICAL: str = "CRITICAL"
+    DEBUG: str = "DEBUG"
+    EMERGENCY: str = "EMERGENCY"
+    ERROR: str = "ERROR"
+    INFO: str = "INFO"
+    NOTICE: str = "NOTICE"
+    WARNING: str = "WARNING"
 
     @classmethod
     @property
@@ -170,7 +170,7 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
         if log_level not in LogsLevelKeys.keys:
             raise Raise.error(
                 f"logs_level key not found, '{log_level}' received.",
-                KeyError,  # type: ignore
+                KeyError,
                 self._c_name,
                 currentframe(),
             )

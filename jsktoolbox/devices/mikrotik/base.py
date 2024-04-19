@@ -25,8 +25,8 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    ELEMENTS = "__elements__"
-    LOADED = "__loaded__"
+    ELEMENTS: str = "__elements__"
+    LOADED: str = "__loaded__"
 
 
 class BRouterOS(BDev, BElement):

@@ -23,13 +23,13 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    DATA = "__data__"
-    DESC = "__desc__"
-    DESCRIPTION = "__description__"
-    MAIN = "__main__"
-    NAME = "__name__"
-    VALUE = "__value__"
-    VARIABLES = "__variables__"
+    DATA: str = "__data__"
+    DESC: str = "__desc__"
+    DESCRIPTION: str = "__description__"
+    MAIN: str = "__main__"
+    NAME: str = "__name__"
+    VALUE: str = "__value__"
+    VARIABLES: str = "__variables__"
 
 
 class IModel(ABC):

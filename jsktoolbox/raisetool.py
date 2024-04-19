@@ -24,11 +24,13 @@ class Raise(NoDynamicAttributes):
     ) -> str:
         """Message formatter method.
 
-        message: str    - message to format
-        class_name: str - caller class name (self.__class__.__name__)
-        currentframe: FrameType - object from inspect.currentframe()
+        ### Arguments:
+        * message: str    - message to format
+        * class_name: str - caller class name (self.__class__.__name__)
+        * currentframe: FrameType - object from inspect.currentframe()
 
-        Return: formatted message string
+        ### Returns:
+        formatted message string
         """
         template: str = f"{message}"
         if currentframe and isinstance(currentframe, FrameType):
@@ -49,34 +51,39 @@ class Raise(NoDynamicAttributes):
         class_name: str = "",
         currentframe: Optional[FrameType] = None,
     ) -> Exception:
-        """Return exception with formatted string.
+        """Returns exception with formatted string.
 
-        message: str - message to format
-        exception: type[Exception] - custom exception to return
-        class_name: str - caller class name (self.__class__.__name__)
-        currentframe: FrameType - object from inspect.currentframe()
+        ### Arguments:
+        * message: str - message to format
+        * exception: type[Exception] - custom exception to return
+        * class_name: str - caller class name (self.__class__.__name__)
+        * currentframe: FrameType - object from inspect.currentframe()
 
-        Return: given exception type"""
+        ### Returns:
+        given exception type
+        """
         if isinstance(exception, type):
             if not isinstance(exception(), Exception):
                 raise cls.error(
                     f"Exception class or its derived class expected, '{exception.__qualname__}' received.",
-                    TypeError,  # type: ignore
+                    TypeError,
                     class_name,
                     currentframe,
                 )
         else:
             raise cls.error(
                 "Exception class or its derived class expected.",
-                TypeError,  # type: ignore
+                TypeError,
                 class_name,
                 currentframe,
             )
         return exception(
             cls.message(
-                f"[{exception.__qualname__}]: {message}"
-                if message
-                else f"[{exception.__qualname__}]",
+                (
+                    f"[{exception.__qualname__}]: {message}"
+                    if message
+                    else f"[{exception.__qualname__}]"
+                ),
                 class_name,
                 currentframe,
             )

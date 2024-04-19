@@ -38,12 +38,12 @@ class _Keys(object, metaclass=ReadOnlyClass):
     For internal purpose only.
     """
 
-    CH = "__connector_handler__"
-    DEBUG = "__debug__"
-    LC = "__logs_client__"
-    PARENT = "__parent__"
-    ROOT = "__root__"
-    VERBOSE = "__verbose__"
+    CH: str = "__connector_handler__"
+    DEBUG: str = "__debug__"
+    LC: str = "__logs_client__"
+    PARENT: str = "__parent__"
+    ROOT: str = "__root__"
+    VERBOSE: str = "__verbose__"
 
 
 class BDebug(BData):
