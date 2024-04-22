@@ -7,7 +7,7 @@
 """
 
 import unittest
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 from jsktoolbox.libs.base_data import BData
 
 
@@ -98,6 +98,30 @@ class TestDData(unittest.TestCase):
             self.obj._data = {"test1": 90, "test2": "aaa"}
         except Exception as ex:
             self.fail(f"Unexpected exception: {ex}")
+
+    def test_11_set_list(self) -> None:
+        """Test nr 11."""
+        self.obj._set_data(key="test1", value=[1, 2, 3], set_default_type=List)
+        obj = self.obj._get_data(key="test1")
+        if isinstance(obj, List):
+            self.assertTrue(obj[0] == 1)
+        else:
+            self.fail(msg="Type error.")
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value=10)
+
+    def test_12_set_dict(self) -> None:
+        """Test nr 12."""
+        self.obj._set_data(
+            key="test1", value={"a": 1, "b": 2, "c": 3}, set_default_type=Dict
+        )
+        obj = self.obj._get_data(key="test1")
+        if isinstance(obj, Dict):
+            self.assertTrue(obj["a"] == 1)
+        else:
+            self.fail(msg="Type error.")
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value=10)
 
 
 # #[EOF]#######################################################################
