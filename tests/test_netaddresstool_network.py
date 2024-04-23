@@ -80,7 +80,6 @@ class TestNetwork(unittest.TestCase):
 
     def test_12_address_in_network(self) -> None:
         """Test nr 12."""
-        # self.assertTrue(Network("192.168.0.123/24") == Network("192.168.0.1/24"))
         self.assertTrue(Address("192.168.0.12") in Network("192.168.0.0/24").hosts)
 
 
