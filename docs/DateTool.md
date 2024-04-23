@@ -63,3 +63,16 @@ from datetool import Timestamp
 ```
 
 The property returns the current timestamp in seconds as an integer.
+
+### Public classmethod
+
+```
+.from_string(date_string: str, format: str) -> int
+```
+
+The method returns timestamp as int from date/time string in strptime format.
+
+#### Arguments
+
+- **date_string** [str] - a string containing a date/time representation, for example: `"2000-01-28"`
+- **format** [str] - strptime date/time format, for the above example: `"%Y-%m-%d"`

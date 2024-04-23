@@ -84,5 +84,11 @@ class Timestamp(NoNewAttributes):
         """Return timestamp int."""
         return int(time())
 
+    @classmethod
+    def from_string(cls, date_string: str, format: str) -> int:
+        """Returns timestamp from string in strptime format."""
+        element: datetime = datetime.strptime(date_string, format)
+        return int(datetime.timestamp(element))
+
 
 # #[EOF]#######################################################################
