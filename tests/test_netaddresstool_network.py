@@ -32,15 +32,11 @@ class TestNetwork(unittest.TestCase):
 
     def test_04_network_address(self) -> None:
         """Test nr 4."""
-        self.assertEqual(
-            str(Network("192.168.1.1/24").address), "192.168.1.1"
-        )
+        self.assertEqual(str(Network("192.168.1.1/24").address), "192.168.1.1")
 
     def test_05_network_broadcast(self) -> None:
         """Test nr 5."""
-        self.assertEqual(
-            str(Network("192.168.1.1/24").broadcast), "192.168.1.255"
-        )
+        self.assertEqual(str(Network("192.168.1.1/24").broadcast), "192.168.1.255")
 
     def test_06_network_min_host(self) -> None:
         """Test nr 6."""
@@ -56,9 +52,7 @@ class TestNetwork(unittest.TestCase):
 
     def test_09_network_network(self) -> None:
         """Test nr 9."""
-        self.assertEqual(
-            str(Network("192.168.1.1/24").network), "192.168.1.0"
-        )
+        self.assertEqual(str(Network("192.168.1.1/24").network), "192.168.1.0")
 
     def test_10_network_hosts(self) -> None:
         """Test nr 10."""
@@ -68,8 +62,7 @@ class TestNetwork(unittest.TestCase):
         )
         for idx in range(0, Network("192.168.1.1/24").count):
             self.assertTrue(
-                Network("192.168.1.1/24").hosts[idx]
-                == Address(f"192.168.1.{idx + 1}")
+                Network("192.168.1.1/24").hosts[idx] == Address(f"192.168.1.{idx + 1}")
             )
         self.assertEqual(
             len(Network("192.168.1.1/31").hosts),
@@ -84,6 +77,10 @@ class TestNetwork(unittest.TestCase):
             Network([Address("192.168.1.1"), Netmask(24)])
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: {ex}")
+
+    def test_12_address_in_network(self) -> None:
+        """Test nr 12."""
+        self.assertTrue(Address("192.168.0.12") in Network("192.168.0.0/24").hosts)
 
 
 # #[EOF]#######################################################################
