@@ -72,6 +72,9 @@ class TestDateTool(unittest.TestCase):
         self.assertTrue(
             Timestamp.from_string("1970-01-01 01:00", "%Y-%m-%d %H:%M") == 0
         )
+        self.assertFalse(Timestamp.from_string("2004-07-28", "%Y-%m-%d") == 0)
+        with self.assertRaises(ValueError):
+            Timestamp.from_string("2004-07-28", "Y-m-d")
 
 
 # #[EOF]#######################################################################

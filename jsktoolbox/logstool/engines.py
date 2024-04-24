@@ -154,11 +154,11 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         """Set log directory."""
         if dirname[-1] != os.sep:
             dirname = f"{dirname}/"
-        ld = PathChecker(dirname)
-        if not ld.exists:
-            ld.create()
-        if ld.exists and ld.is_dir:
-            self._data[Keys.DIR] = ld.path
+        pc_ld = PathChecker(dirname)
+        if not pc_ld.exists:
+            pc_ld.create()
+        if pc_ld.exists and pc_ld.is_dir:
+            self._data[Keys.DIR] = pc_ld.path
 
     @property
     def logfile(self) -> Optional[str]:
@@ -176,9 +176,9 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
             fn = filename
         else:
             fn = os.path.join(self.logdir, filename)
-        ld = PathChecker(fn)
-        if ld.exists:
-            if not ld.is_file:
+        pc_ld = PathChecker(fn)
+        if pc_ld.exists:
+            if not pc_ld.is_file:
                 raise Raise.error(
                     f"The 'filename' passed: '{filename}', is a directory.",
                     FileExistsError,
@@ -186,15 +186,15 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
                     currentframe(),
                 )
         else:
-            if not ld.create():
+            if not pc_ld.create():
                 raise Raise.error(
-                    f"I cannot create a file: {ld.path}",
+                    f"I cannot create a file: {pc_ld.path}",
                     PermissionError,
                     self._c_name,
                     currentframe(),
                 )
-        self.logdir = ld.dirname if ld.dirname else ""
-        self._data[Keys.FILE] = ld.filename
+        self.logdir = pc_ld.dirname if pc_ld.dirname else ""
+        self._data[Keys.FILE] = pc_ld.filename
 
 
 class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):

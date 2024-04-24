@@ -81,13 +81,27 @@ class Timestamp(NoNewAttributes):
     @classmethod
     @property
     def now(cls) -> int:
-        """Return timestamp int."""
+        """Return current timestamp as int."""
         return int(time())
 
     @classmethod
     def from_string(cls, date_string: str, format: str) -> int:
-        """Returns timestamp from string in strptime format."""
-        element: datetime = datetime.strptime(date_string, format)
+        """Returns timestamp from string in strptime format.
+
+        ### Arguments
+        * date_string [str] - date/time string to parse,
+        * format [str] - string with date/time format, for example: '%Y-%m-%d'
+
+        ### Returns
+        timestamp as int
+        """
+        try:
+            element: datetime = datetime.strptime(date_string, format)
+        except ValueError as ex:
+            raise Raise.error(f"{ex}", ValueError, cls.__qualname__, currentframe())
+        except Exception as ex:
+            raise ex
+
         return int(datetime.timestamp(element))
 
 

@@ -40,9 +40,11 @@ class SimpleCrypto(NoDynamicAttributes):
     def salt_generator(cls, length: int = 8) -> int:
         """Method for generate random salt with specific length.
 
-        length: int - number of digits in the generated salt
+        ### Arguments
+        * length [int] - number of digits in the generated salt
 
-        Return: int - salt number
+        ### Returns
+        [int] - salt number
         """
         if length < 1:
             raise Raise.error(
@@ -58,11 +60,11 @@ class SimpleCrypto(NoDynamicAttributes):
         """Caesar encoder method with chars translate table.
 
         ### Arguments:
-        * salt: int    - a number used to calculate the offset in the translation table,
-        * message: str - string to encode,
+        * salt [int]    - a number used to calculate the offset in the translation table,
+        * message [str] - string to encode,
 
         ### Returns:
-        * str  - encoded string
+        [str]  - encoded string
         """
         if not isinstance(salt, int):
             raise Raise.error(
@@ -90,11 +92,11 @@ class SimpleCrypto(NoDynamicAttributes):
         """Caesar decoder method with chars translate table.
 
         ### Arguments:
-        * salt: int    - a number used to calculate the offset in the translation table,
-        * message: str - encoded string,
+        * salt [int]    - a number used to calculate the offset in the translation table,
+        * message [str] - encoded string,
 
         ### Returns:
-        str  - decoded string
+        [str]  - decoded string
         """
         if not isinstance(salt, int):
             raise Raise.error(
@@ -122,10 +124,10 @@ class SimpleCrypto(NoDynamicAttributes):
         """Rot13 encoder/decoder method.
 
         ### Arguments:
-        * message: str - string for encode/decode
+        * message [str] - string for encode/decode
 
         ### Returns:
-        str - encoded/decoded string
+        [str] - encoded/decoded string
         """
         if not isinstance(message, str):
             raise Raise.error(
@@ -142,10 +144,10 @@ class SimpleCrypto(NoDynamicAttributes):
         """Base64 encoder method.
 
         ### Arguments:
-        * message: str - string for encode,
+        * message [str] - string for encode,
 
         ### Returns:
-        str - base64 encoded string.
+        [str] - base64 encoded string.
         """
         if not isinstance(message, str):
             raise Raise.error(
@@ -161,10 +163,10 @@ class SimpleCrypto(NoDynamicAttributes):
         """Base64 decoder method.
 
         ### Arguments:
-        * message: str - base64 string for decode,
+        * message [str] - base64 string for decode,
 
         ### Returns:
-        str - decoded string.
+        [str] - decoded string.
         """
         if not isinstance(message, str):
             raise Raise.error(
@@ -180,11 +182,11 @@ class SimpleCrypto(NoDynamicAttributes):
         """Multiple encoder method.
 
         ### Arguments:
-        * salt: int    - a number used to calculate the offset in the translation table,
-        * message: str - string to encode,
+        * salt [int]    - a number used to calculate the offset in the translation table,
+        * message [str] - string to encode,
 
         ### Returns:
-        str  - encoded string
+        [str]  - encoded string
         """
         if not isinstance(message, str):
             raise Raise.error(
@@ -200,11 +202,11 @@ class SimpleCrypto(NoDynamicAttributes):
         """Multiple decoder method.
 
         ### Arguments:
-        * salt: int    - a number used to calculate the offset in the translation table,
-        * message: str - encoded string,
+        * salt [int]    - a number used to calculate the offset in the translation table,
+        * message [str] - encoded string,
 
         ### Returns:
-        str  - decoded string
+        [str]  - decoded string
         """
         if not isinstance(message, str):
             raise Raise.error(
