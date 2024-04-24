@@ -1,6 +1,6 @@
 # JskToolBox
 
-The project contains sets of base classes for various operations.
+The project contains sets of classes for various operations.
 
 ## AttribTool
 
@@ -28,7 +28,7 @@ The project contains several classes that create a logging subsystem for the des
 
 ## NetAddressTool
 
-The project contains sets of base classes for operations on IPv4 and IPv6 addresses.
+The project contains sets of classes for operations on IPv4 and IPv6 addresses.
 
 [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)
 
