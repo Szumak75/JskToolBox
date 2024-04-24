@@ -42,9 +42,9 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     ) -> None:
         """Constructor.
 
-        Arguments:
-        queue [LoggerQueue] - optional LoggerQueue class object from LoggerEngine, required, but can be set after the object is created,
-        name [str] - optional client name for logs decorator
+        ### Arguments:
+        * queue [LoggerQueue] - optional LoggerQueue class object from LoggerEngine, required, but can be set after the object is created,
+        * name [str] - optional client name for logs decorator
         """
         # store name
         self.name = name
@@ -188,9 +188,9 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
     def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
         """Add LoggerEngine to specific log level.
 
-        Arguments:
-        log_level [str] - String Key from .base_log.LogsLevelKeys.keys,
-        engine [ILoggerEngine] - an object created from Engine classes.
+        ### Arguments:
+        * log_level [str] - String Key from .base_log.LogsLevelKeys.keys,
+        * engine [ILoggerEngine] - an object created from Engine classes.
         """
         if not isinstance(log_level, str):
             raise Raise.error(
