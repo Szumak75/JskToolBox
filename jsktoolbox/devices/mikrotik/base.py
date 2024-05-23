@@ -46,7 +46,9 @@ class BRouterOS(BDev, BElement):
         self.logs = logs
         self.debug = debug
         self.verbose = verbose
-        self._data[_Keys.LOADED] = False
+        # self._data[_Keys.LOADED] = False
+        self._set_data(key=_Keys.LOADED, set_default_type=bool, value=False)
+        self._set_data(key=_Keys.ELEMENTS, set_default_type=Dict, value={})
 
     def __str__(self) -> str:
         """Returns a string representing the object."""
@@ -81,7 +83,6 @@ class BRouterOS(BDev, BElement):
         if self.attrib:
             print(f"attrib: {self.attrib}")
         if self.list:
-            # print(f"list: {self.list}")
             for item in self.list:
                 print(f"list: {item}")
         for item in self.elements.values():
@@ -109,9 +110,10 @@ class BRouterOS(BDev, BElement):
     @property
     def elements(self) -> Dict:
         """Return elements dict."""
-        if _Keys.ELEMENTS not in self._data:
-            self._data[_Keys.ELEMENTS] = {}
-        return self._data[_Keys.ELEMENTS]
+        # if _Keys.ELEMENTS not in self._data:
+        #     self._data[_Keys.ELEMENTS] = {}
+        # return self._data[_Keys.ELEMENTS]
+        return self._get_data(key=_Keys.ELEMENTS)  # type: ignore
 
     def get(self) -> bool:
         """Gets config for current element."""
@@ -120,13 +122,14 @@ class BRouterOS(BDev, BElement):
     @property
     def is_loaded(self) -> bool:
         """Returns True if loaded."""
-        return self._data[_Keys.LOADED]
+        # return self._data[_Keys.LOADED]
+        return self._get_data(key=_Keys.LOADED)  # type: ignore
 
     def load(self, root: str) -> bool:
         """Gets element config from RB."""
         if self._ch is None:
             return False
-        if root is not None and not self._data[_Keys.LOADED]:
+        if root is not None and not self.is_loaded:
             ret: bool = self._ch.execute(f"{root}print")
             if ret:
                 out, err = self._ch.outputs()
@@ -137,7 +140,8 @@ class BRouterOS(BDev, BElement):
                     and isinstance(out[0][0], Dict)
                 ):
                     self.attrib.update(out[0][0])
-                    self._data[_Keys.LOADED] = True
+                    # self._data[_Keys.LOADED] = True
+                    self._set_data(key=_Keys.LOADED, value=True)
                 elif (
                     out[0]
                     and isinstance(out[0], List)
@@ -146,7 +150,8 @@ class BRouterOS(BDev, BElement):
                 ):
                     for item in out[0]:
                         self.list.append(item)
-                    self._data[_Keys.LOADED] = True
+                    # self._data[_Keys.LOADED] = True
+                    self._set_data(key=_Keys.LOADED, value=True)
                 else:
                     if out[0]:
                         print(f"DEBUG_: {out}")
@@ -159,6 +164,19 @@ class BRouterOS(BDev, BElement):
 
 class Element(BRouterOS):
     """MikroTik Element class."""
+
+    # TODO:
+    # metody:
+    # - add
+    # - set
+    # - remove
+    # - move
+    # - is_dirty
+    # - commit
+    # - _reload
+    # ze sprawdzeniem kontentu,
+    # weryfikacja wersji ROS
+    # kodowanie stringów
 
     def __init__(
         self,
