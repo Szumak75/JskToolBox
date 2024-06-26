@@ -46,7 +46,6 @@ class BRouterOS(BDev, BElement):
         self.logs = logs
         self.debug = debug
         self.verbose = verbose
-        # self._data[_Keys.LOADED] = False
         self._set_data(key=_Keys.LOADED, set_default_type=bool, value=False)
         self._set_data(key=_Keys.ELEMENTS, set_default_type=Dict, value={})
 
@@ -110,9 +109,6 @@ class BRouterOS(BDev, BElement):
     @property
     def elements(self) -> Dict:
         """Return elements dict."""
-        # if _Keys.ELEMENTS not in self._data:
-        #     self._data[_Keys.ELEMENTS] = {}
-        # return self._data[_Keys.ELEMENTS]
         return self._get_data(key=_Keys.ELEMENTS)  # type: ignore
 
     def get(self) -> bool:
@@ -122,7 +118,6 @@ class BRouterOS(BDev, BElement):
     @property
     def is_loaded(self) -> bool:
         """Returns True if loaded."""
-        # return self._data[_Keys.LOADED]
         return self._get_data(key=_Keys.LOADED)  # type: ignore
 
     def load(self, root: str) -> bool:
@@ -140,7 +135,6 @@ class BRouterOS(BDev, BElement):
                     and isinstance(out[0][0], Dict)
                 ):
                     self.attrib.update(out[0][0])
-                    # self._data[_Keys.LOADED] = True
                     self._set_data(key=_Keys.LOADED, value=True)
                 elif (
                     out[0]
@@ -150,7 +144,6 @@ class BRouterOS(BDev, BElement):
                 ):
                     for item in out[0]:
                         self.list.append(item)
-                    # self._data[_Keys.LOADED] = True
                     self._set_data(key=_Keys.LOADED, value=True)
                 else:
                     if out[0]:
