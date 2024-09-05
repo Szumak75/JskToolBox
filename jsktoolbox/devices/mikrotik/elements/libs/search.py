@@ -8,8 +8,9 @@
 
 from copy import copy
 from typing import Dict, Optional
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.attribtool import ReadOnlyClass
+
+from .....basetool.data import BData
+from .....attribtool import ReadOnlyClass
 
 
 class RBQuery(BData):

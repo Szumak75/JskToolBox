@@ -10,18 +10,18 @@ import time
 import threading
 from inspect import currentframe
 
-from typing import Optional, Tuple
+from typing import Optional
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_logs import (
+from ..attribtool import NoDynamicAttributes, ReadOnlyClass
+from ..raisetool import Raise
+from ..basetool.logs import (
     BLoggerQueue,
     LoggerQueue,
     LogsLevelKeys,
     Keys,
 )
-from jsktoolbox.libs.base_th import ThBaseObject
-from jsktoolbox.logstool.engines import *
+from ..basetool.threads import ThBaseObject
+from .engines import *
 
 
 class _Keys(object, metaclass=ReadOnlyClass):

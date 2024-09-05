@@ -8,7 +8,7 @@
 
 import base64
 
-from jsktoolbox.attribtool import NoDynamicAttributes
+from ...attribtool import NoDynamicAttributes
 
 
 class B64Converter(NoDynamicAttributes):

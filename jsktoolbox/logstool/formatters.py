@@ -6,11 +6,10 @@
   Purpose: LogFormatter classes.
 """
 
-import time
 from datetime import datetime
 
-from jsktoolbox.libs.base_logs import BLogFormatter
-from jsktoolbox.datetool import Timestamp
+from ..basetool.logs import BLogFormatter
+from ..datetool import Timestamp
 
 
 class LogFormatterNull(BLogFormatter):

@@ -8,10 +8,11 @@
 
 from inspect import currentframe
 from typing import List, Optional
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.libs.system import PathChecker
+
+from ...attribtool import NoDynamicAttributes, ReadOnlyClass
+from ...raisetool import Raise
+from ...basetool.data import BData
+from ...libs.system import PathChecker
 
 
 class _Keys(object, metaclass=ReadOnlyClass):

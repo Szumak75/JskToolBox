@@ -9,7 +9,8 @@
 """
 from types import FrameType
 from typing import Optional
-from jsktoolbox.attribtool import NoDynamicAttributes
+
+from .attribtool import NoDynamicAttributes
 
 
 class Raise(NoDynamicAttributes):

@@ -9,12 +9,13 @@
 import re
 from inspect import currentframe
 from typing import List, Dict, Optional, Any
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.configtool.libs.file import FileProcessor
-from jsktoolbox.configtool.libs.data import DataProcessor
-from jsktoolbox.configtool.libs.data import SectionModel
+
+from ..attribtool import NoDynamicAttributes, ReadOnlyClass
+from ..raisetool import Raise
+from ..basetool.data import BData
+from .libs.file import FileProcessor
+from .libs.data import DataProcessor
+from .libs.data import SectionModel
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -74,12 +75,12 @@ class Config(BData, NoDynamicAttributes):
     @property
     def __fp(self) -> FileProcessor:
         """Return FileProcessor object."""
-        return self._get_data(key=_Keys.FP, set_default_type=FileProcessor) # type: ignore
+        return self._get_data(key=_Keys.FP, set_default_type=FileProcessor)  # type: ignore
 
     @property
     def __dp(self) -> DataProcessor:
         """Return DataProcessor object."""
-        return self._get_data(key=_Keys.DP, set_default_type=DataProcessor) # type: ignore
+        return self._get_data(key=_Keys.DP, set_default_type=DataProcessor)  # type: ignore
 
     @property
     def file_exists(self) -> bool:

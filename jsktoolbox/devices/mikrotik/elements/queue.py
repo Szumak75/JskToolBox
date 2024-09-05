@@ -8,12 +8,10 @@
 
 from typing import Dict, Optional, Any
 
-from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
-
-
-from jsktoolbox.devices.mikrotik.base import BRouterOS, BDev
-from jsktoolbox.devices.network.connectors import IConnector
+from ....attribtool import ReadOnlyClass
+from ....logstool.logs import LoggerClient, LoggerQueue
+from ..base import BRouterOS, BDev
+from ...network.connectors import IConnector
 
 
 class _Elements(object, metaclass=ReadOnlyClass):

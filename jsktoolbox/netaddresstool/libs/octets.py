@@ -5,13 +5,14 @@
 
   Purpose: Octet class for representing ipv4 octet.
 """
+
 from inspect import currentframe
 from typing import Union, TypeVar
-from jsktoolbox.attribtool import NoDynamicAttributes
-from jsktoolbox.raisetool import Raise
 
-from jsktoolbox.libs.interfaces.comparators import IComparators
-from jsktoolbox.libs.base_data import BClasses
+from ...attribtool import NoDynamicAttributes
+from ...raisetool import Raise
+from ...libs.interfaces.comparators import IComparators
+from ...basetool.classes import BClasses
 
 TOctet = TypeVar("TOctet", bound="Octet")
 

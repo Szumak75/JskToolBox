@@ -9,49 +9,46 @@
 from typing import Dict, List, Optional, Union, Tuple, Any
 from inspect import currentframe
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
+from ...attribtool import NoDynamicAttributes, ReadOnlyClass
+from ...raisetool import Raise
+from ...logstool.logs import LoggerClient, LoggerQueue
 
 
-from jsktoolbox.netaddresstool.ipv4 import (
+from ...netaddresstool.ipv4 import (
     Address,
     Netmask,
     Network,
     SubNetwork,
 )
-from jsktoolbox.netaddresstool.ipv6 import (
+from ...netaddresstool.ipv6 import (
     Address6,
     Network6,
     Prefix6,
     SubNetwork6,
 )
 
-from jsktoolbox.devices.mikrotik.base import BRouterOS, Element
-
-from jsktoolbox.devices.network.connectors import IConnector
-
-from jsktoolbox.devices.mikrotik.elements.libs.interfaces import IElement
-
-from jsktoolbox.devices.mikrotik.elements.certificate import RBCertificate
-from jsktoolbox.devices.mikrotik.elements.disk import RBDisk
-from jsktoolbox.devices.mikrotik.elements.file import RBFile
-from jsktoolbox.devices.mikrotik.elements.interface import RBInterface
-from jsktoolbox.devices.mikrotik.elements.ip import RBIp
-from jsktoolbox.devices.mikrotik.elements.ipv6 import RBIpv6
-from jsktoolbox.devices.mikrotik.elements.lcd import RBLcd
-from jsktoolbox.devices.mikrotik.elements.log import RBLog
-from jsktoolbox.devices.mikrotik.elements.mpls import RBMpls
-from jsktoolbox.devices.mikrotik.elements.partitions import RBPartitions
-from jsktoolbox.devices.mikrotik.elements.port import RBPort
-from jsktoolbox.devices.mikrotik.elements.ppp import RBPpp
-from jsktoolbox.devices.mikrotik.elements.queue import RBQueue
-from jsktoolbox.devices.mikrotik.elements.radius import RBRadius
-from jsktoolbox.devices.mikrotik.elements.routing import RBRouting
-from jsktoolbox.devices.mikrotik.elements.snmp import RBSnmp
-from jsktoolbox.devices.mikrotik.elements.system import RBSystem
-from jsktoolbox.devices.mikrotik.elements.tool import RBTool
-from jsktoolbox.devices.mikrotik.elements.user import RBUser
+from .base import BRouterOS, Element
+from ..network.connectors import IConnector
+from .elements.libs.interfaces import IElement
+from .elements.certificate import RBCertificate
+from .elements.disk import RBDisk
+from .elements.file import RBFile
+from .elements.interface import RBInterface
+from .elements.ip import RBIp
+from .elements.ipv6 import RBIpv6
+from .elements.lcd import RBLcd
+from .elements.log import RBLog
+from .elements.mpls import RBMpls
+from .elements.partitions import RBPartitions
+from .elements.port import RBPort
+from .elements.ppp import RBPpp
+from .elements.queue import RBQueue
+from .elements.radius import RBRadius
+from .elements.routing import RBRouting
+from .elements.snmp import RBSnmp
+from .elements.system import RBSystem
+from .elements.tool import RBTool
+from .elements.user import RBUser
 
 
 class _Elements(object, metaclass=ReadOnlyClass):

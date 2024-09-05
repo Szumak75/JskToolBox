@@ -14,9 +14,9 @@ from inspect import currentframe
 from pathlib import Path
 from typing import Optional, Union, List, Tuple, Dict, Any
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
+from ..attribtool import NoDynamicAttributes, ReadOnlyClass
+from ..raisetool import Raise
+from ..basetool.data import BData
 
 
 class _Keys(object, metaclass=ReadOnlyClass):

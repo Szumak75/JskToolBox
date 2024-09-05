@@ -8,9 +8,8 @@
 from inspect import currentframe
 from typing import List, Dict, Any, Optional
 
-from jsktoolbox.libs.base_data import BClasses
-from jsktoolbox.attribtool import NoDynamicAttributes
-from jsktoolbox.raisetool import Raise
+from ..basetool.classes import BClasses
+from ..raisetool import Raise
 
 
 class EmptyError(Exception):

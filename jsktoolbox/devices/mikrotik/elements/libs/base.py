@@ -9,8 +9,8 @@
 
 from typing import Dict, List
 
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.attribtool import ReadOnlyClass
+from .....basetool.data import BData
+from .....attribtool import ReadOnlyClass
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
