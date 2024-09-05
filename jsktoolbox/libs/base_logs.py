@@ -6,7 +6,7 @@
   Purpose: For compatibility reasons only.
 """
 
-from jsktoolbox.basetool.logs import (
+from ..basetool.logs import (
     BLogFormatter,
     BLoggerEngine,
     BLoggerQueue,

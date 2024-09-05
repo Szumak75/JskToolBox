@@ -6,6 +6,6 @@
   Purpose: For compatibility reasons only.
 """
 
-from jsktoolbox.basetool.threads import ThBaseObject
+from ..basetool.threads import ThBaseObject
 
 # #[EOF]#######################################################################

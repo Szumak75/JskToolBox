@@ -6,8 +6,8 @@
   Purpose: For compatibility reasons only.
 """
 
-from jsktoolbox.basetool.classes import BClasses
-from jsktoolbox.basetool.data import BData
+from ..basetool.classes import BClasses
+from ..basetool.data import BData
 
 
 # #[EOF]#######################################################################
