@@ -44,6 +44,12 @@ The project contains sets of classes for various operations on string.
 
 [StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md)
 
+## SystemTool
+
+The project contains a set of classes enabling interaction with the operating system.
+
+[SystemTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md)
+
 ## TkTool
 
 The project contains sets of classes for tkinter framework.

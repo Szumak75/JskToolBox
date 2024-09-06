@@ -37,13 +37,13 @@ The 'salt' is used to calculate the offset in the translation table for 'caesar'
 .caesar_encrypt(salt: int, message: str): str
 ```
 
-The 'ceasar' encryption method is based on a translation table with an offset calculated for the given 'salt' parameter. Returns an encrypted string.
+The 'caesar' encryption method is based on a translation table with an offset calculated for the given 'salt' parameter. Returns an encrypted string.
 
 ```
 .caesar_decrypt(salt: int, message: str): str
 ```
 
-The 'ceasar' decryption method is based on a translation table with an offset calculated for the given 'salt' parameter. Returns an decrypted string.
+The 'caesar' decryption method is based on a translation table with an offset calculated for the given 'salt' parameter. Returns an decrypted string.
 
 ```
 .rot13_codec(message: str): str

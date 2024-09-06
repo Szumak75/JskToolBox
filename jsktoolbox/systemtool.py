@@ -151,9 +151,9 @@ class CommandLineParser(BData):
                     self.args[long_arg] = value
         return True
 
-    def get_option(self, option: str) -> Optional[str]:
+    def get_option(self, long_arg: str) -> Optional[str]:
         """Get value of the option or None if it doesn't exist."""
-        out: Optional[Any] = self.args.get(option)
+        out: Optional[Any] = self.args.get(long_arg)
         if out is None:
             return None
         return str(out)
@@ -294,9 +294,6 @@ class PathChecker(BData):
                 self._c_name,
                 currentframe(),
             )
-        # self._data[_Keys.PATH_NAME] = pathname
-        # self._data[_Keys.SPLIT] = check_deep
-        # self._data[_Keys.LIST] = []
         self._set_data(key=_Keys.PATH_NAME, value=pathname, set_default_type=str)
         self._set_data(key=_Keys.SPLIT, value=check_deep, set_default_type=bool)
         self._set_data(key=_Keys.LIST, value=[], set_default_type=List)
@@ -339,7 +336,7 @@ class PathChecker(BData):
             self._set_data(key=_Keys.LIST, value=tmp_list)
 
     def __str__(self) -> str:
-        """Return class data as string."""
+        """Returns class data as string."""
         return (
             "PathChecker("
             f"'pathname': '{self.path}', "
@@ -352,12 +349,12 @@ class PathChecker(BData):
         )
 
     def __repr__(self) -> str:
-        """Return string representation."""
+        """Returns string representation."""
         return f"PathChecker('{self.path}')"
 
     @property
     def dirname(self) -> Optional[str]:
-        """Return dirname from path."""
+        """Returns dirname from path."""
         tmp_list: List[PathChecker] = self._get_data(key=_Keys.LIST)  # type: ignore
         if self.exists:
             last: Optional[str] = None
@@ -369,7 +366,7 @@ class PathChecker(BData):
 
     @property
     def filename(self) -> Optional[str]:
-        """Return filename from path."""
+        """Returns filename from path."""
         if self.exists and self.is_file:
             tmp: list[str] = self.path.split(os.sep)
             if len(tmp) > 0:
@@ -379,32 +376,32 @@ class PathChecker(BData):
 
     @property
     def exists(self) -> bool:
-        """Return path exists flag."""
+        """Returns path exists flag."""
         return self._get_data(key=_Keys.EXISTS)  # type: ignore
 
     @property
     def is_dir(self) -> bool:
-        """Return path is_dir flag."""
+        """Returns path is_dir flag."""
         return self._get_data(key=_Keys.IS_DIR)  # type: ignore
 
     @property
     def is_file(self) -> bool:
-        """Return path is_file flag."""
+        """Returns path is_file flag."""
         return self._get_data(key=_Keys.IS_FILE)  # type: ignore
 
     @property
     def is_symlink(self) -> bool:
-        """Return path is_symlink flag."""
+        """Returns path is_symlink flag."""
         return self._get_data(key=_Keys.IS_SYMLINK)  # type: ignore
 
     @property
     def path(self) -> str:
-        """Return path string."""
+        """Returns path string."""
         return self._get_data(key=_Keys.PATH_NAME)  # type: ignore
 
     @property
     def posixpath(self) -> Optional[str]:
-        """Return path string."""
+        """Returns path string."""
         if self.exists:
             return self._get_data(key=_Keys.POSIXPATH)  # type: ignore
         return None
