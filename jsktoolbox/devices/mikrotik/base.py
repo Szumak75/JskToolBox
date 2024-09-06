@@ -8,8 +8,10 @@
 
 from typing import Dict, List, Optional, Union, TypeVar
 
+from ...logstool.queue import LoggerQueue
+
 from ...attribtool import ReadOnlyClass
-from ...logstool.logs import LoggerClient, LoggerQueue
+from ...logstool.logs import LoggerClient
 from .elements.libs.base import BElement
 from ..libs.base import BDev
 from ..network.connectors import IConnector

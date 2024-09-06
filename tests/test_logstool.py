@@ -9,7 +9,7 @@
 
 from unittest import TestCase
 
-from jsktoolbox.libs.base_logs import LoggerQueue
+from jsktoolbox.logstool.queue import LoggerQueue
 from jsktoolbox.logstool.formatters import LogFormatterNull
 
 

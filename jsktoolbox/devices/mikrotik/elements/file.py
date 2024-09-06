@@ -9,8 +9,10 @@
 
 from typing import Optional, Dict, Any
 
+from ....logstool.queue import LoggerQueue
+
 from ....attribtool import ReadOnlyClass
-from ....logstool.logs import LoggerClient, LoggerQueue
+from ....logstool.logs import LoggerClient
 from ..base import BRouterOS, BDev
 from ...network.connectors import IConnector
 

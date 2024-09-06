@@ -9,9 +9,11 @@
 from typing import Dict, List, Optional, Union, Tuple, Any, TypeVar
 from inspect import currentframe
 
+from ...logstool.queue import LoggerQueue
+
 from ...attribtool import NoDynamicAttributes, ReadOnlyClass
 from ...raisetool import Raise
-from ...logstool.logs import LoggerClient, LoggerQueue
+from ...logstool.logs import LoggerClient
 from ...basetool.data import BData
 
 from ...netaddresstool.ipv4 import (

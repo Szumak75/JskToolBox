@@ -6,14 +6,12 @@
   Purpose: For compatibility reasons only.
 """
 
+from ..logstool.queue import LoggerQueue
+from ..logstool.keys import LogKeys, LogsLevelKeys, SysLogKeys
 from ..basetool.logs import (
     BLogFormatter,
     BLoggerEngine,
     BLoggerQueue,
-    LoggerQueue,
-    LogsLevelKeys,
-    SysLogKeys,
-    Keys,
 )
 
 
