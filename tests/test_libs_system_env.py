@@ -9,7 +9,7 @@
 import unittest
 import os
 from pathlib import Path
-from jsktoolbox.libs.system import Env
+from jsktoolbox.systemtool import Env
 
 
 class TestEnv(unittest.TestCase):

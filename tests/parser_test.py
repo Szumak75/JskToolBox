@@ -7,7 +7,7 @@
   Purpose:
 """
 
-from jsktoolbox.libs.system import CommandLineParser
+from jsktoolbox.systemtool import CommandLineParser
 
 
 if __name__ == "__main__":

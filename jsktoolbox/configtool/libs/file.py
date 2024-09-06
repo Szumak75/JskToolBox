@@ -12,7 +12,7 @@ from typing import List, Optional
 from ...attribtool import NoDynamicAttributes, ReadOnlyClass
 from ...raisetool import Raise
 from ...basetool.data import BData
-from ...libs.system import PathChecker
+from ...systemtool import PathChecker
 
 
 class _Keys(object, metaclass=ReadOnlyClass):

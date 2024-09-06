@@ -9,7 +9,7 @@
 import unittest
 import sys
 
-from jsktoolbox.libs.system import CommandLineParser
+from jsktoolbox.systemtool import CommandLineParser
 
 
 class TestCommandLineParser(unittest.TestCase):
