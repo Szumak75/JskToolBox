@@ -36,6 +36,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     DESC_OPTS: str = "__desc_opts__"
     EXAMPLE_OPTS: str = "__ex_opts__"
     EXISTS: str = "__exists__"
+    HOME: str = "__home__"
     IS_DIR: str = "__is_dir__"
     IS_FILE: str = "__is_file__"
     IS_SYMLINK: str = "__is_symlink__"
@@ -45,7 +46,6 @@ class _Keys(object, metaclass=ReadOnlyClass):
     POSIXPATH: str = "__posix_path__"
     SHORT_OPTS: str = "__short_opts__"
     SPLIT: str = "__split__"
-    HOME: str = "__home__"
     TMP: str = "__tmp__"
 
 
