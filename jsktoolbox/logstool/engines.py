@@ -18,7 +18,7 @@ from .keys import LogKeys, SysLogKeys
 from ..attribtool import NoDynamicAttributes
 from ..raisetool import Raise
 from ..basetool.data import BData
-from ..libs.system import PathChecker
+from ..systemtool import PathChecker
 from ..basetool.logs import (
     BLoggerEngine,
 )

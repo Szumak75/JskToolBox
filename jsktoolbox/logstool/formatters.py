@@ -52,7 +52,7 @@ class LogFormatterTimestamp(BLogFormatter):
 
     def __init__(self) -> None:
         """Constructor."""
-        self._forms_.append(Timestamp.now)
+        self._forms_.append(Timestamp.now())
         self._forms_.append("{message}")
         self._forms_.append("[{name}]: {message}")
 

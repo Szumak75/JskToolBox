@@ -18,17 +18,19 @@ class TestDateTool(unittest.TestCase):
 
     def test_01_Timestamp(self) -> None:
         """Test nr 01."""
-        self.assertIsInstance(Timestamp.now, int)
-        tnow = Timestamp.now
+        self.assertIsInstance(Timestamp.now(), int)
+        self.assertIsInstance(Timestamp.now_float(), float)
+        self.assertIsInstance(Timestamp.now_int(), int)
+        tnow = Timestamp.now()
         now = int(time.time())
         self.assertTrue(tnow < now + 2 and tnow > now - 2)
 
     def test_02_datetime_from_timestamp(self) -> None:
         """Test nr 02."""
         self.assertIsInstance(
-            DateTime.datetime_from_timestamp(Timestamp.now), datetime.datetime
+            DateTime.datetime_from_timestamp(Timestamp.now()), datetime.datetime
         )
-        tnow = Timestamp.now
+        tnow = Timestamp.now()
         dtime = DateTime.datetime_from_timestamp(tnow)
         dtest = datetime.datetime.now()
         self.assertTrue(
@@ -58,10 +60,10 @@ class TestDateTool(unittest.TestCase):
     def test_05_datetime_elapsed_time_from_timestamp(self) -> None:
         """Test nr 05."""
         self.assertIsInstance(
-            DateTime.elapsed_time_from_seconds(Timestamp.now), datetime.timedelta
+            DateTime.elapsed_time_from_seconds(Timestamp.now()), datetime.timedelta
         )
         td = datetime.timedelta(seconds=1)
-        tnow = Timestamp.now - 1
+        tnow = Timestamp.now() - 1
         self.assertTrue(td == DateTime.elapsed_time_from_timestamp(tnow))
         self.assertEqual(str(DateTime.elapsed_time_from_timestamp(tnow)), "0:00:01")
         with self.assertRaises(TypeError):

@@ -7,7 +7,7 @@
 """
 
 import unittest
-from jsktoolbox.libs.system import PathChecker
+from jsktoolbox.systemtool import PathChecker
 
 
 class TestPathChecker(unittest.TestCase):
@@ -21,15 +21,15 @@ class TestPathChecker(unittest.TestCase):
             self.fail(f"Unexpected exception was thrown: {ex}")
 
         with self.assertRaises(TypeError):
-            PathChecker(None) # type: ignore
+            PathChecker(None)  # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker(10) # type: ignore
+            PathChecker(10)  # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker([]) # type: ignore
+            PathChecker([])  # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker({}) # type: ignore
+            PathChecker({})  # type: ignore
         with self.assertRaises(TypeError):
-            PathChecker() # type: ignore
+            PathChecker()  # type: ignore
 
         with self.assertRaises(ValueError):
             PathChecker("")

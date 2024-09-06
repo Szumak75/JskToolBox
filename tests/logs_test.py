@@ -21,9 +21,7 @@ from jsktoolbox.logstool.logs import (
     LoggerEngineSyslog,
     ThLoggerProcessor,
 )
-from jsktoolbox.libs.base_logs import (
-    BLoggerQueue,
-)
+from jsktoolbox.basetool.logs import BLoggerQueue
 from jsktoolbox.logstool.formatters import (
     LogFormatterDateTime,
     LogFormatterNull,

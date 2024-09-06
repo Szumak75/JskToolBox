@@ -9,7 +9,7 @@
 import unittest
 import os
 from pathlib import Path
-from jsktoolbox.libs.system import Env
+from jsktoolbox.systemtool import Env
 
 
 class TestEnv(unittest.TestCase):
@@ -25,20 +25,17 @@ class TestEnv(unittest.TestCase):
     def test_system_env_home_return(self) -> None:
         """Test nr 2."""
         self.assertIsInstance(Env().home, str)
-        self.assertIsInstance(Env.home, str)
-        self.assertEqual(Env().home, Env.home)
-        self.assertEqual(os.getenv("HOME"), Env.home)
+        self.assertIsInstance(Env().home, str)
+        self.assertEqual(os.getenv("HOME"), Env().home)
 
     def test_system_env_home_exists(self) -> None:
         """Test nr 3."""
-        self.assertTrue(Path(Env.home).exists() and Path(Env.home).is_dir())
+        self.assertTrue(Path(Env().home).exists() and Path(Env().home).is_dir())
 
     def test_system_env_username_return(self) -> None:
         """Test nr 4."""
         self.assertIsInstance(Env().username, str)
-        self.assertIsInstance(Env.username, str)
-        self.assertEqual(Env().username, Env.username)
-        self.assertEqual(os.getenv("USER"), Env.username)
+        self.assertEqual(os.getenv("USER"), Env().username)
 
 
 # #[EOF]#######################################################################

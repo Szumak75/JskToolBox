@@ -8,7 +8,7 @@
 
 import unittest
 from typing import Dict, List, Optional
-from jsktoolbox.libs.base_data import BData
+from jsktoolbox.basetool.data import BData
 
 
 class TestDData(unittest.TestCase):
