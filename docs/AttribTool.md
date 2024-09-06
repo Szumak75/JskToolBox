@@ -6,9 +6,9 @@ Classes throw an AttributeError exception when trying to add an undefined attrib
 
 ## Public classes
 
-1. [NoDynamicAttributes](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#nodynamicattributes)
-1. [NoNewAttributes](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#nonewattributes)
-1. [ReadOnlyClass](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#readonlyclass)
+1. [NoDynamicAttributes](https://github.com/Szumak75/JskToolBox/blob/1.0.19/docs/AttribTool.md#nodynamicattributes)
+1. [NoNewAttributes](https://github.com/Szumak75/JskToolBox/blob/1.0.19/docs/AttribTool.md#nonewattributes)
+1. [ReadOnlyClass](https://github.com/Szumak75/JskToolBox/blob/1.0.19/docs/AttribTool.md#readonlyclass)
 
 ## Usage examples
 

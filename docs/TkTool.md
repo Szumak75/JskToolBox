@@ -4,9 +4,9 @@ The project contains classes useful for tkinter-based projects.
 
 ## Public classes
 
-1. [CreateToolTip](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#createtooltip)
-1. [VerticalScrolledTkFrame](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#verticalscrolledtkframe)
-1. [VerticalScrolledTtkFrame](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#verticalscrolledttkframe)
+1. [CreateToolTip](https://github.com/Szumak75/JskToolBox/blob/1.0.19/docs/TkTool.md#createtooltip)
+1. [VerticalScrolledTkFrame](https://github.com/Szumak75/JskToolBox/blob/1.0.19/docs/TkTool.md#verticalscrolledtkframe)
+1. [VerticalScrolledTtkFrame](https://github.com/Szumak75/JskToolBox/blob/1.0.19/docs/TkTool.md#verticalscrolledttkframe)
 
 ## CreateToolTip
 
