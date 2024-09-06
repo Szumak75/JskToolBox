@@ -11,6 +11,8 @@
 import os
 import sys
 import getopt
+import tempfile
+import subprocess
 
 from inspect import currentframe
 from pathlib import Path
@@ -43,9 +45,11 @@ class _Keys(object, metaclass=ReadOnlyClass):
     POSIXPATH: str = "__posix_path__"
     SHORT_OPTS: str = "__short_opts__"
     SPLIT: str = "__split__"
+    HOME: str = "__home__"
+    TMP: str = "__tmp__"
 
 
-class CommandLineParser(BData, NoDynamicAttributes):
+class CommandLineParser(BData):
     """Parser for command line options."""
 
     def __init__(self) -> None:
@@ -183,29 +187,88 @@ class CommandLineParser(BData, NoDynamicAttributes):
         return self._data[_Keys.ARGS]
 
 
-class Env(NoDynamicAttributes):
+class Env(BData):
     """Environment class."""
 
-    @classmethod
-    @property
-    def home(cls) -> str:
-        """Return home dir name."""
-        tmp: Optional[str] = os.getenv("HOME")
-        if tmp:
-            return tmp
-        return ""
+    def __init__(self) -> None:
+        """Initialize Env class."""
+        home: Optional[str] = os.getenv("HOME")
+        if home is None:
+            home = os.getenv("HOMEPATH")
+            if home is not None:
+                home = f"{os.getenv('HOMEDRIVE')}{home}"
+        self._set_data(key=_Keys.HOME, set_default_type=str, value=home)
 
-    @classmethod
+        tmp: Optional[str] = os.getenv("TMP")
+        if tmp is None:
+            tmp = os.getenv("TEMP")
+            if tmp is None:
+                tmp = tempfile.gettempdir()
+        self._set_data(key=_Keys.TMP, set_default_type=str, value=tmp)
+
     @property
-    def username(cls) -> str:
-        """Return login name."""
+    def home(self) -> str:
+        """Returns home dir name."""
+        return self._get_data(key=_Keys.HOME, default_value="")  # type: ignore
+
+    @property
+    def tmpdir(self) -> str:
+        """Returns tmp dir name."""
+        return self._get_data(key=_Keys.TMP, default_value="")  # type: ignore
+
+    @property
+    def username(self) -> str:
+        """Returns login name."""
         tmp: Optional[str] = os.getenv("USER")
         if tmp:
             return tmp
         return ""
 
+    def os_arch(self) -> str:
+        """Return multiplatform os architecture."""
+        os_arch = "32-bit"
+        if os.name == "nt":
+            output = subprocess.check_output(
+                ["wmic", "os", "get", "OSArchitecture"]
+            ).decode()
+            os_arch = output.split()[1]
+        else:
+            output: str = subprocess.check_output(["uname", "-m"]).decode()
+            if "x86_64" in output:
+                os_arch = "64-bit"
+            else:
+                os_arch = "32-bit"
+        return os_arch
 
-class PathChecker(BData, NoDynamicAttributes):
+    @property
+    def is_64bits(self) -> bool:
+        """Check 64bits platform."""
+        return sys.maxsize > 2**32
+
+
+# class Env(NoDynamicAttributes):
+#     """Environment class."""
+
+#     @classmethod
+#     @property
+#     def home(cls) -> str:
+#         """Return home dir name."""
+#         tmp: Optional[str] = os.getenv("HOME")
+#         if tmp:
+#             return tmp
+#         return ""
+
+#     @classmethod
+#     @property
+#     def username(cls) -> str:
+#         """Return login name."""
+#         tmp: Optional[str] = os.getenv("USER")
+#         if tmp:
+#             return tmp
+#         return ""
+
+
+class PathChecker(BData):
     """PathChecker class for filesystem path."""
 
     def __init__(self, pathname: str, check_deep: bool = True) -> None:
