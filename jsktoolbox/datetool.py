@@ -79,10 +79,19 @@ class Timestamp(NoNewAttributes):
     """Timestamp class for getting current timestamp."""
 
     @classmethod
-    @property
     def now(cls) -> int:
         """Return current timestamp as int."""
         return int(time())
+
+    @classmethod
+    def now_int(cls) -> int:
+        """Return current timestamp as int."""
+        return int(time())
+
+    @classmethod
+    def now_float(cls) -> float:
+        """Return current timestamp as float."""
+        return float(time())
 
     @classmethod
     def from_string(cls, date_string: str, format: str) -> int:
@@ -103,6 +112,26 @@ class Timestamp(NoNewAttributes):
             raise ex
 
         return int(datetime.timestamp(element))
+
+    @classmethod
+    def from_string_float(cls, date_string: str, format: str) -> float:
+        """Returns timestamp from string in strptime format.
+
+        ### Arguments
+        * date_string [str] - date/time string to parse,
+        * format [str] - string with date/time format, for example: '%Y-%m-%d'
+
+        ### Returns
+        timestamp as float
+        """
+        try:
+            element: datetime = datetime.strptime(date_string, format)
+        except ValueError as ex:
+            raise Raise.error(f"{ex}", ValueError, cls.__qualname__, currentframe())
+        except Exception as ex:
+            raise ex
+
+        return float(datetime.timestamp(element))
 
 
 # #[EOF]#######################################################################

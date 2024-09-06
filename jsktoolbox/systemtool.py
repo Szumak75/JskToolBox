@@ -294,35 +294,49 @@ class PathChecker(BData):
                 self._c_name,
                 currentframe(),
             )
-        self._data[_Keys.PATH_NAME] = pathname
-        self._data[_Keys.SPLIT] = check_deep
-        self._data[_Keys.LIST] = []
+        # self._data[_Keys.PATH_NAME] = pathname
+        # self._data[_Keys.SPLIT] = check_deep
+        # self._data[_Keys.LIST] = []
+        self._set_data(key=_Keys.PATH_NAME, value=pathname, set_default_type=str)
+        self._set_data(key=_Keys.SPLIT, value=check_deep, set_default_type=bool)
+        self._set_data(key=_Keys.LIST, value=[], set_default_type=List)
+
         # analysis
         self.__run__()
 
     def __run__(self) -> None:
         """Path analysis procedure."""
-        query = Path(self._data[_Keys.PATH_NAME])
+        query = Path(self._get_data(key=_Keys.PATH_NAME))  # type: ignore
         # check exists
-        self._data[_Keys.EXISTS] = query.exists()
-        if self._data[_Keys.EXISTS]:
+        self._set_data(key=_Keys.EXISTS, value=query.exists(), set_default_type=bool)
+        if self.exists:
             # check if is file
-            self._data[_Keys.IS_FILE] = query.is_file()
+            self._set_data(
+                key=_Keys.IS_FILE, value=query.is_file(), set_default_type=bool
+            )
             # check if is dir
-            self._data[_Keys.IS_DIR] = query.is_dir()
+            self._set_data(
+                key=_Keys.IS_DIR, value=query.is_dir(), set_default_type=bool
+            )
             # check if is symlink
-            self._data[_Keys.IS_SYMLINK] = query.is_symlink()
+            self._set_data(
+                key=_Keys.IS_SYMLINK, value=query.is_symlink(), set_default_type=bool
+            )
             # resolve symlink
-            self._data[_Keys.POSIXPATH] = str(query.resolve())
+            self._set_data(
+                key=_Keys.POSIXPATH, value=str(query.resolve()), set_default_type=str
+            )
 
-        if self._data[_Keys.SPLIT]:
+        if self._get_data(key=_Keys.SPLIT):
             # split and analyse
             tmp: str = ""
+            tmp_list: List[PathChecker] = self._get_data(key=_Keys.LIST)  # type: ignore
             for item in self.path.split(os.sep):
                 if item == "":
                     continue
                 tmp += f"{os.sep}{item}"
-                self._data[_Keys.LIST].append(PathChecker(tmp, False))
+                tmp_list.append(PathChecker(tmp, False))
+            self._set_data(key=_Keys.LIST, value=tmp_list)
 
     def __str__(self) -> str:
         """Return class data as string."""
@@ -344,9 +358,10 @@ class PathChecker(BData):
     @property
     def dirname(self) -> Optional[str]:
         """Return dirname from path."""
+        tmp_list: List[PathChecker] = self._get_data(key=_Keys.LIST)  # type: ignore
         if self.exists:
             last: Optional[str] = None
-            for item in self._data[_Keys.LIST]:
+            for item in tmp_list:
                 if item.is_dir:
                     last = item.path
             return last
@@ -365,75 +380,44 @@ class PathChecker(BData):
     @property
     def exists(self) -> bool:
         """Return path exists flag."""
-        if _Keys.EXISTS in self._data:
-            return self._data[_Keys.EXISTS]
-        else:
-            raise Raise.error(
-                "Unexpected exception",
-                KeyError,
-                self._c_name,
-                currentframe(),
-            )
+        return self._get_data(key=_Keys.EXISTS)  # type: ignore
 
     @property
     def is_dir(self) -> bool:
         """Return path is_dir flag."""
-        if _Keys.IS_DIR in self._data:
-            return self._data[_Keys.IS_DIR]
-        else:
-            raise Raise.error(
-                "Unexpected exception",
-                KeyError,
-                self._c_name,
-                currentframe(),
-            )
+        return self._get_data(key=_Keys.IS_DIR)  # type: ignore
 
     @property
     def is_file(self) -> bool:
         """Return path is_file flag."""
-        if _Keys.IS_FILE in self._data:
-            return self._data[_Keys.IS_FILE]
-        else:
-            raise Raise.error(
-                "Unexpected exception",
-                KeyError,
-                self._c_name,
-                currentframe(),
-            )
+        return self._get_data(key=_Keys.IS_FILE)  # type: ignore
 
     @property
     def is_symlink(self) -> bool:
         """Return path is_symlink flag."""
-        if _Keys.IS_SYMLINK in self._data:
-            return self._data[_Keys.IS_SYMLINK]
-        else:
-            raise Raise.error(
-                "Unexpected exception",
-                KeyError,
-                self._c_name,
-                currentframe(),
-            )
+        return self._get_data(key=_Keys.IS_SYMLINK)  # type: ignore
 
     @property
     def path(self) -> str:
         """Return path string."""
-        return self._data[_Keys.PATH_NAME]
+        return self._get_data(key=_Keys.PATH_NAME)  # type: ignore
 
     @property
     def posixpath(self) -> Optional[str]:
         """Return path string."""
         if self.exists:
-            return self._data[_Keys.POSIXPATH]
+            return self._get_data(key=_Keys.POSIXPATH)  # type: ignore
         return None
 
     def create(self) -> bool:
         """Create path procedure."""
+        tmp_list: List[PathChecker] = self._get_data(key=_Keys.LIST)  # type: ignore
         test_path: str = self.path
         file = True
         if self.path[-1] == os.sep:
             file = False
             test_path = self.path[:-1]
-        for item in self._data[_Keys.LIST]:
+        for item in tmp_list:
             if item.exists:
                 continue
             if item.path == test_path:
@@ -447,7 +431,7 @@ class PathChecker(BData):
             else:
                 os.mkdir(item.path)
         # check
-        self._data[_Keys.LIST] = []
+        self._set_data(key=_Keys.LIST, value=[])
         self.__run__()
 
         return self.exists
