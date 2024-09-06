@@ -11,8 +11,8 @@ from datetime import datetime, timezone, timedelta
 from typing import Optional, Union
 from inspect import currentframe
 
-from jsktoolbox.attribtool import NoNewAttributes
-from jsktoolbox.raisetool import Raise
+from .attribtool import NoNewAttributes
+from .raisetool import Raise
 
 
 class DateTime(NoNewAttributes):

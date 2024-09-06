@@ -14,7 +14,7 @@ import tkinter as tk
 from tkinter import Toplevel, ttk
 from typing import Any, Optional, List, Tuple, Union, Dict
 
-from jsktoolbox.tktool.base import TkBase
+from .base import TkBase
 
 
 class CreateToolTip(TkBase):

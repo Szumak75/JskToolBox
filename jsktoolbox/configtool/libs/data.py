@@ -10,9 +10,10 @@ from inspect import currentframe
 from typing import List, Tuple, Optional, Union, Any, TypeVar
 from abc import ABC, abstractmethod
 from copy import copy
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.libs.base_data import BData
+
+from ...attribtool import NoDynamicAttributes, ReadOnlyClass
+from ...raisetool import Raise
+from ...basetool.data import BData
 
 TVariableModel = TypeVar("TVariableModel", bound="VariableModel")
 

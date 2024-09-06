@@ -466,6 +466,7 @@ A class that formats the message using the `LogFormatter` class and sends the re
 
 ```
 from jsktoolbox.logstool.engines import LoggerEngineSyslog
+from jsktoolbox.logstool.keys import SysLogKeys
 ```
 
 ### Constructor
@@ -522,8 +523,8 @@ The setter thet allows you to assign an name string or `None`.
 
 Sets syslog facility.
 
-- **int** key from `.libs.base_log.SysLogKeys.facility_keys.values()` list
-- **str** key from `.libs.base_log.SysLogKeys.facility_keys` list
+- **int** key from `SysLogKeys.facility_keys.values()` list
+- **str** key from `SysLogKeys.facility_keys` list
 
 ```
 .level = Union[int, str]
@@ -531,8 +532,8 @@ Sets syslog facility.
 
 Sets syslog level.
 
-- **int** key from `.libs.base_log.SysLogKeys.level_keys.values()` list
-- **str** key from `.libs.base_log.SysLogKeys.level_keys` list
+- **int** key from `SysLogKeys.level_keys.values()` list
+- **str** key from `SysLogKeys.level_keys` list
 
 # Formatter classes
 
@@ -668,7 +669,8 @@ A simple class that defines a queue of messages sent between the `LoggerClient` 
 ### Import
 
 ```
-from jsktoolbox.logstool.libs.base_logs import LoggerQueue
+from jsktoolbox.logstool.queue import LoggerQueue
+from jsktoolbox.logstool.keys import LogsLevelKeys
 ```
 
 ### Constructor
@@ -686,12 +688,12 @@ LoggerQueue()
 Gets the queue item as a tuple(log_level: str, message: str) or `None` if the queue is empty.
 
 ```
-.put(message: str, log_level: str = .libs.base_log.LogsLevelKeys.INFO)
+.put(message: str, log_level: str = LogsLevelKeys.INFO)
 ```
 
 Arguments:
 
 - **message** [str] - _formatted message string_.
-- **log_level** [str] - _logging level string from `.libs.base_log.LogsLevelKeys.keys` tuple_.
+- **log_level** [str] - _logging level string from `LogsLevelKeys.keys` tuple_.
 
 Queues a formatted message string with the specified logging level.

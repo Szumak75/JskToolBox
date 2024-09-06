@@ -10,7 +10,7 @@
 from typing import Optional
 
 from jsktoolbox.netaddresstool.ipv4 import Address
-from jsktoolbox.logstool.logs import LoggerQueue
+from jsktoolbox.logstool.queue import LoggerQueue
 
 from jsktoolbox.devices.network.connectors import API
 from jsktoolbox.devices.mikrotik.routerboard import RouterBoard

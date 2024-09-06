@@ -19,14 +19,12 @@ from abc import ABC, abstractmethod
 from typing import List, Union, Optional, Tuple
 from inspect import currentframe
 
-
-from jsktoolbox.libs.base_data import BData
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.netaddresstool.ipv4 import Address
-from jsktoolbox.netaddresstool.ipv6 import Address6
-from jsktoolbox.attribtool import ReadOnlyClass
-
-from jsktoolbox.devices.libs.converters import B64Converter
+from ...basetool.data import BData
+from ...raisetool import Raise
+from ...netaddresstool.ipv4 import Address
+from ...netaddresstool.ipv6 import Address6
+from ...attribtool import ReadOnlyClass
+from ..libs.converters import B64Converter
 
 
 class IConnector(ABC):

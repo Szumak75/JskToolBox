@@ -8,12 +8,13 @@
 
 from typing import Dict, List, Optional, Union, TypeVar
 
-from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
+from ...logstool.queue import LoggerQueue
 
-from jsktoolbox.devices.mikrotik.elements.libs.base import BElement
-from jsktoolbox.devices.libs.base import BDev
-from jsktoolbox.devices.network.connectors import IConnector
+from ...attribtool import ReadOnlyClass
+from ...logstool.logs import LoggerClient
+from .elements.libs.base import BElement
+from ..libs.base import BDev
+from ..network.connectors import IConnector
 
 TRouterOS = TypeVar("TRouterOS", bound="BRouterOS")
 TElement = TypeVar("TElement", bound="Element")

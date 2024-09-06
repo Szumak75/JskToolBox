@@ -11,6 +11,7 @@ import time
 import sys
 
 from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.logstool.keys import LogsLevelKeys
 from jsktoolbox.logstool.logs import (
     LoggerEngine,
     LoggerClient,
@@ -21,9 +22,7 @@ from jsktoolbox.logstool.logs import (
     ThLoggerProcessor,
 )
 from jsktoolbox.libs.base_logs import (
-    LoggerQueue,
     BLoggerQueue,
-    LogsLevelKeys,
 )
 from jsktoolbox.logstool.formatters import (
     LogFormatterDateTime,
@@ -31,12 +30,13 @@ from jsktoolbox.logstool.formatters import (
     LogFormatterTime,
     LogFormatterTimestamp,
 )
+from jsktoolbox.logstool.queue import LoggerQueue
 
 
 class A(BLoggerQueue, NoDynamicAttributes):
     """"""
 
-    __le = None
+    __le = None  # type: ignore
 
     def __init__(self) -> None:
         """Constructor."""
@@ -56,7 +56,7 @@ class A(BLoggerQueue, NoDynamicAttributes):
         lff.logdir = "/tmp"
         lff.logfile = "A.debug.log"
         le.add_engine(LogsLevelKeys.DEBUG, lff)
-        self.__le = le
+        self.__le: LoggerEngine = le
 
     def send(self) -> None:
         """"""
@@ -66,11 +66,11 @@ class A(BLoggerQueue, NoDynamicAttributes):
 class B(BLoggerQueue, NoDynamicAttributes):
     """"""
 
-    msg = None
+    msg = None  # type: ignore
 
     def __init__(self, logger: LoggerClient) -> None:
         """Constructor."""
-        self.msg = logger
+        self.msg: LoggerClient = logger
         self.msg.message_debug = "coś się stało"
 
     def send(self, msg: str) -> None:
@@ -85,26 +85,26 @@ if __name__ == "__main__":
     print(f"sys.argv: {sys.argv}")
     obj_a = ThLoggerProcessor()
 
-    obj_a.logger_engine = LoggerEngine()
-    obj_a.logger_engine.add_engine(
+    le = LoggerEngine()
+    le.add_engine(
         LogsLevelKeys.INFO,
         LoggerEngineStdout("name", LogFormatterDateTime()),
     )
-    obj_a.logger_engine.add_engine(
+    le.add_engine(
         LogsLevelKeys.DEBUG,
         LoggerEngineStderr("name", LogFormatterTimestamp()),
     )
     lff = LoggerEngineFile("name", LogFormatterTime())
     lff.logdir = "/tmp"
     lff.logfile = "A.debug.log"
-    obj_a.logger_engine.add_engine(LogsLevelKeys.DEBUG, lff)
+    le.add_engine(LogsLevelKeys.DEBUG, lff)
 
-    obj_a.logger_client = LoggerClient(
-        obj_a.logger_engine.logs_queue, "ThLoggerProcessor"
-    )
+    obj_a.logger_engine = le
+
+    obj_a.logger_client = LoggerClient(le.logs_queue, "ThLoggerProcessor")
 
     # make connection to logs_queue from A object
-    obj_b = B(LoggerClient(obj_a.logger_engine.logs_queue, "B"))
+    obj_b = B(LoggerClient(le.logs_queue, "B"))
 
     obj_a.start()
     count = 0

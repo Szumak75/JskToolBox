@@ -14,8 +14,8 @@ from codecs import getencoder
 from inspect import currentframe
 from random import randrange
 
-from jsktoolbox.attribtool import NoDynamicAttributes
-from jsktoolbox.raisetool import Raise
+from ..attribtool import NoDynamicAttributes
+from ..raisetool import Raise
 
 # https://www.tutorialspoint.com/cryptography_with_python/cryptography_with_python_xor_process.htm
 # https://teachen.info/cspp/unit4/lab04-02.html

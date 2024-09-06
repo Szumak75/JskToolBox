@@ -9,25 +9,27 @@
 from typing import Dict, List, Optional, Union, Tuple, Any, TypeVar
 from inspect import currentframe
 
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
-from jsktoolbox.raisetool import Raise
-from jsktoolbox.logstool.logs import LoggerClient, LoggerQueue
-from jsktoolbox.libs.base_data import BData
+from ...logstool.queue import LoggerQueue
 
-from jsktoolbox.netaddresstool.ipv4 import (
+from ...attribtool import NoDynamicAttributes, ReadOnlyClass
+from ...raisetool import Raise
+from ...logstool.logs import LoggerClient
+from ...basetool.data import BData
+
+from ...netaddresstool.ipv4 import (
     Address,
     Netmask,
     Network,
     SubNetwork,
 )
-from jsktoolbox.netaddresstool.ipv6 import (
+from ...netaddresstool.ipv6 import (
     Address6,
     Network6,
     Prefix6,
     SubNetwork6,
 )
 
-from jsktoolbox.devices.network.connectors import IConnector
+from ..network.connectors import IConnector
 
 TDev = TypeVar("TDev", bound="BDev")
 

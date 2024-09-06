@@ -12,11 +12,11 @@ from copy import deepcopy
 from inspect import currentframe
 from typing import TypeVar, Union, List
 
-from jsktoolbox.attribtool import NoDynamicAttributes
-from jsktoolbox.raisetool import Raise
+from ..attribtool import NoDynamicAttributes
+from ..raisetool import Raise
 from .libs.octets import Octet
-from jsktoolbox.libs.interfaces.comparators import IComparators
-from jsktoolbox.libs.base_data import BClasses
+from ..libs.interfaces.comparators import IComparators
+from ..basetool.classes import BClasses
 
 TAddress = TypeVar("TAddress", bound="Address")
 
@@ -120,7 +120,7 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
         """Return string representation of address."""
         return Address.__int_to_ip(self.__var_int)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return representation of object."""
         return f"{self._c_name}('{str(self)}')"
 
