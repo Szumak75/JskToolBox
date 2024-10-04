@@ -54,8 +54,8 @@ class CommandLineParser(BData):
 
     def __init__(self) -> None:
         """Constructor."""
-        self._data[_Keys.CONFIGURED_ARGS] = {}
-        self._data[_Keys.ARGS] = {}
+        self._set_data(key=_Keys.CONFIGURED_ARGS, value={}, set_default_type=Dict)
+        self._set_data(key=_Keys.ARGS, value={}, set_default_type=Dict)
 
     def configure_argument(
         self,
@@ -74,14 +74,14 @@ class CommandLineParser(BData):
         * has_value [bool] - flag, if 'True' argument takes a value, default = False,
         * example_value [Optional[str]] - example value for argument description.
         """
-        if _Keys.SHORT_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS] = ""
-        if _Keys.LONG_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS] = []
-        if _Keys.DESC_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS] = []
-        if _Keys.EXAMPLE_OPTS not in self._data[_Keys.CONFIGURED_ARGS]:
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS] = []
+        if _Keys.SHORT_OPTS not in self.__config_args:
+            self.__config_args[_Keys.SHORT_OPTS] = ""
+        if _Keys.LONG_OPTS not in self.__config_args:
+            self.__config_args[_Keys.LONG_OPTS] = []
+        if _Keys.DESC_OPTS not in self.__config_args:
+            self.__config_args[_Keys.DESC_OPTS] = []
+        if _Keys.EXAMPLE_OPTS not in self.__config_args:
+            self.__config_args[_Keys.EXAMPLE_OPTS] = []
 
         if not short_arg:
             short_arg = "_"
@@ -94,10 +94,10 @@ class CommandLineParser(BData):
                 currentframe(),
             )
 
-        self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS] += short_arg + (
+        self.__config_args[_Keys.SHORT_OPTS] += short_arg + (
             ":" if has_value else ""
         )
-        self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS].append(
+        self.__config_args[_Keys.LONG_OPTS].append(
             long_arg + ("=" if has_value else "")
         )
 
@@ -113,30 +113,30 @@ class CommandLineParser(BData):
                     tmp = ""
             else:
                 tmp = str(desc_arg)
-        self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS].append(tmp)
+        self.__config_args[_Keys.DESC_OPTS].append(tmp)
 
         tmp = ""
         if example_value:
             if isinstance(example_value, str):
                 tmp = example_value
 
-        self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS].append(tmp)
+        self.__config_args[_Keys.EXAMPLE_OPTS].append(tmp)
 
     def parse_arguments(self) -> bool:
         """Command line arguments parser."""
         # replace ':' if exists in short option string
-        short_mod = str(self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]).replace(
+        short_mod = str(self.__config_args[_Keys.SHORT_OPTS]).replace(
             ":", ""
         )
         long_mod = []
-        for item in self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS]:
+        for item in self.__config_args[_Keys.LONG_OPTS]:
             long_mod.append(item.replace("=", ""))
 
         try:
             opts, _ = getopt.getopt(
                 sys.argv[1:],
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS],
-                self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS],
+                self.__config_args[_Keys.SHORT_OPTS],
+                self.__config_args[_Keys.LONG_OPTS],
             )
         except getopt.GetoptError as ex:
             print(f"Command line argument error: {ex}")
@@ -164,14 +164,14 @@ class CommandLineParser(BData):
         """
         out: Dict[str, Any] = {}
         short_mod: str = str(
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.SHORT_OPTS]
+            self.__config_args[_Keys.SHORT_OPTS]
         ).replace(":", "")
 
         for short_arg, long_arg, desc_arg, ex_arg in zip(
             short_mod,
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.LONG_OPTS],
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.DESC_OPTS],
-            self._data[_Keys.CONFIGURED_ARGS][_Keys.EXAMPLE_OPTS],
+            self.__config_args[_Keys.LONG_OPTS],
+            self.__config_args[_Keys.DESC_OPTS],
+            self.__config_args[_Keys.EXAMPLE_OPTS],
         ):
             out[long_arg] = {
                 "short": short_arg if short_arg != "_" else "",
@@ -183,8 +183,13 @@ class CommandLineParser(BData):
 
     @property
     def args(self) -> Dict[str, Any]:
-        """Return parsed arguments dict."""
-        return self._data[_Keys.ARGS]
+        """Returns parsed arguments dict."""
+        return self._get_data(key=_Keys.ARGS)  # type: ignore
+
+    @property
+    def __config_args(self) -> Dict[str, Any]:
+        """Returns configured arguments dict."""
+        return self._get_data(key=_Keys.CONFIGURED_ARGS)  # type: ignore
 
 
 class Env(BData):
