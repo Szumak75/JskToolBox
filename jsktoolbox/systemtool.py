@@ -225,7 +225,10 @@ class Env(BData):
         return ""
 
     def os_arch(self) -> str:
-        """Return multiplatform os architecture."""
+        """Returns multiplatform os architecture.
+
+        Return [str]: '32-bit'|'64-bit'
+        """
         os_arch = "32-bit"
         if os.name == "nt":
             output = subprocess.check_output(
