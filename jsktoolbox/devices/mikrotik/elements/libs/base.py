@@ -29,16 +29,16 @@ class BElement(BData):
     @property
     def attrib(self) -> Dict:
         """Returns attributes dict."""
-        if _Keys.ATTRIB not in self._data:
-            self._data[_Keys.ATTRIB] = {}
-        return self._data[_Keys.ATTRIB]
+        if self._get_data(key=_Keys.ATTRIB) is None:
+            self._set_data(key=_Keys.ATTRIB, set_default_type=Dict, value={})
+        return self._get_data(key=_Keys.ATTRIB)  # type: ignore
 
     @property
     def list(self) -> List:
         """Returns lists od items."""
-        if _Keys.LIST not in self._data:
-            self._data[_Keys.LIST] = []
-        return self._data[_Keys.LIST]
+        if self._get_data(key=_Keys.LIST) is None:
+            self._set_data(key=_Keys.LIST, set_default_type=List, value=[])
+        return self._get_data(key=_Keys.LIST)  # type: ignore
 
 
 # #[EOF]#######################################################################

@@ -32,7 +32,7 @@ if __name__ == "__main__":
     query = RBQuery()
     # query.add_attrib("list", "allowed-devices3")
     query.add_attrib("list", "dev-test")
-    query.add_attrib("address", "10.30.32.9")
+    # query.add_attrib("address", "10.30.32.9")
     # query.add_attrib("state", "Full")
     print(query.query)
 

@@ -136,14 +136,16 @@ class API(IConnector, BData):
         verbose: bool = False,
     ) -> None:
         """Constructor."""
-        self._data[_Keys.OPTIONS] = "+cet1024w"
-        self._data[_Keys.TIMEOUT] = float(timeout)
-        self._data[_Keys.ERRORS] = []
-        self._data[_Keys.STDIN] = []
-        self._data[_Keys.STDERR] = []
-        self._data[_Keys.STDOUT] = []
-        self._data[_Keys.SSL] = use_ssl
-        self._data[_Keys.SOCKET] = None
+        self._set_data(key=_Keys.OPTIONS, set_default_type=str, value="+cet1024w")
+        self._set_data(key=_Keys.TIMEOUT, set_default_type=float, value=float(timeout))
+        self._set_data(key=_Keys.ERRORS, set_default_type=List, value=[])
+        self._set_data(key=_Keys.STDIN, set_default_type=List, value=[])
+        self._set_data(key=_Keys.STDERR, set_default_type=List, value=[])
+        self._set_data(key=_Keys.STDOUT, set_default_type=List, value=[])
+        self._set_data(key=_Keys.SSL, set_default_type=bool, value=use_ssl)
+        self._set_data(
+            key=_Keys.SOCKET, set_default_type=Optional[socket.socket], value=None
+        )
         self.port = port
         if ip_address:
             self.address = ip_address
@@ -159,36 +161,27 @@ class API(IConnector, BData):
     @property
     def __stdin(self) -> List:
         """Returns stdin list."""
-        return self._data[_Keys.STDIN]
+        return self._get_data(key=_Keys.STDIN)  # type: ignore
 
     @property
     def __stderr(self) -> List:
         """Returns stderr list."""
-        return self._data[_Keys.STDERR]
+        return self._get_data(key=_Keys.STDERR)  # type: ignore
 
     @property
     def __stdout(self) -> List:
         """Returns stdout list."""
-        return self._data[_Keys.STDOUT]
+        return self._get_data(key=_Keys.STDOUT)  # type: ignore
 
     @property
     def __socket(self) -> Optional[socket.socket]:
         """Returns connection socket."""
-        return self._data[_Keys.SOCKET]
+        return self._get_data(key=_Keys.SOCKET)  # type: ignore
 
     @__socket.setter
     def __socket(self, connection_socket: Optional[socket.socket]) -> None:
         """Sets connection socket."""
-        if connection_socket is not None and not isinstance(
-            connection_socket, socket.socket
-        ):
-            raise Raise.error(
-                "Expected socket.socket type.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.SOCKET] = connection_socket
+        self._set_data(key=_Keys.SOCKET, value=connection_socket)
 
     def __command_translator(self, command: str) -> List[str]:
         """Method for translate mikrotik CLI commands to format accepted
@@ -394,6 +387,11 @@ class API(IConnector, BData):
             ret += soc_ret.decode(sys.stdout.encoding, "replace")
         return ret
 
+    @property
+    def __errors(self) -> List[str]:
+        """Returns ERRORS list."""
+        return self._get_data(key=_Keys.ERRORS)  # type: ignore
+
     def __get_socket(self) -> bool:
         """Try to open client socket for communications."""
         res = socket.getaddrinfo(
@@ -409,15 +407,15 @@ class API(IConnector, BData):
             skt = socket.socket(af, socktype, proto)
         except socket.error as ex:
             self.__socket = None
-            self._data[_Keys.ERRORS].append(f"socket creation error: {ex}")
+            self.__errors.append(f"socket creation error: {ex}")
             return False
         except Exception as ex:
             self.__socket = None
-            self._data[_Keys.ERRORS].append(f"socket creation error: {ex}")
+            self.__errors.append(f"socket creation error: {ex}")
             return False
 
         # set ssl if needed
-        if self._data[_Keys.SSL]:
+        if self._get_data(key=_Keys.SSL):
             context: ssl.SSLContext = ssl.create_default_context()
             context.check_hostname = False
             context.verify_mode = ssl.CERT_NONE
@@ -435,11 +433,11 @@ class API(IConnector, BData):
             self.__socket.connect(sa)
         except socket.error as ex:
             self.__socket = None
-            self._data[_Keys.ERRORS].append(f"socket connection error: {ex}")
+            self.__errors.append(f"socket connection error: {ex}")
             return False
         except Exception as ex:
             self.__socket = None
-            self._data[_Keys.ERRORS].append(f"socket connection error: {ex}")
+            self.__errors.append(f"socket connection error: {ex}")
             return False
         return True
 
@@ -447,15 +445,15 @@ class API(IConnector, BData):
         """connection method."""
         # get socket
         if not self.__get_socket():
-            self._data[_Keys.ERRORS].append("could not open socket")
+            self.__errors.append("could not open socket")
             return False
 
         # try to login
         for repl, attrs in self.__talk(
             [
                 "/login",
-                f"=name={self._data[_Keys.USER]}",
-                f"=password={self._data[_Keys.PASS]}",
+                f"=name={self._get_data(key=_Keys.USER)}",
+                f"=password={self._get_data(key=_Keys.PASS)}",
             ]
         ):
             if repl == "!trap":
@@ -466,12 +464,12 @@ class API(IConnector, BData):
                 )
                 md: hashlib._Hash = hashlib.md5()
                 md.update(b"\x00")
-                md.update(self._data[_Keys.PASS].encode(sys.stdout.encoding))
+                md.update(self._get_data(key=_Keys.PASS).encode(sys.stdout.encoding))  # type: ignore
                 md.update(chal)
                 for repl2, attrs2 in self.__talk(
                     [
                         "/login",
-                        f"=name={self._data[_Keys.USER]}",
+                        f"=name={self._get_data(key=_Keys.USER)}",
                         "=response=00"
                         + binascii.hexlify(md.digest()).decode(sys.stdout.encoding),
                     ]
@@ -518,7 +516,7 @@ class API(IConnector, BData):
         try:
             self.__socket.close()
         except Exception as ex:
-            self._data[_Keys.ERRORS].append(f'close error: "{ex}"')
+            self.__errors.append(f'close error: "{ex}"')
         else:
             return True
 
@@ -526,7 +524,7 @@ class API(IConnector, BData):
 
     def errors(self) -> List[str]:
         """Get list of errors after executed commands."""
-        return self._data[_Keys.ERRORS]
+        return self.__errors
 
     def execute(self, commands: Union[str, List]) -> bool:
         """Execute commands."""
@@ -573,23 +571,17 @@ class API(IConnector, BData):
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
         """Get host address property."""
-        if _Keys.IPADDR not in self._data:
-            self._data[_Keys.IPADDR] = None
-        return self._data[_Keys.IPADDR]
+        return self._get_data(key=_Keys.IPADDR, default_value=None)
 
     @address.setter
     def address(self, ip_address: Union[Address, Address6]) -> None:
         """Set host address setter."""
         if ip_address:
-            if isinstance(ip_address, (Address, Address6)):
-                self._data[_Keys.IPADDR] = ip_address
-            else:
-                raise Raise.error(
-                    f"Expected Address or Address6 type, received: '{type(ip_address)}'",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+            self._set_data(
+                key=_Keys.IPADDR,
+                value=ip_address,
+                set_default_type=Union[Address, Address6],
+            )
 
     @property
     def is_alive(self) -> bool:
@@ -605,32 +597,21 @@ class API(IConnector, BData):
         try:
             self.__talk(["/system/identity/print"])
         except (socket.timeout, IndexError, BrokenPipeError):
-            self._data[_Keys.ERRORS].append(
-                "RouterOS does not respond, closing socket."
-            )
+            self.__errors.append("RouterOS does not respond, closing socket.")
             self.disconnect()
             return False
-        self.__socket.settimeout(self._data[_Keys.TIMEOUT])
+        self.__socket.settimeout(self._get_data(key=_Keys.TIMEOUT))
         return True
 
     @property
     def login(self) -> Optional[str]:
         """Get login property."""
-        if _Keys.USER not in self._data:
-            self._data[_Keys.USER] = None
-        return self._data[_Keys.USER]
+        return self._get_data(key=_Keys.USER, default_value=None)
 
     @login.setter
     def login(self, username: str) -> None:
         """Set login property."""
-        if username is not None and not isinstance(username, str):
-            raise Raise.error(
-                f"Expected str type, received: '{type(username)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.USER] = username
+        self._set_data(key=_Keys.USER, value=username, set_default_type=str)
 
     def outputs(self) -> Tuple:
         """Get list of results after executed commands."""
@@ -639,42 +620,22 @@ class API(IConnector, BData):
     @property
     def password(self) -> Optional[str]:
         """Get password property."""
-        if _Keys.PASS not in self._data:
-            self._data[_Keys.PASS] = None
-        return self._data[_Keys.PASS]
+        return self._get_data(key=_Keys.PASS, default_value=None)
 
     @password.setter
     def password(self, passwd: str) -> None:
         """Set password property."""
-        if passwd is not None and not isinstance(passwd, str):
-            raise Raise.error(
-                f"Expected str type, received: '{type(passwd)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.PASS] = passwd
+        self._set_data(key=_Keys.PASS, value=passwd, set_default_type=str)
 
     @property
     def port(self) -> Optional[int]:
         """Get port property."""
-        if _Keys.PORT not in self._data:
-            self._data[_Keys.PORT] = None
-        return self._data[_Keys.PORT]
+        return self._get_data(key=_Keys.PORT, default_value=None)
 
     @port.setter
     def port(self, port: int) -> None:
         """Set port property."""
-        if port is not None:
-            if isinstance(port, int):
-                self._data[_Keys.PORT] = port
-            else:
-                raise Raise.error(
-                    f"Expected int type, received: '{type(port)}'.",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+        self._set_data(key=_Keys.PORT, value=port, set_default_type=int)
 
     @property
     def prototype(self) -> str:
@@ -721,23 +682,17 @@ class SSH(IConnector, BData):
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
         """Get host address property."""
-        if _Keys.IPADDR not in self._data:
-            self._data[_Keys.IPADDR] = None
-        return self._data[_Keys.IPADDR]
+        return self._get_data(key=_Keys.IPADDR, default_value=None)
 
     @address.setter
     def address(self, ip_address: Union[Address, Address6]) -> None:
         """Set host address setter."""
         if ip_address:
-            if isinstance(ip_address, (Address, Address6)):
-                self._data[_Keys.IPADDR] = ip_address
-            else:
-                raise Raise.error(
-                    f"Expected Address or Address6 type, received: '{type(ip_address)}'",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+            self._set_data(
+                key=_Keys.IPADDR,
+                value=ip_address,
+                set_default_type=Union[Address, Address6],
+            )
 
     @property
     def is_alive(self) -> bool:
@@ -747,21 +702,12 @@ class SSH(IConnector, BData):
     @property
     def login(self) -> Optional[str]:
         """Get login property."""
-        if _Keys.USER not in self._data:
-            self._data[_Keys.USER] = None
-        return self._data[_Keys.USER]
+        return self._get_data(key=_Keys.USER, default_value=None)
 
     @login.setter
     def login(self, username: str) -> None:
         """Set login property."""
-        if username is not None and not isinstance(username, str):
-            raise Raise.error(
-                f"Expected str type, received: '{type(username)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.USER] = username
+        self._set_data(key=_Keys.USER, value=username, set_default_type=str)
 
     def outputs(self) -> Tuple:
         """Get list of results after executed commands."""
@@ -770,42 +716,22 @@ class SSH(IConnector, BData):
     @property
     def password(self) -> Optional[str]:
         """Get password property."""
-        if _Keys.PASS not in self._data:
-            self._data[_Keys.PASS] = None
-        return self._data[_Keys.PASS]
+        return self._get_data(key=_Keys.PASS, default_value=None)
 
     @password.setter
     def password(self, passwd: str) -> None:
         """Set password property."""
-        if passwd is not None and not isinstance(passwd, str):
-            raise Raise.error(
-                f"Expected str type, received: '{type(passwd)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.PASS] = passwd
+        self._set_data(key=_Keys.PASS, value=passwd, set_default_type=str)
 
     @property
     def port(self) -> Optional[int]:
         """Get port property."""
-        if _Keys.PORT not in self._data:
-            self._data[_Keys.PORT] = None
-        return self._data[_Keys.PORT]
+        return self._get_data(key=_Keys.PORT, default_value=None)
 
     @port.setter
     def port(self, port: int) -> None:
         """Set port property."""
-        if port is not None:
-            if isinstance(port, int):
-                self._data[_Keys.PORT] = port
-            else:
-                raise Raise.error(
-                    f"Expected int type, received: '{type(port)}'.",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+        self._set_data(key=_Keys.PORT, value=port, set_default_type=int)
 
     @property
     def prototype(self) -> str:

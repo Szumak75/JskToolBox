@@ -104,9 +104,9 @@ class BDev(BDebug):
     @property
     def root(self) -> str:
         """Gets RouterOS command root."""
-        if _Keys.ROOT not in self._data:
-            self._data[_Keys.ROOT] = ""
-        tmp: str = self._data[_Keys.ROOT]
+        tmp: str = self._get_data(
+            key=_Keys.ROOT, set_default_type=str, default_value=""
+        )  # type: ignore
         if self.parent is not None:
             item: BDev = self.parent
             tmp = f"{item.root}{tmp}"
@@ -115,33 +115,19 @@ class BDev(BDebug):
     @root.setter
     def root(self, value: str) -> None:
         """Sets RouterOS command root."""
-        if not isinstance(value, str):
-            raise Raise.error(
-                f"Expected string type, received: '{type(value)}'",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.ROOT] = value
+        self._set_data(key=_Keys.ROOT, set_default_type=str, value=value)
 
     @property
     def parent(self) -> Optional[TDev]:
         """Returns parent for current object."""
-        if _Keys.PARENT not in self._data:
-            self._data[_Keys.PARENT] = None
-        return self._data[_Keys.PARENT]
+        return self._get_data(
+            key=_Keys.PARENT, set_default_type=Optional[BDev], default_value=None
+        )
 
     @parent.setter
     def parent(self, value: Optional[TDev]) -> None:
         """Sets parent for current object."""
-        if value is not None and not isinstance(value, BDev):
-            raise Raise.error(
-                f"Expected BDev type, received: '{type(value)}'",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.PARENT] = value
+        self._set_data(key=_Keys.PARENT, set_default_type=Optional[BDev], value=value)
 
 
 # #[EOF]#######################################################################
