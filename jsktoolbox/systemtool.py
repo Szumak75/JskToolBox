@@ -18,9 +18,7 @@ from inspect import currentframe
 from pathlib import Path
 from typing import Optional, Union, List, Tuple, Dict, Any
 
-from jsktoolbox.attribtool import NoDynamicAttributes
-
-from .attribtool import NoDynamicAttributes, ReadOnlyClass
+from .attribtool import ReadOnlyClass
 from .raisetool import Raise
 from .basetool.data import BData
 
@@ -94,9 +92,7 @@ class CommandLineParser(BData):
                 currentframe(),
             )
 
-        self.__config_args[_Keys.SHORT_OPTS] += short_arg + (
-            ":" if has_value else ""
-        )
+        self.__config_args[_Keys.SHORT_OPTS] += short_arg + (":" if has_value else "")
         self.__config_args[_Keys.LONG_OPTS].append(
             long_arg + ("=" if has_value else "")
         )
@@ -125,9 +121,7 @@ class CommandLineParser(BData):
     def parse_arguments(self) -> bool:
         """Command line arguments parser."""
         # replace ':' if exists in short option string
-        short_mod = str(self.__config_args[_Keys.SHORT_OPTS]).replace(
-            ":", ""
-        )
+        short_mod = str(self.__config_args[_Keys.SHORT_OPTS]).replace(":", "")
         long_mod = []
         for item in self.__config_args[_Keys.LONG_OPTS]:
             long_mod.append(item.replace("=", ""))
@@ -163,9 +157,7 @@ class CommandLineParser(BData):
         {'long opt name':{'short':str, 'has_value':bool, 'description':str, 'example':str}}
         """
         out: Dict[str, Any] = {}
-        short_mod: str = str(
-            self.__config_args[_Keys.SHORT_OPTS]
-        ).replace(":", "")
+        short_mod: str = str(self.__config_args[_Keys.SHORT_OPTS]).replace(":", "")
 
         for short_arg, long_arg, desc_arg, ex_arg in zip(
             short_mod,
