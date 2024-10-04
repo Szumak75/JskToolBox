@@ -8,15 +8,13 @@
 """
 
 
-from inspect import currentframe
-from typing import Optional, Tuple, List, Any
+from typing import Optional, List, Any
 
 from ..logstool.keys import LogKeys
 from ..logstool.queue import LoggerQueue
 
 from .data import BData
 from ..attribtool import NoDynamicAttributes
-from ..raisetool import Raise
 
 
 class BLoggerQueue(BData):

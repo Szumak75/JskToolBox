@@ -35,7 +35,6 @@ class FileProcessor(BData, NoDynamicAttributes):
         """Return config file path."""
         out: Optional[PathChecker] = self._get_data(
             key=_Keys.FILE,
-            set_default_type=Optional[PathChecker],
         )
         if out:
             return out.path
@@ -46,29 +45,43 @@ class FileProcessor(BData, NoDynamicAttributes):
         """Set file name."""
         self._set_data(
             key=_Keys.FILE,
-            set_default_type=Optional[PathChecker],
+            set_default_type=PathChecker,
             value=PathChecker(path),
         )
 
     @property
     def file_exists(self) -> bool:
         """Check if the file exists and is a file."""
-        obj: PathChecker = self._data[_Keys.FILE]
-        return obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
+        obj: Optional[PathChecker] = self._get_data(key=_Keys.FILE)
+        if obj:
+            return obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
+        raise Raise.error(
+            f"{self._c_name}.file not set.",
+            AttributeError,
+            self._c_name,
+            currentframe(),
+        )
 
     def file_create(self) -> bool:
         """Try to create file."""
         if self.file_exists:
             return True
-        obj: PathChecker = self._data[_Keys.FILE]
-        if obj.exists and obj.is_dir:
-            raise Raise.error(
-                f"Given path: {obj.path} exists and is a directory.",
-                OSError,
-                self._c_name,
-                currentframe(),
-            )
-        return obj.create()
+        obj: Optional[PathChecker] = self._get_data(key=_Keys.FILE)
+        if obj:
+            if obj.exists and obj.is_dir:
+                raise Raise.error(
+                    f"Given path: {obj.path} exists and is a directory.",
+                    OSError,
+                    self._c_name,
+                    currentframe(),
+                )
+            return obj.create()
+        raise Raise.error(
+            f"{self._c_name}.file not set.",
+            AttributeError,
+            self._c_name,
+            currentframe(),
+        )
 
     def read(self) -> str:
         """Try to read config file."""
