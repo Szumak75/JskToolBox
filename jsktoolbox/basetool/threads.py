@@ -40,7 +40,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     TSTATE_LOCK: str = "_tstate_lock"
 
 
-class ThBaseObject(BData, NoDynamicAttributes):
+class ThBaseObject(BData):
     """Base class for classes derived from threading.Thread.
 
     Definition of properties used in the threading library.

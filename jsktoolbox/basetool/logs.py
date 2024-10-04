@@ -19,43 +19,42 @@ from ..attribtool import NoDynamicAttributes
 from ..raisetool import Raise
 
 
-class BLoggerQueue(BData, NoDynamicAttributes):
+class BLoggerQueue(BData):
     """Logger Queue base metaclass."""
 
     @property
     def logs_queue(self) -> Optional[LoggerQueue]:
         """Get LoggerQueue object."""
-        if LogKeys.QUEUE not in self._data:
-            return None
-        return self._data[LogKeys.QUEUE]
+        return self._get_data(
+            key=LogKeys.QUEUE,
+            default_value=None,
+            set_default_type=Optional[LoggerQueue],
+        )
 
     @logs_queue.setter
     def logs_queue(self, obj: Optional[LoggerQueue]) -> None:
         """Set LoggerQueue object."""
-        if obj and not isinstance(obj, LoggerQueue):
-            raise Raise.error(
-                f"Expected LoggerQueue type, received: '{type(obj)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[LogKeys.QUEUE] = obj
+        self._set_data(
+            key=LogKeys.QUEUE, value=obj, set_default_type=Optional[LoggerQueue]
+        )
 
 
-class BLoggerEngine(BData, NoDynamicAttributes):
+class BLoggerEngine(BData):
     """Base class for LoggerEngine classes."""
 
     @property
     def name(self) -> Optional[str]:
         """Return app name string."""
-        if LogKeys.NAME not in self._data:
-            self._data[LogKeys.NAME] = None
-        return self._data[LogKeys.NAME]
+        return self._get_data(
+            key=LogKeys.NAME,
+            set_default_type=Optional[str],
+            default_value=None,
+        )
 
     @name.setter
     def name(self, value: str) -> None:
         """Set app name string."""
-        self._data[LogKeys.NAME] = value
+        self._set_data(key=LogKeys.NAME, value=value, set_default_type=Optional[str])
 
 
 class BLogFormatter(NoDynamicAttributes):

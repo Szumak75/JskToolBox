@@ -11,8 +11,8 @@ from typing import Dict, List, Optional
 from jsktoolbox.basetool.data import BData
 
 
-class TestDData(unittest.TestCase):
-    """Testing DData container class."""
+class TestBData(unittest.TestCase):
+    """Testing BData container class."""
 
     def setUp(self) -> None:
         """Set up."""
