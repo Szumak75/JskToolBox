@@ -192,7 +192,7 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
         """The interior property."""
         return self.__interior
 
-    def __configure_interior(self, event) -> None:
+    def __configure_interior(self, event: Optional[tk.Event] = None) -> None:
         # Update the scrollbar to match the size of the inner frame.
         self.__canvas.config(
             scrollregion=(
@@ -206,7 +206,7 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
             # Update the canvas's width to fit the inner frame.
             self.__canvas.config(width=self.__interior.winfo_reqwidth())
 
-    def __configure_canvas(self, event: tk.Event) -> None:
+    def __configure_canvas(self, event: Optional[tk.Event] = None) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
         if self.__interior.winfo_reqwidth() != self.__canvas.winfo_width():
@@ -286,7 +286,7 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
         """The interior property."""
         return self.__interior
 
-    def __configure_interior(self, event) -> None:
+    def __configure_interior(self, event: Optional[tk.Event] = None) -> None:
         # Update the scrollbar to match the size of the inner frame.
         self.__canvas.config(
             scrollregion=(
