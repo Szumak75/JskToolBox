@@ -48,206 +48,151 @@ class ThBaseObject(BData):
 
     @property
     def _target(self) -> Optional[Any]:
-        if _Keys.TARGET not in self._data:
-            self._data[_Keys.TARGET] = None
-        return self._data[_Keys.TARGET]
+        return self._get_data(
+            key=_Keys.TARGET, set_default_type=Optional[Any], default_value=None
+        )
 
     @_target.setter
     def _target(self, value: Any) -> None:
-        self._data[_Keys.TARGET] = value
+        self._set_data(key=_Keys.TARGET, value=value, set_default_type=Optional[Any])
 
     @property
     def _name(self) -> Optional[str]:
-        if _Keys.NAME not in self._data:
-            self._data[_Keys.NAME] = None
-        return self._data[_Keys.NAME]
+        return self._get_data(
+            key=_Keys.NAME, set_default_type=Optional[str], default_value=None
+        )
 
     @_name.setter
     def _name(self, value: Optional[str]) -> None:
-        if value is not None and not isinstance(value, str):
-            raise Raise.error(
-                f"Expected String type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.NAME] = value
+        self._set_data(key=_Keys.NAME, value=value, set_default_type=Optional[str])
 
     @property
     def _args(self) -> Optional[Tuple]:
-        if _Keys.ARGS not in self._data:
-            self._data[_Keys.ARGS] = None
-        return self._data[_Keys.ARGS]
+        return self._get_data(
+            key=_Keys.ARGS, set_default_type=Optional[Tuple], default_value=None
+        )
 
     @_args.setter
     def _args(self, value: Tuple) -> None:
-        self._data[_Keys.ARGS] = value
+        self._set_data(key=_Keys.ARGS, value=value, set_default_type=Optional[Tuple])
 
     @property
     def _kwargs(self) -> Optional[Dict]:
-        if _Keys.KWARGS not in self._data:
-            self._data[_Keys.KWARGS] = None
-        return self._data[_Keys.KWARGS]
+        return self._get_data(
+            key=_Keys.KWARGS, set_default_type=Optional[Dict], default_value=None
+        )
 
     @_kwargs.setter
     def _kwargs(self, value: Dict) -> None:
-        if value is not None and not isinstance(value, Dict):
-            raise Raise.error(
-                f"Expected Dict type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.KWARGS] = value
+        self._set_data(key=_Keys.KWARGS, value=value, set_default_type=Optional[Dict])
 
     @property
     def _daemonic(self) -> Optional[bool]:
-        if _Keys.DAEMONIC not in self._data:
-            self._data[_Keys.DAEMONIC] = None
-        return self._data[_Keys.DAEMONIC]
+        return self._get_data(
+            key=_Keys.DAEMONIC, set_default_type=Optional[bool], default_value=None
+        )
 
     @_daemonic.setter
     def _daemonic(self, value: bool) -> None:
-        if not isinstance(value, bool):
-            raise Raise.error(
-                f"Expected Boolean type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.DAEMONIC] = value
+        self._set_data(key=_Keys.DAEMONIC, value=value, set_default_type=Optional[bool])
 
     @property
     def _debug(self) -> Optional[bool]:
-        if _Keys.DEBUG not in self._data:
-            self._data[_Keys.DEBUG] = None
-        return self._data[_Keys.DEBUG]
+        return self._get_data(
+            key=_Keys.DEBUG, set_default_type=Optional[bool], default_value=None
+        )
 
     @_debug.setter
     def _debug(self, value: bool) -> None:
-        if not isinstance(value, bool):
-            raise Raise.error(
-                f"Expected Boolean type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.DEBUG] = value
+        self._set_data(key=_Keys.DEBUG, value=value, set_default_type=Optional[bool])
 
     @property
     def _ident(self) -> Optional[int]:
-        if _Keys.IDENT not in self._data:
-            self._data[_Keys.IDENT] = None
-        return self._data[_Keys.IDENT]
+        return self._get_data(
+            key=_Keys.IDENT, set_default_type=Optional[int], default_value=None
+        )
 
     @_ident.setter
     def _ident(self, value: Optional[int]) -> None:
-        if value is not None and not isinstance(value, int):
-            raise Raise.error(
-                f"Expected Integer type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.IDENT] = value
+        self._set_data(key=_Keys.IDENT, value=value, set_default_type=Optional[int])
 
     @property
     def _native_id(self) -> Optional[int]:
-        if _Keys.NATIVE_ID not in self._data:
-            self._data[_Keys.NATIVE_ID] = None
-        return self._data[_Keys.NATIVE_ID]
+        return self._get_data(
+            key=_Keys.NATIVE_ID, set_default_type=Optional[int], default_value=None
+        )
 
     @_native_id.setter
     def _native_id(self, value: Optional[int]) -> None:
-        if value is not None and not isinstance(value, int):
-            raise Raise.error(
-                f"Expected Integer type, received '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.NATIVE_ID] = value
+        self._set_data(key=_Keys.NATIVE_ID, value=value, set_default_type=Optional[int])
 
     @property
     def _tstate_lock(self) -> Optional[Any]:
-        if _Keys.TSTATE_LOCK not in self._data:
-            self._data[_Keys.TSTATE_LOCK] = None
-        return self._data[_Keys.TSTATE_LOCK]
+        return self._get_data(
+            key=_Keys.TSTATE_LOCK, set_default_type=Optional[Any], default_value=None
+        )
 
     @_tstate_lock.setter
     def _tstate_lock(self, value: Any) -> None:
-        self._data[_Keys.TSTATE_LOCK] = value
+        self._set_data(
+            key=_Keys.TSTATE_LOCK, value=value, set_default_type=Optional[Any]
+        )
 
     @property
     def _started(self) -> Optional[Event]:
-        if _Keys.STARTED not in self._data:
-            self._data[_Keys.STARTED] = None
-        return self._data[_Keys.STARTED]
+        return self._get_data(
+            key=_Keys.STARTED, set_default_type=Optional[Event], default_value=None
+        )
 
     @_started.setter
     def _started(self, value: Event) -> None:
-        if value is not None and not isinstance(value, Event):
-            raise Raise.error(
-                f"Expected threading.Event type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.STARTED] = value
+        self._set_data(key=_Keys.STARTED, value=value, set_default_type=Optional[Event])
 
     @property
     def _is_stopped(self) -> Optional[bool]:
-        if _Keys.IS_STOPPED not in self._data:
-            self._data[_Keys.IS_STOPPED] = None
-        return self._data[_Keys.IS_STOPPED]
+        return self._get_data(
+            key=_Keys.IS_STOPPED, set_default_type=Optional[bool], default_value=None
+        )
 
     @_is_stopped.setter
     def _is_stopped(self, value: bool) -> None:
-        if not isinstance(value, bool):
-            raise Raise.error(
-                f"Expected Boolean type, received: '{type(value)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.IS_STOPPED] = value
+        self._set_data(
+            key=_Keys.IS_STOPPED, value=value, set_default_type=Optional[bool]
+        )
 
     @property
     def _stderr(self) -> Optional[Any]:
-        if _Keys.STDERR not in self._data:
-            self._data[_Keys.STDERR] = None
-        return self._data[_Keys.STDERR]
+        return self._get_data(
+            key=_Keys.STDERR, set_default_type=Optional[Any], default_value=None
+        )
 
     @_stderr.setter
     def _stderr(self, value: Any) -> None:
-        self._data[_Keys.STDERR] = value
+        self._set_data(key=_Keys.STDERR, value=value, set_default_type=Optional[Any])
 
     @property
     def _invoke_excepthook(self) -> Optional[Any]:
-        if _Keys.INVOKE_EXCEPTHOOK not in self._data:
-            self._data[_Keys.INVOKE_EXCEPTHOOK] = None
-        return self._data[_Keys.INVOKE_EXCEPTHOOK]
+        return self._get_data(
+            key=_Keys.INVOKE_EXCEPTHOOK,
+            set_default_type=Optional[Any],
+            default_value=None,
+        )
 
     @_invoke_excepthook.setter
     def _invoke_excepthook(self, value: Any) -> None:
-        self._data[_Keys.INVOKE_EXCEPTHOOK] = value
+        self._set_data(
+            key=_Keys.INVOKE_EXCEPTHOOK, value=value, set_default_type=Optional[Any]
+        )
 
     @property
     def _stop_event(self) -> Optional[Event]:
-        if _Keys.STOP_EVENT not in self._data:
-            self._data[_Keys.STOP_EVENT] = None
-        return self._data[_Keys.STOP_EVENT]
+        return self._get_data(
+            key=_Keys.STOP_EVENT, set_default_type=Optional[Event], default_value=None
+        )
 
     @_stop_event.setter
     def _stop_event(self, obj: Event) -> None:
-        if obj is not None and not isinstance(obj, Event):
-            raise Raise.error(
-                f"Expected threading.Event type, received: '{type(obj)}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.STOP_EVENT] = obj
+        self._set_data(key=_Keys.STOP_EVENT, value=obj, set_default_type=None)
 
     @property
     def is_stopped(self) -> Optional[bool]:
@@ -262,21 +207,14 @@ class ThBaseObject(BData):
     @property
     def sleep_period(self) -> float:
         """Return sleep period value."""
-        if _Keys.SLEEP_PERIOD not in self._data:
-            self._data[_Keys.SLEEP_PERIOD] = 1.0
-        return self._data[_Keys.SLEEP_PERIOD]
+        return self._get_data(
+            key=_Keys.SLEEP_PERIOD, set_default_type=float, default_value=1.0
+        )  # type: ignore
 
     @sleep_period.setter
     def sleep_period(self, value: float) -> None:
         """Set sleep period value."""
-        if not isinstance(value, float):
-            raise Raise.error(
-                f"Expected positive float type, received: '{value}'.",
-                TypeError,
-                self._c_name,
-                currentframe(),
-            )
-        self._data[_Keys.SLEEP_PERIOD] = value
+        self._set_data(key=_Keys.SLEEP_PERIOD, value=value, set_default_type=float)
 
 
 # #[EOF]#######################################################################
