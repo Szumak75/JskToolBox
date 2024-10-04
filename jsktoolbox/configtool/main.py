@@ -75,12 +75,12 @@ class Config(BData, NoDynamicAttributes):
     @property
     def __fp(self) -> FileProcessor:
         """Return FileProcessor object."""
-        return self._get_data(key=_Keys.FP, set_default_type=FileProcessor)  # type: ignore
+        return self._get_data(key=_Keys.FP)  # type: ignore
 
     @property
     def __dp(self) -> DataProcessor:
         """Return DataProcessor object."""
-        return self._get_data(key=_Keys.DP, set_default_type=DataProcessor)  # type: ignore
+        return self._get_data(key=_Keys.DP)  # type: ignore
 
     @property
     def file_exists(self) -> bool:

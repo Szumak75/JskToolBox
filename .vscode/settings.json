@@ -1,9 +1,12 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.words": [
+        "Ascher",
         "basetool",
+        "Martelli",
         "posix",
         "posixpath",
+        "Ravenscroft",
         "systemtool"
     ]
 }
