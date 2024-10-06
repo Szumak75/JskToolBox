@@ -100,8 +100,8 @@ class ThBaseObject(BData):
         return self._get_data(key=_Keys.IDENT, default_value=None)
 
     @_ident.setter
-    def _ident(self, value: int) -> None:
-        self._set_data(key=_Keys.IDENT, value=value, set_default_type=int)
+    def _ident(self, value: Optional[int]) -> None:
+        self._set_data(key=_Keys.IDENT, value=value, set_default_type=Optional[int])
 
     @property
     def _native_id(self) -> Optional[int]:
