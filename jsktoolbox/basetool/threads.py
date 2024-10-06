@@ -7,7 +7,7 @@
   Purpose: Base class for classes derived from threading.Thread
 """
 
-
+from io import TextIOWrapper
 from typing import Any, Optional, Tuple, Dict
 from threading import Event
 
@@ -159,14 +159,18 @@ class ThBaseObject(BData):
         )
 
     @property
-    def _stderr(self) -> Optional[Any]:
+    def _stderr(self) -> Optional[TextIOWrapper]:
         return self._get_data(
-            key=_Keys.STDERR, set_default_type=Optional[Any], default_value=None
+            key=_Keys.STDERR,
+            set_default_type=Optional[TextIOWrapper],
+            default_value=None,
         )
 
     @_stderr.setter
-    def _stderr(self, value: Any) -> None:
-        self._set_data(key=_Keys.STDERR, value=value, set_default_type=Optional[Any])
+    def _stderr(self, value: Optional[TextIOWrapper]) -> None:
+        self._set_data(
+            key=_Keys.STDERR, value=value, set_default_type=Optional[TextIOWrapper]
+        )
 
     @property
     def _invoke_excepthook(self) -> Optional[Any]:
