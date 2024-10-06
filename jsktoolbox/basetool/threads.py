@@ -9,7 +9,7 @@
 
 from io import TextIOWrapper
 from types import FunctionType
-from typing import Any, Optional, Tuple, Dict
+from typing import Any, Callable, Optional, Tuple, Dict
 from threading import Event
 
 from .data import BData
@@ -46,14 +46,16 @@ class ThBaseObject(BData):
     """
 
     @property
-    def _target(self) -> Optional[Any]:
+    def _target(self) -> Optional[Callable]:
         return self._get_data(
-            key=_Keys.TARGET, set_default_type=Optional[Any], default_value=None
+            key=_Keys.TARGET, set_default_type=Optional[Callable], default_value=None
         )
 
     @_target.setter
-    def _target(self, value: Any) -> None:
-        self._set_data(key=_Keys.TARGET, value=value, set_default_type=Optional[Any])
+    def _target(self, value: Callable) -> None:
+        self._set_data(
+            key=_Keys.TARGET, value=value, set_default_type=Optional[Callable]
+        )
 
     @property
     def _name(self) -> Optional[str]:
