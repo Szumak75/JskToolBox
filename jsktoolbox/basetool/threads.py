@@ -108,8 +108,8 @@ class ThBaseObject(BData):
         return self._get_data(key=_Keys.NATIVE_ID, default_value=None)
 
     @_native_id.setter
-    def _native_id(self, value: int) -> None:
-        self._set_data(key=_Keys.NATIVE_ID, value=value, set_default_type=int)
+    def _native_id(self, value: Optional[int]) -> None:
+        self._set_data(key=_Keys.NATIVE_ID, value=value, set_default_type=Optional[int])
 
     @property
     def _tstate_lock(self) -> Optional[Any]:
