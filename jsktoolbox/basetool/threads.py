@@ -50,8 +50,10 @@ class ThBaseObject(BData):
         return self._get_data(key=_Keys.TARGET, default_value=None)
 
     @_target.setter
-    def _target(self, value: Callable) -> None:
-        self._set_data(key=_Keys.TARGET, value=value, set_default_type=Callable)
+    def _target(self, value: Optional[Callable]) -> None:
+        self._set_data(
+            key=_Keys.TARGET, value=value, set_default_type=Optional[Callable]
+        )
 
     @property
     def _name(self) -> Optional[str]:
