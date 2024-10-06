@@ -8,6 +8,7 @@
 """
 
 from io import TextIOWrapper
+from types import FunctionType
 from typing import Any, Optional, Tuple, Dict
 from threading import Event
 
@@ -173,17 +174,19 @@ class ThBaseObject(BData):
         )
 
     @property
-    def _invoke_excepthook(self) -> Optional[Any]:
+    def _invoke_excepthook(self) -> Optional[FunctionType]:
         return self._get_data(
             key=_Keys.INVOKE_EXCEPTHOOK,
-            set_default_type=Optional[Any],
+            set_default_type=Optional[FunctionType],
             default_value=None,
         )
 
     @_invoke_excepthook.setter
-    def _invoke_excepthook(self, value: Any) -> None:
+    def _invoke_excepthook(self, value: Optional[FunctionType]) -> None:
         self._set_data(
-            key=_Keys.INVOKE_EXCEPTHOOK, value=value, set_default_type=Optional[Any]
+            key=_Keys.INVOKE_EXCEPTHOOK,
+            value=value,
+            set_default_type=Optional[FunctionType],
         )
 
     @property
