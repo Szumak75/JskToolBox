@@ -4,6 +4,7 @@
         "Alloc",
         "Ascher",
         "basetool",
+        "edmctool",
         "Martelli",
         "posix",
         "posixpath",
