@@ -61,7 +61,7 @@ class StarsSystem(BData):
         return (
             f"{self._c_name}(name='{self.name}', "
             f"address={self.address}, "
-            f"starpos={self.star_pos}, "
+            f"star_pos={self.star_pos}, "
             f"data={self.data})"
         )
 
