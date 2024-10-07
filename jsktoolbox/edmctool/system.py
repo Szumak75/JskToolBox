@@ -9,8 +9,8 @@
 
 import os
 
-from jsktoolbox.edmctool.logs import Directory
-from jsktoolbox.systemtool import Env
+from ..edmctool.logs import Directory
+from ..systemtool import Env
 
 
 class EnvLocal(Env):
