@@ -14,10 +14,11 @@ from typing import Union, Optional, List, Dict
 from logging.handlers import RotatingFileHandler
 from queue import Queue, SimpleQueue
 
+from ..edmctool.system import EnvLocal
+
 from ..attribtool import ReadOnlyClass, NoDynamicAttributes
 from ..basetool.data import BData
 from ..raisetool import Raise
-from ..systemtool import Env
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -56,20 +57,6 @@ class Directory(BData):
         """
         if self.is_directory(arg):
             self._set_data(key=_Keys.DIR, value=arg, set_default_type=str)
-
-
-class EnvLocal(Env):
-    """Environmental class."""
-
-    def __init__(self) -> None:
-        """Initialize Env class."""
-        super().__init__()
-
-    def check_dir(self, directory: str) -> str:
-        """Check if dir exists, return dir or else HOME."""
-        if not Directory().is_directory(directory):
-            return self.home
-        return directory
 
 
 class Log(BData):
