@@ -1,7 +1,7 @@
 #!/bin/csh
 
 set MASTER = 'master'
-set BRANCHES = ('systemtool_devel' 'configtool_devel' 'devices_devel' 'libs_devel' 'logstool_devel' 'netaddresstool_devel' 'raise_devel' 'stringtool_devel' 'datetool_devel' 'basetool_devel' 'tktool_devel' 'edmc_devel' )
+set BRANCHES = ('systemtool_devel' 'configtool_devel' 'devices_devel' 'libs_devel' 'logstool_devel' 'netaddresstool_devel' 'raise_devel' 'stringtool_devel' 'datetool_devel' 'basetool_devel' 'tktool_devel' 'edmctool_devel' )
 
 echo ${MASTER}
 echo ${BRANCHES}
