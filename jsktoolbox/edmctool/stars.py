@@ -15,8 +15,8 @@ from ..raisetool import Raise
 from ..basetool.data import BData
 
 
-class _Keys(object, metaclass=ReadOnlyClass):
-    """Internal Keys container class."""
+class EdmcKeys(object, metaclass=ReadOnlyClass):
+    """EDMC Keys container class."""
 
     # EDMC keys
     EDMC_ADDRESS: str = "id64"
@@ -31,6 +31,10 @@ class _Keys(object, metaclass=ReadOnlyClass):
     EDMC_X: str = "x"
     EDMC_Y: str = "y"
     EDMC_Z: str = "z"
+
+
+class _Keys(object, metaclass=ReadOnlyClass):
+    """Internal Keys container class."""
 
     # StarsSystem
     SS_ADDRESS: str = "__ss_address__"
@@ -177,24 +181,29 @@ class StarsSystem(BData):
         if data is None or not isinstance(data, Dict):
             return
 
-        self.name = data.get(_Keys.EDMC_NAME, self.name)
-        self.address = data.get(_Keys.EDMC_ADDRESS, self.address)
-        if _Keys.EDMC_COORDS in data and _Keys.EDMC_X in data[_Keys.EDMC_COORDS]:
-            self.pos_x = data[_Keys.EDMC_COORDS].get(_Keys.EDMC_X, self.pos_x)
-            self.pos_y = data[_Keys.EDMC_COORDS].get(_Keys.EDMC_Y, self.pos_y)
-            self.pos_z = data[_Keys.EDMC_COORDS].get(_Keys.EDMC_Z, self.pos_z)
-        if _Keys.EDMC_BODY_COUNT in data:
-            self.data[_Keys.EDMC_BODY_COUNT.lower()] = data[_Keys.EDMC_BODY_COUNT]
-        if _Keys.EDMC_COORDS_LOCKED in data:
-            self.data[_Keys.EDMC_COORDS_LOCKED.lower()] = data[_Keys.EDMC_COORDS_LOCKED]
-        if _Keys.EDMC_REQUIRE_PERMIT in data:
-            self.data[_Keys.EDMC_REQUIRE_PERMIT.lower()] = data[
-                _Keys.EDMC_REQUIRE_PERMIT
+        self.name = data.get(EdmcKeys.EDMC_NAME, self.name)
+        self.address = data.get(EdmcKeys.EDMC_ADDRESS, self.address)
+        if (
+            EdmcKeys.EDMC_COORDS in data
+            and EdmcKeys.EDMC_X in data[EdmcKeys.EDMC_COORDS]
+        ):
+            self.pos_x = data[EdmcKeys.EDMC_COORDS].get(EdmcKeys.EDMC_X, self.pos_x)
+            self.pos_y = data[EdmcKeys.EDMC_COORDS].get(EdmcKeys.EDMC_Y, self.pos_y)
+            self.pos_z = data[EdmcKeys.EDMC_COORDS].get(EdmcKeys.EDMC_Z, self.pos_z)
+        if EdmcKeys.EDMC_BODY_COUNT in data:
+            self.data[EdmcKeys.EDMC_BODY_COUNT.lower()] = data[EdmcKeys.EDMC_BODY_COUNT]
+        if EdmcKeys.EDMC_COORDS_LOCKED in data:
+            self.data[EdmcKeys.EDMC_COORDS_LOCKED.lower()] = data[
+                EdmcKeys.EDMC_COORDS_LOCKED
             ]
-        if _Keys.EDMC_DISTANCE in data:
-            self.data[_Keys.EDMC_DISTANCE] = data[_Keys.EDMC_DISTANCE]
-        if _Keys.EDMC_BODIES in data:
-            self.data[_Keys.EDMC_BODIES] = len(data[_Keys.EDMC_BODIES])
+        if EdmcKeys.EDMC_REQUIRE_PERMIT in data:
+            self.data[EdmcKeys.EDMC_REQUIRE_PERMIT.lower()] = data[
+                EdmcKeys.EDMC_REQUIRE_PERMIT
+            ]
+        if EdmcKeys.EDMC_DISTANCE in data:
+            self.data[EdmcKeys.EDMC_DISTANCE] = data[EdmcKeys.EDMC_DISTANCE]
+        if EdmcKeys.EDMC_BODIES in data:
+            self.data[EdmcKeys.EDMC_BODIES] = len(data[EdmcKeys.EDMC_BODIES])
 
 
 # #[EOF]#######################################################################
