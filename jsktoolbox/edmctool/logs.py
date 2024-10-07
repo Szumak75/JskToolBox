@@ -195,8 +195,8 @@ class LogProcessor(BData):
                 for msg in message.log:
                     self.__engine.warning("%s", msg)
             else:
-                for msg in message.log:
-                    self.__engine.notset("%s", msg)  # type: ignore
+                # engine.notset
+                pass
         else:
             raise Raise.error(
                 f"Log type expected, {type(message)} received.",
