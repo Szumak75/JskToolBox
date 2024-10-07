@@ -91,11 +91,12 @@ class StarsSystem(BData):
 
     @property
     def address(self) -> Optional[int]:
-        """Give me address of system."""
+        """Returns address of the star system."""
         return self._get_data(key=_Keys.SS_ADDRESS, default_value=None)
 
     @address.setter
     def address(self, arg: Optional[Union[int, str]]) -> None:
+        """Sets  address of the star system."""
         if isinstance(arg, str):
             self._set_data(
                 key=_Keys.SS_ADDRESS,
@@ -109,47 +110,52 @@ class StarsSystem(BData):
 
     @property
     def name(self) -> Optional[str]:
-        """Give me name of system."""
+        """Returns name of the  star system."""
         return self._get_data(key=_Keys.SS_NAME, default_value=None)
 
     @name.setter
     def name(self, arg: Optional[str]) -> None:
+        """Sets name of the star system."""
         self._set_data(key=_Keys.SS_NAME, value=arg, set_default_type=Optional[str])
 
     @property
     def pos_x(self) -> Optional[float]:
-        """Give me pos_x of system."""
+        """Returns pos_x of the star system."""
         return self._get_data(key=_Keys.SS_POS_X, default_value=None)
 
     @pos_x.setter
     def pos_x(self, arg: Optional[float]) -> None:
+        """Sets pos_x of the star system."""
         self._set_data(key=_Keys.SS_POS_X, value=arg, set_default_type=Optional[float])
 
     @property
     def pos_y(self) -> Optional[float]:
-        """Give me pos_y of system."""
+        """Returns pos_y of the star system."""
         return self._get_data(key=_Keys.SS_POS_Y, default_value=None)
 
     @pos_y.setter
     def pos_y(self, arg: Optional[float]) -> None:
+        """Sets pos_y of the star system."""
         self._set_data(key=_Keys.SS_POS_Y, value=arg, set_default_type=Optional[float])
 
     @property
     def pos_z(self) -> Optional[float]:
-        """Give me pos_z of system."""
+        """Returns pos_z of the star system."""
         return self._get_data(key=_Keys.SS_POS_Z, default_value=None)
 
     @pos_z.setter
     def pos_z(self, arg: Optional[float]) -> None:
+        """Sets pos_z of the star system."""
         self._set_data(key=_Keys.SS_POS_Z, value=arg, set_default_type=Optional[float])
 
     @property
     def star_pos(self) -> List:
-        """Give me star position list."""
+        """Returns the star position list."""
         return [self.pos_x, self.pos_y, self.pos_z]
 
     @star_pos.setter
     def star_pos(self, arg: Optional[List] = None) -> None:
+        """Sets  the star position list."""
         if arg is None:
             (self.pos_x, self.pos_y, self.pos_z) = (None, None, None)
         elif isinstance(arg, List) and len(arg) == 3:
@@ -164,17 +170,17 @@ class StarsSystem(BData):
 
     @property
     def star_class(self) -> str:
-        """Give me star class string."""
+        """Returns star class string."""
         return self._get_data(key=_Keys.SS_STAR_CLASS, default_value="")  # type: ignore
 
     @star_class.setter
     def star_class(self, value: str) -> None:
-        """Set StarClass string."""
+        """Sets star class string."""
         self._set_data(key=_Keys.SS_STAR_CLASS, value=value, set_default_type=str)
 
     @property
     def data(self) -> Dict:
-        """Return data container.
+        """Returns data container.
 
         This is dictionary object for storing various elements.
         """
@@ -184,6 +190,7 @@ class StarsSystem(BData):
 
     @data.setter
     def data(self, value: Optional[Dict]) -> None:
+        """Initialize or set data container."""
         if value is None:
             self._set_data(key=_Keys.SS_DATA, value={}, set_default_type=Dict)
         else:
