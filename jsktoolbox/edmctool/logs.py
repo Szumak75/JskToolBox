@@ -24,39 +24,11 @@ from ..raisetool import Raise
 class _Keys(object, metaclass=ReadOnlyClass):
     """Internal Keys container class."""
 
-    DIR: str = "__dir__"
     LOG_DATA: str = "__logger_data__"
     LOG_LEVEL: str = "__logger_level__"
     LOG_QUEUE: str = "__logger_queue__"
     LP_ENGINE: str = "__log_processor_engine__"
     LP_NAME: str = "__log_processor_name__"
-
-
-class Directory(BData):
-    """Container class to store the directory path."""
-
-    def is_directory(self, path_string: str) -> bool:
-        """Check if the given string is a directory.
-
-        path_string: str        path string to check
-        return:      bool       True, if exists and is directory,
-                                False in the other case.
-        """
-        return os.path.exists(path_string) and os.path.isdir(path_string)
-
-    @property
-    def dir(self) -> str:
-        """Property that returns directory string."""
-        return self._get_data(key=_Keys.DIR, default_value="")  # type: ignore
-
-    @dir.setter
-    def dir(self, arg: str) -> None:
-        """Setter for directory string.
-
-        given path must exists.
-        """
-        if self.is_directory(arg):
-            self._set_data(key=_Keys.DIR, value=arg, set_default_type=str)
 
 
 class Log(BData):
