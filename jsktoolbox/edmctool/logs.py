@@ -136,6 +136,8 @@ class LogProcessor(BData):
 
     def send(self, message: Log) -> None:
         """Send single message to log engine."""
+        if self.__engine is None:
+            return
         lgl = LogLevels()
         if isinstance(message, Log):
             if message.loglevel == lgl.critical:
