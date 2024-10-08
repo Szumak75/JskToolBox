@@ -16,24 +16,6 @@ from ..basetool.data import BData
 from .edsm_keys import EdsmKeys
 
 
-class EdmcKeys(object, metaclass=ReadOnlyClass):
-    """EDMC Keys container class."""
-
-    EDMC_EVENT: str = "event"
-    EDMC_FSD_JUMP: str = "FSDJump"
-    EDMC_FSD_TARGET: str = "FSDTarget"
-    EDMC_NAME: str = "Name"
-    EDMC_STAR_CLASS: str = "StarClass"
-    EDMC_STAR_SYSTEM: str = "StarSystem"
-    EDMC_SYSTEM_ADDRESS: str = "SystemAddress"
-    EDMC_SYSTEM_BODY: str = "SystemBody"
-    EDMC_SYSTEM_BODY_COUNT: str = "SystemBodyCount"
-    EDMC_SYSTEM_COORDS: str = "SystemCoords"
-    EDMC_SYSTEM_COORDS_LOCKED: str = "SystemCoordsLocked"
-    EDMC_SYSTEM_DISTANCE: str = "SystemDistance"
-    EDMC_SYSTEM_NAME: str = "SystemName"
-
-
 class _Keys(object, metaclass=ReadOnlyClass):
     """Internal Keys container class."""
 
