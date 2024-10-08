@@ -1,14 +1,23 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.words": [
+        "Afmu",
         "Alloc",
         "Ascher",
         "basetool",
+        "Datalink",
+        "Dropship",
         "edmctool",
+        "Loadout",
         "Martelli",
+        "msgnum",
+        "PERIAPSIS",
         "posix",
         "posixpath",
+        "Powerplay",
         "Ravenscroft",
+        "Scoopable",
+        "Supercruise",
         "systemtool"
     ]
 }
