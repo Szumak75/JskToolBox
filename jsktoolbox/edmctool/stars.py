@@ -118,34 +118,40 @@ class StarsSystem(BData):
         self._set_data(key=_Keys.SS_NAME, value=arg, set_default_type=Optional[str])
 
     @property
-    def pos_x(self) -> Optional[float]:
+    def pos_x(self) -> Optional[Union[float, int]]:
         """Returns pos_x of the star system."""
         return self._get_data(key=_Keys.SS_POS_X, default_value=None)
 
     @pos_x.setter
-    def pos_x(self, arg: Optional[float]) -> None:
+    def pos_x(self, arg: Optional[Union[float, int]]) -> None:
         """Sets pos_x of the star system."""
-        self._set_data(key=_Keys.SS_POS_X, value=arg, set_default_type=Optional[float])
+        self._set_data(
+            key=_Keys.SS_POS_X, value=arg, set_default_type=Optional[Union[float, int]]
+        )
 
     @property
-    def pos_y(self) -> Optional[float]:
+    def pos_y(self) -> Optional[Union[float, int]]:
         """Returns pos_y of the star system."""
         return self._get_data(key=_Keys.SS_POS_Y, default_value=None)
 
     @pos_y.setter
-    def pos_y(self, arg: Optional[float]) -> None:
+    def pos_y(self, arg: Optional[Union[float, int]]) -> None:
         """Sets pos_y of the star system."""
-        self._set_data(key=_Keys.SS_POS_Y, value=arg, set_default_type=Optional[float])
+        self._set_data(
+            key=_Keys.SS_POS_Y, value=arg, set_default_type=Optional[Union[float, int]]
+        )
 
     @property
-    def pos_z(self) -> Optional[float]:
+    def pos_z(self) -> Optional[Union[float, int]]:
         """Returns pos_z of the star system."""
         return self._get_data(key=_Keys.SS_POS_Z, default_value=None)
 
     @pos_z.setter
-    def pos_z(self, arg: Optional[float]) -> None:
+    def pos_z(self, arg: Optional[Union[float, int]]) -> None:
         """Sets pos_z of the star system."""
-        self._set_data(key=_Keys.SS_POS_Z, value=arg, set_default_type=Optional[float])
+        self._set_data(
+            key=_Keys.SS_POS_Z, value=arg, set_default_type=Optional[Union[float, int]]
+        )
 
     @property
     def star_class(self) -> str:
