@@ -67,7 +67,7 @@ The methods returns the current timestamp in seconds as an integer or float depe
 
 #### Arguments
 
-- **return_type** [type[int] or type[float]] - the method returns the data type specified by this variable, by default `int`.
+- **return_type** [type[int] or type[float]] - the method returns the data in the type specified by this variable, by default `int`.
 
 
 ```
@@ -80,4 +80,4 @@ The method returns timestamp as int from date/time string in strptime format.
 
 - **date_string** [str] - a string containing a date/time representation, for example: `"2000-01-28"`
 - **format** [str] - strptime date/time format, for the above example: `"%Y-%m-%d"`
-- **return_type** [type[int] or type[float]] - the method returns the data type specified by this variable, by default `int`.
+- **return_type** [type[int] or type[float]] - the method returns the data in the type specified by this variable, by default `int`.
