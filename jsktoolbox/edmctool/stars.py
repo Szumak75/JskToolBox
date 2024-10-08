@@ -195,11 +195,11 @@ class StarsSystem(BData):
             self.pos_y = data[EdsmKeys.COORDS].get(EdsmKeys.Y, self.pos_y)
             self.pos_z = data[EdsmKeys.COORDS].get(EdsmKeys.Z, self.pos_z)
         if EdsmKeys.BODY_COUNT in data:
-            self.data[EdsmKeys.BODY_COUNT.lower()] = data[EdsmKeys.BODY_COUNT]
+            self.data[EdsmKeys.BODY_COUNT] = data[EdsmKeys.BODY_COUNT]
         if EdsmKeys.COORDS_LOCKED in data:
-            self.data[EdsmKeys.COORDS_LOCKED.lower()] = data[EdsmKeys.COORDS_LOCKED]
+            self.data[EdsmKeys.COORDS_LOCKED] = data[EdsmKeys.COORDS_LOCKED]
         if EdsmKeys.REQUIRE_PERMIT in data:
-            self.data[EdsmKeys.REQUIRE_PERMIT.lower()] = data[EdsmKeys.REQUIRE_PERMIT]
+            self.data[EdsmKeys.REQUIRE_PERMIT] = data[EdsmKeys.REQUIRE_PERMIT]
         if EdsmKeys.DISTANCE in data:
             self.data[EdsmKeys.DISTANCE] = data[EdsmKeys.DISTANCE]
         if EdsmKeys.BODIES in data:
