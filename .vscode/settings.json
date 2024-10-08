@@ -6,9 +6,12 @@
         "basetool",
         "edmctool",
         "Martelli",
+        "msgnum",
+        "PERIAPSIS",
         "posix",
         "posixpath",
         "Ravenscroft",
+        "Scoopable",
         "systemtool"
     ]
 }
