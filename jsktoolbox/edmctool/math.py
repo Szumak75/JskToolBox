@@ -269,9 +269,6 @@ class Euclid(BLogClient):
         while out is None:
             if i < len(self.__euclid_methods):
                 out = self.__euclid_methods[i](point_1, point_2)
-                if out is None:
-                    i += 1
-                    continue
             else:
                 break
             i += 1
