@@ -408,6 +408,16 @@ class AlgAStar(IAlg, BLogClient):
         path.reverse()
         return path
 
+    def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
+        """Build debug message."""
+        p_name: str = f"{self.__plugin_name}"
+        c_name: str = f"{self._c_name}"
+        m_name: str = f"{currentframe.f_code.co_name}" if currentframe else ""
+        if message != "":
+            message = f": {message}"
+        if self.logger:
+            self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
+
     @property
     def get_final(self) -> List[StarsSystem]:
         """Zwraca listę punktów w końcowej trasie, z wyjątkiem punktu startowego."""
