@@ -21,12 +21,15 @@ from sys import maxsize
 
 from types import FrameType
 
+from jsktoolbox.edmctool.edsm_keys import EdsmKeys
+
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
 from .base import BLogClient
 from .logs import LogClient
 from .data import RscanData
 from .stars import StarsSystem
+from .edmc_keys import EdmcKeys
 
 try:
     import numpy as np  # type: ignore
@@ -427,11 +430,11 @@ class AlgTsp(IAlg, BLogClient):
             self.logger.debug = f"TMP: {self.__tmp}"
         for idx in range(1, len(self.__tmp)):
             system = self.__data[self.__tmp[idx]]
-            system.data["distance"] = self.__math.distance(
+            system.data[EdsmKeys.DISTANCE] = self.__math.distance(
                 self.__data[self.__tmp[idx - 1]].star_pos,
                 self.__data[self.__tmp[idx]].star_pos,
             )
-            d_sum += system.data["distance"]
+            d_sum += system.data[EdsmKeys.DISTANCE]
             self.__final.append(system)
         if self.logger:
             self.logger.debug = f"FINAL Distance: {d_sum:.2f} ly"
@@ -645,8 +648,8 @@ class AlgGenetic(IAlg, BLogClient):
         start: StarsSystem = self.__start_point
         for item in self.__final:
             end: StarsSystem = item
-            end.data["distance"] = self.__math.distance(start.star_pos, end.star_pos)
-            d_sum += end.data["distance"]
+            end.data[EdsmKeys.DISTANCE] = self.__math.distance(start.star_pos, end.star_pos)
+            d_sum += end.data[EdsmKeys.DISTANCE]
             start = end
         if self.logger:
             self.logger.debug = f"FINAL Distance: {d_sum:.2f} ly"
