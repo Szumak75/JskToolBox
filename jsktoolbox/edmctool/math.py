@@ -21,8 +21,6 @@ from sys import maxsize
 
 from types import FrameType
 
-from jsktoolbox.edmctool.edsm_keys import EdsmKeys
-
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
 from .base import BLogClient
