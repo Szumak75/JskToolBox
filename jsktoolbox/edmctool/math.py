@@ -13,7 +13,7 @@ import random
 
 from inspect import currentframe
 from queue import Queue, SimpleQueue
-from typing import Optional, List, Tuple, Union, Any
+from typing import Optional, List, Tuple, Union, Any, Dict
 from types import FrameType, MethodType
 from abc import ABC, abstractmethod
 from itertools import permutations
@@ -204,6 +204,7 @@ class Euclid(BLogClient):
         performs calculations on it and sums up the intermediate results.
         """
         return sum((i - j) ** 2 for i, j in zip(point_1, point_2)) ** 0.5
+        # return math.sqrt(sum((i - j) ** 2 for i, j in zip(point_1, point_2)))
 
     def __math(self, point_1: List[float], point_2: List[float]) -> Optional[float]:
         """Try to use math lib."""
@@ -274,6 +275,143 @@ class Euclid(BLogClient):
             i += 1
 
         return out
+
+
+class AlgAStar(IAlg, BLogClient):
+
+    __plugin_name: str = None  # type: ignore
+    __math: Euclid = None  # type: ignore
+    __data: List[StarsSystem] = None  # type: ignore
+    __tmp: List[Any] = None  # type: ignore
+    __jump_range: int = None  # type: ignore
+    __final: List[StarsSystem] = None  # type: ignore
+    __start: StarsSystem = None  # type: ignore
+
+    def __init__(
+        self,
+        start: StarsSystem,
+        systems: List[StarsSystem],
+        jump_range: int,
+        log_queue: Optional[Union[Queue, SimpleQueue]],
+        euclid_alg: Euclid,
+        plugin_name: str,
+    ) -> None:
+
+        self.__plugin_name = plugin_name
+        # init log subsystem
+        if isinstance(log_queue, (Queue, SimpleQueue)):
+            self.logger = LogClient(log_queue)
+        else:
+            raise Raise.error(
+                f"Queue or SimpleQueue type expected, '{type(log_queue)}' received.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        # Euclid's algorithm for calculating the length of vectors
+        if isinstance(euclid_alg, Euclid):
+            self.__math = euclid_alg
+        else:
+            raise Raise.error(
+                f"Euclid type expected, '{type(euclid_alg)}' received",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        if isinstance(jump_range, int):
+            self.__jump_range = jump_range
+        else:
+            raise Raise.error(
+                f"Int type expected, '{type(jump_range)}' received",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        if not isinstance(start, StarsSystem):
+            raise Raise.error(
+                f"StarsSystem type expected, '{type(start)}' received.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        if not isinstance(systems, List):
+            raise Raise.error(
+                f"list type expected, '{type(systems)}' received.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+        self.debug(currentframe(), "Initialize dataset")
+
+        self.__tmp = []
+        self.__start = start
+        self.__data = systems
+        self.__final = []
+
+    def heuristic(self, a: List[float], b: List[float]) -> float:
+        """Oblicza heurystykę (odległość euklidesową) między dwoma punktami."""
+        return self.__math.distance(a, b)
+        # return math.sqrt(sum((x - y) ** 2 for x, y in zip(a, b)))
+
+    def get_neighbors(self, point: StarsSystem) -> List[StarsSystem]:
+        """Zwraca sąsiadów, którzy są w zasięgu max_range."""
+        neighbors = []
+        for p in self.__data:
+            if (
+                p not in self.__final
+                and self.heuristic(point.star_pos, p.star_pos) <= self.__jump_range
+            ):
+                neighbors.append(p)
+        return neighbors
+
+    def run(self) -> None:
+        """Implementacja algorytmu A*."""
+        open_set: List[StarsSystem] = [self.__start]
+        came_from = {}
+        g_score: Dict[StarsSystem, float] = {self.__start: 0.0}
+        f_score: Dict[StarsSystem, float] = {
+            self.__start: self.heuristic(self.__start.star_pos, self.__data[0].star_pos)
+        }
+
+        while open_set:
+            current: StarsSystem = min(
+                open_set, key=lambda point: f_score.get(point, float("inf"))
+            )
+            if current in self.__data:
+                self.__final = self.reconstruct_path(came_from, current)
+
+            open_set.remove(current)
+            for neighbor in self.get_neighbors(current):
+                tentative_g_score = g_score[current] + self.heuristic(
+                    current.star_pos, neighbor.star_pos
+                )
+
+                if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
+                    came_from[neighbor] = current
+                    g_score[neighbor] = tentative_g_score
+                    f_score[neighbor] = g_score[neighbor] + self.heuristic(
+                        neighbor.star_pos, self.__data[0].star_pos
+                    )
+                    if neighbor not in open_set:
+                        open_set.append(neighbor)
+
+        self.__final = []
+
+    def reconstruct_path(
+        self, came_from: dict, current: StarsSystem
+    ) -> List[StarsSystem]:
+        """Rekonstruuje ścieżkę od punktu startowego do celu."""
+        path = []
+        while current in came_from:
+            path.append(current)
+            current = came_from[current]
+        path.reverse()
+        return path
+
+    @property
+    def get_final(self) -> List[StarsSystem]:
+        """Zwraca listę punktów w końcowej trasie, z wyjątkiem punktu startowego."""
+        return [point for point in self.__final if point != self.__start]
 
 
 class AlgTsp(IAlg, BLogClient):
