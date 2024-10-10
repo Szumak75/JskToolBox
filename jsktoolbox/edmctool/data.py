@@ -48,8 +48,8 @@ class RscanData(BData):
         )
         self._set_data(
             key=_Keys.JUMP_RANGE,
-            set_default_type=Optional[float],
-            value=None,
+            set_default_type=float,
+            value=1.0,
         )
         self._set_data(
             key=_Keys.JUMP_SYSTEM, set_default_type=StarsSystem, value=StarsSystem()
