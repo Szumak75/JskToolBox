@@ -22,12 +22,12 @@ from .data import RscanData
 
 
 try:
-    import numpy as np # type: ignore
+    import numpy as np  # type: ignore
 except ModuleNotFoundError:
     pass
 
 try:
-    from scipy.spatial import distance # type: ignore
+    from scipy.spatial import distance  # type: ignore
 except ModuleNotFoundError:
     pass
 
@@ -35,8 +35,8 @@ except ModuleNotFoundError:
 class _Keys(object, metaclass=ReadOnlyClass):
     """Internal Keys container class."""
 
-    DATA: str = "__e_data__"
-    TEST: str = "__e_test__"
+    E_METHODS: str = "__e_methods__"
+    R_DATA: str = "__e_data__"
 
 
 class Euclid(BLogClient):
@@ -45,11 +45,11 @@ class Euclid(BLogClient):
     A class that calculates the length of a vector in Cartesian space.
     """
 
-    def __init__(self, queue: Union[Queue, SimpleQueue], data: RscanData) -> None:
+    def __init__(self, queue: Union[Queue, SimpleQueue], r_data: RscanData) -> None:
         """Create class object."""
 
         self._set_data(
-            key=_Keys.TEST,
+            key=_Keys.E_METHODS,
             set_default_type=List,
             value=[
                 self.__numpy_l2,
@@ -72,16 +72,16 @@ class Euclid(BLogClient):
                 currentframe(),
             )
 
-        if isinstance(data, RscanData):
+        if isinstance(r_data, RscanData):
             self._set_data(
-                key=_Keys.DATA,
+                key=_Keys.R_DATA,
                 set_default_type=RscanData,
-                value=data,
+                value=r_data,
             )
-            self.debug(currentframe(), f"{data}")
+            self.debug(currentframe(), f"{r_data}")
         else:
             raise Raise.error(
-                f"RscanData type expected, '{type(data)}' received",
+                f"RscanData type expected, '{type(r_data)}' received",
                 TypeError,
                 self._c_name,
                 currentframe(),
@@ -90,14 +90,14 @@ class Euclid(BLogClient):
         self.debug(currentframe(), "Initialize dataset")
 
     @property
-    def __data(self) -> RscanData:
+    def __r_data(self) -> RscanData:
         """Return data."""
-        return self._get_data(key=_Keys.DATA)  # type: ignore
+        return self._get_data(key=_Keys.R_DATA)  # type: ignore
 
     @property
-    def __test(self) -> List[MethodType]:
+    def __euclid_methods(self) -> List[MethodType]:
         """Return test list."""
-        return self._get_data(key=_Keys.TEST)  # type: ignore
+        return self._get_data(key=_Keys.E_METHODS)  # type: ignore
 
     def benchmark(self) -> None:
         """Do benchmark test.
@@ -105,7 +105,7 @@ class Euclid(BLogClient):
         Compare the computational efficiency of functions for real data
         and choose the right priority of their use.
         """
-        p_name: str = f"{self.__data.plugin_name}"
+        p_name: str = f"{self.__r_data.plugin_name}"
         c_name: str = f"{self._c_name}"
 
         if self.logger:
@@ -139,7 +139,7 @@ class Euclid(BLogClient):
         test = []
         bench_out = {}
 
-        for item in self.__test:
+        for item in self.__euclid_methods:
             if item(data1[0], data2[0]) is not None:
                 test.append(item)
 
@@ -152,9 +152,9 @@ class Euclid(BLogClient):
             bench_out[t_stop - t_start] = item
 
         # optimize list of the methods
-        self.__test.clear()
+        self.__euclid_methods.clear()
         for idx in sorted(bench_out.keys()):
-            self.__test.append(bench_out[idx])
+            self.__euclid_methods.append(bench_out[idx])
             self.debug(currentframe(), f"{idx}: {bench_out[idx]}")
 
         if self.logger:
@@ -162,7 +162,7 @@ class Euclid(BLogClient):
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
         """Build debug message."""
-        p_name: str = f"{self.__data.plugin_name}"
+        p_name: str = f"{self.__r_data.plugin_name}"
         c_name: str = f"{self._c_name}"
         m_name: str = (
             f"{currentframe.f_code.co_name}" if currentframe is not None else ""
@@ -244,8 +244,8 @@ class Euclid(BLogClient):
         i = 0
 
         while out is None:
-            if i < len(self.__test):
-                out = self.__test[i](points_1, points_2)
+            if i < len(self.__euclid_methods):
+                out = self.__euclid_methods[i](points_1, points_2)
             else:
                 break
             i += 1

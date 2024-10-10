@@ -10,8 +10,8 @@
 from typing import Union, Optional
 
 from ..attribtool import ReadOnlyClass
-from .stars import StarsSystem
 from ..basetool.data import BData
+from .stars import StarsSystem
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -22,14 +22,12 @@ class _Keys(object, metaclass=ReadOnlyClass):
     JUMP_SYSTEM: str = "__jump_system__"
     PLUGIN_NAME: str = "__plugin_name__"
     SHUTDOWN: str = "__shutdown__"
-    STAR_SYSTEM: str = "__star_system__"
+    STARS_SYSTEM: str = "__stars_system__"
     VERSION: str = "__version__"
 
 
 class RscanData(BData):
     """Data container for username and current system."""
-
-    # __data: Dict[str, Any] = None  # type: ignore
 
     def __init__(self) -> None:
         """Initialize dataset."""
@@ -54,12 +52,12 @@ class RscanData(BData):
             value=None,
         )
         self._set_data(
-            key=_Keys.STAR_SYSTEM,
-            set_default_type=StarsSystem,
-            value=StarsSystem(),
+            key=_Keys.JUMP_SYSTEM, set_default_type=StarsSystem, value=StarsSystem()
         )
         self._set_data(
-            key=_Keys.JUMP_SYSTEM, set_default_type=StarsSystem, value=StarsSystem()
+            key=_Keys.STARS_SYSTEM,
+            set_default_type=StarsSystem,
+            value=StarsSystem(),
         )
         self._set_data(
             key=_Keys.SHUTDOWN,
@@ -74,7 +72,7 @@ class RscanData(BData):
             f"plugin_name='{self.plugin_name}', "
             f"version='{self.version}', "
             f"jump_range={self.jump_range}, "
-            f"{self.star_system})"
+            f"{self.stars_system})"
         )
 
     @property
@@ -92,16 +90,16 @@ class RscanData(BData):
         )
 
     @property
-    def star_system(self) -> StarsSystem:
+    def stars_system(self) -> StarsSystem:
         """Return StarsSystem object."""
-        return self._get_data(key=_Keys.STAR_SYSTEM)  # type: ignore
+        return self._get_data(key=_Keys.STARS_SYSTEM)  # type: ignore
 
-    @star_system.setter
-    def star_system(self, value: Optional[StarsSystem]) -> None:
+    @stars_system.setter
+    def stars_system(self, value: Optional[StarsSystem]) -> None:
         if value is None:
-            self._set_data(key=_Keys.STAR_SYSTEM, value=StarsSystem())
+            self._set_data(key=_Keys.STARS_SYSTEM, value=StarsSystem())
         self._set_data(
-            key=_Keys.STAR_SYSTEM,
+            key=_Keys.STARS_SYSTEM,
             value=value,
         )
 
