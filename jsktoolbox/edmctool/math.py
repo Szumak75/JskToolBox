@@ -29,7 +29,7 @@ from .base import BLogClient
 from .logs import LogClient
 from .data import RscanData
 from .stars import StarsSystem
-from .edmc_keys import EdmcKeys
+from .edsm_keys import EdsmKeys
 
 try:
     import numpy as np  # type: ignore
@@ -648,7 +648,9 @@ class AlgGenetic(IAlg, BLogClient):
         start: StarsSystem = self.__start_point
         for item in self.__final:
             end: StarsSystem = item
-            end.data[EdsmKeys.DISTANCE] = self.__math.distance(start.star_pos, end.star_pos)
+            end.data[EdsmKeys.DISTANCE] = self.__math.distance(
+                start.star_pos, end.star_pos
+            )
             d_sum += end.data[EdsmKeys.DISTANCE]
             start = end
         if self.logger:
