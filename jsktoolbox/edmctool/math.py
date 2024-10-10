@@ -36,7 +36,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     """Internal Keys container class."""
 
     E_METHODS: str = "__e_methods__"
-    R_DATA: str = "__e_data__"
+    R_DATA: str = "__e_r_data__"
 
 
 class Euclid(BLogClient):
@@ -56,8 +56,8 @@ class Euclid(BLogClient):
                 self.__numpy,
                 self.__einsum,
                 self.__scipy,
-                self.__core,
                 self.__math,
+                self.__core,
             ],
         )
 
