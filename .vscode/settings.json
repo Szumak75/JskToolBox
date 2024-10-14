@@ -5,14 +5,19 @@
         "Alloc",
         "Ascher",
         "basetool",
+        "CALLSIGN",
         "Datalink",
         "Dropship",
         "edmctool",
+        "FLEETCARRIER",
+        "gameversion",
         "Healt",
+        "Landable",
         "linalg",
         "Loadout",
         "Localised",
         "Martelli",
+        "MOTHERLODE",
         "msgnum",
         "Multicrew",
         "PERIAPSIS",
@@ -23,6 +28,7 @@
         "Rebuy",
         "Scoopable",
         "Supercruise",
-        "systemtool"
+        "systemtool",
+        "Telepresence"
     ]
 }
