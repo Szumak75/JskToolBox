@@ -12,7 +12,14 @@ from queue import Queue, Empty
 
 from jsktoolbox.edmctool.stars import StarsSystem
 from jsktoolbox.edmctool.data import RscanData
-from jsktoolbox.edmctool.math import Euclid, AlgAStar, AlgGenetic, AlgTsp
+from jsktoolbox.edmctool.math import (
+    Euclid,
+    AlgAStar,
+    AlgGenetic,
+    AlgTsp,
+    AlgGenetic2,
+    AlgSimulatedAnnealing,
+)
 
 if __name__ == "__main__":
 
@@ -53,8 +60,7 @@ if __name__ == "__main__":
 
     # print(systems)
 
-    # alg = AlgGenetic(
-    alg = AlgAStar(
+    alg = AlgSimulatedAnnealing(
         start=start,
         systems=systems,
         jump_range=jump_range,
@@ -67,6 +73,7 @@ if __name__ == "__main__":
     for item in alg.get_final:
         count += 1
         print(f"{count}: {item}")
+    print(f"Final distance: {alg.final_distance}")
 
     while True:
         try:
