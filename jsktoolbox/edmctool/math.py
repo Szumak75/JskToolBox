@@ -838,7 +838,7 @@ class AlgGenetic(IAlg, BLogClient):
     def final_distance(self) -> float:
         if not self.__final:
             return 0.0
-        dist = self.__math.distance(
+        dist: float = self.__math.distance(
             self.__start_point.star_pos, self.__final[0].star_pos
         )
         for item in range(len(self.__final) - 1):
@@ -990,14 +990,14 @@ class AlgGenetic2(IAlg, BLogClient):
     def __initialize_population(self) -> None:
         """Initialize the population with random routes."""
         for _ in range(self.__population_size):
-            route = self.__points[:]
+            route: List[StarsSystem] = self.__points[:]
             random.shuffle(route)
             self.__population.append(route)
 
     def __fitness(self, route: List[StarsSystem]) -> float:
         """Calculate the fitness (inverse of the total route distance)."""
         total_distance = 0.0
-        current_point = self.__start_point
+        current_point: StarsSystem = self.__start_point
         for system in route:
             total_distance += self.__math.distance(
                 current_point.star_pos, system.star_pos
@@ -1008,13 +1008,19 @@ class AlgGenetic2(IAlg, BLogClient):
 
     def __selection(self) -> Tuple[List[StarsSystem], List[StarsSystem]]:
         """Select two parents based on their fitness (roulette wheel selection)."""
-        fitness_values = [self.__fitness(route) for route in self.__population]
-        total_fitness = sum(fitness_values)
-        probabilities = [f / total_fitness for f in fitness_values]
+        fitness_values: List[float] = [
+            self.__fitness(route) for route in self.__population
+        ]
+        total_fitness: float = sum(fitness_values)
+        probabilities: List[float] = [f / total_fitness for f in fitness_values]
 
         # Select two parents based on the fitness-proportional probabilities
-        parent1 = random.choices(self.__population, weights=probabilities, k=1)[0]
-        parent2 = random.choices(self.__population, weights=probabilities, k=1)[0]
+        parent1: List[StarsSystem] = random.choices(
+            self.__population, weights=probabilities, k=1
+        )[0]
+        parent2: List[StarsSystem] = random.choices(
+            self.__population, weights=probabilities, k=1
+        )[0]
 
         return parent1, parent2
 
@@ -1022,13 +1028,13 @@ class AlgGenetic2(IAlg, BLogClient):
         self, parent1: List[StarsSystem], parent2: List[StarsSystem]
     ) -> List[StarsSystem]:
         """Perform Order Crossover (OX) to generate a child route."""
-        start_idx = random.randint(0, len(parent1) - 1)
-        end_idx = random.randint(start_idx, len(parent1) - 1)
+        start_idx: int = random.randint(0, len(parent1) - 1)
+        end_idx: int = random.randint(start_idx, len(parent1) - 1)
 
         child: List[StarsSystem] = [None] * len(parent1)  # type: ignore
         child[start_idx:end_idx] = parent1[start_idx:end_idx]
 
-        current_pos = end_idx
+        current_pos: int = end_idx
         for system in parent2:
             if system not in child:
                 if current_pos >= len(parent1):
@@ -1041,8 +1047,8 @@ class AlgGenetic2(IAlg, BLogClient):
     def __mutate(self, route: List[StarsSystem]) -> None:
         """Perform swap mutation with a given probability."""
         if random.random() < self.__mutation_rate:
-            idx1 = random.randint(0, len(route) - 1)
-            idx2 = random.randint(0, len(route) - 1)
+            idx1: int = random.randint(0, len(route) - 1)
+            idx2: int = random.randint(0, len(route) - 1)
             route[idx1], route[idx2] = route[idx2], route[idx1]
 
     def __evolve(self) -> None:
@@ -1053,8 +1059,8 @@ class AlgGenetic2(IAlg, BLogClient):
             new_population = []
             for _ in range(self.__population_size // 2):  # Generate new population
                 parent1, parent2 = self.__selection()
-                child1 = self.__crossover(parent1, parent2)
-                child2 = self.__crossover(parent2, parent1)
+                child1: List[StarsSystem] = self.__crossover(parent1, parent2)
+                child2: List[StarsSystem] = self.__crossover(parent2, parent1)
                 self.__mutate(child1)
                 self.__mutate(child2)
                 new_population.extend([child1, child2])
@@ -1067,7 +1073,7 @@ class AlgGenetic2(IAlg, BLogClient):
 
     def run(self) -> None:
         """Return the best route found after evolution."""
-        start_t = time.time()
+        start_t: float = time.time()
 
         # precalculate
         systems: List[StarsSystem] = []
@@ -1081,7 +1087,7 @@ class AlgGenetic2(IAlg, BLogClient):
         self.__evolve()
         # update distance
         if self.__final:
-            dist = self.__math.distance(
+            dist: float = self.__math.distance(
                 self.__start_point.star_pos, self.__final[0].star_pos
             )
             self.__final[0].data[EdsmKeys.DISTANCE] = dist
@@ -1092,7 +1098,7 @@ class AlgGenetic2(IAlg, BLogClient):
                 )
                 self.__final[item + 1].data[EdsmKeys.DISTANCE] = dist
 
-        end_t = time.time()
+        end_t: float = time.time()
         self.debug(currentframe(), f"Evolution took {end_t - start_t} seconds.")
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
@@ -1109,7 +1115,7 @@ class AlgGenetic2(IAlg, BLogClient):
     def final_distance(self) -> float:
         if not self.__final:
             return 0.0
-        dist = self.__math.distance(
+        dist: float = self.__math.distance(
             self.__start_point.star_pos, self.__final[0].star_pos
         )
         for item in range(len(self.__final) - 1):
@@ -1226,9 +1232,11 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
     def calculate_total_distance(self, path: List[StarsSystem]) -> float:
         """Calculate the total distance of the path, starting from the start point."""
         total_dist = 0
-        current_star = self.__start_point
+        current_star: StarsSystem = self.__start_point
         for next_star in path:
-            dist = self.__math.distance(current_star.star_pos, next_star.star_pos)
+            dist: float = self.__math.distance(
+                current_star.star_pos, next_star.star_pos
+            )
             if dist <= self.__max_distance:  # Only count valid jumps
                 total_dist += dist
             else:
@@ -1249,7 +1257,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
 
     def run(self) -> None:
         """Perform the Simulated Annealing optimization."""
-        start_t = time.time()
+        start_t: float = time.time()
 
         # precalculate
         systems: List[StarsSystem] = []
@@ -1266,16 +1274,18 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
         random.shuffle(self.__current_solution)
         self.__best_distance = self.calculate_total_distance(self.__current_solution)
 
-        temperature = self.__initial_temp
+        temperature: float = self.__initial_temp
         while temperature > 1:
             # Create a new solution by swapping two random points
-            new_solution = self.__current_solution[:]
+            new_solution: List[StarsSystem] = self.__current_solution[:]
             i, j = random.sample(range(len(new_solution)), 2)
             new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
 
             # Calculate the total distance for the new solution
-            current_distance = self.calculate_total_distance(self.__current_solution)
-            new_distance = self.calculate_total_distance(new_solution)
+            current_distance: float = self.calculate_total_distance(
+                self.__current_solution
+            )
+            new_distance: float = self.calculate_total_distance(new_solution)
 
             # Decide whether to accept the new solution
             if self.accept_solution(current_distance, new_distance, temperature):
@@ -1291,7 +1301,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
 
         # update distance
         if self.__final:
-            dist = self.__math.distance(
+            dist: float = self.__math.distance(
                 self.__start_point.star_pos, self.__final[0].star_pos
             )
             self.__final[0].data[EdsmKeys.DISTANCE] = dist
@@ -1302,7 +1312,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
                 )
                 self.__final[item + 1].data[EdsmKeys.DISTANCE] = dist
 
-        end_t = time.time()
+        end_t: float = time.time()
         self.debug(currentframe(), f"Evolution took {end_t - start_t} seconds.")
 
     def debug(self, currentframe: Optional[FrameType], message: str = "") -> None:
@@ -1319,7 +1329,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
     def final_distance(self) -> float:
         if not self.__final:
             return 0.0
-        dist = self.__math.distance(
+        dist: float = self.__math.distance(
             self.__start_point.star_pos, self.__final[0].star_pos
         )
         for item in range(len(self.__final) - 1):
