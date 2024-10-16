@@ -396,11 +396,14 @@ class AlgAStar(IAlg, BLogClient):
                 self.__start_point.star_pos, self.__points[0].star_pos
             )
         }
+        # self.debug(currentframe(), f"{g_score}")
+        # self.debug(currentframe(), f"{f_score}")
 
         while open_set:
             current: StarsSystem = min(
                 open_set, key=lambda point: f_score.get(point, float("inf"))
             )
+            # self.debug(currentframe(), f"{current}")
             if current in self.__points:
                 self.__final = self.__reconstruct_path(came_from, current)
 
