@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     # print(systems)
 
-    alg = AlgSimulatedAnnealing(
+    alg = AlgAStar(
         start=start,
         systems=systems,
         jump_range=jump_range,
