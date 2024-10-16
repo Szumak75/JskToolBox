@@ -288,7 +288,7 @@ class AlgAStar(IAlg, BLogClient):
 
     __plugin_name: str = None  # type: ignore
     __math: Euclid = None  # type: ignore
-    __data: List[StarsSystem] = None  # type: ignore
+    __points: List[StarsSystem] = None  # type: ignore
     __jump_range: int = None  # type: ignore
     __final: List[StarsSystem] = None  # type: ignore
     __start_point: StarsSystem = None  # type: ignore
@@ -350,13 +350,13 @@ class AlgAStar(IAlg, BLogClient):
         self.debug(currentframe(), "Initialize dataset")
 
         self.__start_point = start
-        self.__data = systems
+        self.__points = systems
         self.__final = []
 
     def __get_neighbors(self, point: StarsSystem) -> List[StarsSystem]:
         """Zwraca sąsiadów, którzy są w zasięgu max_range."""
         neighbors: List[StarsSystem] = []
-        for p in self.__data:
+        for p in self.__points:
             if (
                 p not in self.__final
                 and self.__math.distance(point.star_pos, p.star_pos)
@@ -393,7 +393,7 @@ class AlgAStar(IAlg, BLogClient):
         g_score: Dict[StarsSystem, float] = {self.__start_point: 0.0}
         f_score: Dict[StarsSystem, float] = {
             self.__start_point: self.__math.distance(
-                self.__start_point.star_pos, self.__data[0].star_pos
+                self.__start_point.star_pos, self.__points[0].star_pos
             )
         }
 
@@ -401,7 +401,7 @@ class AlgAStar(IAlg, BLogClient):
             current: StarsSystem = min(
                 open_set, key=lambda point: f_score.get(point, float("inf"))
             )
-            if current in self.__data:
+            if current in self.__points:
                 self.__final = self.__reconstruct_path(came_from, current)
 
             open_set.remove(current)
@@ -414,7 +414,7 @@ class AlgAStar(IAlg, BLogClient):
                     came_from[neighbor] = current
                     g_score[neighbor] = tentative_g_score
                     f_score[neighbor] = g_score[neighbor] + self.__math.distance(
-                        neighbor.star_pos, self.__data[0].star_pos
+                        neighbor.star_pos, self.__points[0].star_pos
                     )
                     if neighbor not in open_set:
                         open_set.append(neighbor)
@@ -445,7 +445,7 @@ class AlgTsp(IAlg, BLogClient):
 
     __plugin_name: str = None  # type: ignore
     __math: Euclid = None  # type: ignore
-    __data: List[StarsSystem] = None  # type: ignore
+    __points: List[StarsSystem] = None  # type: ignore
     __tmp: List[Any] = None  # type: ignore
     __jump_range: int = None  # type: ignore
     __final: List[StarsSystem] = None  # type: ignore
@@ -515,12 +515,12 @@ class AlgTsp(IAlg, BLogClient):
             )
         self.debug(currentframe(), "Initialize dataset")
 
-        self.__data = []
+        self.__points = []
         self.__tmp = []
         self.__final = []
-        self.__data.append(start)
+        self.__points.append(start)
         for item in systems:
-            self.__data.append(item)
+            self.__points.append(item)
 
     def run(self) -> None:
         """Run algorithm."""
@@ -533,13 +533,13 @@ class AlgTsp(IAlg, BLogClient):
 
     def __stage_1_costs(self) -> None:
         """Stage 1: generate a cost table."""
-        count: int = len(self.__data)
+        count: int = len(self.__points)
         for idx in range(count):
             self.__tmp.append([])
             for idx2 in range(count):
                 self.__tmp[idx].append(
                     self.__math.distance(
-                        self.__data[idx].star_pos, self.__data[idx2].star_pos
+                        self.__points[idx].star_pos, self.__points[idx2].star_pos
                     )
                 )
         self.debug(currentframe(), f"{self.__tmp}")
@@ -549,7 +549,7 @@ class AlgTsp(IAlg, BLogClient):
         out: List[Any] = []
         vertex: List[int] = []
         start: int = 0
-        for i in range(len(self.__data)):
+        for i in range(len(self.__points)):
             if i != start:
                 vertex.append(i)
         # store minimum weight Hamilton Cycle
@@ -573,7 +573,7 @@ class AlgTsp(IAlg, BLogClient):
 
         # best solution
         if self.logger:
-            self.logger.debug = f"DATA: {self.__data}"
+            self.logger.debug = f"DATA: {self.__points}"
         if self.logger:
             self.logger.debug = f"PATH: {out}"
         # add start system as first
@@ -588,17 +588,17 @@ class AlgTsp(IAlg, BLogClient):
         if self.logger:
             self.logger.debug = f"TMP: {self.__tmp}"
         for idx in range(1, len(self.__tmp)):
-            system = self.__data[self.__tmp[idx]]
+            system = self.__points[self.__tmp[idx]]
             system.data[EdsmKeys.DISTANCE] = self.__math.distance(
-                self.__data[self.__tmp[idx - 1]].star_pos,
-                self.__data[self.__tmp[idx]].star_pos,
+                self.__points[self.__tmp[idx - 1]].star_pos,
+                self.__points[self.__tmp[idx]].star_pos,
             )
             d_sum += system.data[EdsmKeys.DISTANCE]
             self.__final.append(system)
         if self.logger:
             self.logger.debug = f"FINAL Distance: {d_sum:.2f} ly"
         if self.logger:
-            self.logger.debug = f"INPUT: {self.__data}"
+            self.logger.debug = f"INPUT: {self.__points}"
         if self.logger:
             self.logger.debug = f"OUTPUT: {self.__final}"
 
@@ -616,7 +616,7 @@ class AlgTsp(IAlg, BLogClient):
     def final_distance(self) -> float:
         if not self.__final:
             return 0.0
-        dist = self.__math.distance(self.__data[0].star_pos, self.__final[0].star_pos)
+        dist = self.__math.distance(self.__points[0].star_pos, self.__final[0].star_pos)
         for item in range(len(self.__final) - 1):
             dist += self.__math.distance(
                 self.__final[item].star_pos, self.__final[item + 1].star_pos
@@ -635,7 +635,7 @@ class AlgGeneric(IAlg, BLogClient):
     __math: Euclid = None  # type: ignore
 
     __start_point: StarsSystem = None  # type: ignore
-    __systems: List[StarsSystem] = None  # type: ignore
+    __points: List[StarsSystem] = None  # type: ignore
     __jump_range: int = 0
     __final: List[StarsSystem] = None  # type: ignore
 
@@ -704,7 +704,7 @@ class AlgGeneric(IAlg, BLogClient):
             )
         self.debug(currentframe(), "Initialize dataset")
         self.__start_point = start
-        self.__systems = [
+        self.__points = [
             system for system in systems if isinstance(system, StarsSystem)
         ]
         self.__final = []
@@ -723,7 +723,7 @@ class AlgGeneric(IAlg, BLogClient):
 
         # precalculate
         systems: List[StarsSystem] = []
-        for item in self.__systems:
+        for item in self.__points:
             if self.__math.distance(self.__start_point.star_pos, item.star_pos) > 100:
                 self.debug(currentframe(), f"{item} removed")
             else:
@@ -809,7 +809,7 @@ class AlgGenetic(IAlg, BLogClient):
 
     __points: List[StarsSystem] = None  # type: ignore
     __start_point: StarsSystem = None  # type: ignore
-    __max_distance: int = None  # type: ignore
+    __jump_range: int = None  # type: ignore
     __population_size: int = None  # type: ignore
     __generations: int = None  # type: ignore
     __mutation_rate: float = None  # type: ignore
@@ -857,7 +857,7 @@ class AlgGenetic(IAlg, BLogClient):
                 currentframe(),
             )
         if isinstance(jump_range, int):
-            self.__max_distance = jump_range
+            self.__jump_range = jump_range
         else:
             raise Raise.error(
                 f"Int type expected, '{type(jump_range)}' received",
@@ -883,7 +883,7 @@ class AlgGenetic(IAlg, BLogClient):
 
         self.__points = systems
         self.__start_point = start
-        self.__population_size = len(systems)*3
+        self.__population_size = len(systems) * 3
         self.__generations = 200
         self.__mutation_rate = 0.01
         self.__crossover_rate = 0.4
@@ -900,7 +900,7 @@ class AlgGenetic(IAlg, BLogClient):
             )
             if (
                 self.__math.distance(individual[-1].star_pos, closest_point.star_pos)
-                > self.__max_distance
+                > self.__jump_range
             ):
                 break
             individual.append(closest_point)
@@ -1034,7 +1034,7 @@ class AlgGenetic2(IAlg, BLogClient):
 
     __points: List[StarsSystem] = None  # type: ignore
     __start_point: StarsSystem = None  # type: ignore
-    __max_distance: int = None  # type: ignore
+    __jump_range: int = None  # type: ignore
     __population_size: int = None  # type: ignore
     __generations: int = None  # type: ignore
     __mutation_rate: float = None  # type: ignore
@@ -1081,7 +1081,7 @@ class AlgGenetic2(IAlg, BLogClient):
                 currentframe(),
             )
         if isinstance(jump_range, int):
-            self.__max_distance = jump_range
+            self.__jump_range = jump_range
         else:
             raise Raise.error(
                 f"Int type expected, '{type(jump_range)}' received",
@@ -1311,7 +1311,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
 
     __points: List[StarsSystem] = None  # type: ignore
     __start_point: StarsSystem = None  # type: ignore
-    __max_distance: int = None  # type: ignore
+    __jump_range: int = None  # type: ignore
     __initial_temp: float = 0.0
     __cooling_rate: float = 0.0
     __best_distance: float = float("inf")
@@ -1359,7 +1359,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
                 currentframe(),
             )
         if isinstance(jump_range, int):
-            self.__max_distance = jump_range
+            self.__jump_range = jump_range
         else:
             raise Raise.error(
                 f"Int type expected, '{type(jump_range)}' received",
@@ -1385,7 +1385,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
 
         self.__start_point = start
         self.__points = systems
-        self.__max_distance = jump_range
+        self.__jump_range = jump_range
         self.__initial_temp = 1000.0  # 1000
         self.__cooling_rate = 0.003  # 0.003
         # initial_temp: Im wyższa temperatura początkowa, tym większe jest
@@ -1410,7 +1410,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
             dist: float = self.__math.distance(
                 current_star.star_pos, next_star.star_pos
             )
-            if dist <= self.__max_distance:  # Only count valid jumps
+            if dist <= self.__jump_range:  # Only count valid jumps
                 total_dist += dist
             else:
                 return float("inf")  # Penalize paths that exceed jump_range
