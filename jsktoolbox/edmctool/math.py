@@ -617,7 +617,7 @@ class AlgTsp(IAlg, BLogClient):
         if not self.__final:
             return 0.0
         dist = self.__math.distance(self.__points[0].star_pos, self.__final[0].star_pos)
-        for item in range(len(self.__final) - 1):
+        for item in range(1, len(self.__final) - 1):
             dist += self.__math.distance(
                 self.__final[item].star_pos, self.__final[item + 1].star_pos
             )
