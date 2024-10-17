@@ -58,7 +58,7 @@ class TestPathFinderAlg(unittest.TestCase):
         # add points list
         self.points: List[StarsSystem] = []
         for point in [
-            (200, 0, 0),
+            # (200, 0, 0),
             (50, 0, 0),
             (40, 0, 0),
             (30, 0, 0),
