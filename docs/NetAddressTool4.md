@@ -4,11 +4,11 @@ The project contains sets of base classes for operations on IPv4 addresses.
 
 ## Public Classes
 
-1. [Octet](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#octet)
-1. [Address](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#address)
-1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#netmask)
-1. [Network](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#network)
-1. [SubNetwork](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md#subnetwork)
+1. [Octet](https://github.com/Szumak75/JskToolBox/blob/1.0.20/docs/NetAddressTool4.md#octet)
+1. [Address](https://github.com/Szumak75/JskToolBox/blob/1.0.20/docs/NetAddressTool4.md#address)
+1. [Netmask](https://github.com/Szumak75/JskToolBox/blob/1.0.20/docs/NetAddressTool4.md#netmask)
+1. [Network](https://github.com/Szumak75/JskToolBox/blob/1.0.20/docs/NetAddressTool4.md#network)
+1. [SubNetwork](https://github.com/Szumak75/JskToolBox/blob/1.0.20/docs/NetAddressTool4.md#subnetwork)
 
 ## Octet
 
