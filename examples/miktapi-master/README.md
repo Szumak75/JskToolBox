@@ -5,7 +5,7 @@ This lib currently provides some helpers for communication with RouterOS, so it'
 ### Usage
 
 Example with login process and sending commands for receiving list of interfaces
-can be found [here](https://github.com/mrin/miktapi/blob/master/examples/simple_interface_print.py).
+can be found [here](https://github.com/mrin/miktapi/blob/1.0.22/examples/simple_interface_print.py).
 
 Lib helpers:
 
