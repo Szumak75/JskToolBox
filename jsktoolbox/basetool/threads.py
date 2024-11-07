@@ -186,8 +186,8 @@ class ThBaseObject(BData):
     def stopped(self) -> bool:
         """Return stop event flag."""
         if self._stop_event:
-            self._stop_event.is_set()
-        return False
+            return self._stop_event.is_set()
+        return True
 
     @property
     def sleep_period(self) -> float:
