@@ -6,7 +6,10 @@
   Purpose: Base classes for RouterOS
 """
 
+from inspect import currentframe
 from typing import Dict, List, Optional, Union, TypeVar, Any
+
+from jsktoolbox.raisetool import Raise
 
 from ...logstool.queue import LoggerQueue
 
@@ -65,6 +68,13 @@ class BRouterOS(BDev, BElement):
         """Add children from configuration dict."""
         if parent._ch is None:
             return None
+        if not isinstance(elements_dict, Dict):
+            raise Raise.error(
+                f"Expected dictionary type, received: {type(elements_dict)}",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         for key in elements_dict.keys():
             if key in self.elements:
                 # duplicate
