@@ -388,7 +388,10 @@ class API(IConnector, BData):
                 )
             if soc_ret >= (128).to_bytes(1, "big"):
                 return soc_ret
-            ret += soc_ret.decode(sys.stdout.encoding, "replace")
+            try:
+                ret += soc_ret.decode(sys.stdout.encoding, "replace")
+            except UnicodeDecodeError:
+                return soc_ret
         return ret
 
     @property
