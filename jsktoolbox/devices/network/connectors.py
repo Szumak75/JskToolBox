@@ -195,7 +195,7 @@ class API(IConnector, BData):
         ['/ping', '=address=10.0.0.1', '=count=3"']
         """
         com_list = []
-        buf_list: list[str] = command.split()
+        buf_list: List[str] = command.split()
         attr_flag = False
         where_flag = False
         unset_flag = False
