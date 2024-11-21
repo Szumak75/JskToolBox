@@ -346,34 +346,32 @@ class API(IConnector, BData):
         return char
 
     def __write_str(self, string: str) -> None:
-        number = 0
+        if not string:
+            return
         if self.__socket is None:
             return None
-        while number < len(string):
-            ret: int = self.__socket.send(bytes(string[number:], "UTF-8"))
-            if ret == 0:
-                raise Raise.error(
-                    "connection closed by remote end",
-                    RuntimeError,
-                    self._c_name,
-                    currentframe(),
-                )
-            number += ret
+        try:
+            self.__socket.sendall(bytes(string, "UTF-8"))
+        except socket.error as ex:
+            raise Raise.error(
+                f"connection closed by remote end: {ex}",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
 
     def __write_byte(self, string: bytes) -> None:
-        number = 0
-        if self.__socket is None:
+        if not string or self.__socket is None:
             return None
-        while number < len(string):
-            ret: int = self.__socket.send(string[number:])
-            if ret == 0:
-                raise Raise.error(
-                    "connection closed by remote end",
-                    RuntimeError,
-                    self._c_name,
-                    currentframe(),
-                )
-            number += ret
+        try:
+            self.__socket.sendall(string)
+        except socket.error as ex:
+            raise Raise.error(
+                f"connection closed by remote end: {ex}",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
 
     def __read_str(self, length: int) -> Union[str, bytes]:
         ret: str = ""
