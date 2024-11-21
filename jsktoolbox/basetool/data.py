@@ -146,7 +146,7 @@ class BData(BClasses):
         else:
             raise Raise.error(
                 f"Expected Dict type, received: '{type(value)}'.",
-                AttributeError,
+                TypeError,
                 self._c_name,
                 currentframe(),
             )

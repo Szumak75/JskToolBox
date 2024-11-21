@@ -70,7 +70,7 @@ class TestBData(unittest.TestCase):
 
     def test_07_set_invalid_type(self) -> None:
         """Test nr 7."""
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(TypeError):
             self.obj._data = 1  # type: ignore
 
     def test_08_get_and_set_method(self) -> None:
