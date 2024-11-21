@@ -269,12 +269,11 @@ class API(IConnector, BData):
 
     def __read_sentence(self) -> List:
         ret_list = []
-        while 1:
+        while True:
             word = self.__read_word()
-            if word == "":
+            if not word:
                 return ret_list
             ret_list.append(word)
-        return ret_list
 
     def __write_word(self, word: str) -> None:
         self.__write_len(len(word))
