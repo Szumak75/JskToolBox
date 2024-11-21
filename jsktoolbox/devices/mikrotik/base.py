@@ -17,7 +17,7 @@ from ..libs.base import BDev
 from ..network.connectors import IConnector
 
 TRouterOS = TypeVar("TRouterOS", bound="BRouterOS")
-TElement = TypeVar("TElement", bound="Element")
+# TElement = TypeVar("TElement", bound="Element")
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -95,7 +95,7 @@ class BRouterOS(BDev, BElement):
         for item in self.elements.values():
             item.dump()
 
-    def element(self, root: str, auto_load: bool = False) -> Optional[TElement]:
+    def element(self, root: str, auto_load: bool = False) -> Optional["Element"]:
         """Returns the Element object for corresponding path."""
         # check if first and last char in path is '/'
         if root:
