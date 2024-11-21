@@ -6,7 +6,7 @@
   Purpose: Base classes for RouterOS
 """
 
-from typing import Dict, List, Optional, Union, TypeVar
+from typing import Dict, List, Optional, Union, TypeVar, Any
 
 from ...logstool.queue import LoggerQueue
 
@@ -115,7 +115,7 @@ class BRouterOS(BDev, BElement):
         return None
 
     @property
-    def elements(self) -> Dict:
+    def elements(self) -> Dict[str, Any]:
         """Return elements dict."""
         return self._get_data(key=_Keys.ELEMENTS)  # type: ignore
 
@@ -198,7 +198,7 @@ class Element(BRouterOS):
         )
         self.root = f"{key}/"
 
-    def search(self, search_dict: Dict) -> Optional[Union[List, Dict]]:
+    def search(self, search_dict: Dict) -> Optional[Union[List[str], Dict[str, Any]]]:
         """Returns optional Dict or List[Dict] with found results."""
         # search_dict = {
         # key1: value1,
