@@ -281,6 +281,11 @@ class API(IConnector, BData):
 
     def __read_word(self) -> Union[str, bytes]:
         ret = self.__read_str(self.__read_len())
+        if isinstance(ret, bytes):
+            try:
+                return ret.decode(sys.stdout.encoding, "replace")
+            except UnicodeDecodeError:
+                return ret
         return ret
 
     def __write_len(self, value: int) -> None:
