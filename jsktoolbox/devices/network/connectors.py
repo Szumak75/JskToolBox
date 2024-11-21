@@ -240,9 +240,9 @@ class API(IConnector, BData):
         ret = []
         if self.__write_sentence(words) == 0:
             return ret
-        while 1:
+        while True:
             items_list = self.__read_sentence()
-            if len(items_list) == 0:
+            if not items_list:
                 continue
             reply = items_list[0]
             attrs = {}
