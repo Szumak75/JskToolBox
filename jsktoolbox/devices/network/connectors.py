@@ -258,6 +258,8 @@ class API(IConnector, BData):
         return ret
 
     def __write_sentence(self, words: List) -> int:
+        if not words:
+            return 0
         ret = 0
         for w in words:
             self.__write_word(w)
