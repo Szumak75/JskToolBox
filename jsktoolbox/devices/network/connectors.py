@@ -466,13 +466,12 @@ class API(IConnector, BData):
             if repl == "!trap":
                 return False
             elif "=ret" in attrs.keys():
-                chal: bytes = binascii.unhexlify(
-                    (attrs["=ret"]).encode(sys.stdout.encoding)
-                )
                 md: hashlib._Hash = hashlib.md5()
                 md.update(b"\x00")
                 md.update(self._get_data(key=_Keys.PASS).encode(sys.stdout.encoding))  # type: ignore
-                md.update(chal)
+                md.update(
+                    binascii.unhexlify((attrs["=ret"]).encode(sys.stdout.encoding))
+                )
                 for repl2, attrs2 in self.__talk(
                     [
                         "/login",
