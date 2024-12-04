@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jsktoolbox"
-version = "1.1.dev"
+version = "1.1.0"
 description = "Small sets of classes for various operations."
 authors = ["Jacek 'Szumak' Kotlarski <szumak@virthost.pl>"]
 maintainers = ["Jacek 'Szumak' Kotlarski <szumak@virthost.pl>"]
