@@ -4,27 +4,27 @@ The project contains several classes that create a logging subsystem for the des
 
 ## Public classes
 
-1. [ThLoggerProcessor](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#thloggerprocessor)
-1. [LoggerEngine](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerengine)
-1. [LoggerClient](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerclient)
+1. [ThLoggerProcessor](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#thloggerprocessor)
+1. [LoggerEngine](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerengine)
+1. [LoggerClient](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerclient)
 
 ## Engine classes
 
-1. [LoggerEngineStdout](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerenginestdout)
-1. [LoggerEngineStderr](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerenginestderr)
-1. [LoggerEngineFile](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerenginefile)
-1. [LoggerEngineSyslog](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerenginesyslog)
+1. [LoggerEngineStdout](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerenginestdout)
+1. [LoggerEngineStderr](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerenginestderr)
+1. [LoggerEngineFile](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerenginefile)
+1. [LoggerEngineSyslog](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerenginesyslog)
 
 ## Formatter classes
 
-1. [LogFormatterNull](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#logformatternull)
-1. [LogFormatterDateTime](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#logformatterdatetime)
-1. [LogFormatterTime](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#logformattertime)
-1. [LogFormatterTimestamp](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#logformattertimestamp)
+1. [LogFormatterNull](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#logformatternull)
+1. [LogFormatterDateTime](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#logformatterdatetime)
+1. [LogFormatterTime](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#logformattertime)
+1. [LogFormatterTimestamp](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#logformattertimestamp)
 
 ## Queue class
 
-1. [LoggerQueue](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md#loggerqueue)
+1. [LoggerQueue](https://github.com/Szumak75/JskToolBox/blob/1.1.1/docs/LogsTool.md#loggerqueue)
 
 # Public classes
 
