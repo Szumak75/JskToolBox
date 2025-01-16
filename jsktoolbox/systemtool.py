@@ -182,12 +182,13 @@ class CommandLineParser(BData):
             }
         return out
 
-    def help(self, command_conf: Dict[str, Any]) -> None:
+    def help(self) -> None:
         """Show help information.
 
         ### Arguments:
         * command_conf [Dict[str, Any]] - CommandLineParser.dump() output.
         """
+        command_conf: Dict[str, Any] = self.dump()
         command_opts: str = ""
         desc_opts: List = []
         max_len: int = 0
