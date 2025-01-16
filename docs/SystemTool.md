@@ -25,11 +25,13 @@ CommandLineParser()
 
 ### Public methods
 
+#### configure_argument
+
 ```
 .configure_argument(short_arg, long_arg, desc_arg, has_value, example_value) -> None
 ```
 
-#### Arguments
+##### Arguments
 
 * short_arg [Optional[str]] - optional one character string,
 * long_arg [str] - required one word string,
@@ -39,22 +41,31 @@ CommandLineParser()
 
 The method creates and configures the application invocation argument passed in the comment line when it is launched.
 
+#### parse_arguments
+
 ```
-parse_arguments() -> bool
+.parse_arguments() -> bool
 ```
 
 The method processes the list of arguments passed on the command line.
 
 ```
-get_option(long_arg) -> Optional[str]
+.get_option(long_arg) -> Optional[str]
 ```
 
-#### Arguments
+##### Arguments
 
 * long_arg [str] - name of argument to get
 
 The method checks if an argument with the name indicated by `long_arg` was passed. If the variable `has_value=True` is set in the configuration section, the string assigned to this flag in the comment line will be returned.
 
+#### help
+
+```
+.help() -> None
+```
+
+This is example method to print help message.
 
 ## PathChecker
 
@@ -74,11 +85,14 @@ PathChecker(pathname:str, check_deep: bool = True)
 
 ### Public properties
 
+#### dirname
 ```
 .dirname -> Optional[str]
 ```
 
 Returns dirname from path.
+
+#### filename
 
 ```
 .filename -> Optional[str]
@@ -86,11 +100,15 @@ Returns dirname from path.
 
 Returns filename from path.
 
+#### exists
+
 ```
 .exists -> bool
 ```
 
 Returns path exists flag.
+
+#### is_dir
 
 ```
 .is_dir -> bool
@@ -98,11 +116,15 @@ Returns path exists flag.
 
 Returns path is_dir flag.
 
+#### is_file
+
 ```
 .is_file -> bool
 ```
 
 Returns path is_file flag.
+
+#### is_symlink
 
 ```
 .is_symlink -> bool
@@ -110,11 +132,15 @@ Returns path is_file flag.
 
 Returns path is_symlink flag.
 
+#### path
+
 ```
 .path -> str
 ```
 
 Returns path string.
+
+#### posixpath
 
 ```
 .posixpath -> str
@@ -122,8 +148,9 @@ Returns path string.
 
 Returns posix path string.
 
-
 ### Public methods
+
+#### create
 
 ```
 .create() -> bool
