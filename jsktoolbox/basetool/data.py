@@ -130,7 +130,10 @@ class BData(BClasses):
     def _data(self, value: Optional[Dict]) -> None:
         """Set data dict."""
         if value is None:
-            self.__data = {}
+            if self.__data is not None:
+                self.__data.clear()
+            if self.__types is not None:
+                self.__types.clear()
             return None
         if isinstance(value, Dict) and self.__data is not None:
             for key in value.keys():
