@@ -18,7 +18,7 @@ from .classes import BClasses
 class BData(BClasses):
     """BData container class."""
 
-    __data: Optional[Dict] = None
+    __data: Optional[Dict[str, Any]] = None
     __types: Optional[Dict[str, Any]] = None
 
     def __check_keys(self, key: str) -> bool:
@@ -116,9 +116,20 @@ class BData(BClasses):
                     )
             else:
                 self._data[key] = value
+    
+    def _del_data(self, key:str)->None:
+        """Deletes data from internal dict.
+
+        ### Arguments:
+        * key [str] - variable name to delete
+        """
+        if self.__check_keys(key):
+            del self._data[key]
+            if self.__has_type(key):
+                del self.__types[key] # type: ignore
 
     @property
-    def _data(self) -> Dict:
+    def _data(self) -> Dict[str, Any]:
         """Return data dict."""
         if self.__data is None:
             self.__data = {}
@@ -127,7 +138,7 @@ class BData(BClasses):
         return self.__data
 
     @_data.setter
-    def _data(self, value: Optional[Dict]) -> None:
+    def _data(self, value: Optional[Dict[str, Any]]) -> None:
         """Set data dict."""
         if value is None:
             if self.__data is not None:
@@ -153,6 +164,16 @@ class BData(BClasses):
                 self._c_name,
                 currentframe(),
             )
+
+    @_data.deleter
+    def _data(self) -> None:
+        """Delete data dict."""
+        if self.__data is not None:
+            self.__data.clear()
+        if self.__types is not None:
+            self.__types.clear()
+        self.__data = None
+        self.__types = None
 
 
 #

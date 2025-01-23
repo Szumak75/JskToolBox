@@ -123,5 +123,23 @@ class TestBData(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.obj._set_data(key="test1", value=10)
 
+    def test_13_del_data(self) -> None:
+        """Test nr 13."""
+        self.obj._set_data(key="test2", value=12.1, set_default_type=float)
+        self.obj._set_data(key="test1", value=12, set_default_type=int)
+        self.assertTrue(self.obj._get_data(key="test1") == 12)
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value="abc")
+        self.obj._del_data(key="test1")
+        self.assertIsNone(self.obj._get_data(key="test1"))
+        self.assertEqual(len(self.obj._data.keys()), 1)
+        try:
+            self.obj._set_data(key="test1", value="xxx")
+        except Exception as ex:
+            self.fail(ex)
+        del self.obj._data
+        self.assertTrue(isinstance(self.obj._data, Dict))
+        self.assertEqual(len(self.obj._data.keys()), 0)
+
 
 # #[EOF]#######################################################################
