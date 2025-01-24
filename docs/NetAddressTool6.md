@@ -4,11 +4,11 @@ The project contains sets of base classes for operations on IPv6 addresses.
 
 ## Public Classes
 
-1. [Word16](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#word16)
-1. [Address6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#address6)
-1. [Prefix6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#prefix6)
-1. [Network6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#network6)
-1. [SubNetwork6](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md#subnetwork6)
+1. [Word16](https://github.com/Szumak75/JskToolBox/blob/1.1.2/docs/NetAddressTool6.md#word16)
+1. [Address6](https://github.com/Szumak75/JskToolBox/blob/1.1.2/docs/NetAddressTool6.md#address6)
+1. [Prefix6](https://github.com/Szumak75/JskToolBox/blob/1.1.2/docs/NetAddressTool6.md#prefix6)
+1. [Network6](https://github.com/Szumak75/JskToolBox/blob/1.1.2/docs/NetAddressTool6.md#network6)
+1. [SubNetwork6](https://github.com/Szumak75/JskToolBox/blob/1.1.2/docs/NetAddressTool6.md#subnetwork6)
 
 ## Word16
 
