@@ -130,7 +130,7 @@ class TestBData(unittest.TestCase):
         self.assertTrue(self.obj._get_data(key="test1") == 12)
         with self.assertRaises(TypeError):
             self.obj._set_data(key="test1", value="abc")
-        self.obj._del_data(key="test1")
+        self.obj._delete_data(key="test1")
         self.assertIsNone(self.obj._get_data(key="test1"))
         self.assertEqual(len(self.obj._data.keys()), 1)
         try:
