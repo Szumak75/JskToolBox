@@ -101,6 +101,7 @@ class TestBData(unittest.TestCase):
 
     def test_11_set_list(self) -> None:
         """Test nr 11."""
+        # first set
         self.obj._set_data(key="test1", value=[1, 2, 3], set_default_type=List)
         obj = self.obj._get_data(key="test1")
         if isinstance(obj, List):
@@ -109,9 +110,17 @@ class TestBData(unittest.TestCase):
             self.fail(msg="Type error.")
         with self.assertRaises(TypeError):
             self.obj._set_data(key="test1", value=10)
+        # second set
+        self.obj._set_data(key="test1", value=[4, 5, 6])
+        obj = self.obj._get_data(key="test1")
+        if isinstance(obj, List):
+            self.assertTrue(obj[0] == 4)
+        else:
+            self.fail(msg="Type error.")
 
     def test_12_set_dict(self) -> None:
         """Test nr 12."""
+        # first set
         self.obj._set_data(
             key="test1", value={"a": 1, "b": 2, "c": 3}, set_default_type=Dict
         )
@@ -122,6 +131,13 @@ class TestBData(unittest.TestCase):
             self.fail(msg="Type error.")
         with self.assertRaises(TypeError):
             self.obj._set_data(key="test1", value=10)
+        # second set
+        self.obj._set_data(key="test1", value={"a": 4, "b": 5, "c": 6})
+        obj = self.obj._get_data(key="test1")
+        if isinstance(obj, Dict):
+            self.assertTrue(obj["a"] == 4)
+        else:
+            self.fail(msg="Type error.")
 
     def test_13_del_data(self) -> None:
         """Test nr 13."""
