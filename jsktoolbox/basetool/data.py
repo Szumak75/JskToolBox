@@ -125,8 +125,8 @@ class BData(BClasses):
         """
         if self.__check_keys(key):
             del self._data[key]
-            if self.__has_type(key):
-                del self.__types[key]  # type: ignore
+        if self.__has_type(key):
+            del self.__types[key]  # type: ignore
 
     def _clear_data(self, key: str) -> None:
         """Clear data from internal dict.
