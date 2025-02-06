@@ -10,6 +10,7 @@
 import ctypes
 import os, platform
 
+from abc import ABC, abstractmethod
 from inspect import currentframe
 from typing import Any, Callable, Optional
 from types import MethodType
@@ -17,6 +18,18 @@ from types import MethodType
 from ..basetool.data import BData
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
+
+
+class _IClip(ABC):
+    """Clipboard interface class."""
+
+    @abstractmethod
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+
+    @abstractmethod
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -30,6 +43,78 @@ class _Keys(object, metaclass=ReadOnlyClass):
     PASTE: str = "_paste_"
     POSIX: str = "posix"
     WINDOWS: str = "Windows"
+
+
+class _WinClip(BData, _IClip):
+    """Windows clipboard class."""
+
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+        return ""
+
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
+        pass
+
+
+class _MacClip(BData, _IClip):
+    """MacOS clipboard class."""
+
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+        return ""
+
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
+        pass
+
+
+class _XClip(BData, _IClip):
+    """X11 clipboard class."""
+
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+        return ""
+
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
+        pass
+
+
+class _GtkClip(BData, _IClip):
+    """Gtk clipboard class."""
+
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+        return ""
+
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
+        pass
+
+
+class _QtClip(BData, _IClip):
+    """Qt clipboard class."""
+
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+        return ""
+
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
+        pass
+
+
+class _TkClip(BData, _IClip):
+    """Tk clipboard class."""
+
+    def get_clipboard(self) -> str:
+        """Get clipboard content."""
+        return ""
+
+    def set_clipboard(self, value: str) -> None:
+        """Set clipboard content."""
+        pass
 
 
 class ClipBoard(BData):
