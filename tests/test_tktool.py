@@ -63,4 +63,28 @@ class XClipTest(unittest.TestCase):
             self.assertEqual(self.cb.get_clipboard(), "to jest test xclip")
 
 
+class CollectiveTest(unittest.TestCase):
+    """Class for testing clipboard operations."""
+
+    def test_over_different_classes(self) -> None:
+        """Test nr 01."""
+        var: str = "this is collective test."
+        cb = None
+        if _XClip().is_tool:
+            cb = _XClip()
+        elif _XSel().is_tool:
+            cb = _XSel()
+
+        if cb:
+            cb.set_clipboard(var)
+
+            if _XClip().is_tool:
+                test = _XClip()
+                self.assertEqual(test.get_clipboard(), var)
+
+            if _XSel().is_tool:
+                test = _XSel()
+                self.assertEqual(test.get_clipboard(), var)
+
+
 # #[EOF]#######################################################################
