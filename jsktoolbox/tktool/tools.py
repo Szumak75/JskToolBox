@@ -9,6 +9,8 @@
 
 import ctypes
 import os, platform
+import tkinter as tk
+import time
 
 from abc import ABC, abstractmethod
 from inspect import currentframe
@@ -18,6 +20,7 @@ from types import MethodType
 from ..basetool.data import BData
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
+from .base import TkBase
 
 
 class _IClip(ABC):
@@ -253,11 +256,55 @@ class _QtClip(_BClip):
         cb.setText(text)
 
 
-class _TkClip(_BClip):
-    """Tk clipboard class."""
+class _TkClip(_BClip, TkBase):
+    """Tk clipboard class.
 
-    def __init__(self) -> None:
+    Tkinter Clipboard Issue
+    Using Tkinter's clipboard functions might not always ensure that the clipboard content is shared
+    with the system clipboard, especially when the Tkinter application is closed immediately after
+    setting the clipboard content. This is because Tkinter needs to stay active for the clipboard
+    content to persist.
+    """
+
+    # __tw: Optional[tk.Toplevel] = None
+    __tw: Optional[tk.Tk] = None
+    # __widget: tk.Misc = None  # type: ignore
+
+    def __init__(
+        self,
+        # widget: tk.Misc,
+    ) -> None:
         """Initialize the class."""
+        # self.__widget = widget
+        # if self.__widget:
+        # creates a toplevel window
+        # self.__tw = tk.Toplevel(self.__widget)
+        self.__tw = tk.Tk()
+        self.__tw.withdraw()
+        if self.__tw:
+            get_cb = self.__tkinter_get_clipboard
+            set_cb = self.__tkinter_set_clipboard
+            self._set_data(
+                key=_Keys.COPY, value=set_cb, set_default_type=Optional[MethodType]
+            )
+            self._set_data(
+                key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
+            )
+
+    def __tkinter_get_clipboard(self) -> str:
+        """Get Tk clipboard data."""
+        if self.__tw:
+            return self.__tw.clipboard_get()
+        return ""
+
+    def __tkinter_set_clipboard(self, text: str) -> None:
+        """Set Tk clipboard data."""
+        if self.__tw:
+            self.__tw.clipboard_clear()
+            self.__tw.clipboard_append(text)
+            self.__tw.update()
+            time.sleep(0.2)
+            self.__tw.update()
 
 
 class ClipBoard(BData):
