@@ -226,6 +226,19 @@ class _GtkClip(_BClip):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        try:
+            import gtk  # type: ignore
+
+            get_cb = self.__gtk_get_clipboard
+            set_cb = self.__gtk_set_clipboard
+            self._set_data(
+                key=_Keys.COPY, value=set_cb, set_default_type=Optional[MethodType]
+            )
+            self._set_data(
+                key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
+            )
+        except Exception:
+            pass
 
     def __gtk_get_clipboard(self) -> str:
         """Get GTK clipboard data."""
@@ -245,6 +258,23 @@ class _QtClip(_BClip):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        try:
+            # TODO: PyQt5
+            import PyQt4.QtCore  # type: ignore
+            import PyQt4.QtGui  # type: ignore
+
+            app = PyQt4.QApplication([])
+            cb = PyQt4.QtGui.QApplication.clipboard()
+            get_cb = self.__qt_get_clipboard
+            set_cb = self.__qt_set_clipboard
+            self._set_data(
+                key=_Keys.COPY, value=set_cb, set_default_type=Optional[MethodType]
+            )
+            self._set_data(
+                key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
+            )
+        except:
+            pass
 
     def __qt_get_clipboard(self) -> str:
         """Get QT clipboard data."""
