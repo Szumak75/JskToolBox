@@ -14,7 +14,7 @@ import time
 
 from abc import ABC, abstractmethod
 from inspect import currentframe
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Union
 from types import MethodType
 
 from ..basetool.data import BData
@@ -254,10 +254,7 @@ class _GtkClip(_BClip):
 
 
 class _QtClip(_BClip):
-    """Qt clipboard class.
-
-    TODO: segmentation fault (core dumped) in some tests (pytest)
-    """
+    """Qt clipboard class."""
 
     __app = None
     __cb = None
@@ -267,10 +264,19 @@ class _QtClip(_BClip):
         try:
             # TODO: PyQt5
             # example: https://pythonprogramminglanguage.com/pyqt-clipboard/
-            from PyQt5.Qt import QApplication, QClipboard
+            from PyQt5.QtCore import QCoreApplication
+            from PyQt5.QtWidgets import QApplication
+            from PyQt5.QtGui import QClipboard
 
-            self.__app = QApplication([])
-            self.__cb = QApplication.clipboard()
+            # QApplication is a singleton
+            if not QApplication.instance():
+                self.__app: Optional[Union[QApplication, QCoreApplication]] = (
+                    QApplication([])
+                )
+            else:
+                self.__app = QApplication.instance()
+
+            self.__cb: Optional[QClipboard] = QApplication.clipboard()
             get_cb = self.__qt_get_clipboard
             set_cb = self.__qt_set_clipboard
             self._set_data(

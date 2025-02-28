@@ -136,10 +136,9 @@ class CollectiveTest(unittest.TestCase):
                 test = _XSel()
                 self.assertEqual(test.get_clipboard(), var)
 
-            # TODO: zsh: segmentation fault (core dumped)  pytest
-            # if _QtClip().is_tool:
-            #     test = _QtClip()
-            #     self.assertEqual(test.get_clipboard(), var)
+            if _QtClip().is_tool:
+                test = _QtClip()
+                self.assertEqual(test.get_clipboard(), var)
 
             # TkClip
             # if _TkClip().is_tool:
