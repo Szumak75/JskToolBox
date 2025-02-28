@@ -7,6 +7,7 @@
 """
 
 import unittest
+import os
 
 from jsktoolbox.devices.network.connectors import API, SSH
 from jsktoolbox.netaddresstool.ipv4 import Address
@@ -60,20 +61,22 @@ class TestConnectors(unittest.TestCase):
 
     def test_06_connect(self) -> None:
         """Test nr 06."""
-        try:
-            obj = API(
-                ip_address=Address("10.5.5.254"),
-                port=8728,
-                login="devel",
-                password="mojehaslo",
-            )
-            self.assertTrue(obj.connect(), msg="connection error")
-            self.assertTrue(obj.is_alive, msg="broken connection")
-            self.assertTrue(obj.execute("/system/identity/print"))
-            self.assertTrue(obj.disconnect(), msg="disconnection error")
-        except Exception as ex:
-            self.fail(msg=f"Exception was thrown: {ex}")
-        self.assertEqual(len(obj.errors()), 0, msg=f"{obj.errors()}")
+        ip = "10.5.5.254"
+        if os.system(f"ping -c 1 {ip}") == 0:
+            try:
+                obj = API(
+                    ip_address=Address(ip),
+                    port=8728,
+                    login="devel",
+                    password="mojehaslo",
+                )
+                self.assertTrue(obj.connect(), msg="connection error")
+                self.assertTrue(obj.is_alive, msg="broken connection")
+                self.assertTrue(obj.execute("/system/identity/print"))
+                self.assertTrue(obj.disconnect(), msg="disconnection error")
+            except Exception as ex:
+                self.fail(msg=f"Exception was thrown: {ex}")
+            self.assertEqual(len(obj.errors()), 0, msg=f"{obj.errors()}")
 
 
 # #[EOF]#######################################################################

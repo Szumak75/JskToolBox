@@ -254,19 +254,23 @@ class _GtkClip(_BClip):
 
 
 class _QtClip(_BClip):
-    """Qt clipboard class."""
+    """Qt clipboard class.
+
+    TODO: segmentation fault (core dumped) in some tests (pytest)
+    """
+
+    __app = None
+    __cb = None
 
     def __init__(self) -> None:
         """Initialize the class."""
         try:
             # TODO: PyQt5
             # example: https://pythonprogramminglanguage.com/pyqt-clipboard/
+            from PyQt5.Qt import QApplication, QClipboard
 
-            import PyQt4.QtCore  # type: ignore
-            import PyQt4.QtGui  # type: ignore
-
-            app = PyQt4.QApplication([])
-            cb = PyQt4.QtGui.QApplication.clipboard()
+            self.__app = QApplication([])
+            self.__cb = QApplication.clipboard()
             get_cb = self.__qt_get_clipboard
             set_cb = self.__qt_set_clipboard
             self._set_data(
@@ -280,12 +284,15 @@ class _QtClip(_BClip):
 
     def __qt_get_clipboard(self) -> str:
         """Get QT clipboard data."""
-        return str(cb.text())
+        if self.__cb:
+            return str(self.__cb.text())
+        return ""
 
     def __qt_set_clipboard(self, text: str) -> None:
         """Set QT clipboard data."""
-        text = str(text)
-        cb.setText(text)
+        if self.__cb:
+            text = str(text)
+            self.__cb.setText(text)
 
 
 class _TkClip(_BClip, TkBase):

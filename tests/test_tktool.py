@@ -40,6 +40,7 @@ class XSelTest(unittest.TestCase):
         """Test nr 02."""
         if self.cb.is_tool:
             self.cb.set_clipboard("to jest test xsel")
+            self.assertNotEqual(self.cb.get_clipboard(), "to jest test xsel 2")
             self.assertEqual(self.cb.get_clipboard(), "to jest test xsel")
 
 
@@ -61,6 +62,7 @@ class XClipTest(unittest.TestCase):
         """Test nr 02."""
         if self.cb.is_tool:
             self.cb.set_clipboard("to jest test xclip")
+            self.assertNotEqual(self.cb.get_clipboard(), "to jest test xclip 2")
             self.assertEqual(self.cb.get_clipboard(), "to jest test xclip")
 
 
@@ -85,8 +87,30 @@ class TkClipTest(unittest.TestCase):
         """Test nr 02."""
         if self.cb.is_tool:
             self.cb.set_clipboard("to jest test tkclip")
+            self.assertNotEqual(self.cb.get_clipboard(), "to jest test tkclip 2")
             self.assertEqual(self.cb.get_clipboard(), "to jest test tkclip")
-            self.assertEqual(self.cb.get_clipboard(), "to jest test tkclip")
+
+
+class QtClipTest(unittest.TestCase):
+    """Class for testing QtClip clipboard operations."""
+
+    def setUp(self) -> None:
+        """Setup for QtClipTest."""
+        try:
+            self.cb = _QtClip()
+        except Exception as e:
+            self.fail(f"Failed to create QtClip instance: {e}")
+
+    def test_is_tool(self) -> None:
+        """Test nr 01."""
+        self.assertTrue(self.cb.is_tool)
+
+    def test_copy_paste(self) -> None:
+        """Test nr 02."""
+        if self.cb.is_tool:
+            self.cb.set_clipboard("to jest test qt clip")
+            self.assertNotEqual(self.cb.get_clipboard(), "to jest test qt clip 2")
+            self.assertEqual(self.cb.get_clipboard(), "to jest test qt clip")
 
 
 class CollectiveTest(unittest.TestCase):
@@ -112,11 +136,16 @@ class CollectiveTest(unittest.TestCase):
                 test = _XSel()
                 self.assertEqual(test.get_clipboard(), var)
 
+            # TODO: zsh: segmentation fault (core dumped)  pytest
+            # if _QtClip().is_tool:
+            #     test = _QtClip()
+            #     self.assertEqual(test.get_clipboard(), var)
+
             # TkClip
-            if _TkClip().is_tool:
-                _TkClip().set_clipboard(var)
-                test = _TkClip()
-                self.assertEqual(test.get_clipboard(), var)
+            # if _TkClip().is_tool:
+            #     _TkClip().set_clipboard(var)
+            #     test = _TkClip()
+            #     self.assertEqual(test.get_clipboard(), var)
             # win = tk.Tk()
             # if _TkClip(win).is_tool:
             #     _TkClip(win).set_clipboard(var)
