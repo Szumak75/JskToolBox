@@ -260,6 +260,8 @@ class _QtClip(_BClip):
         """Initialize the class."""
         try:
             # TODO: PyQt5
+            # example: https://pythonprogramminglanguage.com/pyqt-clipboard/
+
             import PyQt4.QtCore  # type: ignore
             import PyQt4.QtGui  # type: ignore
 
