@@ -81,6 +81,7 @@ class _WinClip(_BClip):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        # https://stackoverflow.com/questions/101128/how-do-i-read-text-from-the-windows-clipboard-in-python
 
         if os.name == _Keys.NT or platform.system() == _Keys.WINDOWS:
             get_cb = self.__win_get_clipboard
@@ -285,7 +286,7 @@ class _QtClip(_BClip):
             self._set_data(
                 key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
             )
-        except:
+        except Exception:
             pass
 
     def __qt_get_clipboard(self) -> str:
@@ -311,7 +312,6 @@ class _TkClip(_BClip, TkBase):
     content to persist.
     """
 
-    # __tw: Optional[tk.Toplevel] = None
     __tw: Optional[tk.Tk] = None
     # __widget: tk.Misc = None  # type: ignore
 
