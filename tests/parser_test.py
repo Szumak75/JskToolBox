@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 07.11.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 07.11.2023
 
-  Purpose:
+Purpose:
 """
 
 from jsktoolbox.systemtool import CommandLineParser

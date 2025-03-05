@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  path_tests.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 15.10.2024, 09:26:00
-  
-  Purpose: 
+path_tests.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 15.10.2024, 09:26:00
+
+Purpose:
 """
 
 from typing import List

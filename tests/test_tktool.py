@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_tktool.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 22.02.2025, 22:00:45
-  
-  Purpose: Tests for tktool
+test_tktool.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 22.02.2025, 22:00:45
+
+Purpose: Tests for tktool
 """
 
 import unittest
