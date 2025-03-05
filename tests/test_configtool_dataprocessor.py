@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 29.10.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 29.10.2023
 
-  Purpose:
+Purpose:
 """
 
 import unittest
@@ -149,6 +149,7 @@ var02 = 2 # comment 02
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{self.dp._data}")
 
+        data: str = ""
         try:
             data = self.dp.dump
             self.assertEqual(data, expectation)

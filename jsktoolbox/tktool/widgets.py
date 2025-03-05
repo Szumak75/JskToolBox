@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-  widgets.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 15.01.2024, 10:42:01
-  
-  Purpose: custom tkinter widgets.
+widgets.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 15.01.2024, 10:42:01
 
-  VerticalScrolledFrame: https://gist.github.com/novel-yet-trivial/3eddfce704db3082e38c84664fc1fdf8
+Purpose: custom tkinter widgets.
+
+VerticalScrolledFrame: https://gist.github.com/novel-yet-trivial/3eddfce704db3082e38c84664fc1fdf8
 """
 
 

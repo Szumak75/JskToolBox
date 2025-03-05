@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_libs_queues.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 24.04.2024, 10:24:50
-  
-  Purpose: 
+test_libs_queues.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 24.04.2024, 10:24:50
+
+Purpose:
 """
 
 import unittest

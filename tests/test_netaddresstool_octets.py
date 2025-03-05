@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 23.06.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 23.06.2023
 
-  Purpose: for testing Octet class.
+Purpose: for testing Octet class.
 """
 
 import unittest
@@ -58,7 +58,7 @@ class TestOctet(unittest.TestCase):
     def test_07_set_invalid_type_float(self) -> None:
         """Test nr 7."""
         with self.assertRaises(TypeError):
-            self.o.value = 2.1 # type: ignore
+            self.o.value = 2.1  # type: ignore
 
     def test_08_set_invalid_type_string(self) -> None:
         """Test nr 8."""
@@ -68,7 +68,7 @@ class TestOctet(unittest.TestCase):
     def test_09_set_invalid_type_binary(self) -> None:
         """Test nr 9."""
         with self.assertRaises(TypeError):
-            self.o.value = b"1" # type: ignore
+            self.o.value = b"1"  # type: ignore
 
     def test_10_string_representation(self) -> None:
         """Test nr 10."""

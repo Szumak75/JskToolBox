@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_basetool_threads.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 7.10.2024, 11:36:25
-  
-  Purpose: 
+test_basetool_threads.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 7.10.2024, 11:36:25
+
+Purpose:
 """
 from time import sleep
 import unittest

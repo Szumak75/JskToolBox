@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 02.12.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 02.12.2023
 
-  Purpose: For testing classes from datetool module.
+Purpose: For testing classes from datetool module.
 """
 
 import unittest

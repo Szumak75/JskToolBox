@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-  tkinter.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 15.01.2024, 10:54:49
-  
-  Purpose: testing tkinter widget classes.
+tkinter.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 15.01.2024, 10:54:49
+
+Purpose: testing tkinter widget classes.
 """
 
 import tkinter as tk

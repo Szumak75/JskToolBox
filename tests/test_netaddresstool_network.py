@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 27.06.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 27.06.2023
 
-  Purpose: Network class testing.
+Purpose: Network class testing.
 """
 
 import unittest

@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 01.09.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 01.09.2023
 
-  Purpose: for testing DData class
+Purpose: for testing DData class
 """
 
 import unittest

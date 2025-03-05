@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 """
-  tools.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 5.10.2024, 14:26:16
-  
-  Purpose: ClipBoard tool.
+tools.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 5.10.2024, 14:26:16
+
+Purpose: ClipBoard tool.
 """
 
 import ctypes

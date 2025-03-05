@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 03.12.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 03.12.2023
 
-  Purpose: Connectors module testing class.
+Purpose: Connectors module testing class.
 """
 
 import unittest

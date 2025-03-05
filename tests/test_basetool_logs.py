@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_basetool_logs.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 4.10.2024, 12:43:33
-  
-  Purpose: 
+test_basetool_logs.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 4.10.2024, 12:43:33
+
+Purpose:
 """
 from types import NoneType
 import unittest

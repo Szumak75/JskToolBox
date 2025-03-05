@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 05.09.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 05.09.2023
 
-  Purpose: tests for Env class.
+Purpose: tests for Env class.
 """
 
 import unittest

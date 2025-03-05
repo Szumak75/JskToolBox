@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 27.06.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 27.06.2023
 
-  Purpose: Network6 class testing.
+Purpose: Network6 class testing.
 
-  https://www.juniper.net/us/en/research-topics/what-is-ipv4-vs-ipv6.html
+https://www.juniper.net/us/en/research-topics/what-is-ipv4-vs-ipv6.html
 """
 
 import unittest
@@ -59,8 +59,7 @@ class TestNetwork6(unittest.TestCase):
         )
         for idx in range(0, Network6("fd00::1/125").count):
             self.assertTrue(
-                Network6("fd00::1/125").hosts[idx]
-                == Address6(f"fd00::{idx}")
+                Network6("fd00::1/125").hosts[idx] == Address6(f"fd00::{idx}")
             )
 
     def test_10_network_create_from_list(self) -> None:

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 05.11.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 05.11.2023
 
-  Purpose:
+Purpose:
 """
 import getopt
 import sys
@@ -21,12 +21,8 @@ class CommandLineParser:
         if "long_opts" not in self.configured_args:
             self.configured_args["long_opts"] = []
 
-        self.configured_args["short_opts"] += short_arg + (
-            ":" if has_value else ""
-        )
-        self.configured_args["long_opts"].append(
-            long_arg + ("=" if has_value else "")
-        )
+        self.configured_args["short_opts"] += short_arg + (":" if has_value else "")
+        self.configured_args["long_opts"].append(long_arg + ("=" if has_value else ""))
 
     def parse_arguments(self):
         print(f"{self.configured_args} # {self.args}")
