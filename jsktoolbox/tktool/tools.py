@@ -8,6 +8,7 @@ Purpose: ClipBoard tool.
 """
 
 import ctypes
+from json import tool
 import os, platform
 import tkinter as tk
 import time
@@ -50,6 +51,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     NT: str = "nt"
     PASTE: str = "_paste_"
     POSIX: str = "posix"
+    TOOL: str = "_tool_"
     WINDOWS: str = "Windows"
 
 
@@ -353,6 +355,75 @@ class _TkClip(_BClip, TkBase):
 
 
 class ClipBoard(BData):
+    """System clipboard tool."""
+
+    __error: str = (
+        "ClipBoard requires the xclip or the xsel command or gtk or PyQt4 module installed."
+    )
+
+    def __init__(self) -> None:
+        """Create instance of class."""
+        if _XClip().is_tool:
+            self._set_data(key=_Keys.TOOL, value=_XClip())
+        elif _XSel().is_tool:
+            self._set_data(key=_Keys.TOOL, value=_XSel())
+        elif _GtkClip().is_tool:
+            self._set_data(key=_Keys.TOOL, value=_GtkClip())
+        elif _QtClip().is_tool:
+            self._set_data(key=_Keys.TOOL, value=_QtClip())
+        elif _WinClip().is_tool:
+            self._set_data(key=_Keys.TOOL, value=_WinClip())
+        elif _MacClip().is_tool:
+            self._set_data(key=_Keys.TOOL, value=_MacClip())
+        # elif _TkClip().is_tool:
+        #     self._set_data(key=_Keys.TOOL, value=_TkClip())
+        else:
+            print(
+                Raise.message(
+                    self.__error,
+                    self._c_name,
+                    currentframe(),
+                )
+            )
+
+    @property
+    def is_tool(self) -> bool:
+        """Return True if the tool is available."""
+        if self._get_data(key=_Keys.TOOL, default_value=None):
+            tool: _IClip = self._get_data(key=_Keys.TOOL)  # type: ignore
+            return tool.is_tool
+        return False
+
+    @property
+    def copy(self) -> Callable:
+        """Return copy handler."""
+        if self.is_tool:
+            return self._get_data(key=_Keys.TOOL).set_clipboard  # type: ignore
+        print(
+            Raise.message(
+                self.__error,
+                self._c_name,
+                currentframe(),
+            )
+        )
+        return lambda: ""
+
+    @property
+    def paste(self) -> Callable:
+        """Return paste handler."""
+        if self.is_tool:
+            return self._get_data(key=_Keys.TOOL).get_clipboard  # type: ignore
+        print(
+            Raise.message(
+                self.__error,
+                self._c_name,
+                currentframe(),
+            )
+        )
+        return lambda: ""
+
+
+class ClipBoardOld(BData):
     """System clipboard tool."""
 
     def __init__(self) -> None:
