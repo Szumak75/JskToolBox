@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 14.09.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 14.09.2023
 
-  Purpose: Testing IPv6 Address class.
+Purpose: Testing IPv6 Address class.
 """
 
 import unittest
@@ -20,9 +20,7 @@ class TestAddress6(unittest.TestCase):
 
     def test_01_address_string(self) -> None:
         """Test nr 1."""
-        self.assertEqual(
-            str(self.o), "1111:2222:3333:4444:5555:6666:7777:8888"
-        )
+        self.assertEqual(str(self.o), "1111:2222:3333:4444:5555:6666:7777:8888")
 
     def test_02_address_words(self) -> None:
         """Test nr 2."""
@@ -66,50 +64,34 @@ class TestAddress6(unittest.TestCase):
 
     def test_08_address_equal(self) -> None:
         """Test nr 8."""
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") == Address6("2000::FF")
-        )
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") == Address6("2000::FF"))
         self.assertFalse(Address6("::FA") == Address6("::FB"))
 
     def test_09_address_negative(self) -> None:
         """Test nr 9."""
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") != Address6("2000::F")
-        )
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") != Address6("2000::F"))
         self.assertFalse(Address6("::AA") != Address6("::AA"))
 
     def test_10_address_less(self) -> None:
         """Test nr 10."""
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") < Address6("2000:1::FF")
-        )
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") < Address6("2000:1::FF"))
         self.assertFalse(Address6("::FB") < Address6("::FA"))
         self.assertFalse(Address6("::F") < Address6("::F"))
 
     def test_11_address_less_or_equal(self) -> None:
         """Test nr 11."""
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") <= Address6("2000:1::FF")
-        )
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") <= Address6("2000::FF")
-        )
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") <= Address6("2000:1::FF"))
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") <= Address6("2000::FF"))
 
     def test_12_address_greater(self) -> None:
         """Test nr 12."""
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") > Address6("2000::FE")
-        )
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") > Address6("2000::FE"))
         self.assertFalse(Address6("::FA") > Address6("::FB"))
 
     def test_13_address_greater_or_equal(self) -> None:
         """Test nr 13."""
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") >= Address6("2000::FE")
-        )
-        self.assertTrue(
-            Address6("2000:0:0:0:0:0:0:FF") >= Address6("2000::FF")
-        )
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") >= Address6("2000::FE"))
+        self.assertTrue(Address6("2000:0:0:0:0:0:0:FF") >= Address6("2000::FF"))
 
     def test_14_address_invalid(self) -> None:
         """Test nr 14."""
@@ -122,9 +104,9 @@ class TestAddress6(unittest.TestCase):
         with self.assertRaises(ValueError):
             Address6([1, 2, 3])
         with self.assertRaises(TypeError):
-            Address6(None) # type: ignore
+            Address6(None)  # type: ignore
         with self.assertRaises(TypeError):
-            Address6({}) # type: ignore
+            Address6({})  # type: ignore
 
 
 # #[EOF]#######################################################################

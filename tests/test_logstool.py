@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_logstool.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 9.01.2024, 19:18:47
-  
-  Purpose: LogsTool testing suit.
+test_logstool.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 9.01.2024, 19:18:47
+
+Purpose: LogsTool testing suit.
 """
 
 from unittest import TestCase

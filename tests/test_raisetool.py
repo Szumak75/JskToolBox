@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 08.05.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 08.05.2023
 
-  Purpose: For testing Raise class
+Purpose: For testing Raise class
 """
 
 import unittest

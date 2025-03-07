@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_edmctool_stars.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 10.10.2024, 16:14:11
-  
-  Purpose: 
+test_edmctool_stars.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 10.10.2024, 16:14:11
+
+Purpose:
 """
 
 import unittest

@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 07.05.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 07.05.2023
 
-  Purpose: For testing classes that restrict the dynamic creation
-  of attributes in inheriting classes.
+Purpose: For testing classes that restrict the dynamic creation
+of attributes in inheriting classes.
 """
 
 import unittest
@@ -59,8 +59,8 @@ class TestNoNewAttributes(unittest.TestCase):
     def test_set_the_wrong_attribute(self) -> None:
         """Test nr 2."""
         try:
-            self.workclass.abc = 1 # type: ignore
-            self.workclass.abc = "test" # type: ignore
+            self.workclass.abc = 1  # type: ignore
+            self.workclass.abc = "test"  # type: ignore
         except Exception as ex:
             self.assertTrue(isinstance(ex, AttributeError))
         else:

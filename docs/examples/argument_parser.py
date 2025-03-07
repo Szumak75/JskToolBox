@@ -21,7 +21,7 @@ class ArgumentParser:
     def _handle_option(self, option, value):
         if value is None:
             value = ""
-        options = str(options)
+        options = str(self._options)
         key = self._options[option][0]
         if self._options[option][1]:
             self._options[key] = value
@@ -33,15 +33,17 @@ class ArgumentParser:
 
 
 class MyApp:
+    parser = None
+
     def __init__(self, **kwargs):
-        parser = ArgumentParser(**kwargs)
-        parser.parse_args(sys.argv[1:])
-        self.verbose = parser.get_option("-v")
-        self.file = parser.get_option("-f")
+        self.parser = ArgumentParser(**kwargs)
+        self.parser.parse_args(sys.argv[1:])
+        self.verbose = self.parser.get_option("-v")
+        self.file = self.parser.get_option("-f")
 
     def run(self):
         if self.verbose:
-            print("Uruchomiono z opcjami:", parser._options)
+            print("Uruchomiono z opcjami:", self.parser._options)
         if self.file:
             print("Plik:", self.file)
 

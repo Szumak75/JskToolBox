@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 23.06.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 23.06.2023
 
-  Purpose: Testing IPv4 Address class.
+Purpose: Testing IPv4 Address class.
 """
 
 import unittest

@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 30.06.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 30.06.2023
 
-  Purpose: Testing SubNetwork calculator.
+Purpose: Testing SubNetwork calculator.
 """
 
 import unittest

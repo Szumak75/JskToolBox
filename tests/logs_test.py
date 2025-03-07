@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 03.11.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 03.11.2023
 
-  Purpose: test logs engine
+Purpose: test logs engine
 """
 
 import time

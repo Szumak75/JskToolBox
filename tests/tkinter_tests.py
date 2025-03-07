@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-  tkinter.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 15.01.2024, 10:54:49
-  
-  Purpose: testing tkinter widget classes.
+tkinter.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 15.01.2024, 10:54:49
+
+Purpose: testing tkinter widget classes.
 """
 
 import tkinter as tk
@@ -13,6 +13,7 @@ from tkinter import ttk
 from jsktoolbox.tktool.widgets import (
     VerticalScrolledTtkFrame,
     CreateToolTip,
+    StatusBarTtkFrame,
 )
 
 
@@ -25,6 +26,10 @@ if __name__ == "__main__":
     frame = VerticalScrolledTtkFrame(root, width=300, borderwidth=2, relief=tk.SUNKEN)
 
     frame.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.TRUE)  # fill window
+
+    status = StatusBarTtkFrame(root)
+    status.pack(side=tk.BOTTOM, fill=tk.X)
+    status.set("This is a status bar")
 
     for i in range(30):
         line = ttk.Frame(frame.interior, borderwidth=1, relief=tk.GROOVE)

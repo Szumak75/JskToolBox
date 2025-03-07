@@ -1,5 +1,9 @@
 #!/bin/csh
 
+# Merge all branches from master
+#
+# Usage: git-merge-branches.csh
+
 set MASTER = 'master'
 set BRANCHES = ('systemtool_devel' 'configtool_devel' 'devices_devel' 'libs_devel' 'logstool_devel' 'netaddresstool_devel' 'raise_devel' 'stringtool_devel' 'datetool_devel' 'basetool_devel' 'tktool_devel' 'edmctool_devel' )
 

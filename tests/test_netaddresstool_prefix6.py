@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 22.09.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 22.09.2023
 
-  Purpose: testing IPv6 prefix
+Purpose: testing IPv6 prefix
 """
 
 import unittest

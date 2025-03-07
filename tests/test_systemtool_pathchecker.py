@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 06.09.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 06.09.2023
 
-  Purpose: PathChecker testing class
+Purpose: PathChecker testing class
 """
 
 import unittest

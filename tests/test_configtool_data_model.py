@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 30.10.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 30.10.2023
 
-  Purpose:
+Purpose:
 """
 
 import unittest
@@ -15,6 +15,7 @@ class TestDataModel(unittest.TestCase):
 
     def test_01_create_object(self) -> None:
         """Test nr 01."""
+        obj = None
         try:
             obj = SectionModel()
             obj.parser("[TEST]\n")

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  path.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 15.10.2024, 00:00:38
-  
-  Purpose: 
+path.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 15.10.2024, 00:00:38
+
+Purpose:
 """
 
 import random

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-  test_basetool.py
-  Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 5.09.2024, 22:07:07
-  
-  Purpose: 
+test_basetool.py
+Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 5.09.2024, 22:07:07
+
+Purpose:
 """
 
 

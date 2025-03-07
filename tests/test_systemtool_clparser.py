@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek Kotlarski --<szumak@virthost.pl>
-  Created: 17.11.2023
+Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Created: 17.11.2023
 
-  Purpose:
+Purpose:
 """
 
 import unittest

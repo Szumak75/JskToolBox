@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 """
-  Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-  Created: 29.10.2023
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 29.10.2023
 
-  Purpose: ConfigTool testing class.
+Purpose: ConfigTool testing class.
 """
 
 import unittest
