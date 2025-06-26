@@ -289,7 +289,30 @@ class _QtClip(_BClip):
                 key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
             )
         except Exception:
-            pass
+            try:
+                from PyQt6.QtCore import QCoreApplication
+                from PyQt6.QtWidgets import QApplication
+                from PyQt6.QtGui import QClipboard
+
+                # QApplication is a singleton
+                if not QApplication.instance():
+                    self.__app: Optional[Union[QApplication, QCoreApplication]] = (
+                        QApplication([])
+                    )
+                else:
+                    self.__app = QApplication.instance()
+
+                self.__cb: Optional[QClipboard] = QApplication.clipboard()
+                get_cb = self.__qt_get_clipboard
+                set_cb = self.__qt_set_clipboard
+                self._set_data(
+                    key=_Keys.COPY, value=set_cb, set_default_type=Optional[MethodType]
+                )
+                self._set_data(
+                    key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
+                )
+            except Exception:
+                pass
 
     def __qt_get_clipboard(self) -> str:
         """Get QT clipboard data."""
