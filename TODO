@@ -9,7 +9,4 @@
 
 [systemtool]->[CommandLineParser]
 * Refactoring: 
-    - configure_argument -> configure_option
-    - parse_arguments -> parse
     - have_option
-* add deprecation info

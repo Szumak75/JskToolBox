@@ -13,10 +13,12 @@ import sys
 import getopt
 import tempfile
 import subprocess
+import warnings
 
 from inspect import currentframe
 from pathlib import Path
 from typing import Optional, Union, List, Tuple, Dict, Any
+
 
 from .attribtool import ReadOnlyClass
 from .raisetool import Raise
@@ -65,6 +67,22 @@ class CommandLineParser(BData):
         self._set_data(key=_Keys.ARGS, value={}, set_default_type=Dict)
 
     def configure_argument(
+        self,
+        short_arg: Optional[str],
+        long_arg: str,
+        desc_arg: Optional[Union[str, List, Tuple]] = None,
+        has_value: bool = False,
+        example_value: Optional[str] = None,
+    ) -> None:
+        """[Deprecated]: Application command line argument configuration method and its description."""
+        warnings.warn(
+            "The 'configure_argument' method is deprecated, use 'configure_option' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.configure_option(short_arg, long_arg, desc_arg, has_value, example_value)
+
+    def configure_option(
         self,
         short_arg: Optional[str],
         long_arg: str,
@@ -128,6 +146,15 @@ class CommandLineParser(BData):
         self.__config_args[_Keys.EXAMPLE_OPTS].append(tmp)
 
     def parse_arguments(self) -> bool:
+        """[Deprecated]: Command line arguments parser."""
+        warnings.warn(
+            "The 'parse_arguments' method is deprecated, use 'parse' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.parse()
+
+    def parse(self) -> bool:
         """Command line arguments parser."""
         # replace ':' if exists in short option string
         short_mod = str(self.__config_args[_Keys.SHORT_OPTS]).replace(":", "")
