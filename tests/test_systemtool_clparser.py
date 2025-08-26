@@ -18,13 +18,13 @@ class TestCommandLineParser(unittest.TestCase):
     def setUp(self) -> None:
         """Set up tests."""
         self.parser = CommandLineParser()
-        self.parser.configure_argument(None, "avar", "a var desc")
-        self.parser.configure_argument("b", "bvar", "b var desc")
-        self.parser.configure_argument("c", "cvar", "c var desc")
-        self.parser.configure_argument("d", "dvar", "d var desc", has_value=True)
-        self.parser.configure_argument("e", "evar", "e var desc", has_value=True)
-        self.parser.configure_argument("f", "fvar", "f var desc", has_value=True)
-        self.parser.configure_argument("g", "gvar", "g var desc", has_value=True)
+        self.parser.configure_option(None, "avar", "a var desc")
+        self.parser.configure_option("b", "bvar", "b var desc")
+        self.parser.configure_option("c", "cvar", "c var desc")
+        self.parser.configure_option("d", "dvar", "d var desc", has_value=True)
+        self.parser.configure_option("e", "evar", "e var desc", has_value=True)
+        self.parser.configure_option("f", "fvar", "f var desc", has_value=True)
+        self.parser.configure_option("g", "gvar", "g var desc", has_value=True)
 
     def test_01_create_parser(self) -> None:
         """Test nr 01."""
@@ -35,7 +35,7 @@ class TestCommandLineParser(unittest.TestCase):
 
     def test_02_getting_single_args_undefined(self) -> None:
         """Test nr 02."""
-        self.parser.parse_arguments()
+        self.parser.parse()
         self.assertTrue(self.parser.get_option("avar") is None)
         self.assertTrue(self.parser.get_option("bvar") is None)
         self.assertTrue(self.parser.get_option("cvar") is None)
@@ -48,7 +48,7 @@ class TestCommandLineParser(unittest.TestCase):
         """Test nr 03."""
         sys.argv.append("--bvar")
         sys.argv.append("-c")
-        self.parser.parse_arguments()
+        self.parser.parse()
         self.assertTrue(self.parser.get_option("avar") is None)
         self.assertTrue(self.parser.get_option("bvar") is not None)
         self.assertTrue(self.parser.get_option("cvar") is not None)
@@ -61,7 +61,7 @@ class TestCommandLineParser(unittest.TestCase):
         """Test nr 04."""
         sys.argv.append("-d")
         sys.argv.append("10")
-        self.parser.parse_arguments()
+        self.parser.parse()
         self.assertTrue(self.parser.get_option("avar") is None)
         self.assertTrue(self.parser.get_option("bvar") is not None)
         self.assertTrue(self.parser.get_option("cvar") is not None)
@@ -76,7 +76,7 @@ class TestCommandLineParser(unittest.TestCase):
         sys.argv.append("--evar=20")
         sys.argv.append("--fvar=/tmp/for test case.txt")
         sys.argv.append("--avar")
-        self.parser.parse_arguments()
+        self.parser.parse()
         self.assertTrue(self.parser.get_option("avar") is not None)
         self.assertTrue(self.parser.get_option("bvar") is not None)
         self.assertTrue(self.parser.get_option("cvar") is not None)
