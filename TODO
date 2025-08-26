@@ -6,3 +6,10 @@
 
 [base_logs]
 * test for class LoggerQueue, BLogFormatter
+
+[systemtool]->[CommandLineParser]
+* Refactoring: 
+    - configure_argument -> configure_option
+    - parse_arguments -> parse
+    - have_option
+* add deprecation info
