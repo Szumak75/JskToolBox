@@ -181,6 +181,10 @@ class CommandLineParser(BData):
                     self.args[long_arg] = value
         return True
 
+    def has_option(self, long_arg: str) -> bool:
+        """Check if the option exists."""
+        return long_arg in self.args
+
     def get_option(self, long_arg: str) -> Optional[str]:
         """Get value of the option or None if it doesn't exist."""
         out: Optional[Any] = self.args.get(long_arg)
