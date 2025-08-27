@@ -7,6 +7,3 @@
 [base_logs]
 * test for class LoggerQueue, BLogFormatter
 
-[systemtool]->[CommandLineParser]
-* Refactoring: 
-    - have_option
