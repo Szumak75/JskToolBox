@@ -25,10 +25,10 @@ CommandLineParser()
 
 ### Public methods
 
-#### configure_argument
+#### configure_option
 
 ```
-.configure_argument(short_arg, long_arg, desc_arg, has_value, example_value) -> None
+.configure_option(short_arg, long_arg, desc_arg, has_value, example_value) -> None
 ```
 
 ##### Arguments
@@ -41,13 +41,23 @@ CommandLineParser()
 
 The method creates and configures the application invocation argument passed in the comment line when it is launched.
 
-#### parse_arguments
+#### parse
 
 ```
-.parse_arguments() -> bool
+.parse() -> bool
 ```
 
 The method processes the list of arguments passed on the command line.
+
+#### has_option
+
+```
+.has_option() -> bool
+```
+
+The method that allows you to check whether an argument has been used.
+
+#### get_option
 
 ```
 .get_option(long_arg) -> Optional[str]
@@ -58,6 +68,7 @@ The method processes the list of arguments passed on the command line.
 * long_arg [str] - name of argument to get
 
 The method checks if an argument with the name indicated by `long_arg` was passed. If the variable `has_value=True` is set in the configuration section, the string assigned to this flag in the comment line will be returned.
+If the argument is not used, the method returns `None`.
 
 #### help
 
