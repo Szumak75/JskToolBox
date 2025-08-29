@@ -368,7 +368,7 @@ class HostResolvableChecker(NoDynamicAttributes):
         """
         results = {}
         for host in hosts:
-            error = HostResolvableChecker.validate_host(host)
+            error: Optional[str] = HostResolvableChecker.validate_host(host)
             if error is not None:
                 results[host] = error
         return results
