@@ -11,13 +11,19 @@ import os
 import subprocess
 
 from inspect import currentframe
-from distutils.spawn import find_executable
 from typing import Optional, Dict, List
 
 from .attribtool import ReadOnlyClass
 from .raisetool import Raise
 from .netaddresstool.ipv4 import Address
 from .basetool.data import BData
+
+try:
+    # For Python < 3.12
+    from distutils.spawn import find_executable
+except ImportError:
+    # For Python >= 3.12
+    from shutil import which as find_executable
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
