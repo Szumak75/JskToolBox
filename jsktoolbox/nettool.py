@@ -8,15 +8,21 @@ Purpose: Sets of classes for various network operations.
 """
 
 import os
+import re
+import socket
 import subprocess
 
 from inspect import currentframe
 from typing import Optional, Dict, List
+from socket import getaddrinfo
+from re import Pattern
 
-from .attribtool import ReadOnlyClass
-from .raisetool import Raise
-from .netaddresstool.ipv4 import Address
 from .basetool.data import BData
+from .attribtool import ReadOnlyClass
+from .attribtool import NoDynamicAttributes
+from .netaddresstool.ipv4 import Address
+from .netaddresstool.ipv6 import Address6
+from .raisetool import Raise
 
 try:
     # For Python < 3.12
@@ -217,6 +223,191 @@ class Tracert(BData):
                 for line in proc.stdout:
                     out.append(line.decode("utf-8"))
         return out
+
+
+class HostResolvableChecker(NoDynamicAttributes):
+    """Class to check if a hostname or IP address is resolvable."""
+
+    @staticmethod
+    def is_resolvable(host: str) -> bool:
+        """Check if the given host (hostname or IP) is resolvable.
+
+        Args:
+            host (str): The hostname or IP address to check.
+
+        Returns:
+            bool: True if the host is resolvable, False otherwise.
+        """
+        try:
+            getaddrinfo(host, None)
+            return True
+        except Exception:
+            return False
+
+    @staticmethod
+    def is_ip_address(host: str) -> bool:
+        """Check if the given host is a valid IP address (IPv4 or IPv6).
+
+        Args:
+            host (str): The hostname or IP address to check.
+
+        Returns:
+            bool: True if the host is a valid IP address, False otherwise.
+        """
+        try:
+            Address(host)
+            return True
+        except Exception:
+            pass
+
+        try:
+            Address6(host)
+            return True
+        except Exception:
+            pass
+
+        return False
+
+    @staticmethod
+    def is_hostname(host: str) -> bool:
+        """Check if the given host is a valid hostname.
+
+        Args:
+            host (str): The hostname or IP address to check.
+
+        Returns:
+            bool: True if the host is a valid hostname, False otherwise.
+        """
+        if HostResolvableChecker.is_ip_address(host):
+            return False
+
+        # Basic regex for hostname validation
+        hostname_regex: Pattern[str] = re.compile(
+            r"^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.?$"
+        )
+
+        return bool(hostname_regex.match(host))
+
+    @staticmethod
+    def validate_host(host: str) -> Optional[str]:
+        """Validate if the given host is either a resolvable hostname or a valid IP address.
+
+        Args:
+            host (str): The hostname or IP address to validate.
+
+        Returns:
+            Optional[str]: None if valid, otherwise an error message.
+        """
+        if HostResolvableChecker.is_ip_address(host):
+            return None
+
+        if HostResolvableChecker.is_hostname(host):
+            if HostResolvableChecker.is_resolvable(host):
+                return None
+            else:
+                return f"Hostname '{host}' is not resolvable."
+
+        return f"'{host}' is neither a valid IP address nor a valid hostname."
+
+    @staticmethod
+    def ip_from_hostname(hostname: str) -> Optional[str]:
+        """Get the first resolved IP address for the given hostname.
+
+        Args:
+            hostname (str): The hostname to resolve.
+
+        Returns:
+            Optional[str]: The first resolved IP address, or None if not resolvable.
+        """
+        try:
+            addr_info = getaddrinfo(hostname, None)
+            if addr_info:
+                return f"{addr_info[0][4][0]}"
+            return None
+        except Exception:
+            return None
+
+    @staticmethod
+    def validate_hosts(hosts: List[str]) -> Dict[str, Optional[str]]:
+        """Validate a list of hosts.
+
+        Args:
+            hosts (list[str]): List of hostnames or IP addresses to validate.
+
+        Returns:
+            dict[str, Optional[str]]: Dictionary with hosts as keys and validation results as values.
+        """
+        results = {}
+        for host in hosts:
+            results[host] = HostResolvableChecker.validate_host(host)
+        return results
+
+    @staticmethod
+    def filter_valid_hosts(hosts: List[str]) -> List[str]:
+        """Filter and return only valid hosts from the given list.
+
+        Args:
+            hosts (list[str]): List of hostnames or IP addresses to filter.
+
+        Returns:
+            list[str]: List of valid hosts.
+        """
+        return [
+            host for host in hosts if HostResolvableChecker.validate_host(host) is None
+        ]
+
+    @staticmethod
+    def filter_invalid_hosts(hosts: List[str]) -> Dict[str, str]:
+        """Filter and return only invalid hosts from the given list along with error messages.
+
+        Args:
+            hosts (list[str]): List of hostnames or IP addresses to filter.
+
+        Returns:
+            dict[str, str]: Dictionary with invalid hosts as keys and error messages as values.
+        """
+        results = {}
+        for host in hosts:
+            error: Optional[str] = HostResolvableChecker.validate_host(host)
+            if error is not None:
+                results[host] = error
+        return results
+
+    @staticmethod
+    def ip4_from_hostname(hostname: str) -> Optional[Address]:
+        """Resolve and return the first IPv4 address for the given hostname.
+
+        Args:
+            hostname (str): The hostname to resolve.
+
+        Returns:
+            Optional[str]: The first resolved IPv4 address, or None if not resolvable.
+        """
+        try:
+            addr_info = getaddrinfo(hostname, None, family=socket.AF_INET)
+            if addr_info:
+                return Address(addr_info[0][4][0])
+            return None
+        except Exception:
+            return None
+
+    @staticmethod
+    def ip6_from_hostname(hostname: str) -> Optional[Address6]:
+        """Resolve and return the first IPv6 address for the given hostname.
+
+        Args:
+            hostname (str): The hostname to resolve.
+
+        Returns:
+            Optional[str]: The first resolved IPv6 address, or None if not resolvable.
+        """
+        try:
+            addr_info = getaddrinfo(hostname, None, family=socket.AF_INET6)
+            if addr_info:
+                return Address6(addr_info[0][4][0])
+            return None
+        except Exception:
+            return None
 
 
 # #[EOF]#######################################################################
