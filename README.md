@@ -32,6 +32,12 @@ The project contains sets of classes for operations on IPv4 and IPv6 addresses.
 
 [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)
 
+## NetTool
+
+The project contains sets of classes for network operations.
+
+[NetTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetTool.md)
+
 ## RaiseTool
 
 The project contains small class for formatting thrown exception messages.
