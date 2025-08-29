@@ -4,8 +4,8 @@ The project contains a set of classes enabling interaction with the operating sy
 
 ## Public classes
 
-1. [CommandLineParser](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md#commandlineparser)
-1. [PathChecker](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md#pathchecker)
+1. [CommandLineParser](https://github.com/Szumak75/JskToolBox/blob/1.1.6/docs/SystemTool.md#commandlineparser)
+1. [PathChecker](https://github.com/Szumak75/JskToolBox/blob/1.1.6/docs/SystemTool.md#pathchecker)
 
 ## CommandLineParser
 
