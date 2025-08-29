@@ -4,7 +4,7 @@ The project contains sets of classes for various operations on string.
 
 ## Public classes
 
-1. [SimpleCrypto](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md#simplecrypto)
+1. [SimpleCrypto](https://github.com/Szumak75/JskToolBox/blob/1.1.5/docs/StringTool.md#simplecrypto)
 
 ## SimpleCrypto
 
