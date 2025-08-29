@@ -176,7 +176,7 @@ class Tracert(BData):
         command: Optional[Dict] = self._get_data(key=_Keys.COMMAND)
         if command is None:
             raise Raise.error(
-                "Command for testing ICMP echo not found.",
+                "Command for testing traceroute not found.",
                 ChildProcessError,
                 self._c_name,
                 currentframe(),
