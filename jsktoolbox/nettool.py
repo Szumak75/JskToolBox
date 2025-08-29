@@ -187,6 +187,19 @@ class Tracert(BData):
         args.extend(command[_Keys.OPTS].split(" "))
         args.append(str(Address(ip)))
 
+        # TODO:
+        # traceroute to 192.168.255.255 (192.168.255.255), 10 hops max, 60 byte packets
+        # 1  * *
+        # 2  * *
+        # 3  * *
+        # 4  * *
+        # 5  * *
+        # 6  * *
+        # 7  * *
+        # 8  * *
+        # 9  * *
+        # 10  * *
+
         with subprocess.Popen(
             args,
             env={
