@@ -176,7 +176,7 @@ class Tracert(BData):
         command: Optional[Dict] = self._get_data(key=_Keys.COMMAND)
         if command is None:
             raise Raise.error(
-                "Command for testing ICMP echo not found.",
+                "Command for testing traceroute not found.",
                 ChildProcessError,
                 self._c_name,
                 currentframe(),
@@ -186,6 +186,19 @@ class Tracert(BData):
         args.append(command[_Keys.CMD])
         args.extend(command[_Keys.OPTS].split(" "))
         args.append(str(Address(ip)))
+
+        # TODO:
+        # traceroute to 192.168.255.255 (192.168.255.255), 10 hops max, 60 byte packets
+        # 1  * *
+        # 2  * *
+        # 3  * *
+        # 4  * *
+        # 5  * *
+        # 6  * *
+        # 7  * *
+        # 8  * *
+        # 9  * *
+        # 10  * *
 
         with subprocess.Popen(
             args,
