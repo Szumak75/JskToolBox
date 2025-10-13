@@ -8,7 +8,7 @@ Purpose: Sets of classes for various date/time operations.
 
 from time import time
 from datetime import datetime, timezone, timedelta
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 from inspect import currentframe
 
 from .attribtool import NoNewAttributes
@@ -129,6 +129,13 @@ class Timestamp(NoNewAttributes):
         if returned_type == int:
             return int(datetime.timestamp(element))
         return datetime.timestamp(element)
+
+    @classmethod
+    def timestamp_month_tuple(
+        cls, date=None, tz=None
+    ) -> Tuple[Union[float, int], Union[float, int]]:
+
+        return (0, 0)
 
 
 # #[EOF]#######################################################################

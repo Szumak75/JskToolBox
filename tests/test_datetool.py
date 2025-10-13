@@ -78,5 +78,16 @@ class TestDateTool(unittest.TestCase):
         with self.assertRaises(ValueError):
             Timestamp.from_string("2004-07-28", "Y-m-d")
 
+    def test_07_timestamp_month_tuple(self) -> None:
+        """Test nr 07."""
+        # check if the method present
+        self.assertTrue(hasattr(Timestamp, "timestamp_month_tuple"))
+
+        # check if the method returns tuple
+        self.assertIsInstance(Timestamp.timestamp_month_tuple(), tuple)
+
+        # check if the method returns two element tuple
+        self.assertEqual(len(Timestamp.timestamp_month_tuple()), 2)
+
 
 # #[EOF]#######################################################################
