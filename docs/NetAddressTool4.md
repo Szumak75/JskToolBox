@@ -201,10 +201,16 @@ Returns the broadcast address.
 Returns the number of host addresses in the network range.
 
 ```
-.hosts: List[Address]
+.hosts(limit: Optional[int] = DEFAULT_IPV4_HOST_LIMIT): List[Address]  _(deprecated)_
 ```
 
-Returns a list of host addresses in the network range.
+Returns a list of host addresses in the network range while enforcing the safety limit. Use `iter_hosts()` for lazy iteration.
+
+```
+.iter_hosts(limit: Optional[int] = DEFAULT_IPV4_HOST_LIMIT) -> Iterator[Address]
+```
+
+Returns a generator that yields host addresses lazily. The limit prevents accidental allocation of massive host lists; pass `None` to disable the guard intentionally.
 
 ```
 .mask: Netmask
@@ -236,7 +242,7 @@ Returns the network address.
 1. `str(Network("192.168.1.22/30").address)` will return the ipv4 address: `"192.168.1.22"`
 1. `str(Network("192.168.1.22/30").broadcast)` will return the ipv4 broadcast address: `"192.168.1.23"`
 1. `str(Network("192.168.1.22/30").count)` will return the number of hosts in the network range: `"2"`
-1. `str(Network("192.168.1.22/30").hosts)` will return the list of hosts in the network range: `"[Address('192.168.1.21'), Address('192.168.1.22')]"`
+1. `list(Network("192.168.1.22/30").iter_hosts())` will return the list of hosts in the network range: `[Address('192.168.1.21'), Address('192.168.1.22')]`
 1. `str(Network("192.168.1.22/30").mask)` will return the network mask: `"255.255.255.252"`
 1. `str(Network("192.168.1.22/30").max)` will return the ipv4 last host address: `"192.168.1.22"`
 1. `str(Network("192.168.1.22/30").min)` will return the ipv4 first host address: `"192.168.1.21"`
@@ -265,11 +271,17 @@ The Netmask object is the netmask value for the subnets you are looking for.
 ### Public properties
 
 ```
-.subnets: List[Network]
+.subnets(limit: Optional[int] = DEFAULT_IPV4_SUBNET_LIMIT): List[Network]  _(deprecated)_
 ```
 
-Returns a list of subnets found in the given network address with the given netmask.
+Returns a list of subnets found in the given network address with the given netmask while enforcing the safety limit. Use `iter_subnets()` for lazy iteration.
+
+```
+.iter_subnets(limit: Optional[int] = DEFAULT_IPV4_SUBNET_LIMIT) -> Iterator[Network]
+```
+
+Returns a generator that yields subnetworks lazily. The limit prevents accidental allocation of very large subnet lists; pass `None` to disable the guard intentionally.
 
 ### Functional properties
 
-1. `SubNetwork(Network('192.168.1.20/29'), Netmask(30)).subnets` will return the list of subnets: `[Network(192.168.1.16/30), Network(192.168.1.20/30)]`
+1. `list(SubNetwork(Network('192.168.1.20/29'), Netmask(30)).iter_subnets())` will return the list of subnets: `[Network(192.168.1.16/30), Network(192.168.1.20/30)]`

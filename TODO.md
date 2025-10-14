@@ -15,7 +15,7 @@
 - (x) jsktoolbox.libs.queues
 - (x) jsktoolbox.libs.system
 - (x) jsktoolbox.logstool
-- (x) jsktoolbox.netaddresstool
+- (/) jsktoolbox.netaddresstool
 - (x) jsktoolbox.nettool
 - (/) jsktoolbox.raisetool
 - (/) jsktoolbox.stringtool

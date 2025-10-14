@@ -8,7 +8,12 @@ Purpose: Network class testing.
 
 import unittest
 
-from jsktoolbox.netaddresstool.ipv4 import Network, Address, Netmask
+from jsktoolbox.netaddresstool.ipv4 import (
+    Network,
+    Address,
+    Netmask,
+    SubNetwork,
+)
 
 
 class TestNetwork(unittest.TestCase):
@@ -56,18 +61,13 @@ class TestNetwork(unittest.TestCase):
 
     def test_10_network_hosts(self) -> None:
         """Test nr 10."""
-        self.assertEqual(
-            len(Network("192.168.1.1/24").hosts),
-            Network("192.168.1.1/24").count,
-        )
-        for idx in range(0, Network("192.168.1.1/24").count):
-            self.assertTrue(
-                Network("192.168.1.1/24").hosts[idx] == Address(f"192.168.1.{idx + 1}")
-            )
-        self.assertEqual(
-            len(Network("192.168.1.1/31").hosts),
-            Network("192.168.1.1/31").count,
-        )
+        network = Network("192.168.1.1/24")
+        hosts = list(network.iter_hosts())
+        self.assertEqual(len(hosts), network.count)
+        for idx, host in enumerate(hosts, start=1):
+            self.assertEqual(host, Address(f"192.168.1.{idx}"))
+        small_network = Network("192.168.1.1/31")
+        self.assertEqual(len(list(small_network.iter_hosts())), small_network.count)
 
     def test_11_network_create_from_list(self) -> None:
         """Test nr 11."""
@@ -80,7 +80,10 @@ class TestNetwork(unittest.TestCase):
 
     def test_12_address_in_network(self) -> None:
         """Test nr 12."""
-        self.assertTrue(Address("192.168.0.12") in Network("192.168.0.0/24").hosts)
+        self.assertIn(
+            Address("192.168.0.12"),
+            list(Network("192.168.0.0/24").iter_hosts()),
+        )
 
     def test_13_network_create_invalid_string(self) -> None:
         """Test nr 13."""
@@ -95,14 +98,55 @@ class TestNetwork(unittest.TestCase):
     def test_15_network_contains_address(self) -> None:
         """Test nr 15."""
         network = Network("10.0.0.0/30")
-        self.assertTrue(Address("10.0.0.1") in network.hosts)
-        self.assertFalse(Address("10.0.0.4") in network.hosts)
+        hosts = list(network.iter_hosts())
+        self.assertIn(Address("10.0.0.1"), hosts)
+        self.assertNotIn(Address("10.0.0.4"), hosts)
 
     def test_16_network_min_max_small_subnet(self) -> None:
         """Test nr 16."""
         network = Network("10.0.0.0/31")
         self.assertEqual(str(network.min), "10.0.0.0")
         self.assertEqual(str(network.max), "10.0.0.1")
+
+    def test_17_iter_hosts_limit_enforced(self) -> None:
+        """Test nr 17."""
+        network = Network("192.168.1.1/24")
+        with self.assertRaises(ValueError):
+            list(network.iter_hosts(limit=10))
+
+    def test_18_hosts_deprecated_warning(self) -> None:
+        """Test nr 18."""
+        network = Network("10.0.0.0/30")
+        with self.assertWarns(DeprecationWarning):
+            result = network.hosts()
+        self.assertEqual(len(result), network.count)
+
+    def test_19_iter_subnets_limit_enforced(self) -> None:
+        """Test nr 19."""
+        subnets = SubNetwork(Network("10.0.0.0/24"), Netmask(28))
+        with self.assertRaises(ValueError):
+            list(subnets.iter_subnets(limit=2))
+
+    def test_20_iter_subnets_yields_all(self) -> None:
+        """Test nr 20."""
+        subnets = SubNetwork(Network("10.0.0.0/24"), Netmask(26))
+        generated = list(subnets.iter_subnets())
+        self.assertEqual(len(generated), 4)
+        self.assertEqual(str(generated[0]), "10.0.0.0/26")
+        self.assertEqual(str(generated[-1]), "10.0.0.192/26")
+
+    def test_21_iter_hosts_no_limit(self) -> None:
+        """Test nr 21."""
+        network = Network("10.0.0.0/16")
+        iterator = network.iter_hosts(limit=None)
+        self.assertEqual(next(iterator), Address("10.0.0.1"))
+
+    def test_22_iter_subnets_no_limit(self) -> None:
+        """Test nr 22."""
+        subnets = SubNetwork(Network("10.0.0.0/24"), Netmask(27))
+        iterator = subnets.iter_subnets(limit=None)
+        first = next(iterator)
+        self.assertEqual(str(first), "10.0.0.0/27")
 
 
 # #[EOF]#######################################################################

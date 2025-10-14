@@ -23,14 +23,12 @@ class TestSubNetwork(unittest.TestCase):
 
     def test_02_sub_network_list_count(self) -> None:
         """Test nr 2."""
-        self.assertEqual(
-            len(SubNetwork(Network("192.168.1.1/24"), Netmask(30)).subnets),
-            64,
-        )
+        subnets = SubNetwork(Network("192.168.1.1/24"), Netmask(30))
+        self.assertEqual(len(list(subnets.iter_subnets())), 64)
 
     def test_03_sub_network_validate_ranges(self) -> None:
         """Test nr 3."""
-        subnets = SubNetwork(Network("10.0.0.0/24"), Netmask(26)).subnets
+        subnets = list(SubNetwork(Network("10.0.0.0/24"), Netmask(26)).iter_subnets())
         self.assertEqual(str(subnets[0]), "10.0.0.0/26")
         self.assertEqual(str(subnets[-1]), "10.0.0.192/26")
         self.assertTrue(all(int(subnet.mask) == 26 for subnet in subnets))
@@ -39,6 +37,13 @@ class TestSubNetwork(unittest.TestCase):
         """Test nr 4."""
         with self.assertRaises(ValueError):
             SubNetwork(Network("10.0.0.0/26"), Netmask(24))
+
+    def test_05_sub_network_deprecated_warning(self) -> None:
+        """Test nr 5."""
+        subnets = SubNetwork(Network("192.168.1.0/24"), Netmask(30))
+        with self.assertWarns(DeprecationWarning):
+            result = subnets.subnets()
+        self.assertEqual(len(result), 64)
 
 
 # #[EOF]#######################################################################

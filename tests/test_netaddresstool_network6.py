@@ -53,14 +53,11 @@ class TestNetwork6(unittest.TestCase):
 
     def test_09_network_hosts(self) -> None:
         """Test nr 9."""
-        self.assertEqual(
-            len(Network6("fd00::1/125").hosts),
-            Network6("fd00::1/125").count,
-        )
-        for idx in range(0, Network6("fd00::1/125").count):
-            self.assertTrue(
-                Network6("fd00::1/125").hosts[idx] == Address6(f"fd00::{idx}")
-            )
+        network = Network6("fd00::1/125")
+        hosts = list(network.iter_hosts())
+        self.assertEqual(len(hosts), network.count)
+        for idx, host in enumerate(hosts):
+            self.assertEqual(host, Address6(f"fd00::{idx}"))
 
     def test_10_network_create_from_list(self) -> None:
         """Test nr 10."""
@@ -74,7 +71,7 @@ class TestNetwork6(unittest.TestCase):
     def test_11_network_hosts_respect_order(self) -> None:
         """Test nr 11."""
         network = Network6("fd00::/126")
-        hosts = network.hosts
+        hosts = list(network.iter_hosts())
         self.assertEqual(hosts[0], network.min)
         self.assertEqual(hosts[-1], network.max)
         self.assertEqual(len(hosts), network.count)
@@ -93,6 +90,25 @@ class TestNetwork6(unittest.TestCase):
         """Test nr 14."""
         with self.assertRaises(ValueError):
             Network6([Address6("fd00::1"), "not-a-prefix"])  # type: ignore
+
+    def test_15_iter_hosts_limit_enforced(self) -> None:
+        """Test nr 15."""
+        network = Network6("fd00::/125")
+        with self.assertRaises(ValueError):
+            list(network.iter_hosts(limit=4))
+
+    def test_16_hosts_deprecated_warning(self) -> None:
+        """Test nr 16."""
+        network = Network6("fd00::/126")
+        with self.assertWarns(DeprecationWarning):
+            result = network.hosts()
+        self.assertEqual(len(result), network.count)
+
+    def test_17_iter_hosts_no_limit(self) -> None:
+        """Test nr 17."""
+        network = Network6("fd00::/125")
+        iterator = network.iter_hosts(limit=None)
+        self.assertEqual(next(iterator), Address6("fd00::"))
 
 
 # #[EOF]#######################################################################

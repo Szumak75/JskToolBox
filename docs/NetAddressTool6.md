@@ -176,11 +176,17 @@ Returns the address passed when creating the object.
 
 Returns the number of host addresses in the network range.
 
-```.hosts: List[Address6]
+```.hosts(limit: Optional[int] = DEFAULT_IPV6_HOST_LIMIT): List[Address6]  _(deprecated)_
 
 ```
 
-Returns a list of host addresses in the network range.
+Returns a list of host addresses in the network range while enforcing the safety limit. Use `iter_hosts()` for lazy iteration.
+
+```.iter_hosts(limit: Optional[int] = DEFAULT_IPV6_HOST_LIMIT) -> Iterator[Address6]
+
+```
+
+Returns a generator that yields host addresses lazily. The limit prevents accidental allocation of massive host lists; pass `None` to disable the guard intentionally.
 
 ```.network: Address6
 
@@ -211,7 +217,7 @@ Returns the first host address in the network range.
 1. `str(Network6("FF::1/30"))` will return the network address: `"ff::1/30"`
 1. `str(Network6("FF::1/30").address)` will return the ipv6 address: `"ff::1"`
 1. `str(Network6("FF::1/125").count)` will return the number of hosts in the network range: `"8"`
-1. `str(Network6("FF::1/127").hosts)` will return the list of hosts in the network range: `"[Address6('ff::'), Address6('ff::1')]"`
+1. `list(Network6("FF::1/127").iter_hosts())` will return the list of hosts in the network range: `[Address6('ff::'), Address6('ff::1')]`
 1. `str(Network6("FF::1/127").prefix)` will return the network prefix: `"127"`
 1. `str(Network6("FF::1/125").max)` will return the ipv6 last host address: `"ff::7"`
 1. `str(Network6("FF::1/127").min)` will return the ipv4 first host address: `"ff::"`
@@ -240,11 +246,17 @@ The Prefix6 object is the prefix value for the subnets you are looking for.
 ### Public properties
 
 ```
-.subnets: List[Network6]
+.subnets(limit: Optional[int] = DEFAULT_IPV6_SUBNET_LIMIT): List[Network6]  _(deprecated)_
 ```
 
-Returns a list of subnets found in the given network address with the given netmask.
+Returns a list of subnets found in the given network address with the given netmask while enforcing the safety limit. Use `iter_subnets()` for lazy iteration.
+
+```
+.iter_subnets(limit: Optional[int] = DEFAULT_IPV6_SUBNET_LIMIT) -> Iterator[Network6]
+```
+
+Returns a generator that yields subnetworks lazily. The limit prevents accidental allocation of very large subnet lists; pass `None` to disable the guard intentionally.
 
 ### Functional properties
 
-1. `SubNetwork6(Network6('2000::123/125'), Prefix6(127)).subnets` will return the list of subnets: `[Network6(2000::120/127), Network6(2000::122/127), Network6(2000::124/127), Network6(2000::126/127)]`
+1. `list(SubNetwork6(Network6('2000::123/125'), Prefix6(127)).iter_subnets())` will return the list of subnets: `[Network6(2000::120/127), Network6(2000::122/127), Network6(2000::124/127), Network6(2000::126/127)]`
