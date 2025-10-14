@@ -212,6 +212,10 @@ Returns a list of host addresses in the network range while enforcing the safety
 
 Returns a generator that yields host addresses lazily. The limit prevents accidental allocation of massive host lists; pass `None` to disable the guard intentionally.
 
+> Tip: the default guard values are exported from `jsktoolbox.netaddresstool`
+> (`DEFAULT_IPV4_HOST_LIMIT`, `DEFAULT_IPV4_SUBNET_LIMIT`). Override them early in
+> your application if you need different thresholds.
+
 ```
 .mask: Netmask
 ```

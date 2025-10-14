@@ -188,6 +188,10 @@ Returns a list of host addresses in the network range while enforcing the safety
 
 Returns a generator that yields host addresses lazily. The limit prevents accidental allocation of massive host lists; pass `None` to disable the guard intentionally.
 
+> Tip: `DEFAULT_IPV6_HOST_LIMIT` and `DEFAULT_IPV6_SUBNET_LIMIT` are exported by
+> `jsktoolbox.netaddresstool`. Override them before invoking deprecated helpers
+> if your application requires different thresholds.
+
 ```.network: Address6
 
 ```
