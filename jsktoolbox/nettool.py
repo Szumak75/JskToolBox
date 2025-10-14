@@ -199,7 +199,7 @@ class Tracert(BData):
         args.extend(command[_Keys.OPTS].split(" "))
         args.append(str(Address(ip)))
 
-        # TODO:
+        # Unexpected output but possible:
         # traceroute to 192.168.255.255 (192.168.255.255), 10 hops max, 60 byte packets
         # 1  * *
         # 2  * *

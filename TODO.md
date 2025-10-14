@@ -6,14 +6,7 @@
 - (/) jsktoolbox.datetool
 - (x) jsktoolbox.devices
 - (x) jsktoolbox.edmctool
-- (x) jsktoolbox.libs
-- (x) jsktoolbox.libs.base_data
-- (x) jsktoolbox.libs.base_logs
-- (x) jsktoolbox.libs.base_th
-- (x) jsktoolbox.libs.interfaces.comparators
-- (x) jsktoolbox.libs.interfaces.logger_engine
-- (x) jsktoolbox.libs.queues
-- (x) jsktoolbox.libs.system
+- (/) jsktoolbox.libs
 - (x) jsktoolbox.logstool
 - (/) jsktoolbox.netaddresstool
 - (x) jsktoolbox.nettool
