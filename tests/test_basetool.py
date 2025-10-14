@@ -151,5 +151,45 @@ class TestBData(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.obj._set_data(key="test1", value=10)
 
+    def test_13_copy_data_returns_deep_copy(self) -> None:
+        """Test nr 13."""
+        original: List[int] = [1, 2, 3]
+        self.obj._set_data("numbers", original, list)
+        copied = self.obj._copy_data("numbers")
+        self.assertIsInstance(copied, list)
+        if isinstance(copied, list):
+            copied.append(4)
+        retrieved = self.obj._get_data("numbers")
+        self.assertIsInstance(retrieved, list)
+        if isinstance(retrieved, list):
+            self.assertEqual(retrieved, [1, 2, 3])
+
+    def test_14_delete_data_removes_value_and_type(self) -> None:
+        """Test nr 14."""
+        self.obj._set_data("flag", True, bool)
+        self.obj._delete_data("flag")
+        self.assertIsNone(self.obj._get_data("flag"))
+        try:
+            self.obj._set_data("flag", "text")
+        except TypeError:
+            self.fail("Type constraint was not removed after deletion.")
+
+    def test_15_clear_data_preserves_type_constraints(self) -> None:
+        """Test nr 15."""
+        self.obj._set_data("items", [1], list)
+        self.obj._clear_data("items")
+        self.assertIsNone(self.obj._get_data("items"))
+        with self.assertRaises(TypeError):
+            self.obj._set_data("items", 1)
+
+    def test_16_set_data_type_mismatch_raises(self) -> None:
+        """Test nr 16."""
+        with self.assertRaises(TypeError):
+            self.obj._set_data("token", 123, str)
+
+    def test_17_copy_data_missing_key_returns_none(self) -> None:
+        """Test nr 17."""
+        self.assertIsNone(self.obj._copy_data("missing"))
+
 
 # #[EOF]#######################################################################
