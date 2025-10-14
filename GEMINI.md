@@ -1,1 +1,147 @@
-# Konfiguracja Gemini dla projektu JskToolBox\n\n## Konfiguracja plików\n# Uwzględnij tylko pliki źródłowe Python i testy.\nfiles.include:\n  - \"jsktoolbox/**/*.py\"\n  - \"tests/**/*.py\"\n\n# Wyklucz katalogi wirtualnego środowiska, pamięć podręczną i inne.\nfiles.exclude:\n  - \".venv/**\"\n  - \".pytest_cache/**\"\n  - \"__pycache__/**\"\n  - \"dist/**\"\n  - \"*.egg-info/**\"\n  - \"examples/**\"\n  - \"examples/**/*\"\n\n## Instrukcje dotyczące zachowania\nbehavior:\n  # Język i zarządzanie projektem\n  language: \"Python 3.10+\"\n  project_management: \"Projekt używa Poetry. Używaj `poetry run <polecenie>` do uruchamiania narzędzi takich jak `pytest` czy `black`.\"\n\n  # Styl kodowania\n  code_style:\n    - \"Kod jest formatowany za pomocą `black`. Zawsze uruchamiaj `poetry run black .` po wprowadzeniu zmian.\"\n    - \"Przestrzegaj standardów PEP 8, sprawdzanych za pomocą `pycodestyle`.\"\n    - \"Wszystkie nowe funkcje i metody muszą mieć podpowiedzi typów (type hints).\"\n    - \"Docstringi mają specyficzny format. Pierwsza linia to krótkie podsumowanie. Sekcje takie jak argumenty są oznaczane nagłówkiem `### Arguments`. Analizuj istniejący kod, aby zachować spójność.\"\n    - \"Używaj pojedynczych cudzysłowów dla ciągów znaków, chyba że podwójne są konieczne.\"\n\n  # Testowanie\n  testing:\n    - \"Testy znajdują się w katalogu `tests/`.\"\n    - \"Testy są pisane przy użyciu klas `unittest.TestCase`, ale uruchamiane za pomocą `pytest`.\"\n    - \"Każdy nowy kod powinien być pokryty testami jednostkowymi.\"\n    - \"Uruchamiaj testy za pomocą polecenia `poetry run pytest`.\"\n\n  # Obsługa błędów\n  error_handling: \"Do zgłaszania wyjątków używaj niestandardowego mechanizmu `raisetool.Raise.error(message, exception_type, class_name, frame)`.\"\n\n  # Ogólne\n  general:\n    - \"Odpowiadaj w języku polskim.\"\n    - \"Komentarze i dokumentację w plikach projektowych generuj w języku angielskim.\"\n    - \"Twoje odpowiedzi powinny być zwięzłe, techniczne i zgodne z konwencjami projektu.\"\n    - \"Przed wprowadzeniem zmian w wielu plikach, przedstaw plan i poproś o zatwierdzenie.\"\n\n## Docstring Template\nTo ensure consistency, all docstrings should adhere to the following templates. The documentation and docstrings should be generated in **English**.\n\n### Module-level Docstring\n```python\n\"\"\"\nAuthor:  [Author Name] --<[author_email@example.com]>\nCreated: [YYYY-MM-DD]\n\nPurpose: [Short, one-line summary of the module\'s purpose.]\n\n[Optional: More detailed description of the module\'s functionality,\nits components, and how they fit into the larger project.]\n\"\"\"\n```\n\n### Class-level Docstring\n```python\n\"\"\"[Short, one-line summary of the class\'s purpose.]\n\n[Optional: More detailed description of the class\'s responsibilities,\ndesign choices, and its role (e.g., utility, data structure).]\n\"\"\"\n```\n\n### Function/Method-level Docstring\n```python\n\"\"\"[Short, one-line summary of what the function does.]\n\n[Optional: More detailed explanation of the function\'s logic,\nits use cases, or any important algorithms used.]\n\n### Arguments:\n* arg1: [type] - [Description of the first argument.]\n* arg2: Optional[[type]] - [Description of the second, optional argument. Defaults to [DefaultValue].]\n\n### Returns:\n[type] - [Description of the returned value.]\n\n### Raises:\n* [ExceptionType]: [Description of the condition that causes this exception to be raised.]\n\"\"\"\n```\n\n## Markdown Documentation Template\nFor generating user-facing `.md` documentation files. This template emphasizes readability, context, and practical examples.\n\n```markdown\n# [Module Name] Module\n\n**Source:** `[path/to/module.py]`\n\n**[High-Level Introduction]:**\n*(A user-friendly paragraph explaining what this module helps the user accomplish. Focus on the \"why\" and the benefits, not just the technical function.)*\n\n## Getting Started\n\n*(Explanation of how to import and perform initial setup, if any.)*\n\n```python\nfrom [module_path] import [Class1, Class2]\n```\n\n---\n\n## `[ClassName]` Class\n\n**[Class Introduction]:**\n*(A more detailed description of the class\'s role and responsibilities. Explain how its methods work together to provide a cohesive functionality.)*\n\n### `[ClassName].[MethodName]()`\n\n**[Detailed Description]:**\n*(A full paragraph explaining the method\'s purpose, its specific behavior, and common use cases. This should be more descriptive than the docstring summary, focusing on practical application and scenarios.)*\n\n**Signature:**\n`\``python\n[Full method signature]\n`\``\n\n- **Arguments:**\n  - `arg1: type` - [Description of argument 1.]\n- **Returns:**\n  - `type` - [Description of the return value.]\n- **Raises:**\n  - `ExceptionType`: [Condition for raising.]\n\n**Usage Example:**\n*(A clear, well-commented code block demonstrating how to use the method effectively in a realistic scenario.)*\n\n`\``python\n# A clear and commented code example\nresult = ClassName.method_name(argument=\"value\")\nprint(result)\n`\``\n\n--- \n*(Repeat for all public methods and classes)*\n```\n
+# Konfiguracja Gemini dla projektu JskToolBox
+
+## Konfiguracja plików
+Uwzględnij tylko pliki źródłowe Python i testy.
+
+**files.include**
+- `jsktoolbox/**/*.py`
+- `tests/**/*.py`
+
+Wyklucz katalogi wirtualnego środowiska, pamięć podręczną i inne pliki pomocnicze.
+
+**files.exclude**
+- `.venv/**`
+- `.pytest_cache/**`
+- `__pycache__/**`
+- `dist/**`
+- `*.egg-info/**`
+- `examples/**`
+- `examples/**/*`
+
+## Instrukcje dotyczące zachowania
+Sekcje poniżej opisują preferowane ustawienia dla agenta Gemini.
+
+### Język i zarządzanie projektem
+- `language`: `Python 3.10+`
+- `project_management`: Projekt używa Poetry. Uruchamiaj narzędzia poprzez `poetry run <polecenie>` (np. `poetry run pytest`).
+
+### Styl kodowania
+- Formatuj kod przy użyciu `black`; po zmianach wykonaj `poetry run black .`.
+- Przestrzegaj PEP 8 i waliduj styl poleceniem `poetry run pycodestyle`.
+- Dodawaj adnotacje typów do nowych funkcji i metod.
+- Docstringi zachowują format: krótka linia streszczenia, sekcje (`### Arguments`, `### Returns`, `### Raises`).
+- Preferuj pojedyncze cudzysłowy, chyba że podwójne są wymagane.
+
+### Testowanie
+- Testy znajdują się w katalogu `tests/`.
+- Klasy testowe dziedziczą po `unittest.TestCase`, a zestaw uruchamiaj przez `poetry run pytest`.
+- Zapewnij pokrycie testami każdej nowej funkcjonalności.
+
+### Obsługa błędów
+- Do zgłaszania wyjątków używaj mechanizmu `raisetool.Raise.error(message, exception_type, class_name, frame)`.
+
+### Ogólne zalecenia
+- Odpowiadaj w języku polskim.
+- Komentarze i dokumentację w repozytorium zapisuj po angielsku.
+- Zachowuj zwięzłą, techniczną formę odpowiedzi zgodną z konwencjami projektu.
+- Przy zmianach obejmujących wiele plików przedstaw plan i poproś o akceptację.
+
+## Docstring Template
+Docstringi tworzymy w języku angielskim według poniższych wzorców.
+
+### Module-level Docstring
+```python
+"""
+Author:  [Author Name] --<[author_email@example.com]>
+Created: [YYYY-MM-DD]
+
+Purpose: [Short, one-line summary of the module's purpose.]
+
+[Optional: More detailed description of the module's functionality,
+its components, and how they fit into the larger project.]
+"""
+```
+
+### Class-level Docstring
+```python
+"""[Short, one-line summary of the class's purpose.]
+
+[Optional: More detailed description of the class's responsibilities,
+design choices, and its role (e.g., utility, data structure).]
+"""
+```
+
+### Function/Method-level Docstring
+```python
+"""[Short, one-line summary of what the function does.]
+
+[Optional: More detailed explanation of the function's logic,
+its use cases, or any important algorithms used.]
+
+### Arguments:
+* arg1: [type] - [Description of the first argument.]
+* arg2: Optional[[type]] - [Description of the second, optional argument. Defaults to [DefaultValue].]
+
+### Returns:
+[type] - [Description of the returned value.]
+
+### Raises:
+* [ExceptionType]: [Description of the condition that causes this exception to be raised.]
+"""
+```
+
+## Markdown Documentation Template
+Szablon dla dokumentacji `.md`, z naciskiem na czytelność, kontekst i przykłady.
+
+````markdown
+# [Module Name] Module
+
+**Source:** `[path/to/module.py]`
+
+**[High-Level Introduction]:**
+*(A user-friendly paragraph explaining what this module helps the user accomplish. Focus on the "why" and the benefits, not just the technical function.)*
+
+## Getting Started
+
+*(Explanation of how to import and perform initial setup, if any.)*
+
+```python
+from [module_path] import [Class1, Class2]
+```
+
+---
+
+## `[ClassName]` Class
+
+**[Class Introduction]:**
+*(A more detailed description of the class's role and responsibilities. Explain how its methods work together to provide a cohesive functionality.)*
+
+### `[ClassName].[MethodName]()`
+
+**[Detailed Description]:**
+*(A full paragraph explaining the method's purpose, its specific behavior, and common use cases. This should be more descriptive than the docstring summary, focusing on practical application and scenarios.)*
+
+**Signature:**
+```python
+[Full method signature]
+```
+
+- **Arguments:**
+  - `arg1: type` - [Description of argument 1.]
+- **Returns:**
+  - `type` - [Description of the return value.]
+- **Raises:**
+  - `ExceptionType`: [Condition for raising.]
+
+**Usage Example:**
+*(A clear, well-commented code block demonstrating how to use the method effectively in a realistic scenario.)*
+
+```python
+# A clear and commented code example
+result = ClassName.method_name(argument="value")
+print(result)
+```
+
+---
+*(Repeat for all public methods and classes)*
+````
