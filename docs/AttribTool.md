@@ -1,104 +1,111 @@
-# AttribTool
+# Attrib Tool Module
 
-The project contains base classes that limit the possibility of adding new attributes without their prior declaration inside classes inheriting from them or their objects.
+**Source:** `jsktoolbox/attribtool.py`
 
-Classes throw an AttributeError exception when trying to add an undefined attribute to a derived class or its object.
+**High-Level Introduction:**
+The Attrib Tool module aggregates mixins and metaclasses that guard against accidental attribute creation. By wrapping `__setattr__`, it ensures only predefined attributes can be written, protecting objects that require strict schemas.
 
-## Public classes
+## Getting Started
 
-1. [NoDynamicAttributes](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#nodynamicattributes)
-1. [NoNewAttributes](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#nonewattributes)
-1. [ReadOnlyClass](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md#readonlyclass)
+Import the helper that fits your target class. Use `NoDynamicAttributes` for instances, `NoNewAttributes` when you also need metaclass-level protection, and `ReadOnlyClass` for immutable class attributes.
 
-## Usage examples
-
-### NoDynamicAttributes
-
-```
-from jsktoolbox.attribtool import NoDynamicAttributes
-
-class Example(NoDynamicAttributes):
-    __name = None
-
-    def __init__(self):
-        self.__name = self.__class__.__name__
-
-if __name__ == "__main__":
-    obj = Example()
-    obj.data = "abc"
+```python
+from jsktoolbox.attribtool import NoDynamicAttributes, NoNewAttributes, ReadOnlyClass
 ```
 
-Output:
+---
 
-```
-% python3 example.py
-Traceback (most recent call last):
-  File "/home/szumak/Projects/JskToolBox/example.py", line 11, in <module>
-    obj.data = "abc"
-    ^^^^^^^^
-  File "/home/szumak/Projects/JskToolBox/jsktoolbox/attribtool.py", line 63, in __setattr__
-    raise AttributeError(
-AttributeError: Cannot add new attribute 'data' to Example object
-```
+## `NoNewAttributes` Class
 
-### NoNewAttributes
+**Class Introduction:**
+Combines instance and metaclass interceptors to forbid adding new attributes after class definition. Existing attributes remain writable.
 
-```
-from jsktoolbox.attribtool import NoNewAttributes
+### `NoNewAttributes.__setattr__()`
 
-class Example(NoNewAttributes):
-    __name = None
+**Detailed Description:**
+Delegates to Python’s default `object.__setattr__` while checking attribute existence. Intended for internal wiring; you typically inherit from the mixin instead of overriding this method.
 
-    def __init__(self):
-        self.__name = self.__class__.__name__
-        self.__data = 1
-
-if __name__ == "__main__":
-    obj = Example()
+**Signature:**
+```python
+def __setattr__(self, name: str, value: Any) -> None
 ```
 
-Output:
+- **Arguments:**
+  - `name: str` - Name of the attribute to set.
+  - `value: Any` - Value to assign.
+- **Raises:**
+  - `AttributeError`: Attribute does not exist on the instance yet.
 
-```
-% python3 example.py
-Traceback (most recent call last):
-  File "/home/szumak/Projects/JskToolBox/example.py", line 11, in <module>
-    obj = Example()
-          ^^^^^^^^^
-  File "/home/szumak/Projects/JskToolBox/example.py", line 8, in __init__
-    self.__data = 1
-    ^^^^^^^^^^^
-  File "/home/szumak/Projects/JskToolBox/jsktoolbox/attribtool.py", line 30, in __setattr__
-    raise AttributeError(
-AttributeError: Undefined attribute _Example__data cannot be added to <__main__.Example object at 0x7fac9b183c50>
-```
+**Usage Example:**
+```python
+class Locked(NoNewAttributes):
+    existing = 1
 
-### ReadOnlyClass
-
-```
-#!/usr/bin/env python3
-from jsktoolbox.attribtool import ReadOnlyClass
-
-
-class A(object, metaclass=ReadOnlyClass):
-    FOO = "don't change me"
-
-
-if __name__ == "__main__":
-    print(A.FOO)
-    A.FOO = 1
+obj = Locked()
+obj.existing = 2          # OK
+obj.new_field = "fail"    # AttributeError
 ```
 
-Output:
+---
 
+## `NoDynamicAttributes` Class
+
+**Class Introduction:**
+Lightweight mixin that prevents instance-level attribute creation while leaving class attributes untouched. Use it when metaclass protection is unnecessary.
+
+### `NoDynamicAttributes.__setattr__()`
+
+**Detailed Description:**
+Checks whether the attribute already exists on the instance before delegating to `super().__setattr__`. Raising early helps catch misspellings and schema drift.
+
+**Signature:**
+```python
+def __setattr__(self, name: str, value: Any) -> None
 ```
-% ./example.py
-don't change me
-Traceback (most recent call last):
-  File "/home/szumak/Projects/JskToolBox/./example.py", line 11, in <module>
-    A.FOO = 1
-    ^^^^^
-  File "/home/szumak/Projects/JskToolBox/jsktoolbox/attribtool.py", line 78, in __setattr__
-    raise AttributeError(f"Read only attribute: {name}.")
-AttributeError: Read only attribute: FOO.
+
+- **Arguments:**
+  - `name: str` - Attribute name.
+  - `value: Any` - Value to assign.
+- **Raises:**
+  - `AttributeError`: New attribute is rejected.
+
+**Usage Example:**
+```python
+class Model(NoDynamicAttributes):
+    id: int = 0
+
+m = Model()
+m.id = 42          # OK
+m.created_at = 0   # AttributeError
+```
+
+---
+
+## `ReadOnlyClass` Metaclass
+
+**Class Introduction:**
+Metaclass that blocks reassignment of class attributes. The restriction safeguards constants and configuration baked into the class definition.
+
+### `ReadOnlyClass.__setattr__()`
+
+**Detailed Description:**
+Overrides metaclass `__setattr__` so attempts to adjust class attributes raise `AttributeError`.
+
+**Signature:**
+```python
+def __setattr__(self, name: str, value: Any) -> None
+```
+
+- **Arguments:**
+  - `name: str` - Attribute to override.
+  - `value: Any` - New value supplied by the caller.
+- **Raises:**
+  - `AttributeError`: Always raised to prevent modification.
+
+**Usage Example:**
+```python
+class Constants(metaclass=ReadOnlyClass):
+    FOO = "immutable"
+
+Constants.FOO = "mutated"  # AttributeError
 ```
