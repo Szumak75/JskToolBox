@@ -1,173 +1,165 @@
-# SystemTool
+# SystemTool Module
 
-The project contains a set of classes enabling interaction with the operating system.
+**Source:** `jsktoolbox/systemtool.py`
 
-## Public classes
+**High-Level Introduction:**
+Utility classes for command-line parsing, environment inspection, and filesystem path validation used by other toolboxes.
 
-1. [CommandLineParser](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md#commandlineparser)
-1. [PathChecker](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md#pathchecker)
+## Getting Started
 
-## CommandLineParser
-
-This class provides tools for configuring and maintaining a list of parameters passed from the command line.
-
-### Import
-
-```
-from jsktoolbox.systemtool import CommandLineParser
+```python
+from jsktoolbox.systemtool import CommandLineParser, Env, PathChecker
 ```
 
-### Constructor
+---
 
-```
-CommandLineParser()
-```
+## `CommandLineParser` Class
 
-### Public methods
+**Class Introduction:**
+Configures short/long command-line options, parses `sys.argv`, and produces help output based on the registered metadata.
 
-#### configure_option
+### `CommandLineParser.configure_option(short_arg, long_arg, desc_arg=None, has_value=False, example_value=None)`
 
-```
-.configure_option(short_arg, long_arg, desc_arg, has_value, example_value) -> None
-```
+**Detailed Description:**
+Registers a command-line option, recording description, value requirements, and example text for help output.
 
-##### Arguments
-
-- short_arg [Optional[str]] - optional one character string,
-- long_arg [str] - required one word string,
-- desc_arg [Optional[Union[str, List, Tuple]]] - optional argument description,
-- has_value [bool] - flag, if 'True' argument takes a value, default = False,
-- example_value [Optional[str]] - example value for argument description.
-
-The method creates and configures the application invocation argument passed in the comment line when it is launched.
-
-#### parse
-
-```
-.parse() -> bool
+**Signature:**
+```python
+configure_option(short_arg: Optional[str],
+                 long_arg: str,
+                 desc_arg: Optional[Union[str, List[str], Tuple[str, ...]]] = None,
+                 has_value: bool = False,
+                 example_value: Optional[str] = None) -> None
 ```
 
-The method processes the list of arguments passed on the command line.
+- **Arguments:**
+  - `short_arg: Optional[str]` – Optional 1-character alias (pass `None` to skip).
+  - `long_arg: str` – Long option without leading dashes.
+  - `desc_arg: Optional[str | Sequence[str]]` – Description for help output.
+  - `has_value: bool` – When `True`, the option expects a value.
+  - `example_value: Optional[str]` – Sample value appended to usage text.
+- **Returns:**
+  - `None`
+- **Raises:**
+  - `AttributeError` – If `long_arg` is empty.
 
-#### has_option
+### `CommandLineParser.parse()`
 
-```
-.has_option() -> bool
-```
+**Detailed Description:**
+Parses `sys.argv` according to the options configured with `configure_option`.
 
-The method that allows you to check whether an argument has been used.
-
-#### get_option
-
-```
-.get_option(long_arg) -> Optional[str]
-```
-
-##### Arguments
-
-- long_arg [str] - name of argument to get
-
-The method checks if an argument with the name indicated by `long_arg` was passed. If the variable `has_value=True` is set in the configuration section, the string assigned to this flag in the comment line will be returned.
-If the argument is not used, the method returns `None`.
-
-#### help
-
-```
-.help() -> None
+**Signature:**
+```python
+parse() -> bool
 ```
 
-This is example method to print help message.
+- **Returns:**
+  - `bool` – `True` on success, `False` when parsing fails.
 
-## PathChecker
+### `CommandLineParser.has_option(long_arg: str)`
 
-This tool returns information about a given file system path. It allows you to attempt to create a non-existent path to a file or directory.
+**Detailed Description:**
+Checks whether the long option was present on the command line.
 
-### Import
-
-```
-from jsktoolbox.systemtool import PathChecker
-```
-
-### Constructor
-
-```
-PathChecker(pathname:str, check_deep: bool = True)
+**Signature:**
+```python
+has_option(long_arg: str) -> bool
 ```
 
-### Public properties
+### `CommandLineParser.get_option(long_arg: str)`
 
-#### dirname
+**Detailed Description:**
+Returns the parsed value for a long option, when applicable.
 
-```
-.dirname -> Optional[str]
-```
-
-Returns dirname from path.
-
-#### filename
-
-```
-.filename -> Optional[str]
+**Signature:**
+```python
+get_option(long_arg: str) -> Optional[str]
 ```
 
-Returns filename from path.
+### `CommandLineParser.help()`
 
-#### exists
+**Detailed Description:**
+Prints a formatted help summary, showing available options and their descriptions.
 
-```
-.exists -> bool
-```
+### Additional Helpers
 
-Returns path exists flag.
+- `parse_arguments()` – Deprecated alias of `parse()`.
+- `.args` property – Parsed key/value dictionary.
+- `.dump()` – Returns structured metadata for help generation.
 
-#### is_dir
+---
 
-```
-.is_dir -> bool
-```
+## `Env` Class
 
-Returns path is_dir flag.
+**Class Introduction:**
+Provides access to common environment variables, username, and platform architecture with safe fallbacks.
 
-#### is_file
+### Key Properties & Methods
 
-```
-.is_file -> bool
-```
+- `Env.home` – Home directory string.
+- `Env.tmpdir` – Temporary directory string.
+- `Env.username` – Login name if available.
+- `Env.os_arch()` – Returns architecture description (`64-bit`, `32-bit`, etc.) using platform-specific detection with fallback to `platform.architecture()`.
+- `Env.is_64bits` – Boolean flag computed from `sys.maxsize`.
 
-Returns path is_file flag.
+---
 
-#### is_symlink
+## `PathChecker` Class
 
-```
-.is_symlink -> bool
-```
+**Class Introduction:**
+Inspects filesystem paths, exposing metadata (exists, type) and optional recursive component analysis along with creation helpers.
 
-Returns path is_symlink flag.
+### `PathChecker(pathname: str, check_deep: bool = True)`
 
-#### path
-
-```
-.path -> str
-```
-
-Returns path string.
-
-#### posixpath
-
-```
-.posixpath -> str
+**Signature:**
+```python
+PathChecker(pathname: str, check_deep: bool = True)
 ```
 
-Returns posix path string.
+- **Raises:**
+  - `TypeError` – When `pathname` is None or not a string.
+  - `ValueError` – When `pathname` is empty.
 
-### Public methods
+### Properties
 
-#### create
+- `dirname` – Last existing directory component.
+- `filename` – Filename when the path targets a file.
+- `exists`, `is_dir`, `is_file`, `is_symlink` – Boolean flags.
+- `path` – Original path string.
+- `posixpath` – Resolved POSIX representation when the path exists.
 
+### `PathChecker.create()`
+
+**Detailed Description:**
+Creates missing directories or touches the final file component. Useful for ensuring log directories or runtime output paths exist before writing.
+
+**Signature:**
+```python
+create() -> bool
 ```
-.create() -> bool
+
+- **Returns:**
+  - `bool` – `True` when the path exists after creation.
+
+---
+
+## Example Workflow
+
+```python
+from jsktoolbox.systemtool import CommandLineParser, Env, PathChecker
+
+parser = CommandLineParser()
+parser.configure_option('o', 'output', 'Output file', has_value=True)
+parser.parse()
+if parser.has_option('output'):
+    out_path = PathChecker(parser.get_option('output'))
+    if not out_path.exists:
+        out_path.create()
+
+env = Env()
+print(f"Running as {env.username} on {env.os_arch()}")
 ```
 
-Attempts to create a non-existent path, if the path ends with a directory character, a directory will be created as the last element of the passed path, otherwise an empty file will be created.
+---
 
-The method returns True if the whole operation was successful.
+**JskToolBox Project**
