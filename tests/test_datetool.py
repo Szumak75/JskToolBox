@@ -92,13 +92,51 @@ class TestDateTool(unittest.TestCase):
         # check the argument type: positive
         try:
             Timestamp.month_timestamp_tuple(0)
-            Timestamp.month_timestamp_tuple(datetime.datetime(1970, 1, 0, 0, 0, 0))
+            Timestamp.month_timestamp_tuple(datetime.datetime(1970, 1, 1, 0, 0, 0))
         except Exception as e:
             self.fail()
 
         # check the argument type: negative
         with self.assertRaises(TypeError):
-            Timestamp.month_timestamp_tuple("2015-03-24") # type: ignore
+            Timestamp.month_timestamp_tuple("2015-03-24")  # type: ignore
+
+        # check returned tuple
+        try:
+            start, end = Timestamp.month_timestamp_tuple(
+                DateTime.datetime_from_timestamp(0, tz=datetime.timezone.utc)
+            )
+        except Exception as e:
+            self.fail("Unexpected exception")
+        self.assertEqual(int(start), 0)
+        self.assertEqual(int(end), 2678399)
+
+        dec_2023 = datetime.datetime(2023, 12, 15, tzinfo=datetime.timezone.utc)
+        start_ts, end_ts = Timestamp.month_timestamp_tuple(dec_2023)
+
+        # Expected values for December 2023 UTC
+        expected_start = datetime.datetime(
+            2023, 12, 1, 0, 0, 0, tzinfo=datetime.timezone.utc
+        ).timestamp()
+        expected_end = datetime.datetime(
+            2023, 12, 31, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc
+        ).timestamp()
+
+        self.assertEqual(start_ts, expected_start)
+        self.assertEqual(end_ts, expected_end)
+
+        # Test for a leap year (February 2024)
+        feb_2024 = datetime.datetime(2024, 2, 10, tzinfo=datetime.timezone.utc)
+        start_ts_leap, end_ts_leap = Timestamp.month_timestamp_tuple(feb_2024)
+
+        expected_start_leap = datetime.datetime(
+            2024, 2, 1, 0, 0, 0, tzinfo=datetime.timezone.utc
+        ).timestamp()
+        expected_end_leap = datetime.datetime(
+            2024, 2, 29, 23, 59, 59, 999999, tzinfo=datetime.timezone.utc
+        ).timestamp()
+
+        self.assertEqual(start_ts_leap, expected_start_leap)
+        self.assertEqual(end_ts_leap, expected_end_leap)
 
 
 # #[EOF]#######################################################################

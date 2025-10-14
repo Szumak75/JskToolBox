@@ -124,8 +124,6 @@ class Timestamp(NoNewAttributes):
             element: datetime = datetime.strptime(date_string, format)
         except ValueError as ex:
             raise Raise.error(f"{ex}", ValueError, cls.__qualname__, currentframe())
-        except Exception as ex:
-            raise ex
 
         if returned_type == int:
             return int(datetime.timestamp(element))
@@ -134,20 +132,48 @@ class Timestamp(NoNewAttributes):
     @classmethod
     def month_timestamp_tuple(
         cls,
-        date: Optional[Union[float, int, datetime]] = None,
+        query_date: Optional[Union[float, int, datetime]] = None,
         tz: Optional[timezone] = timezone.utc,
     ) -> Tuple[float, float]:
         """Returns a tuple containing the start and end Unix timestamps for a selected year and month.
 
         ### Arguments
-        * date: Optional[Union[float, int, datetime.datetime]] -- year.month representation,
+        * query_date: Optional[Union[float, int, datetime.datetime]] -- year.month representation,
         * tz: Optional[datetime.timezone] -- default datetime.timezone.utc for UTC, None for current set timezone.
 
         ### Returns
         tuple: A tuple (start_timestamp, end_timestamp).
         """
 
-        return (0, 1)
+        q_date: datetime = DateTime.now(tz)
+
+        # check types
+        if tz and not isinstance(tz, timezone):
+            raise Raise.error(
+                f"Expected tzinfo as datetime.timezone type, received: '{type(tz)}'.",
+                TypeError,
+                cls.__qualname__,
+                currentframe(),
+            )
+        if query_date:
+            if isinstance(query_date, (int, float)):
+                # receive timestamp number
+                q_date = DateTime.datetime_from_timestamp(
+                    timestamp_seconds=query_date, tz=tz
+                )
+            elif isinstance(query_date, datetime):
+                # receive datetime format
+                q_date = query_date
+            else:
+                raise Raise.error(
+                    f"Excepted date as timestamp or datetime.datetime format, received: '{type(query_date)}'.",
+                    TypeError,
+                    cls.__qualname__,
+                    currentframe(),
+                )
+        
+        # Call the helper method with the determined year and month
+        return cls._get_month_timestamp(q_date.year, q_date.month, tz=tz)
 
     @classmethod
     def _get_month_timestamp(
