@@ -7,7 +7,7 @@
 - (x) jsktoolbox.devices
 - (x) jsktoolbox.edmctool
 - (/) jsktoolbox.libs
-- (x) jsktoolbox.logstool
+- (/) jsktoolbox.logstool
 - (/) jsktoolbox.netaddresstool
 - (/) jsktoolbox.nettool
 - (/) jsktoolbox.raisetool
