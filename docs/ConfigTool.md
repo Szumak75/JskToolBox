@@ -178,7 +178,3 @@ cfg = Config("/tmp/app.ini", "main")
 cfg.load()
 port = cfg.get("main", "port")
 ```
-
-```
-
-```

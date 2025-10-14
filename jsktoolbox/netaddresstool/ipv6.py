@@ -170,7 +170,7 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
             )
 
     def __int__(self) -> int:
-        """Return ipv4 representation as integer."""
+        """Return ipv6 representation as integer."""
         return self.__var_int
 
     def __str__(self) -> str:
@@ -436,7 +436,7 @@ class Network6(BClasses, NoDynamicAttributes):
 
     @property
     def network(self) -> Address6:
-        """Return network address (first host address of subnet)."""
+        """Return network address (first address of subnet)."""
         return self.min
 
     @property

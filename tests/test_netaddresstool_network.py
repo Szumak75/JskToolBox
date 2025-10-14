@@ -82,5 +82,27 @@ class TestNetwork(unittest.TestCase):
         """Test nr 12."""
         self.assertTrue(Address("192.168.0.12") in Network("192.168.0.0/24").hosts)
 
+    def test_13_network_create_invalid_string(self) -> None:
+        """Test nr 13."""
+        with self.assertRaises(ValueError):
+            Network("192.168.1.1")  # missing mask
+
+    def test_14_network_create_invalid_list_length(self) -> None:
+        """Test nr 14."""
+        with self.assertRaises(ValueError):
+            Network(["192.168.1.1"])  # type: ignore
+
+    def test_15_network_contains_address(self) -> None:
+        """Test nr 15."""
+        network = Network("10.0.0.0/30")
+        self.assertTrue(Address("10.0.0.1") in network.hosts)
+        self.assertFalse(Address("10.0.0.4") in network.hosts)
+
+    def test_16_network_min_max_small_subnet(self) -> None:
+        """Test nr 16."""
+        network = Network("10.0.0.0/31")
+        self.assertEqual(str(network.min), "10.0.0.0")
+        self.assertEqual(str(network.max), "10.0.0.1")
+
 
 # #[EOF]#######################################################################

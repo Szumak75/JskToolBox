@@ -2,7 +2,7 @@
 
 - (/) jsktoolbox.attribtool
 - (/) jsktoolbox.basetool
-- (x) jsktoolbox.configtool
+- (/) jsktoolbox.configtool
 - (/) jsktoolbox.datetool
 - (x) jsktoolbox.devices
 - (x) jsktoolbox.edmctool

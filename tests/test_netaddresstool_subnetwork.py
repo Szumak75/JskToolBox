@@ -28,5 +28,17 @@ class TestSubNetwork(unittest.TestCase):
             64,
         )
 
+    def test_03_sub_network_validate_ranges(self) -> None:
+        """Test nr 3."""
+        subnets = SubNetwork(Network("10.0.0.0/24"), Netmask(26)).subnets
+        self.assertEqual(str(subnets[0]), "10.0.0.0/26")
+        self.assertEqual(str(subnets[-1]), "10.0.0.192/26")
+        self.assertTrue(all(int(subnet.mask) == 26 for subnet in subnets))
+
+    def test_04_sub_network_invalid_mask(self) -> None:
+        """Test nr 4."""
+        with self.assertRaises(ValueError):
+            SubNetwork(Network("10.0.0.0/26"), Netmask(24))
+
 
 # #[EOF]#######################################################################

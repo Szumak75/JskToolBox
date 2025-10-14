@@ -71,5 +71,28 @@ class TestNetwork6(unittest.TestCase):
         except Exception as ex:
             self.fail(f"Unexpected exception was thrown: {ex}")
 
+    def test_11_network_hosts_respect_order(self) -> None:
+        """Test nr 11."""
+        network = Network6("fd00::/126")
+        hosts = network.hosts
+        self.assertEqual(hosts[0], network.min)
+        self.assertEqual(hosts[-1], network.max)
+        self.assertEqual(len(hosts), network.count)
+
+    def test_12_network_create_invalid_string(self) -> None:
+        """Test nr 12."""
+        with self.assertRaises(ValueError):
+            Network6("fd00::1")  # missing prefix
+
+    def test_13_network_create_invalid_list_length(self) -> None:
+        """Test nr 13."""
+        with self.assertRaises(ValueError):
+            Network6(["fd00::1"])  # type: ignore
+
+    def test_14_network_create_invalid_types(self) -> None:
+        """Test nr 14."""
+        with self.assertRaises(ValueError):
+            Network6([Address6("fd00::1"), "not-a-prefix"])  # type: ignore
+
 
 # #[EOF]#######################################################################
