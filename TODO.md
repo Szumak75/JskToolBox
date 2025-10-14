@@ -9,7 +9,7 @@
 - (/) jsktoolbox.libs
 - (x) jsktoolbox.logstool
 - (/) jsktoolbox.netaddresstool
-- (x) jsktoolbox.nettool
+- (/) jsktoolbox.nettool
 - (/) jsktoolbox.raisetool
 - (/) jsktoolbox.stringtool
 - (x) jsktoolbox.systemtool
