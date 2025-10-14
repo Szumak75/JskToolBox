@@ -2,11 +2,13 @@
 
 **Source:** `jsktoolbox/raisetool.py`
 
-The `raisetool` module provides the `Raise` class, a powerful utility for creating standardized and informative exception messages. It allows you to easily add context—such as class name, method name, and line number—directly into your error messages, which significantly simplifies debugging.
+**High-Level Introduction:**
+
+The `raisetool` module provides a simple but powerful interface for standardizing exception handling across a project. Its primary goal is to make debugging easier by enriching error messages with valuable context, such as the class, method, and line number where an error occurred. Instead of raising generic exceptions, you can use the `Raise.error()` factory to generate consistent, informative, and easy-to-trace exception objects.
 
 ## Getting Started
 
-To use the `Raise` class, import it along with the `inspect` module to access frame information:
+To use the `Raise` class, import it from the module. It is highly recommended to also import the `inspect` module, which is needed to capture the execution frame and provide detailed context.
 
 ```python
 import inspect
@@ -17,11 +19,15 @@ from jsktoolbox.raisetool import Raise
 
 ## `Raise` Class
 
-The `Raise` class is a static utility and is not meant to be instantiated. It provides class methods for formatting messages and creating exception objects.
+**Class Introduction:**
+
+The `Raise` class is a static utility and is not meant to be instantiated. It provides two class methods: `message()` for formatting strings with context, and `error()` for creating fully-formed exception objects. Think of it as a centralized factory for all your project's exceptions.
 
 ### `Raise.message()`
 
-Formats a string with contextual information, such as the calling class, method, and line number.
+**Detailed Description:**
+
+This method is a string formatting utility. It takes a basic message and enhances it with contextual details like the class name, method name, and line number. While you can use it for general-purpose logging or messaging, its primary role is as a helper for the `Raise.error()` method.
 
 **Signature:**
 ```python
@@ -30,47 +36,38 @@ def message(cls, message: str, class_name: str = "", currentframe: Optional[Fram
 ```
 
 - **Arguments:**
-  - `message` (str): The core message to be formatted.
-  - `class_name` (Optional[str]): The name of the class from which the method is called. You can get this using `self.__class__.__name__`.
-  - `currentframe` (Optional[FrameType]): A frame object from `inspect.currentframe()`. If provided, it automatically extracts the method name and line number.
+  - `message: str` - The core message to be formatted.
+  - `class_name: str` - The name of the class from which the call is made. Defaults to `""`.
+  - `currentframe: Optional[FrameType]` - A frame object from `inspect.currentframe()` to automatically extract method and line number.
 - **Returns:**
-  - A formatted message string.
+  - `str` - A formatted message string with contextual details.
 
-**Example:**
-
+**Usage Example:**
 ```python
-class MyWorker:
-    def do_something(self):
-        # Simple message
-        msg1 = Raise.message("Task started.")
-        print(f"Simple: {msg1}")
-
-        # Message with class context
-        msg2 = Raise.message("Processing data.", class_name=self.__class__.__name__)
-        print(f"With class: {msg2}")
-
-        # Message with full context
-        msg3 = Raise.message(
-            "Finalizing task.",
+class DataProcessor:
+    def process(self):
+        # This example shows how to format a status message with full context.
+        status_update = Raise.message(
+            "Starting data processing...",
             class_name=self.__class__.__name__,
-            currentframe=inspect.currentframe(),
+            currentframe=inspect.currentframe()
         )
-        print(f"Full context: {msg3}")
+        print(status_update)
 
-worker = MyWorker()
-worker.do_something()
+processor = DataProcessor()
+processor.process()
 ```
 
-**Output:**
+**Example Output:**
 ```
-Simple: Task started.
-With class: MyWorker: Processing data.
-Full context: MyWorker.do_something [line:38]: Finalizing task.
+DataProcessor.process [line:10]: Starting data processing...
 ```
 
 ### `Raise.error()`
 
-Creates and returns an exception instance with a fully formatted, contextual error message. This is the primary method for generating exceptions.
+**Detailed Description:**
+
+This is the core method of the module. It is a factory that creates and returns an exception instance with a rich, contextual error message. You provide a message and an exception type (like `ValueError` or `TypeError`), and it constructs an exception object that is ready to be `raise`d. This ensures all exceptions thrown by your application have a consistent and debug-friendly format.
 
 **Signature:**
 ```python
@@ -79,35 +76,36 @@ def error(cls, message: str, exception: type[Exception] = Exception, class_name:
 ```
 
 - **Arguments:**
-  - `message` (str): The core error message.
-  - `exception` (type[Exception]): The exception class (e.g., `ValueError`, `TypeError`) to be instantiated. Defaults to the base `Exception`.
-  - `class_name` (Optional[str]): The name of the class where the error occurred.
-  - `currentframe` (Optional[FrameType]): A frame object from `inspect.currentframe()` for detailed error location.
+  - `message: str` - The core error message.
+  - `exception: type[Exception]` - The exception class (not an instance) to be instantiated. Defaults to the base `Exception`.
+  - `class_name: str` - The name of the class where the error occurred. Defaults to `""`.
+  - `currentframe: Optional[FrameType]` - A frame object from `inspect.currentframe()` for detailed error location.
 - **Returns:**
-  - An instance of the specified exception class, ready to be raised.
+  - `Exception` - An instance of the specified exception class, with a formatted message.
 - **Raises:**
-  - `TypeError`: If the provided `exception` argument is not a class that inherits from `Exception`.
+  - `TypeError`: If the `exception` argument is not a class that inherits from `Exception`.
 
-**Example:**
-
+**Usage Example:**
 ```python
-def calculate_value(x, y):
-    if y == 0:
+# A function that validates user input
+def set_user_age(age):
+    if not isinstance(age, int) or age < 0:
+        # Raise a specific, contextual error if validation fails.
         raise Raise.error(
-            "Division by zero is not allowed.",
-            ValueError,
-            class_name="Calculator",
-            currentframe=inspect.currentframe(),
+            f"Invalid age provided: '{age}'. Age must be a positive integer.",
+            TypeError,
+            class_name="UserValidator",
+            currentframe=inspect.currentframe()
         )
-    return x / y
+    print(f"Age set to {age}")
 
 try:
-    calculate_value(10, 0)
-except ValueError as e:
-    print(e)
+    set_user_age("-25")
+except TypeError as e:
+    print(f"Caught an error: {e}")
 ```
 
-**Output:**
+**Example Output:**
 ```
-Calculator.calculate_value [line:68]: [ValueError]: Division by zero is not allowed.
+Caught an error: UserValidator.set_user_age [line:10]: [TypeError]: Invalid age provided: '-25'. Age must be a positive integer.
 ```

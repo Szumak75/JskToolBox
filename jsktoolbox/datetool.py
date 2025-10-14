@@ -17,14 +17,17 @@ from .raisetool import Raise
 
 
 class DateTime(NoNewAttributes):
-    """DateTime class for generating various datetime structures."""
+    """A utility class for generating various datetime structures."""
 
     @classmethod
     def now(cls, tz: Optional[timezone] = None) -> datetime:
-        """Return datetime.datetime.now() object.
+        """Return a datetime object for the current time.
 
         ### Arguments:
-        tz [datetime.timezone] - datetime.timezone.utc for UTC, default None for current set timezone.
+        * tz: Optional[timezone] - The timezone for the object. Defaults to None (local time).
+
+        ### Returns:
+        datetime - The current datetime object.
         """
         return datetime.now(tz=tz)
 
@@ -36,15 +39,15 @@ class DateTime(NoNewAttributes):
     ) -> datetime:
         """Create a datetime object from a Unix timestamp.
 
-        ### Arguments
-        * timestamp_seconds [Union[int, float]] -- The Unix timestamp, in seconds.
-        * tz [Optional[timezone]] -- The timezone for the resulting datetime object. Defaults to None.
+        ### Arguments:
+        * timestamp_seconds: Union[int, float] - The Unix timestamp in seconds.
+        * tz: Optional[timezone] - The timezone for the object. Defaults to None.
 
-        ### Returns
-        [datetime] -- The datetime object corresponding to the timestamp.
+        ### Returns:
+        datetime - The datetime object corresponding to the timestamp.
 
-        ### Raises
-        * TypeError -- If `timestamp_seconds` is not an int or float.
+        ### Raises:
+        * TypeError: If `timestamp_seconds` is not an int or float.
         """
         if not isinstance(timestamp_seconds, (int, float)):
             raise Raise.error(
@@ -59,14 +62,14 @@ class DateTime(NoNewAttributes):
     def elapsed_time_from_seconds(cls, seconds: Union[int, float]) -> timedelta:
         """Convert a duration in seconds into a timedelta object.
 
-        ### Arguments
-        * seconds [Union[int, float]] -- The duration in seconds.
+        ### Arguments:
+        * seconds: Union[int, float] - The duration in seconds.
 
-        ### Returns
-        [timedelta] -- The timedelta object representing the duration.
+        ### Returns:
+        timedelta - The timedelta object representing the duration.
 
-        ### Raises
-        * TypeError -- If `seconds` is not an int or float.
+        ### Raises:
+        * TypeError: If `seconds` is not an int or float.
         """
         if not isinstance(seconds, (int, float)):
             raise Raise.error(
@@ -83,15 +86,15 @@ class DateTime(NoNewAttributes):
     ) -> timedelta:
         """Calculate the elapsed time from a given timestamp to now.
 
-        ### Arguments
-        * seconds [Union[int, float]] -- The starting Unix timestamp in seconds.
-        * tz [Optional[timezone]] -- The timezone to use for the calculation. Defaults to None.
+        ### Arguments:
+        * seconds: Union[int, float] - The starting Unix timestamp in seconds.
+        * tz: Optional[timezone] - The timezone for the calculation. Defaults to None.
 
-        ### Returns
-        [timedelta] -- The timedelta object representing the elapsed time, accurate to the second.
+        ### Returns:
+        timedelta - The timedelta object for the elapsed time, accurate to the second.
 
-        ### Raises
-        * TypeError -- If `seconds` is not an int or float.
+        ### Raises:
+        * TypeError: If `seconds` is not an int or float.
         """
         if not isinstance(seconds, (int, float)):
             raise Raise.error(
@@ -105,22 +108,22 @@ class DateTime(NoNewAttributes):
 
 
 class Timestamp(NoNewAttributes):
-    """Timestamp class for getting current timestamp."""
+    """A utility class for generating Unix timestamps."""
 
     @classmethod
     def now(
         cls, returned_type: Union[type[int], type[float]] = int
     ) -> Union[int, float]:
-        """Gets the current Unix timestamp.
+        """Get the current Unix timestamp.
 
-        ### Arguments
-        * returned_type [Union[type[int], type[float]]] - Optional: The desired type for the timestamp, either `int` (default) or `float`.
+        ### Arguments:
+        * returned_type: Union[type[int], type[float]] - The desired type, `int` (default) or `float`.
 
-        ### Returns
-        Union[int, float] - The current Unix timestamp, truncated to an integer or as a float.
+        ### Returns:
+        Union[int, float] - The current Unix timestamp.
 
-        ### Raises
-        TypeError - If `returned_type` is not `int` or `float`.
+        ### Raises:
+        * TypeError: If `returned_type` is not `int` or `float`.
         """
         if returned_type not in (int, float):
             raise Raise.error(
@@ -142,17 +145,17 @@ class Timestamp(NoNewAttributes):
     ) -> Union[int, float]:
         """Create a Unix timestamp from a string representation of a date.
 
-        ### Arguments
-        * date_string [str] -- The string containing the date and/or time.
-        * format [str] -- The format code used to parse the `date_string` (e.g., '%Y-%m-%d').
-        * returned_type [Union[type[int], type[float]]] -- The desired type for the timestamp, either `int` (default) or `float`.
+        ### Arguments:
+        * date_string: str - The string containing the date and/or time.
+        * format: str - The `strptime` format code used to parse the `date_string`.
+        * returned_type: Union[type[int], type[float]] - The desired type, `int` (default) or `float`.
 
-        ### Returns
-        [Union[int, float]] -- The Unix timestamp derived from the string.
+        ### Returns:
+        Union[int, float] - The Unix timestamp derived from the string.
 
-        ### Raises
-        * TypeError -- If `returned_type` is not `int` or `float`.
-        * ValueError -- If the `date_string` cannot be parsed with the given `format`.
+        ### Raises:
+        * TypeError: If `returned_type` is not `int` or `float`.
+        * ValueError: If `date_string` cannot be parsed with the given `format`.
         """
         if returned_type not in (int, float):
             raise Raise.error(
@@ -181,15 +184,15 @@ class Timestamp(NoNewAttributes):
 
         If `query_date` is not provided, the current month is used.
 
-        ### Arguments
-        * query_date [Optional[Union[float, int, datetime]]] -- The date to determine the month. Can be a timestamp, or a datetime object. Defaults to None.
-        * tz [Optional[timezone]] -- The timezone for the calculation. Defaults to `timezone.utc`.
+        ### Arguments:
+        * query_date: Optional[Union[float, int, datetime]] - The date to determine the month (timestamp or datetime object). Defaults to None.
+        * tz: Optional[timezone] - The timezone for the calculation. Defaults to `timezone.utc`.
 
-        ### Returns
-        [Tuple[float, float]] -- A tuple containing the start and end timestamps of the month.
+        ### Returns:
+        Tuple[float, float] - A tuple with the start and end timestamps of the month.
 
-        ### Raises
-        * TypeError -- If `tz` is not a `timezone` object or if `query_date` is an unsupported type.
+        ### Raises:
+        * TypeError: If `tz` or `query_date` is an unsupported type.
         """
 
         q_date: datetime = DateTime.now(tz)
@@ -228,16 +231,18 @@ class Timestamp(NoNewAttributes):
     ) -> Tuple[float, float]:
         """Generate the start and end Unix timestamps for a specific month and year.
 
-        ### Arguments
-        * year [int] -- The target year.
-        * month [int] -- The target month (1-12).
-        * tz [Optional[timezone]] -- The timezone for the calculation. Defaults to `timezone.utc`.
+        This is a private helper method.
 
-        ### Returns
-        [Tuple[float, float]] -- A tuple with the start and end timestamps of the month.
+        ### Arguments:
+        * year: int - The target year.
+        * month: int - The target month (1-12).
+        * tz: Optional[timezone] - The timezone for the calculation. Defaults to `timezone.utc`.
 
-        ### Raises
-        * ValueError -- If the month is not between 1 and 12.
+        ### Returns:
+        Tuple[float, float] - A tuple with the start and end timestamps of the month.
+
+        ### Raises:
+        * ValueError: If the month is not between 1 and 12.
         """
         # Validate month input
         if not 1 <= month <= 12:
