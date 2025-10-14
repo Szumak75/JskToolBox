@@ -13,6 +13,8 @@ files.exclude:
   - "__pycache__/**"
   - "dist/**"
   - "*.egg-info/**"
+  - "examples/**"
+  - "examples/**/*"
 
 ## Instrukcje dotyczące zachowania
 behavior:

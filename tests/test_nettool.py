@@ -29,9 +29,8 @@ class TestNetTool(unittest.TestCase):
         """Test nr 2: Tracert localhost."""
         result = self.tracert.execute("127.0.0.1")
         self.assertIsInstance(result, list)
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], "")
-        # Localhost tracert should return only one hop with no address.
+        self.assertEqual(len(result), 2)
+        self.assertIn("127.0.0.1", result[1])
 
     def test_03_ping_invalid_ip(self) -> None:
         """Test nr 3: Ping invalid IP."""

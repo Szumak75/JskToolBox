@@ -17,7 +17,11 @@ class TestDateTool(unittest.TestCase):
     """Test class for DateTool module."""
 
     def test_01_Timestamp(self) -> None:
-        """Test nr 01."""
+        """Test Timestamp.now() method.
+
+        This test checks if Timestamp.now() returns the correct types (int, float)
+        and if the returned timestamp is accurate within a small margin.
+        """
         self.assertIsInstance(Timestamp.now(), int)
         self.assertIsInstance(Timestamp.now(float), float)
         self.assertIsInstance(Timestamp.now(int), int)
@@ -26,7 +30,11 @@ class TestDateTool(unittest.TestCase):
         self.assertTrue(now1 < now2 + 2 and now1 > now2 - 2)
 
     def test_02_datetime_from_timestamp(self) -> None:
-        """Test nr 02."""
+        """Test DateTime.datetime_from_timestamp() method.
+
+        This test ensures that the method correctly converts a Unix timestamp
+        to a datetime object and that the resulting datetime is accurate.
+        """
         self.assertIsInstance(
             DateTime.datetime_from_timestamp(Timestamp.now()), datetime.datetime
         )
@@ -43,11 +51,18 @@ class TestDateTool(unittest.TestCase):
         )
 
     def test_03_datetime_now(self) -> None:
-        """Test nr 03."""
+        """Test DateTime.now() method.
+
+        This test verifies that DateTime.now() returns a datetime.datetime object.
+        """
         self.assertIsInstance(DateTime.now(), datetime.datetime)
 
     def test_04_datetime_elapsed_time_from_seconds(self) -> None:
-        """Test nr 04."""
+        """Test DateTime.elapsed_time_from_seconds() method.
+
+        This test checks if the method correctly converts seconds to a timedelta object
+        and handles invalid (string) input by raising a TypeError.
+        """
         self.assertIsInstance(
             DateTime.elapsed_time_from_seconds(10.01), datetime.timedelta
         )
@@ -58,7 +73,11 @@ class TestDateTool(unittest.TestCase):
             DateTime.elapsed_time_from_seconds("20")  # type: ignore
 
     def test_05_datetime_elapsed_time_from_timestamp(self) -> None:
-        """Test nr 05."""
+        """Test DateTime.elapsed_time_from_timestamp() method.
+
+        This test verifies that the method correctly calculates the elapsed time
+        from a timestamp and handles invalid (string) input by raising a TypeError.
+        """
         self.assertIsInstance(
             DateTime.elapsed_time_from_seconds(Timestamp.now()), datetime.timedelta
         )
@@ -70,7 +89,11 @@ class TestDateTool(unittest.TestCase):
             DateTime.elapsed_time_from_timestamp("20")  # type: ignore
 
     def test_06_timestamp_from_string(self) -> None:
-        """Test nr 06."""
+        """Test Timestamp.from_string() method.
+
+        This test checks if the method correctly converts a formatted string to a timestamp
+        and raises a ValueError for an invalid format.
+        """
         self.assertTrue(
             Timestamp.from_string("1970-01-01 01:00", "%Y-%m-%d %H:%M") == 0
         )
@@ -79,7 +102,15 @@ class TestDateTool(unittest.TestCase):
             Timestamp.from_string("2004-07-28", "Y-m-d")
 
     def test_07_timestamp_month_timestamp_tuple(self) -> None:
-        """Test nr 07."""
+        """Test Timestamp.month_timestamp_tuple() method.
+
+        This comprehensive test verifies the functionality of month_timestamp_tuple(),
+        ensuring it correctly returns a tuple of start and end timestamps for a given month.
+        It checks for presence, return type, and element count. It also validates handling
+        of different input types (timestamps, datetime objects) and gracefully fails for invalid
+        inputs. The test confirms the accuracy of the returned timestamps for regular months,
+        the Unix epoch, and leap years.
+        """
         # check if the method present
         self.assertTrue(hasattr(Timestamp, "month_timestamp_tuple"))
 
