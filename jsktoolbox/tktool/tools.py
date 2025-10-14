@@ -8,14 +8,13 @@ Purpose: ClipBoard tool.
 """
 
 import ctypes
-from json import tool
-import os, platform
+import os
+import platform
 import tkinter as tk
-import time
 
 from abc import ABC, abstractmethod
 from inspect import currentframe
-from typing import Any, Callable, Optional, Union
+from typing import Callable, Optional, Union
 from types import MethodType
 
 from ..basetool.data import BData
@@ -81,8 +80,12 @@ class _BClip(BData, _IClip):
 class _WinClip(_BClip):
     """Windows clipboard class."""
 
+    _CF_UNICODETEXT: int = 13
+    _GMEM_MOVEABLE: int = 0x0002
+    _UNICODE_NULL: int = 2  # two bytes for UTF-16LE terminator
+
     def __init__(self) -> None:
-        """Initialize the class."""
+        """Initialise clipboard helpers for the Windows platform."""
         # https://stackoverflow.com/questions/101128/how-do-i-read-text-from-the-windows-clipboard-in-python
 
         if os.name == _Keys.NT or platform.system() == _Keys.WINDOWS:
@@ -96,40 +99,68 @@ class _WinClip(_BClip):
             )
 
     def __win_get_clipboard(self) -> str:
-        """Get windows clipboard data."""
-        ctypes.windll.user32.OpenClipboard(0)  # type: ignore
-        p_contents = ctypes.windll.user32.GetClipboardData(1)  # type: ignore # 1 is CF_TEXT
-        data = ctypes.c_char_p(p_contents).value
-        # ctypes.windll.kernel32.GlobalUnlock(p_contents)
-        ctypes.windll.user32.CloseClipboard()  # type: ignore
-        return data  # type: ignore
+        """Return Unicode clipboard contents from the Windows clipboard."""
+        if not ctypes.windll.user32.OpenClipboard(0):  # type: ignore
+            raise Raise.error(
+                "Unable to open Windows clipboard.",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
+        try:
+            handle = ctypes.windll.user32.GetClipboardData(self._CF_UNICODETEXT)  # type: ignore
+            if not handle:
+                return ""
+            pointer = ctypes.windll.kernel32.GlobalLock(handle)  # type: ignore
+            if not pointer:
+                return ""
+            try:
+                text = ctypes.wstring_at(pointer)
+                return text or ""
+            finally:
+                ctypes.windll.kernel32.GlobalUnlock(handle)  # type: ignore
+        finally:
+            ctypes.windll.user32.CloseClipboard()  # type: ignore
 
     def __win_set_clipboard(self, text: str) -> None:
-        """Set windows clipboard data."""
-        text = str(text)
-        G_MEM_DDE_SHARE = 0x2000
-        ctypes.windll.user32.OpenClipboard(0)  # type: ignore
-        ctypes.windll.user32.EmptyClipboard()  # type: ignore
-        try:
-            # works on Python 2 (bytes() only takes one argument)
-            hCd = ctypes.windll.kernel32.GlobalAlloc(  # type: ignore
-                G_MEM_DDE_SHARE, len(bytes(text)) + 1  # type: ignore
+        """Store Unicode clipboard data on Windows."""
+        value = str(text)
+        encoded = value.encode("utf-16-le")
+        size = len(encoded) + self._UNICODE_NULL
+        if not ctypes.windll.user32.OpenClipboard(0):  # type: ignore
+            raise Raise.error(
+                "Unable to open Windows clipboard.",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
             )
-        except TypeError:
-            # works on Python 3 (bytes() requires an encoding)
-            hCd = ctypes.windll.kernel32.GlobalAlloc(  # type: ignore
-                G_MEM_DDE_SHARE, len(bytes(text, "ascii")) + 1
-            )
-        pchData = ctypes.windll.kernel32.GlobalLock(hCd)  # type: ignore
         try:
-            # works on Python 2 (bytes() only takes one argument)
-            ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pchData), bytes(text))  # type: ignore
-        except TypeError:
-            # works on Python 3 (bytes() requires an encoding)
-            ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pchData), bytes(text, "ascii"))
-        ctypes.windll.kernel32.GlobalUnlock(hCd)  # type: ignore
-        ctypes.windll.user32.SetClipboardData(1, hCd)  # type: ignore
-        ctypes.windll.user32.CloseClipboard()  # type: ignore
+            ctypes.windll.user32.EmptyClipboard()  # type: ignore
+            handle = ctypes.windll.kernel32.GlobalAlloc(self._GMEM_MOVEABLE, size)  # type: ignore
+            if not handle:
+                raise Raise.error(
+                    "Unable to allocate global memory for clipboard.",
+                    MemoryError,
+                    self._c_name,
+                    currentframe(),
+                )
+            pointer = ctypes.windll.kernel32.GlobalLock(handle)  # type: ignore
+            if not pointer:
+                ctypes.windll.kernel32.GlobalFree(handle)  # type: ignore
+                raise Raise.error(
+                    "Unable to lock global memory for clipboard.",
+                    RuntimeError,
+                    self._c_name,
+                    currentframe(),
+                )
+            try:
+                ctypes.memmove(pointer, encoded, len(encoded))  # type: ignore
+                ctypes.memset(pointer + len(encoded), 0, self._UNICODE_NULL)  # type: ignore
+            finally:
+                ctypes.windll.kernel32.GlobalUnlock(handle)  # type: ignore
+            ctypes.windll.user32.SetClipboardData(self._CF_UNICODETEXT, handle)  # type: ignore
+        finally:
+            ctypes.windll.user32.CloseClipboard()  # type: ignore
 
 
 class _MacClip(_BClip):
@@ -328,29 +359,21 @@ class _QtClip(_BClip):
 
 
 class _TkClip(_BClip, TkBase):
-    """Tk clipboard class.
-
-    Tkinter Clipboard Issue
-    Using Tkinter's clipboard functions might not always ensure that the clipboard content is shared
-    with the system clipboard, especially when the Tkinter application is closed immediately after
-    setting the clipboard content. This is because Tkinter needs to stay active for the clipboard
-    content to persist.
-    """
+    """Tkinter-based clipboard helper with hidden root management."""
 
     __tw: Optional[tk.Tk] = None
-    # __widget: tk.Misc = None  # type: ignore
+    __owns_root: bool = False
 
-    def __init__(
-        self,
-        # widget: tk.Misc,
-    ) -> None:
-        """Initialize the class."""
-        # self.__widget = widget
-        # if self.__widget:
-        # creates a toplevel window
-        # self.__tw = tk.Toplevel(self.__widget)
-        self.__tw = tk.Tk()
-        self.__tw.withdraw()
+    def __init__(self) -> None:
+        """Initialise Tk clipboard access or mark as unavailable."""
+        try:
+            self.__tw = tk.Tk()
+            self.__tw.withdraw()
+            self.__owns_root = True
+        except tk.TclError:
+            self.__tw = None
+            return
+
         if self.__tw:
             get_cb = self.__tkinter_get_clipboard
             set_cb = self.__tkinter_set_clipboard
@@ -361,20 +384,40 @@ class _TkClip(_BClip, TkBase):
                 key=_Keys.PASTE, value=get_cb, set_default_type=Optional[MethodType]
             )
 
+    def __del__(self) -> None:  # pragma: no cover - destructor depends on GC
+        if self.__owns_root and self.__tw is not None:
+            try:
+                self.__tw.destroy()
+            except tk.TclError:
+                pass
+            self.__tw = None
+
     def __tkinter_get_clipboard(self) -> str:
-        """Get Tk clipboard data."""
-        if self.__tw:
-            return self.__tw.clipboard_get()
-        return ""
+        """Return clipboard text via Tkinter APIs."""
+        if self.__tw is None:
+            return ""
+        try:
+            return self.__tw.clipboard_get()  # type: ignore[no-any-return]
+        except tk.TclError:
+            return ""
 
     def __tkinter_set_clipboard(self, text: str) -> None:
-        """Set Tk clipboard data."""
-        if self.__tw:
+        """Store clipboard text via Tkinter APIs."""
+        if self.__tw is None:
+            return
+        value = str(text)
+        try:
             self.__tw.clipboard_clear()
-            self.__tw.clipboard_append(text)
+            self.__tw.clipboard_append(value)
+            self.__tw.update_idletasks()
             self.__tw.update()
-            time.sleep(0.2)
-            self.__tw.update()
+        except tk.TclError as exc:  # pragma: no cover - rare runtime failure
+            raise Raise.error(
+                f"Unable to set Tk clipboard content: {exc}",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
 
 
 class ClipBoard(BData):
@@ -386,7 +429,7 @@ class ClipBoard(BData):
 
     def __init__(self) -> None:
         """Create instance of class."""
-        for tool in (_XClip(), _XSel(), _GtkClip(), _QtClip(), _WinClip(), _MacClip()):
+        for tool in (_XClip(), _XSel(), _GtkClip(), _QtClip(), _WinClip(), _MacClip(), _TkClip()):
             if tool.is_tool:
                 self._set_data(key=_Keys.TOOL, value=tool)
                 break
