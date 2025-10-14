@@ -1,9 +1,13 @@
 # -*- coding: UTF-8 -*-
 """
 Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 04.12.2023
+Created: 2023-12-04
 
-Purpose: Base classes.
+Purpose: Provide foundational mixins for device abstractions, including shared flags and connector
+plumbing.
+
+These helpers keep higher-level device classes lightweight by centralising parent management,
+logging integration, and RouterOS command prefix composition.
 """
 
 from typing import Optional, TypeVar
@@ -22,10 +26,7 @@ TDev = TypeVar("TDev", bound="BDev")
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
+    """Immutable container for data keys used by device helpers."""
 
     CH: str = "__connector_handler__"
     DEBUG: str = "__debug__"
@@ -36,61 +37,153 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
 
 class BDebug(BData):
-    """Base class for debug flags."""
+    """Base class that exposes debug and verbose flags for device components."""
 
     @property
     def debug(self) -> bool:
-        """Return debug flag."""
+        """Return debug flag.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        bool - True when debug logging is enabled for the device.
+
+        ### Raises:
+        * None: Accessors do not raise exceptions.
+        """
         return self._get_data(
             key=_Keys.DEBUG, set_default_type=bool, default_value=False
         )  # type: ignore
 
     @debug.setter
     def debug(self, debug: bool) -> None:
-        """Set debug flag."""
+        """Set debug flag.
+
+        ### Arguments:
+        * debug: bool - New debug flag value.
+
+        ### Returns:
+        None - Updates internal state only.
+
+        ### Raises:
+        * None: Setter does not raise exceptions.
+        """
         self._set_data(key=_Keys.DEBUG, set_default_type=bool, value=debug)
 
     @property
     def verbose(self) -> bool:
-        """Return verbose flag."""
+        """Return verbose flag.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        bool - True when verbose logging is enabled.
+
+        ### Raises:
+        * None: Accessors do not raise exceptions.
+        """
         return self._get_data(
             key=_Keys.VERBOSE, set_default_type=bool, default_value=False
         )  # type: ignore
 
     @verbose.setter
     def verbose(self, verbose: bool) -> None:
-        """Set verbose flag."""
+        """Set verbose flag.
+
+        ### Arguments:
+        * verbose: bool - New verbose flag value.
+
+        ### Returns:
+        None - Updates internal state only.
+
+        ### Raises:
+        * None: Setter does not raise exceptions.
+        """
         self._set_data(key=_Keys.VERBOSE, set_default_type=bool, value=verbose)
 
 
 class BDev(BDebug):
-    """Base devices class."""
+    """Base device class that wires connectors, logging, and parent references."""
 
     @property
     def _ch(self) -> Optional[IConnector]:
-        """Returns optional Connector object."""
+        """Return the connector associated with this device.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        Optional[IConnector] - Current connector or None when detached.
+
+        ### Raises:
+        * None: Accessors do not raise exceptions.
+        """
         return self._get_data(key=_Keys.CH, set_default_type=Optional[IConnector])
 
     @_ch.setter
     def _ch(self, value: IConnector) -> None:
-        """Sets Connector object."""
+        """Attach a connector to the device.
+
+        ### Arguments:
+        * value: IConnector - Connector that should be used for communication.
+
+        ### Returns:
+        None - Updates internal state only.
+
+        ### Raises:
+        * None: Setter does not perform validation beyond typing.
+        """
         self._set_data(key=_Keys.CH, value=value, set_default_type=Optional[IConnector])
 
     @property
     def logs(self) -> Optional[LoggerClient]:
-        """Returns optional LoggerClient object."""
+        """Return the logger client registered for the device.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        Optional[LoggerClient] - Configured logger client or None.
+
+        ### Raises:
+        * None: Accessors do not raise exceptions.
+        """
         return self._get_data(key=_Keys.LC, set_default_type=Optional[LoggerClient])
 
     @logs.setter
     def logs(self, value: LoggerClient) -> None:
-        """Sets Connector object."""
+        """Assign a logger client to the device.
+
+        ### Arguments:
+        * value: LoggerClient - Logger client used for device diagnostics.
+
+        ### Returns:
+        None - Updates internal state only.
+
+        ### Raises:
+        * None: Setter does not perform validation beyond typing.
+        """
         self._set_data(
             key=_Keys.LC, value=value, set_default_type=Optional[LoggerClient]
         )
 
     @property
     def root(self) -> str:
-        """Gets RouterOS command root."""
+        """Return the accumulated RouterOS command root for the device.
+
+        The property aggregates the root path from all parents in the hierarchy.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        str - Command prefix for RouterOS requests.
+
+        ### Raises:
+        * None: Accessors do not raise exceptions.
+        """
         if _Keys.ROOT not in self._data:
             self._data[_Keys.ROOT] = ""
         tmp: str = self._data[_Keys.ROOT]
@@ -101,7 +194,17 @@ class BDev(BDebug):
 
     @root.setter
     def root(self, value: str) -> None:
-        """Sets RouterOS command root."""
+        """Set the RouterOS command root for the device.
+
+        ### Arguments:
+        * value: str - Command prefix specific to the device.
+
+        ### Returns:
+        None - Updates internal state only.
+
+        ### Raises:
+        * TypeError: Raised when the provided value is not a string.
+        """
         if not isinstance(value, str):
             raise Raise.error(
                 f"Expected string type, received: '{type(value)}'",
@@ -113,14 +216,34 @@ class BDev(BDebug):
 
     @property
     def parent(self) -> Optional[TDev]:
-        """Returns parent for current object."""
+        """Return the parent device instance if assigned.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        Optional[TDev] - Parent device or None for top-level elements.
+
+        ### Raises:
+        * None: Accessors do not raise exceptions.
+        """
         if _Keys.PARENT not in self._data:
             self._data[_Keys.PARENT] = None
         return self._data[_Keys.PARENT]
 
     @parent.setter
     def parent(self, value: Optional[TDev]) -> None:
-        """Sets parent for current object."""
+        """Assign the parent device for the current instance.
+
+        ### Arguments:
+        * value: Optional[TDev] - Parent device or None.
+
+        ### Returns:
+        None - Updates internal state only.
+
+        ### Raises:
+        * TypeError: Raised when the provided value is not a BDev instance.
+        """
         if value is not None and not isinstance(value, BDev):
             raise Raise.error(
                 f"Expected BDev type, received: '{type(value)}'",

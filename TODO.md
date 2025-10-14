@@ -13,4 +13,4 @@
 - (/) jsktoolbox.raisetool
 - (/) jsktoolbox.stringtool
 - (/) jsktoolbox.systemtool
-- (x) jsktoolbox.tktool
+- (/) jsktoolbox.tktool
