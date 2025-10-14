@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 """
 Author:  Jacek Kotlarski --<szumak@virthost.pl>
-Created: 24.06.2023
+Created: 2023-06-24
 
 Purpose: Define abstract comparator interfaces used across numeric and
 address-related helpers.
