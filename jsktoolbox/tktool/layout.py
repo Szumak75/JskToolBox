@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-layout.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 15.01.2024, 13:48:01
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-01-15
 
-Purpose: Tkinter geometry managers keys helper classes.
+Purpose: Enumerate helpers for Tk geometry managers (pack, grid, place).
 """
 
 import tkinter as tk

@@ -1,16 +1,17 @@
 # -*- coding: UTF-8 -*-
 """
-tools.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 5.10.2024, 14:26:16
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-05
 
-Purpose: ClipBoard tool.
+Purpose: System clipboard helpers with per-platform implementations (X11, Tk,
+macOS, Windows, Qt, Gtk).
 """
 
 import ctypes
 import os
 import platform
 import tkinter as tk
+import time
 
 from abc import ABC, abstractmethod
 from inspect import currentframe
@@ -411,6 +412,14 @@ class _TkClip(_BClip, TkBase):
             self.__tw.clipboard_append(value)
             self.__tw.update_idletasks()
             self.__tw.update()
+            for _ in range(5):
+                time.sleep(0.1)
+                self.__tw.update()
+                try:
+                    if self.__tw.clipboard_get() == value:
+                        break
+                except tk.TclError:
+                    continue
         except tk.TclError as exc:  # pragma: no cover - rare runtime failure
             raise Raise.error(
                 f"Unable to set Tk clipboard content: {exc}",

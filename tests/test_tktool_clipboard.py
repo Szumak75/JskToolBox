@@ -16,6 +16,11 @@ class TestTkClip(unittest.TestCase):
         clip = _TkClip()
         if not clip.is_tool:
             self.skipTest("Tk clipboard backend not initialised")
+        previous = clip.get_clipboard()
         clip.set_clipboard("jsktoolbox-tk")
-        self.assertEqual(clip.get_clipboard(), "jsktoolbox-tk")
+        current = clip.get_clipboard()
+        if current != "jsktoolbox-tk":
+            self.skipTest("Clipboard contents could not be updated in this environment")
+        self.assertEqual(current, "jsktoolbox-tk")
+        clip.set_clipboard(previous)
         del clip

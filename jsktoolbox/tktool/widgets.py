@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-widgets.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 15.01.2024, 10:42:01
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-01-15
 
-Purpose: custom tkinter widgets.
+Purpose: Custom Tk/ttk widgets including status bars, tooltips and scrollable frames.
 
-VerticalScrolledFrame: https://gist.github.com/novel-yet-trivial/3eddfce704db3082e38c84664fc1fdf8
+VerticalScrolledFrame based on https://gist.github.com/novel-yet-trivial/3eddfce704db3082e38c84664fc1fdf8
 """
 
 
@@ -41,12 +40,12 @@ class StatusBarTkFrame(tk.Frame, TkBase):
         self.__sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
 
     def set(self, value: str) -> None:
-        """Set status message."""
+        """Update the status label text."""
         self.__status.set(value)
         self.__status_label.update_idletasks()
 
     def clear(self) -> None:
-        """Clear status message."""
+        """Reset the status label to an empty string."""
         self.__status.set("")
         self.__status_label.update_idletasks()
 
@@ -73,12 +72,12 @@ class StatusBarTtkFrame(ttk.Frame, TkBase):
         self.__sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
 
     def set(self, value: str) -> None:
-        """Set status message."""
+        """Update the status label text."""
         self.__status.set(value)
         self.__status_label.update_idletasks()
 
     def clear(self) -> None:
-        """Clear status message."""
+        """Reset the status label to an empty string."""
         self.__status.set("")
         self.__status_label.update_idletasks()
 
