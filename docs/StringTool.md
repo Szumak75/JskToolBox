@@ -26,6 +26,7 @@ Exposes stateless class methods for generating salts, translating characters, an
 Produces the ordered character table that Caesar operations rely on. The table merges ASCII printables with selected Unicode ranges (Latin Extended, Greek, Cyrillic, Armenian, Hebrew, Arabic) and preserves insertion order while removing duplicates. Callers rarely need it directly, yet exposing the table helps with custom analyses or diagnostics.
 
 **Signature:**
+
 ```python
 @staticmethod
 def chars_table_generator() -> str
@@ -35,6 +36,7 @@ def chars_table_generator() -> str
   - `str` - Deduplicated string containing all supported characters.
 
 **Usage Example:**
+
 ```python
 table = SimpleCrypto.chars_table_generator()
 print(len(table))  # Inspect supported alphabet size
@@ -48,6 +50,7 @@ print(len(table))  # Inspect supported alphabet size
 Builds numeric salts of a fixed digit length using `secrets.randbelow`, which offers stronger randomness than the standard `random` module. Invalid lengths trigger a ValueError through the Raise helper.
 
 **Signature:**
+
 ```python
 @classmethod
 def salt_generator(cls, length: int = 8) -> int
@@ -61,6 +64,7 @@ def salt_generator(cls, length: int = 8) -> int
   - `ValueError`: Provided length is below the acceptable threshold.
 
 **Usage Example:**
+
 ```python
 salt = SimpleCrypto.salt_generator(length=6)
 print(salt)
@@ -74,6 +78,7 @@ print(salt)
 Encode and decode messages by shifting characters within the generated table. The shift comes from the salt modulo table length, ensuring consistent wrap-around behaviour no matter the alphabet size. Both methods validate parameter types before attempting the translation.
 
 **Signature:**
+
 ```python
 @classmethod
 def caesar_encrypt(cls, salt: int, message: str) -> str
@@ -92,6 +97,7 @@ def caesar_decrypt(cls, salt: int, message: str) -> str
   - `TypeError`: Message is not a string instance.
 
 **Usage Example:**
+
 ```python
 salt = SimpleCrypto.salt_generator()
 encoded = SimpleCrypto.caesar_encrypt(salt, "Kryptos")
@@ -107,6 +113,7 @@ assert decoded == "Kryptos"
 Wraps Python's built-in ROT13 codec with Raise-based validation. ROT13 acts as its own inverse, so calling the method twice returns the original message.
 
 **Signature:**
+
 ```python
 @classmethod
 def rot13_codec(cls, message: str) -> str
@@ -120,6 +127,7 @@ def rot13_codec(cls, message: str) -> str
   - `TypeError`: Message is not a string instance.
 
 **Usage Example:**
+
 ```python
 cipher = SimpleCrypto.rot13_codec("uryyb")
 plain = SimpleCrypto.rot13_codec(cipher)
@@ -134,6 +142,7 @@ assert plain == "hello"
 Round-trip strings through Base64 using UTF-8 bytes on encode and ASCII payloads on decode. The decoder validates input so malformed data raises a ValueError with a consistent error message.
 
 **Signature:**
+
 ```python
 @classmethod
 def b64_encrypt(cls, message: str) -> str
@@ -151,6 +160,7 @@ def b64_decrypt(cls, message: str) -> str
   - `ValueError`: Provided payload is not valid Base64 (decrypt only).
 
 **Usage Example:**
+
 ```python
 encoded = SimpleCrypto.b64_encrypt("payload")
 decoded = SimpleCrypto.b64_decrypt(encoded)
@@ -165,6 +175,7 @@ assert decoded == "payload"
 Provide a convenience wrapper that chains ROT13, Caesar, and Base64. The decrypt counterpart reverses the sequence and propagates Base64 validation errors, making it simple to store or transmit ASCII-safe ciphertexts.
 
 **Signature:**
+
 ```python
 @classmethod
 def multiple_encrypt(cls, salt: int, message: str) -> str
@@ -183,6 +194,7 @@ def multiple_decrypt(cls, salt: int, message: str) -> str
   - `ValueError`: Base64 payload embedded inside the chain is invalid.
 
 **Usage Example:**
+
 ```python
 salt = SimpleCrypto.salt_generator(5)
 secret = SimpleCrypto.multiple_encrypt(salt, "Sensitive data")

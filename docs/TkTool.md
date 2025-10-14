@@ -22,10 +22,10 @@ from jsktoolbox.tktool.widgets import CreateToolTip
 
 ```
 CreateToolTip(
-    widget: tk.Misc, 
-    text: Union[str, List[str], Tuple[str], tk.StringVar] = "widget info", 
-    wait_time: int = 500, 
-    wrap_length: int = 0, 
+    widget: tk.Misc,
+    text: Union[str, List[str], Tuple[str], tk.StringVar] = "widget info",
+    wait_time: int = 500,
+    wrap_length: int = 0,
     **kwargs
 )
 ```
@@ -36,7 +36,7 @@ Arguments:
 - **text** [Union[str, List[str], Tuple[str], tk.StringVar]] - _text displayed in tooltip_
 - **wait_time** [int] - _delay of displaying tooltip [ms]_
 - **wrap_length** [int] - _limit the number of characters on each line to the specified value.
-                The default value of 0 means that lines will only be broken on newlines_
+  The default value of 0 means that lines will only be broken on newlines_
 
 ### Example
 

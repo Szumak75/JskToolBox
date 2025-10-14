@@ -1,15 +1,18 @@
 # Konfiguracja Gemini dla projektu JskToolBox
 
 ## Konfiguracja plików
+
 Uwzględnij tylko pliki źródłowe Python i testy.
 
 **files.include**
+
 - `jsktoolbox/**/*.py`
 - `tests/**/*.py`
 
 Wyklucz katalogi wirtualnego środowiska, pamięć podręczną i inne pliki pomocnicze.
 
 **files.exclude**
+
 - `.venv/**`
 - `.pytest_cache/**`
 - `__pycache__/**`
@@ -19,37 +22,46 @@ Wyklucz katalogi wirtualnego środowiska, pamięć podręczną i inne pliki pomo
 - `examples/**/*`
 
 ## Instrukcje dotyczące zachowania
+
 Sekcje poniżej opisują preferowane ustawienia dla agenta Gemini.
 
 ### Język i zarządzanie projektem
+
 - `language`: `Python 3.10+`
 - `project_management`: Projekt używa Poetry. Uruchamiaj narzędzia poprzez `poetry run <polecenie>` (np. `poetry run pytest`).
 
 ### Styl kodowania
+
 - Formatuj kod przy użyciu `black`; po zmianach wykonaj `poetry run black .`.
+- Pliki Markdown formatuj przy użyciu `prettier`; uruchamiaj `poetry run prettier --write <ścieżka>`.
 - Przestrzegaj PEP 8 i waliduj styl poleceniem `poetry run pycodestyle`.
 - Dodawaj adnotacje typów do nowych funkcji i metod.
 - Docstringi zachowują format: krótka linia streszczenia, sekcje (`### Arguments`, `### Returns`, `### Raises`).
 - Preferuj pojedyncze cudzysłowy, chyba że podwójne są wymagane.
 
 ### Testowanie
+
 - Testy znajdują się w katalogu `tests/`.
 - Klasy testowe dziedziczą po `unittest.TestCase`, a zestaw uruchamiaj przez `poetry run pytest`.
 - Zapewnij pokrycie testami każdej nowej funkcjonalności.
 
 ### Obsługa błędów
+
 - Do zgłaszania wyjątków używaj mechanizmu `raisetool.Raise.error(message, exception_type, class_name, frame)`.
 
 ### Ogólne zalecenia
+
 - Odpowiadaj w języku polskim.
 - Komentarze i dokumentację w repozytorium zapisuj po angielsku.
 - Zachowuj zwięzłą, techniczną formę odpowiedzi zgodną z konwencjami projektu.
 - Przy zmianach obejmujących wiele plików przedstaw plan i poproś o akceptację.
 
 ## Docstring Template
+
 Docstringi tworzymy w języku angielskim według poniższych wzorców.
 
 ### Module-level Docstring
+
 ```python
 """
 Author:  [Author Name] --<[author_email@example.com]>
@@ -63,6 +75,7 @@ its components, and how they fit into the larger project.]
 ```
 
 ### Class-level Docstring
+
 ```python
 """[Short, one-line summary of the class's purpose.]
 
@@ -72,6 +85,7 @@ design choices, and its role (e.g., utility, data structure).]
 ```
 
 ### Function/Method-level Docstring
+
 ```python
 """[Short, one-line summary of what the function does.]
 
@@ -91,6 +105,7 @@ its use cases, or any important algorithms used.]
 ```
 
 ## Markdown Documentation Template
+
 Szablon dla dokumentacji `.md`, z naciskiem na czytelność, kontekst i przykłady.
 
 ````markdown
@@ -99,11 +114,11 @@ Szablon dla dokumentacji `.md`, z naciskiem na czytelność, kontekst i przykła
 **Source:** `[path/to/module.py]`
 
 **[High-Level Introduction]:**
-*(A user-friendly paragraph explaining what this module helps the user accomplish. Focus on the "why" and the benefits, not just the technical function.)*
+_(A user-friendly paragraph explaining what this module helps the user accomplish. Focus on the "why" and the benefits, not just the technical function.)_
 
 ## Getting Started
 
-*(Explanation of how to import and perform initial setup, if any.)*
+_(Explanation of how to import and perform initial setup, if any.)_
 
 ```python
 from [module_path] import [Class1, Class2]
@@ -114,14 +129,15 @@ from [module_path] import [Class1, Class2]
 ## `[ClassName]` Class
 
 **[Class Introduction]:**
-*(A more detailed description of the class's role and responsibilities. Explain how its methods work together to provide a cohesive functionality.)*
+_(A more detailed description of the class's role and responsibilities. Explain how its methods work together to provide a cohesive functionality.)_
 
 ### `[ClassName].[MethodName]()`
 
 **[Detailed Description]:**
-*(A full paragraph explaining the method's purpose, its specific behavior, and common use cases. This should be more descriptive than the docstring summary, focusing on practical application and scenarios.)*
+_(A full paragraph explaining the method's purpose, its specific behavior, and common use cases. This should be more descriptive than the docstring summary, focusing on practical application and scenarios.)_
 
 **Signature:**
+
 ```python
 [Full method signature]
 ```
@@ -134,7 +150,7 @@ from [module_path] import [Class1, Class2]
   - `ExceptionType`: [Condition for raising.]
 
 **Usage Example:**
-*(A clear, well-commented code block demonstrating how to use the method effectively in a realistic scenario.)*
+_(A clear, well-commented code block demonstrating how to use the method effectively in a realistic scenario.)_
 
 ```python
 # A clear and commented code example
@@ -143,5 +159,6 @@ print(result)
 ```
 
 ---
-*(Repeat for all public methods and classes)*
+
+_(Repeat for all public methods and classes)_
 ````

@@ -33,11 +33,11 @@ CommandLineParser()
 
 ##### Arguments
 
-* short_arg [Optional[str]] - optional one character string,
-* long_arg [str] - required one word string,
-* desc_arg [Optional[Union[str, List, Tuple]]] - optional argument description,
-* has_value [bool] - flag, if 'True' argument takes a value, default = False,
-* example_value [Optional[str]] - example value for argument description.
+- short_arg [Optional[str]] - optional one character string,
+- long_arg [str] - required one word string,
+- desc_arg [Optional[Union[str, List, Tuple]]] - optional argument description,
+- has_value [bool] - flag, if 'True' argument takes a value, default = False,
+- example_value [Optional[str]] - example value for argument description.
 
 The method creates and configures the application invocation argument passed in the comment line when it is launched.
 
@@ -65,7 +65,7 @@ The method that allows you to check whether an argument has been used.
 
 ##### Arguments
 
-* long_arg [str] - name of argument to get
+- long_arg [str] - name of argument to get
 
 The method checks if an argument with the name indicated by `long_arg` was passed. If the variable `has_value=True` is set in the configuration section, the string assigned to this flag in the comment line will be returned.
 If the argument is not used, the method returns `None`.
@@ -97,6 +97,7 @@ PathChecker(pathname:str, check_deep: bool = True)
 ### Public properties
 
 #### dirname
+
 ```
 .dirname -> Optional[str]
 ```

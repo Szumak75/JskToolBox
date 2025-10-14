@@ -156,5 +156,16 @@ var02 = 2 # comment 02
         except Exception as ex:
             self.fail(msg=f"{ex}\ndump:{data}")
 
+    def test_09_set_without_name_raises(self) -> None:
+        """Test nr 09."""
+        self.dp.main_section = "TEST"
+        with self.assertRaisesRegex(ValueError, "Variable name is required"):
+            self.dp.set(section="TEST", varname=None, value="value")
+
+    def test_10_dump_without_main_section_raises(self) -> None:
+        """Test nr 10."""
+        with self.assertRaisesRegex(KeyError, "Main section is not set"):
+            _ = self.dp.dump
+
 
 # #[EOF]#######################################################################

@@ -82,11 +82,11 @@ Returns a list of four Octet objects representing the stored address. The list i
 
 Allows you to configure the network address by accepting input data in one of the selected formats:
 
-- **"192.168.0.1"** -- *as a string*
-- **3232235521** -- *as an integer*
-- **[192, 168, 0, 1]** -- *as a list of integers*
-- **["192", "168", "0", "1"]** -- *as a list of strings*
-- **[Octet(192), Octet(168), Octet(0), Octet(1)]** -- *as a list of Octet objects.*
+- **"192.168.0.1"** -- _as a string_
+- **3232235521** -- _as an integer_
+- **[192, 168, 0, 1]** -- _as a list of integers_
+- **["192", "168", "0", "1"]** -- _as a list of strings_
+- **[Octet(192), Octet(168), Octet(0), Octet(1)]** -- _as a list of Octet objects._
 
 ### Functional properties
 
@@ -113,11 +113,11 @@ Netmask(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 
 The addr argument takes values in several formats:
 
-- **16** -- *as an integer in range at 0 to 32 (CIDR format)*
-- **"32"** -- *as a string in range at "0" to "32" (CIDR format)*
-- **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
-- **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
-- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
+- **16** -- _as an integer in range at 0 to 32 (CIDR format)_
+- **"32"** -- _as a string in range at "0" to "32" (CIDR format)_
+- **[255, 255, 0, 0]** -- _as a list of integers containing valid octet values for the netmask_
+- **["255", "255", "0", "0"]** -- _as a list of strings containing valid octet values for the netmask_
+- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- _as a list of Octet objects containing valid octet values for the netmask._
 
 ### Public properties
 
@@ -141,9 +141,9 @@ Returns the netmask in CIDR format.
 
 Takes values as list:
 
-- **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
-- **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
-- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
+- **[255, 255, 0, 0]** -- _as a list of integers containing valid octet values for the netmask_
+- **["255", "255", "0", "0"]** -- _as a list of strings containing valid octet values for the netmask_
+- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- _as a list of Octet objects containing valid octet values for the netmask._
 
 ```
 .cidr: Union[str, int]
@@ -151,8 +151,8 @@ Takes values as list:
 
 Takes values in CIDR format:
 
-- **16** -- *as an integer in range at 0 to 32*
-- **"32"** -- *as a string in range at "0" to "32"*
+- **16** -- _as an integer in range at 0 to 32_
+- **"32"** -- _as a string in range at "0" to "32"_
 
 ### Functional properties
 

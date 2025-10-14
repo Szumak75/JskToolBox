@@ -30,6 +30,7 @@ The `DateTime` class is a static utility focused on creating `datetime` and `tim
 This method is a straightforward wrapper around `datetime.now()`. Its main advantage is providing a consistent, centralized point in your code for getting the current time, and it simplifies the process of creating a timezone-aware `datetime` object for the present moment.
 
 **Signature:**
+
 ```python
 @classmethod
 def now(cls, tz: Optional[timezone] = None) -> datetime:
@@ -41,6 +42,7 @@ def now(cls, tz: Optional[timezone] = None) -> datetime:
   - `datetime` - The current `datetime` object.
 
 **Usage Example:**
+
 ```python
 # Get the current naive local time
 local_time = DateTime.now()
@@ -58,6 +60,7 @@ print(f"Current UTC Time: {utc_time}")
 This method provides a reliable way to convert a standard Unix timestamp (seconds since the epoch) into a human-readable `datetime` object. It is particularly useful when processing data from systems or APIs that communicate time information as timestamps. It also supports creating timezone-aware objects directly.
 
 **Signature:**
+
 ```python
 @classmethod
 def datetime_from_timestamp(cls, timestamp_seconds: Union[int, float], tz: Optional[timezone] = None) -> datetime:
@@ -72,6 +75,7 @@ def datetime_from_timestamp(cls, timestamp_seconds: Union[int, float], tz: Optio
   - `TypeError`: If `timestamp_seconds` is not an `int` or `float`.
 
 **Usage Example:**
+
 ```python
 # The Unix timestamp for January 1, 2023, 12:00:00 PM UTC
 timestamp = 1672574400
@@ -88,6 +92,7 @@ print(f"Datetime in UTC: {dt_utc}")
 This is a simple converter method that turns a numerical value representing seconds into a `timedelta` object. `timedelta` is Python's standard way of representing a duration of time. This method is useful when you have a duration in a simple format (like seconds) and need to perform date arithmetic with it.
 
 **Signature:**
+
 ```python
 @classmethod
 def elapsed_time_from_seconds(cls, seconds: Union[int, float]) -> timedelta:
@@ -101,6 +106,7 @@ def elapsed_time_from_seconds(cls, seconds: Union[int, float]) -> timedelta:
   - `TypeError`: If `seconds` is not an `int` or `float`.
 
 **Usage Example:**
+
 ```python
 # Represent a duration of 2 days in seconds
 duration_in_seconds = 2 * 24 * 60 * 60  # 172800
@@ -118,6 +124,7 @@ print(f"'{duration_in_seconds} seconds' is equal to '{time_delta}'")
 This method calculates the duration between a specific point in the past (given as a Unix timestamp) and the current moment. It is useful for determining how long ago an event occurred, for example, to display messages like "posted 2 hours ago". The result is truncated to the nearest second for cleaner output.
 
 **Signature:**
+
 ```python
 @classmethod
 def elapsed_time_from_timestamp(cls, seconds: Union[int, float], tz: Optional[timezone] = None) -> timedelta:
@@ -132,6 +139,7 @@ def elapsed_time_from_timestamp(cls, seconds: Union[int, float], tz: Optional[ti
   - `TypeError`: If `seconds` is not an `int` or `float`.
 
 **Usage Example:**
+
 ```python
 # Get a timestamp from 30 minutes ago
 past_event_timestamp = Timestamp.now() - (30 * 60)
@@ -157,6 +165,7 @@ The `Timestamp` class is a static utility for creating and converting Unix times
 This method returns the current time as a Unix timestamp, which is the number of seconds that have elapsed since the Unix epoch (January 1, 1970). It allows you to specify whether you need a precise floating-point number or a truncated integer, which is often sufficient.
 
 **Signature:**
+
 ```python
 @classmethod
 def now(cls, returned_type: Union[type[int], type[float]] = int) -> Union[int, float]:
@@ -170,6 +179,7 @@ def now(cls, returned_type: Union[type[int], type[float]] = int) -> Union[int, f
   - `TypeError`: If `returned_type` is not `int` or `float`.
 
 **Usage Example:**
+
 ```python
 # Get the current timestamp as a simple integer
 int_timestamp = Timestamp.now()
@@ -187,6 +197,7 @@ print(f"Float timestamp: {float_timestamp}")
 This method is a powerful tool for parsing a date and time from a string, provided you know the format. It converts a human-readable date string (like "2023-12-25") into a machine-readable Unix timestamp. This is essential when you need to process dates from log files, user input, or text-based data sources.
 
 **Signature:**
+
 ```python
 @classmethod
 def from_string(cls, date_string: str, format: str, returned_type: Union[type[int], type[float]] = int) -> Union[int, float]:
@@ -203,6 +214,7 @@ def from_string(cls, date_string: str, format: str, returned_type: Union[type[in
   - `ValueError`: If the `date_string` cannot be parsed with the given `format`.
 
 **Usage Example:**
+
 ```python
 date_as_string = "2023-01-01 12:00:00"
 format_code = "%Y-%m-%d %H:%M:%S"
@@ -219,6 +231,7 @@ print(f"The timestamp for '{date_as_string}' is: {timestamp}")
 This utility method calculates the exact start and end timestamps for a given month. This is extremely useful for database queries, report generation, or any scenario where you need to filter data within a specific month's boundaries. It correctly handles months of different lengths and can operate on the current month or any month specified by a `datetime` object or timestamp.
 
 **Signature:**
+
 ```python
 @classmethod
 def month_timestamp_tuple(cls, query_date: Optional[Union[float, int, datetime]] = None, tz: Optional[timezone] = timezone.utc) -> Tuple[float, float]:
@@ -233,6 +246,7 @@ def month_timestamp_tuple(cls, query_date: Optional[Union[float, int, datetime]]
   - `TypeError`: If `query_date` or `tz` has an unsupported type.
 
 **Usage Example:**
+
 ```python
 import datetime
 

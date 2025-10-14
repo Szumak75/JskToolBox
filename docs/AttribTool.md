@@ -26,6 +26,7 @@ Combines instance and metaclass interceptors to forbid adding new attributes aft
 Delegates to Python’s default `object.__setattr__` while checking attribute existence. Intended for internal wiring; you typically inherit from the mixin instead of overriding this method.
 
 **Signature:**
+
 ```python
 def __setattr__(self, name: str, value: Any) -> None
 ```
@@ -37,6 +38,7 @@ def __setattr__(self, name: str, value: Any) -> None
   - `AttributeError`: Attribute does not exist on the instance yet.
 
 **Usage Example:**
+
 ```python
 class Locked(NoNewAttributes):
     existing = 1
@@ -59,6 +61,7 @@ Lightweight mixin that prevents instance-level attribute creation while leaving 
 Checks whether the attribute already exists on the instance before delegating to `super().__setattr__`. Raising early helps catch misspellings and schema drift.
 
 **Signature:**
+
 ```python
 def __setattr__(self, name: str, value: Any) -> None
 ```
@@ -70,6 +73,7 @@ def __setattr__(self, name: str, value: Any) -> None
   - `AttributeError`: New attribute is rejected.
 
 **Usage Example:**
+
 ```python
 class Model(NoDynamicAttributes):
     id: int = 0
@@ -92,6 +96,7 @@ Metaclass that blocks reassignment of class attributes. The restriction safeguar
 Overrides metaclass `__setattr__` so attempts to adjust class attributes raise `AttributeError`.
 
 **Signature:**
+
 ```python
 def __setattr__(self, name: str, value: Any) -> None
 ```
@@ -103,6 +108,7 @@ def __setattr__(self, name: str, value: Any) -> None
   - `AttributeError`: Always raised to prevent modification.
 
 **Usage Example:**
+
 ```python
 class Constants(metaclass=ReadOnlyClass):
     FOO = "immutable"

@@ -30,6 +30,7 @@ The `Raise` class is a static utility and is not meant to be instantiated. It pr
 This method is a string formatting utility. It takes a basic message and enhances it with contextual details like the class name, method name, and line number. While you can use it for general-purpose logging or messaging, its primary role is as a helper for the `Raise.error()` method.
 
 **Signature:**
+
 ```python
 @classmethod
 def message(cls, message: str, class_name: str = "", currentframe: Optional[FrameType] = None) -> str:
@@ -43,6 +44,7 @@ def message(cls, message: str, class_name: str = "", currentframe: Optional[Fram
   - `str` - A formatted message string with contextual details.
 
 **Usage Example:**
+
 ```python
 class DataProcessor:
     def process(self):
@@ -59,6 +61,7 @@ processor.process()
 ```
 
 **Example Output:**
+
 ```
 DataProcessor.process [line:10]: Starting data processing...
 ```
@@ -70,6 +73,7 @@ DataProcessor.process [line:10]: Starting data processing...
 This is the core method of the module. It is a factory that creates and returns an exception instance with a rich, contextual error message. You provide a message and an exception type (like `ValueError` or `TypeError`), and it constructs an exception object that is ready to be `raise`d. This ensures all exceptions thrown by your application have a consistent and debug-friendly format.
 
 **Signature:**
+
 ```python
 @classmethod
 def error(cls, message: str, exception: type[Exception] = Exception, class_name: str = "", currentframe: Optional[FrameType] = None) -> Exception:
@@ -86,6 +90,7 @@ def error(cls, message: str, exception: type[Exception] = Exception, class_name:
   - `TypeError`: If the `exception` argument is not a class that inherits from `Exception`.
 
 **Usage Example:**
+
 ```python
 # A function that validates user input
 def set_user_age(age):
@@ -106,6 +111,7 @@ except TypeError as e:
 ```
 
 **Example Output:**
+
 ```
 Caught an error: UserValidator.set_user_age [line:10]: [TypeError]: Invalid age provided: '-25'. Age must be a positive integer.
 ```

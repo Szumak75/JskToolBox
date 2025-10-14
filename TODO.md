@@ -1,7 +1,7 @@
 # Project Modules
 
 - (/) jsktoolbox.attribtool
-- (x) jsktoolbox.basetool
+- (/) jsktoolbox.basetool
 - (x) jsktoolbox.configtool
 - (/) jsktoolbox.datetool
 - (x) jsktoolbox.devices
