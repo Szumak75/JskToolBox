@@ -438,7 +438,7 @@ class ClipBoard(BData):
 
     def __init__(self) -> None:
         """Create instance of class."""
-        for tool in (_XClip(), _XSel(), _GtkClip(), _QtClip(), _WinClip(), _MacClip(), _TkClip()):
+        for tool in (_XClip(), _XSel(), _GtkClip(), _QtClip(), _WinClip(), _MacClip()):
             if tool.is_tool:
                 self._set_data(key=_Keys.TOOL, value=tool)
                 break
