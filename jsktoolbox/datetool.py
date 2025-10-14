@@ -6,6 +6,7 @@ Created: 02.12.2023
 Purpose: Sets of classes for various date/time operations.
 """
 
+import calendar
 from time import time
 from datetime import datetime, timezone, timedelta
 from typing import Optional, Tuple, Union
@@ -131,11 +132,62 @@ class Timestamp(NoNewAttributes):
         return datetime.timestamp(element)
 
     @classmethod
-    def timestamp_month_tuple(
-        cls, date=None, tz=None
-    ) -> Tuple[Union[float, int], Union[float, int]]:
+    def month_timestamp_tuple(
+        cls,
+        date: Optional[Union[float, int, datetime]] = None,
+        tz: Optional[timezone] = timezone.utc,
+    ) -> Tuple[float, float]:
+        """Returns a tuple containing the start and end Unix timestamps for a selected year and month.
 
-        return (0, 0)
+        ### Arguments
+        * date: Optional[Union[float, int, datetime.datetime]] -- year.month representation,
+        * tz: Optional[datetime.timezone] -- default datetime.timezone.utc for UTC, None for current set timezone.
+
+        ### Returns
+        tuple: A tuple (start_timestamp, end_timestamp).
+        """
+
+        return (0, 1)
+
+    @classmethod
+    def _get_month_timestamp(
+        cls, year: int, month: int, tz: Optional[timezone] = timezone.utc
+    ) -> Tuple[float, float]:
+        """Generates a tuple containing the start and end Unix timestamps for a selected year and month.
+
+        Arguments:
+            year -- The target year.
+            month -- The target month (1-12).
+
+        Keyword Arguments:
+            tz -- Optional[datetime.timezone] - datetime.timezone.utc for UTC, default None for current set timezone.
+
+        Returns:
+            A tuple containing the start and end Unix timestamps of the specified month.
+        """
+        # Validate month input
+        if not 1 <= month <= 12:
+            raise Raise.error(
+                "Month must be between 1 and 12.",
+                ValueError,
+                cls.__qualname__,
+                currentframe(),
+            )
+
+        # The first moment of the month in UTC
+        start_dt = datetime(year, month, 1, 0, 0, 0, tzinfo=tz)
+
+        # Find the number of days in the month
+        _, num_days = calendar.monthrange(year, month)
+
+        # The very last moment of the month in UTC
+        end_dt = datetime(year, month, num_days, 23, 59, 59, 999999, tzinfo=tz)
+
+        # Convert datetime objects to Unix timestamps
+        start_timestamp: float = start_dt.timestamp()
+        end_timestamp: float = end_dt.timestamp()
+
+        return (start_timestamp, end_timestamp)
 
 
 # #[EOF]#######################################################################
