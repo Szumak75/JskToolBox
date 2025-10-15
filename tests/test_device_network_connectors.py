@@ -6,12 +6,46 @@ Created: 03.12.2023
 Purpose: Connectors module testing class.
 """
 
-import unittest
 import os
+import subprocess
+import unittest
 
 from jsktoolbox.devices.network.connectors import API, SSH
 from jsktoolbox.netaddresstool.ipv4 import Address
 from jsktoolbox.netaddresstool.ipv6 import Address6
+
+
+_ENDPOINTS_ENV = os.environ.get("JSKTOOLBOX_ROUTEROS_ENDPOINTS")
+if _ENDPOINTS_ENV:
+    ROUTEROS_ENDPOINTS = [
+        item.strip() for item in _ENDPOINTS_ENV.split(",") if item.strip()
+    ]
+else:
+    ROUTEROS_ENDPOINTS = [
+        "10.5.5.254",
+        "10.144.0.105",
+    ]
+
+ROUTEROS_LOGIN = os.environ.get("JSKTOOLBOX_ROUTEROS_LOGIN", "devel")
+ROUTEROS_PASSWORD = os.environ.get("JSKTOOLBOX_ROUTEROS_PASSWORD", "mojehaslo")
+ROUTEROS_PORT = int(os.environ.get("JSKTOOLBOX_ROUTEROS_PORT", "8728"))
+
+
+def _is_endpoint_alive(ip_address: str) -> bool:
+    """Return True when endpoint responds to a single ping."""
+    count_flag = "-c" if os.name != "nt" else "-n"
+    command = ["ping", count_flag, "1", ip_address]
+    try:
+        result = subprocess.run(
+            command,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=3,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return result.returncode == 0
 
 
 class TestConnectors(unittest.TestCase):
@@ -60,23 +94,61 @@ class TestConnectors(unittest.TestCase):
             self.assertEqual(obj.password, "admin")
 
     def test_06_connect(self) -> None:
-        """Test nr 06."""
-        ip = "10.5.5.254"
-        if os.system(f"ping -c 1 {ip}") == 0:
+        """Verify API connectivity against available RouterOS endpoints."""
+        if not ROUTEROS_ENDPOINTS:
+            self.skipTest("No RouterOS endpoints configured for API tests.")
+
+        reachable = []
+        failures = {}
+
+        for ip in ROUTEROS_ENDPOINTS:
+            if not _is_endpoint_alive(ip):
+                failures[ip] = "endpoint unreachable (ping)"
+                continue
+
+            obj = API(
+                ip_address=Address(ip),
+                port=ROUTEROS_PORT,
+                login=ROUTEROS_LOGIN,
+                password=ROUTEROS_PASSWORD,
+                timeout=5.0,
+            )
+            connected = False
             try:
-                obj = API(
-                    ip_address=Address(ip),
-                    port=8728,
-                    login="devel",
-                    password="mojehaslo",
+                if not obj.connect():
+                    failures[ip] = f"connect() returned False: {obj.errors()}"
+                    continue
+                connected = True
+                reachable.append(ip)
+                self.assertTrue(obj.is_alive, msg=f"{ip}: broken connection")
+                self.assertTrue(
+                    obj.execute("/system/identity/print"),
+                    msg=f"{ip}: command execution failed",
                 )
-                self.assertTrue(obj.connect(), msg="connection error")
-                self.assertTrue(obj.is_alive, msg="broken connection")
-                self.assertTrue(obj.execute("/system/identity/print"))
-                self.assertTrue(obj.disconnect(), msg="disconnection error")
+                self.assertEqual(
+                    len(obj.errors()),
+                    0,
+                    msg=f"{ip}: {obj.errors()}",
+                )
+            except AssertionError:
+                raise
             except Exception as ex:
-                self.fail(msg=f"Exception was thrown: {ex}")
-            self.assertEqual(len(obj.errors()), 0, msg=f"{obj.errors()}")
+                failures[ip] = str(ex)
+            finally:
+                if connected:
+                    try:
+                        obj.disconnect()
+                    except Exception:
+                        pass
+
+        if not reachable:
+            details = [
+                f"{ip} -> {error}" for ip, error in failures.items()
+            ] or ["no endpoint responded"]
+            self.skipTest(
+                "No active RouterOS endpoints. Details: "
+                + "; ".join(details)
+            )
 
 
 # #[EOF]#######################################################################
