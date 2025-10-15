@@ -116,51 +116,51 @@ class TestPathFinderAlg(unittest.TestCase):
         self.assertEqual(alg.get_final[3].pos_x, 40)
         self.assertEqual(alg.get_final[4].pos_x, 50)
 
-    # def test_03_genetic2(self) -> None:
-    #     """Test nr 03."""
-    #     try:
-    #         alg = AlgGenetic2(
-    #             log_queue=SimpleQueue(),
-    #             start=self.start,
-    #             systems=self.points,
-    #             jump_range=50,
-    #             euclid_alg=self.math,
-    #             plugin_name="test",
-    #         )
-    #         alg.run()
-    #     except Exception as e:
-    #         self.fail(e)
+    def test_03_genetic2(self) -> None:
+        """Test nr 03."""
+        try:
+            alg = AlgGenetic2(
+                log_queue=SimpleQueue(),
+                start=self.start,
+                systems=self.points,
+                jump_range=50,
+                euclid_alg=self.math,
+                plugin_name="test",
+            )
+            alg.run()
+        except Exception as e:
+            self.fail(e)
 
-    #     self.assertEqual(alg.final_distance, 50.0)
-    #     self.assertEqual(len(alg.get_final), 5)
-    #     self.assertEqual(alg.get_final[0].pos_x, 10)
-    #     self.assertEqual(alg.get_final[1].pos_x, 20)
-    #     self.assertEqual(alg.get_final[2].pos_x, 30)
-    #     self.assertEqual(alg.get_final[3].pos_x, 40)
-    #     self.assertEqual(alg.get_final[4].pos_x, 50)
+        self.assertEqual(alg.final_distance, 50.0)
+        self.assertEqual(len(alg.get_final), 5)
+        self.assertEqual(alg.get_final[0].pos_x, 10)
+        self.assertEqual(alg.get_final[1].pos_x, 20)
+        self.assertEqual(alg.get_final[2].pos_x, 30)
+        self.assertEqual(alg.get_final[3].pos_x, 40)
+        self.assertEqual(alg.get_final[4].pos_x, 50)
 
-    # def test_04_a_star(self) -> None:
-    #     """Test nr 04."""
-    #     try:
-    #         alg = AlgAStar(
-    #             log_queue=SimpleQueue(),
-    #             start=self.start,
-    #             systems=self.points,
-    #             jump_range=50,
-    #             euclid_alg=self.math,
-    #             plugin_name="test",
-    #         )
-    #         alg.run()
-    #     except Exception as e:
-    #         self.fail(e)
+    def test_04_a_star(self) -> None:
+        """Test nr 04."""
+        try:
+            alg = AlgAStar(
+                log_queue=SimpleQueue(),
+                start=self.start,
+                systems=self.points,
+                jump_range=50,
+                euclid_alg=self.math,
+                plugin_name="test",
+            )
+            alg.run()
+        except Exception as e:
+            self.fail(e)
 
-    #     self.assertEqual(alg.final_distance, 50.0)
-    #     self.assertEqual(len(alg.get_final), 5)
-    #     self.assertEqual(alg.get_final[0].pos_x, 10)
-    #     self.assertEqual(alg.get_final[1].pos_x, 20)
-    #     self.assertEqual(alg.get_final[2].pos_x, 30)
-    #     self.assertEqual(alg.get_final[3].pos_x, 40)
-    #     self.assertEqual(alg.get_final[4].pos_x, 50)
+        self.assertEqual(alg.final_distance, 50.0)
+        self.assertEqual(len(alg.get_final), 5)
+        self.assertEqual(alg.get_final[0].pos_x, 10)
+        self.assertEqual(alg.get_final[1].pos_x, 20)
+        self.assertEqual(alg.get_final[2].pos_x, 30)
+        self.assertEqual(alg.get_final[3].pos_x, 40)
+        self.assertEqual(alg.get_final[4].pos_x, 50)
 
     def test_05_sa(self) -> None:
         """Test nr 05."""

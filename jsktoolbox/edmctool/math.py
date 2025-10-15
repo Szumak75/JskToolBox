@@ -34,12 +34,12 @@ from .edsm_keys import EdsmKeys
 try:
     import numpy as np
 except ModuleNotFoundError:
-    pass
+    np = None  # type: ignore[assignment]
 
 try:
     from scipy.spatial import distance
 except ModuleNotFoundError:
-    pass
+    distance = None  # type: ignore[assignment]
 
 
 class IAlg(ABC):
@@ -80,17 +80,29 @@ class Euclid(BLogClient):
     def __init__(self, queue: Union[Queue, SimpleQueue], r_data: RscanData) -> None:
         """Create class object."""
 
+        methods: List[MethodType] = []
+
+        if np is not None:
+            methods.extend(
+                [
+                    self.__numpy_l2,
+                    self.__numpy,
+                    self.__einsum,
+                ]
+            )
+        if distance is not None:
+            methods.append(self.__scipy)
+        methods.extend(
+            [
+                self.__math,
+                self.__core,
+            ]
+        )
+
         self._set_data(
             key=_Keys.E_METHODS,
             set_default_type=List,
-            value=[
-                self.__numpy_l2,
-                self.__numpy,
-                self.__einsum,
-                self.__scipy,
-                self.__math,
-                self.__core,
-            ],
+            value=methods,
         )
 
         # init log subsystem
@@ -1036,6 +1048,7 @@ class AlgGenetic2(IAlg, BLogClient):
     __generations: int = None  # type: ignore
     __mutation_rate: float = None  # type: ignore
     __population: List[List[StarsSystem]] = None  # type: ignore
+    __stagnation_limit: int = None  # type: ignore
 
     def __init__(
         self,
@@ -1107,14 +1120,14 @@ class AlgGenetic2(IAlg, BLogClient):
             system for system in systems if isinstance(system, StarsSystem)
         ]
 
-        self.__population: List[List[StarsSystem]] = []
-        self.__final: List[StarsSystem] = []
+        self.__population = []
+        self.__final = []
 
-        # self.__population_size = len(systems) * 4  # Rozmiar populacji (100)
-        self.__population_size = 100
-        # self.__generations = 200  # Liczba pokoleń (500)
-        self.__generations = 500
+        points_count = max(len(self.__points), 1)
+        self.__population_size = max(20, points_count * 4)
+        self.__generations = max(100, points_count * 20)
         self.__mutation_rate = 0.01  # Prawdopodobieństwo mutacji (0.01)
+        self.__stagnation_limit = max(25, points_count * 5)
 
         # 1. Rozmiar populacji (population_size):
         # Małe wartości (10-50): Szybsze obliczenia, ale może prowadzić do szybkiej
@@ -1163,6 +1176,7 @@ class AlgGenetic2(IAlg, BLogClient):
 
     def __initialize_population(self) -> None:
         """Initialize the population with random routes."""
+        self.__population = []
         for _ in range(self.__population_size):
             route: List[StarsSystem] = self.__points[:]
             random.shuffle(route)
@@ -1228,6 +1242,9 @@ class AlgGenetic2(IAlg, BLogClient):
     def __evolve(self) -> None:
         """Run the evolutionary algorithm over several generations."""
         self.__initialize_population()
+        best_route: Optional[List[StarsSystem]] = None
+        best_fitness: float = float("-inf")
+        stagnant_generations = 0
 
         for _ in range(self.__generations):
             new_population = []
@@ -1241,9 +1258,20 @@ class AlgGenetic2(IAlg, BLogClient):
 
             # Replace old population with new population
             self.__population = new_population
+            current_best = max(self.__population, key=self.__fitness)
+            current_fitness = self.__fitness(current_best)
+            if current_fitness > best_fitness:
+                best_fitness = current_fitness
+                best_route = current_best
+                stagnant_generations = 0
+            else:
+                stagnant_generations += 1
+            if stagnant_generations >= self.__stagnation_limit:
+                break
 
-        # Save the best solution found
-        self.__final = max(self.__population, key=self.__fitness)
+        if best_route is None:
+            best_route = max(self.__population, key=self.__fitness)
+        self.__final = best_route
 
     def run(self) -> None:
         """Return the best route found after evolution."""
