@@ -23,8 +23,18 @@ class TestReadOnlyClass(unittest.TestCase):
 
         self.assertTrue(A.VAR, 1)
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaisesRegex(AttributeError, "Read only attribute"):
             A.VAR = 2
+
+    def test_02_read_only_prevents_new_attribute(self) -> None:
+        """Test nr 02."""
+        from jsktoolbox.attribtool import ReadOnlyClass
+
+        class B(object, metaclass=ReadOnlyClass):
+            VAR: int = 1
+
+        with self.assertRaisesRegex(AttributeError, "Read only attribute"):
+            setattr(B, "NEW_FIELD", 42)
 
 
 class TestNoNewAttributes(unittest.TestCase):
@@ -56,15 +66,10 @@ class TestNoNewAttributes(unittest.TestCase):
         self.workclass.variable = "abc"
         self.assertEqual(self.workclass.variable, "abc")
 
-    def test_set_the_wrong_attribute(self) -> None:
+    def test_prevent_undefined_attribute(self) -> None:
         """Test nr 2."""
-        try:
-            self.workclass.abc = 1  # type: ignore
-            self.workclass.abc = "test"  # type: ignore
-        except Exception as ex:
-            self.assertTrue(isinstance(ex, AttributeError))
-        else:
-            self.fail("No exception thrown.")
+        with self.assertRaisesRegex(AttributeError, "Undefined attribute abc"):
+            setattr(self.workclass, "abc", 1)
 
 
 class TestNoDynamicAttributes(unittest.TestCase):
@@ -96,15 +101,12 @@ class TestNoDynamicAttributes(unittest.TestCase):
         self.workclass.variable = "abc"
         self.assertEqual(self.workclass.variable, "abc")
 
-    def test_set_the_wrong_attribute(self) -> None:
+    def test_prevent_dynamic_attribute(self) -> None:
         """Test nr 2."""
-        try:
-            self.workclass.abc = 1
-            self.workclass.abc = "test"
-        except Exception as ex:
-            self.assertTrue(isinstance(ex, AttributeError))
-        else:
-            self.fail("No exception thrown.")
+        with self.assertRaisesRegex(
+            AttributeError, "Cannot add new attribute 'abc'"
+        ):
+            setattr(self.workclass, "abc", 1)
 
 
 # #[EOF]#######################################################################

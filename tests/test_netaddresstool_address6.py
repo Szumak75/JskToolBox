@@ -108,5 +108,33 @@ class TestAddress6(unittest.TestCase):
         with self.assertRaises(TypeError):
             Address6({})  # type: ignore
 
+    def test_15_words_from_compressed_address(self) -> None:
+        """Test nr 15."""
+        addr = Address6("2001:db8::1")
+        self.assertEqual(
+            [int(word) for word in addr.words],
+            [2001, 3512, 0, 0, 0, 0, 0, 1],
+        )
+
+    def test_16_set_words_from_hex_strings(self) -> None:
+        """Test nr 16."""
+        self.o.words = ["0x2001", "db8", "0", "0", "0", "0", "0", "0x0001"]
+        self.assertEqual(str(self.o), "2001:db8::1")
+
+    def test_17_set_words_invalid_length(self) -> None:
+        """Test nr 17."""
+        with self.assertRaises(ValueError):
+            self.o.words = ["2001", "db8"]  # type: ignore
+
+    def test_18_set_words_invalid_literal(self) -> None:
+        """Test nr 18."""
+        with self.assertRaises(ValueError):
+            self.o.words = ["zzzz"] * 8  # type: ignore
+
+    def test_19_integer_roundtrip(self) -> None:
+        """Test nr 19."""
+        original = Address6("abcd:ef12::1")
+        self.assertEqual(Address6(int(original)).__str__(), str(original))
+
 
 # #[EOF]#######################################################################

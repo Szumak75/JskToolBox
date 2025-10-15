@@ -121,6 +121,27 @@ class TestAddress(unittest.TestCase):
         with self.assertRaises(ValueError):
             Address("192.168.3")
 
+    def test_15_integer_representation(self) -> None:
+        """Test nr 15."""
+        ip = Address("10.0.0.5")
+        self.assertEqual(int(ip), 167772165)
+        self.assertEqual(str(Address(int(ip))), "10.0.0.5")
+
+    def test_16_set_octets_invalid_length(self) -> None:
+        """Test nr 16."""
+        with self.assertRaises(ValueError):
+            self.o.octets = [192, 168, 1]  # type: ignore
+
+    def test_17_set_octets_invalid_literal(self) -> None:
+        """Test nr 17."""
+        with self.assertRaises(TypeError):
+            self.o.octets = ["192", "168", "1", "foo"]  # type: ignore
+
+    def test_18_set_octets_invalid_type(self) -> None:
+        """Test nr 18."""
+        with self.assertRaises(TypeError):
+            self.o.octets = {"a": 1}  # type: ignore
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -29,24 +29,18 @@ class Raise(NoDynamicAttributes):
         class_name: str = "",
         currentframe: Optional[FrameType] = None,
     ) -> str:
-        """Formats a message string with contextual information.
+        """Format a message string with contextual information.
 
         This method constructs a detailed message string by prepending the
-        class name, method name, and line number. The level of detail depends
-
-        on the provided arguments.
-
-        Example output:
-        `MyClass.my_method [line:42]: An error occurred`
+        class name, method name, and line number.
 
         ### Arguments:
         * message: str - The core message to be formatted.
-        * class_name: str - Optional; The name of the class from which the call is made.
-        * currentframe: Optional[FrameType] - Optional; A frame object from `inspect.currentframe()`
-          to automatically extract the method name and line number.
+        * class_name: str - The name of the class from which the call is made. Defaults to "".
+        * currentframe: Optional[FrameType] - A frame object from `inspect.currentframe()`.
 
         ### Returns:
-        A formatted message string with contextual details.
+        str - A formatted message string with contextual details.
         """
         template: str = f"{message}"
         if currentframe and isinstance(currentframe, FrameType):
@@ -67,27 +61,22 @@ class Raise(NoDynamicAttributes):
         class_name: str = "",
         currentframe: Optional[FrameType] = None,
     ) -> Exception:
-        """Creates an exception instance with a formatted message.
+        """Create an exception instance with a formatted message.
 
         This is the primary factory method for creating standardized exceptions.
-        It validates the exception type, formats the message using the `message`
-        method, and returns an instance of the specified exception class,
-        ready to be raised.
+        It validates the exception type and formats the message.
 
         ### Arguments:
         * message: str - The core error message.
-        * exception: type[Exception] - The exception class (not an instance) to be instantiated,
-          e.g., `ValueError`, `TypeError`. Defaults to `Exception`.
-        * class_name: str - Optional; The name of the class where the error occurred.
-        * currentframe: Optional[FrameType] - Optional; A frame object from `inspect.currentframe()`
-          for detailed error location.
+        * exception: type[Exception] - The exception class to be instantiated. Defaults to `Exception`.
+        * class_name: str - The name of the class where the error occurred. Defaults to "".
+        * currentframe: Optional[FrameType] - A frame object from `inspect.currentframe()`.
 
         ### Returns:
-        An instance of the specified exception class with a fully formatted message.
+        Exception - An instance of the specified exception class.
 
         ### Raises:
-        * TypeError: If the provided `exception` argument is not a class that inherits
-          from `Exception`.
+        * TypeError: If the `exception` argument is not a class that inherits from `Exception`.
         """
         if isinstance(exception, type):
             if not isinstance(exception(), Exception):

@@ -94,5 +94,22 @@ class TestNetmask(unittest.TestCase):
         with self.assertRaises(ValueError):
             Netmask("255.253.0.0")
 
+    def test_05_netmask_octets_property(self) -> None:
+        """Test nr 5."""
+        mask = Netmask(24)
+        self.assertEqual([str(octet) for octet in mask.octets], ["255", "255", "255", "0"])
+
+    def test_06_netmask_invalid_octet_list_length(self) -> None:
+        """Test nr 6."""
+        with self.assertRaises(ValueError):
+            Netmask([255, 255, 255])  # type: ignore
+
+    def test_07_netmask_cidr_string_assignment(self) -> None:
+        """Test nr 7."""
+        mask = Netmask("24")
+        self.assertEqual(str(mask), "255.255.255.0")
+        mask.cidr = "30"
+        self.assertEqual(int(mask), 30)
+
 
 # #[EOF]#######################################################################

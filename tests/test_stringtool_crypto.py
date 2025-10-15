@@ -76,5 +76,43 @@ class TestStringtoolCrypto(unittest.TestCase):
                 message,
             )
 
+    def test_09_b64_accepts_standard_payload(self) -> None:
+        """Test nr 09."""
+        self.assertEqual(SimpleCrypto.b64_decrypt("dGVzdA=="), "test")
+
+    def test_10_b64_invalid_payload(self) -> None:
+        """Test nr 10."""
+        with self.assertRaisesRegex(ValueError, "Invalid Base64 payload."):
+            SimpleCrypto.b64_decrypt("not-base64!")
+
+    def test_11_chars_table_includes_extended_alphabets(self) -> None:
+        """Test nr 11."""
+        table: str = SimpleCrypto.chars_table_generator()
+        self.assertIn('Ω', table)
+        self.assertIn('Ж', table)
+        self.assertIn('ي', table)
+
+    def test_12_chars_table_has_unique_characters(self) -> None:
+        """Test nr 12."""
+        table: str = SimpleCrypto.chars_table_generator()
+        self.assertEqual(len(table), len(set(table)))
+
+    def test_13_caesar_handles_greek_characters(self) -> None:
+        """Test nr 13."""
+        message: str = "Τεστ Κρυπτο"
+        salt: int = SimpleCrypto.salt_generator(4)
+        encoded = SimpleCrypto.caesar_encrypt(salt, message)
+        self.assertEqual(SimpleCrypto.caesar_decrypt(salt, encoded), message)
+
+    def test_14_salt_generator_invalid_length(self) -> None:
+        """Test nr 14."""
+        with self.assertRaises(ValueError):
+            SimpleCrypto.salt_generator(0)
+
+    def test_15_rot13_codec_invalid_type(self) -> None:
+        """Test nr 15."""
+        with self.assertRaises(TypeError):
+            SimpleCrypto.rot13_codec(123)  # type: ignore[arg-type]
+
 
 # #[EOF]#######################################################################

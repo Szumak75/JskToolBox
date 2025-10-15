@@ -17,16 +17,19 @@ The class for IPv6 Word16 representation.
 ### Import
 
 ```from jsktoolbox.netaddresstool.libs.words import Word16
+
 ```
 
 ### Constructor
 
 ```Word16(value: Union[str, int, Word16])
+
 ```
 
 ### Public properties
 
 ```.value: int
+
 ```
 
 Return Word16 as integer.
@@ -34,6 +37,7 @@ Return Word16 as integer.
 ### Public setters
 
 ```.value: Union[str, int, Word16]
+
 ```
 
 Set Word16 from integer, string or other Word16 object.
@@ -51,11 +55,13 @@ The class for IPv6 address representation.
 ### Import
 
 ```from jsktoolbox.netaddresstool.ipv6 import Address6
+
 ```
 
 ### Constructor
 
 ```Address6(addr: Union[str, int, Union[List[int], List[str], List[Word16]]])
+
 ```
 
 The addr argument takes values such as the `.words` property described in the head **Public setters**.
@@ -63,6 +69,7 @@ The addr argument takes values such as the `.words` property described in the he
 ### Public properties
 
 ```.words: List[Word16]
+
 ```
 
 Returns a list of eight Word16 objects representing the stored address. The list is a copy of the stored value and does not allow modification of the class object.
@@ -70,15 +77,16 @@ Returns a list of eight Word16 objects representing the stored address. The list
 ### Public setters
 
 ```.words: Union[str, int, Union[List[int], List[str], List[Word16]]]
+
 ```
 
 Allows you to configure the network address by accepting input data in one of the selected formats:
 
-- **"2000::FF"** -- *as a string*
-- **42535295865117307932921825928971026687** -- *as an integer*
-- **[1, 2, 3, 4, 5, 6, 7, 8]** -- *as a list of integers*
-- **["1", "2", "3", "4", "5", "6", "7", "8"]** -- *as a list of strings*
-- **[Word16("0xFF"),Word16("0"),Word16("0x0"),Word16("0"),Word16("0x0"),Word16("0"),Word16("0x0"),Word16("0xFFFF")]** -- *as a list of Word16 objects.*
+- **"2000::FF"** -- _as a string_
+- **42535295865117307932921825928971026687** -- _as an integer_
+- **[1, 2, 3, 4, 5, 6, 7, 8]** -- _as a list of integers_
+- **["1", "2", "3", "4", "5", "6", "7", "8"]** -- _as a list of strings_
+- **[Word16("0xFF"),Word16("0"),Word16("0x0"),Word16("0"),Word16("0x0"),Word16("0"),Word16("0x0"),Word16("0xFFFF")]** -- _as a list of Word16 objects._
 
 ### Functional properties
 
@@ -94,21 +102,24 @@ The class for IPv6 address prefix representation.
 ### Import
 
 ```from jsktoolbox.netaddresstool.ipv6 import Prefix6
+
 ```
 
 ### Constructor
 
 ```Prefix6(addr: Union[str, int])
+
 ```
 
 The addr argument takes values in several formats:
 
-- **125** -- *as an integer in range at 0 to 128*
-- **"127"** -- *as a string in range at "0" to "128"*
+- **125** -- _as an integer in range at 0 to 128_
+- **"127"** -- _as a string in range at "0" to "128"_
 
 ### Public properties
 
 ```.prefix: str
+
 ```
 
 Returns the prefix as a string objects.
@@ -116,12 +127,13 @@ Returns the prefix as a string objects.
 ### Public setters
 
 ```.prefix: Union[int, str]
+
 ```
 
 Takes values as integer or string:
 
-- **125** -- *as an integer in range at 0 to 128*
-- **"127"** -- *as a string in range at "0" to "128"*
+- **125** -- _as an integer in range at 0 to 128_
+- **"127"** -- _as a string in range at "0" to "128"_
 
 ### Functional properties
 
@@ -137,11 +149,13 @@ The class for IPv6 network address representation.
 ### Import
 
 ```from jsktoolbox.netaddresstool.ipv6 import Network6
+
 ```
 
 ### Constructor
 
 ```Network6(addr: Union[str, List])
+
 ```
 
 The addr argument takes the value as a string written in the form of the network
@@ -151,36 +165,53 @@ indicated by the prefix) or in the form of a two-element list: `[ipv6 address, p
 ### Public properties
 
 ```.address: Address6
+
 ```
 
 Returns the address passed when creating the object.
 
 ```.count: int
+
 ```
 
 Returns the number of host addresses in the network range.
 
-```.hosts: List[Address6]
+```.hosts(limit: Optional[int] = DEFAULT_IPV6_HOST_LIMIT): List[Address6]  _(deprecated)_
+
 ```
 
-Returns a list of host addresses in the network range.
+Returns a list of host addresses in the network range while enforcing the safety limit. Use `iter_hosts()` for lazy iteration.
+
+```.iter_hosts(limit: Optional[int] = DEFAULT_IPV6_HOST_LIMIT) -> Iterator[Address6]
+
+```
+
+Returns a generator that yields host addresses lazily. The limit prevents accidental allocation of massive host lists; pass `None` to disable the guard intentionally.
+
+> Tip: `DEFAULT_IPV6_HOST_LIMIT` and `DEFAULT_IPV6_SUBNET_LIMIT` are exported by
+> `jsktoolbox.netaddresstool`. Override them before invoking deprecated helpers
+> if your application requires different thresholds.
 
 ```.network: Address6
+
 ```
 
 Returns the network address.
 
 ```.prefix: Prefix6
+
 ```
 
 Returns the network mask.
 
 ```.max: Address6
+
 ```
 
 Returns the last host address in the network range.
 
 ```.min: Address6
+
 ```
 
 Returns the first host address in the network range.
@@ -190,7 +221,7 @@ Returns the first host address in the network range.
 1. `str(Network6("FF::1/30"))` will return the network address: `"ff::1/30"`
 1. `str(Network6("FF::1/30").address)` will return the ipv6 address: `"ff::1"`
 1. `str(Network6("FF::1/125").count)` will return the number of hosts in the network range: `"8"`
-1. `str(Network6("FF::1/127").hosts)` will return the list of hosts in the network range: `"[Address6('ff::'), Address6('ff::1')]"`
+1. `list(Network6("FF::1/127").iter_hosts())` will return the list of hosts in the network range: `[Address6('ff::'), Address6('ff::1')]`
 1. `str(Network6("FF::1/127").prefix)` will return the network prefix: `"127"`
 1. `str(Network6("FF::1/125").max)` will return the ipv6 last host address: `"ff::7"`
 1. `str(Network6("FF::1/127").min)` will return the ipv4 first host address: `"ff::"`
@@ -219,11 +250,17 @@ The Prefix6 object is the prefix value for the subnets you are looking for.
 ### Public properties
 
 ```
-.subnets: List[Network6]
+.subnets(limit: Optional[int] = DEFAULT_IPV6_SUBNET_LIMIT): List[Network6]  _(deprecated)_
 ```
 
-Returns a list of subnets found in the given network address with the given netmask.
+Returns a list of subnets found in the given network address with the given netmask while enforcing the safety limit. Use `iter_subnets()` for lazy iteration.
+
+```
+.iter_subnets(limit: Optional[int] = DEFAULT_IPV6_SUBNET_LIMIT) -> Iterator[Network6]
+```
+
+Returns a generator that yields subnetworks lazily. The limit prevents accidental allocation of very large subnet lists; pass `None` to disable the guard intentionally.
 
 ### Functional properties
 
-1. `SubNetwork6(Network6('2000::123/125'), Prefix6(127)).subnets` will return the list of subnets: `[Network6(2000::120/127), Network6(2000::122/127), Network6(2000::124/127), Network6(2000::126/127)]`
+1. `list(SubNetwork6(Network6('2000::123/125'), Prefix6(127)).iter_subnets())` will return the list of subnets: `[Network6(2000::120/127), Network6(2000::122/127), Network6(2000::124/127), Network6(2000::126/127)]`

@@ -64,7 +64,7 @@ class TestWord16(unittest.TestCase):
 
     def test_08_set_invalid_type_string(self) -> None:
         """Test nr 8."""
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             self.o.value = "test"
 
     def test_09_set_invalid_type_binary(self) -> None:
@@ -116,6 +116,40 @@ class TestWord16(unittest.TestCase):
         self.assertTrue(Word16(7) >= Word16(7))
         self.assertTrue(Word16(10) >= Word16(7))
         self.assertFalse(Word16(19) >= Word16(193))
+
+    def test_18_set_hexadecimal_without_prefix(self) -> None:
+        """Test nr 18."""
+        try:
+            self.o.value = "db8"
+        except Exception as ex:
+            self.fail(f"Unexpected exception was thrown: {ex}")
+        self.assertEqual(self.o.value, int("db8", 16))
+
+    def test_19_set_hexadecimal_mixed_case(self) -> None:
+        """Test nr 19."""
+        try:
+            self.o.value = "AbCd"
+        except Exception as ex:
+            self.fail(f"Unexpected exception was thrown: {ex}")
+        self.assertEqual(self.o.value, int("abcd", 16))
+
+    def test_20_set_value_with_whitespace(self) -> None:
+        """Test nr 20."""
+        try:
+            self.o.value = "  00ff  "
+        except Exception as ex:
+            self.fail(f"Unexpected exception was thrown: {ex}")
+        self.assertEqual(self.o.value, 255)
+
+    def test_21_empty_string_raise_value_error(self) -> None:
+        """Test nr 21."""
+        with self.assertRaises(ValueError):
+            self.o.value = ""
+
+    def test_22_invalid_hexadecimal_raise_value_error(self) -> None:
+        """Test nr 22."""
+        with self.assertRaises(ValueError):
+            self.o.value = "0xgg"
 
 
 # #[EOF]#######################################################################
