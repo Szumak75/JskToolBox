@@ -8,6 +8,7 @@ Purpose:
 """
 
 import unittest
+import random
 
 from queue import SimpleQueue
 from typing import List
@@ -207,6 +208,68 @@ class TestPathFinderAlg(unittest.TestCase):
         self.assertEqual(alg.get_final[2].pos_x, 30)
         self.assertEqual(alg.get_final[3].pos_x, 40)
         self.assertEqual(alg.get_final[4].pos_x, 50)
+
+
+class TestPathFinderAlgUnreachable(unittest.TestCase):
+    """Path finder algorithms should skip unreachable targets."""
+
+    def setUp(self) -> None:
+        self.start = StarsSystem()
+        self.start.name = "Origin"
+        self.start.star_pos = [0.0, 0.0, 0.0]
+        self.points_data = [
+            (12.5, -4.2, 6.8),
+            (-8.3, 15.7, -3.6),
+            (5.1, 9.4, 11.2),
+            (-14.9, -7.5, 2.3),
+            (3.7, -12.8, -9.0),
+            (120.0, 85.0, -40.0),  # unreachable with jump_range=40
+        ]
+        self.jump_range = 40
+
+    def _build_points(self) -> List[StarsSystem]:
+        points: List[StarsSystem] = []
+        for coords in self.points_data:
+            system = StarsSystem()
+            system.name = f"Star_{coords[0]:.1f}"
+            system.star_pos = list(coords)
+            points.append(system)
+        return points
+
+    def _run_algorithm(self, alg_cls) -> float:
+        random.seed(42)
+        points = self._build_points()
+        euclid = Euclid(queue=SimpleQueue(), r_data=RscanData())
+        euclid.benchmark()
+        alg = alg_cls(
+            log_queue=SimpleQueue(),
+            start=self.start,
+            systems=points,
+            jump_range=self.jump_range,
+            euclid_alg=euclid,
+            plugin_name="test",
+        )
+        alg.run()
+        self.assertEqual(len(alg.get_final), 5)
+        return alg.final_distance
+
+    def test_algorithms_skip_unreachable(self) -> None:
+        algorithms = [
+            AlgGeneric,
+            AlgGenetic,
+            AlgGenetic2,
+            AlgSimulatedAnnealing,
+            AlgAStar,
+            AlgTsp,
+        ]
+        distances = {
+            alg_cls.__name__: self._run_algorithm(alg_cls) for alg_cls in algorithms
+        }
+        self.assertLessEqual(
+            max(distances.values()) - min(distances.values()),
+            10.0,
+            msg=f"Inconsistent route lengths: {distances}",
+        )
 
 
 # #[EOF]#######################################################################
