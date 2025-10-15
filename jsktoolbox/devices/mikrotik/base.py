@@ -81,11 +81,12 @@ class BRouterOS(BDev, BElement):
                 if self.debug and self.logs is not None:
                     self.logs.message_debug = f'duplicate key found: "{key}"'
                     continue
+            queue = parent.logs.logs_queue if parent.logs is not None else None
             obj = Element(
                 key=key,
                 parent=parent,
                 connector=parent._ch,
-                qlog=parent.logs.logs_queue if parent.logs is not None else None,
+                qlog=queue,
                 debug=parent.debug,
                 verbose=parent.verbose,
             )
@@ -94,7 +95,10 @@ class BRouterOS(BDev, BElement):
                 obj._add_elements(obj, elements_dict[key])
 
     def dump(self) -> None:
-        """Dump all dataset."""
+        """Dump all dataset.
+
+        For developer debug purpose only.
+        """
         print(self.root)
         self.load(self.root)
         if self.attrib:
@@ -105,7 +109,11 @@ class BRouterOS(BDev, BElement):
         for item in self.elements.values():
             item.dump()
 
-    def element(self, root: str, auto_load: bool = False) -> Optional["Element"]:
+    def element(
+        self,
+        root: str,
+        auto_load: bool = False,
+    ) -> Optional["Element"]:
         """Returns the Element object for corresponding path."""
         # check if first and last char in path is '/'
         if root:
@@ -119,7 +127,10 @@ class BRouterOS(BDev, BElement):
                 if auto_load:
                     element.load(root)
                 return element  # type: ignore
-            element2: Element = element.element(root, auto_load)  # type: ignore
+            element2: Element = element.element(  # type: ignore
+                root,
+                auto_load,
+            )
             if element2 is not None:
                 return element2  # type: ignore
         return None
@@ -208,7 +219,10 @@ class Element(BRouterOS):
         )
         self.root = f"{key}/"
 
-    def search(self, search_dict: Dict) -> Optional[Union[List[str], Dict[str, Any]]]:
+    def search(
+        self,
+        search_dict: Dict,
+    ) -> Optional[Union[List[str], Dict[str, Any]]]:
         """Returns optional Dict or List[Dict] with found results."""
         # search_dict = {
         # key1: value1,

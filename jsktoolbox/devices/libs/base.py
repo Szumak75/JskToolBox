@@ -3,11 +3,12 @@
 Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2023-12-04
 
-Purpose: Provide foundational mixins for device abstractions, including shared flags and connector
-plumbing.
+Purpose: Provide foundational mixins for device abstractions, including shared
+flags and connector plumbing.
 
-These helpers keep higher-level device classes lightweight by centralising parent management,
-logging integration, and RouterOS command prefix composition.
+These helpers keep higher-level device classes lightweight by centralising
+parent management, logging integration, and RouterOS command prefix
+composition.
 """
 
 from typing import Optional, TypeVar
@@ -37,7 +38,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
 
 class BDebug(BData):
-    """Base class that exposes debug and verbose flags for device components."""
+    """Expose debug and verbose flags for device components."""
 
     @property
     def debug(self) -> bool:
@@ -105,7 +106,7 @@ class BDebug(BData):
 
 
 class BDev(BDebug):
-    """Base device class that wires connectors, logging, and parent references."""
+    """Coordinate connectors, logging, and parent relationships for devices."""
 
     @property
     def _ch(self) -> Optional[IConnector]:
@@ -120,7 +121,10 @@ class BDev(BDebug):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        return self._get_data(key=_Keys.CH, set_default_type=Optional[IConnector])
+        return self._get_data(
+            key=_Keys.CH,
+            set_default_type=Optional[IConnector],
+        )
 
     @_ch.setter
     def _ch(self, value: IConnector) -> None:
@@ -135,7 +139,11 @@ class BDev(BDebug):
         ### Raises:
         * None: Setter does not perform validation beyond typing.
         """
-        self._set_data(key=_Keys.CH, value=value, set_default_type=Optional[IConnector])
+        self._set_data(
+            key=_Keys.CH,
+            value=value,
+            set_default_type=Optional[IConnector],
+        )
 
     @property
     def logs(self) -> Optional[LoggerClient]:
@@ -150,7 +158,10 @@ class BDev(BDebug):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        return self._get_data(key=_Keys.LC, set_default_type=Optional[LoggerClient])
+        return self._get_data(
+            key=_Keys.LC,
+            set_default_type=Optional[LoggerClient],
+        )
 
     @logs.setter
     def logs(self, value: LoggerClient) -> None:
@@ -166,14 +177,17 @@ class BDev(BDebug):
         * None: Setter does not perform validation beyond typing.
         """
         self._set_data(
-            key=_Keys.LC, value=value, set_default_type=Optional[LoggerClient]
+            key=_Keys.LC,
+            value=value,
+            set_default_type=Optional[LoggerClient],
         )
 
     @property
     def root(self) -> str:
         """Return the accumulated RouterOS command root for the device.
 
-        The property aggregates the root path from all parents in the hierarchy.
+        The property aggregates the root path from all parents in the device
+        hierarchy.
 
         ### Arguments:
         * None: No public arguments.
@@ -216,13 +230,15 @@ class BDev(BDebug):
         * None: No public arguments.
 
         ### Returns:
-        Optional[TDev] - Parent device or None for top-level elements.
+        Optional[TDev] - Parent device or `None` for top-level elements.
 
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
         return self._get_data(
-            key=_Keys.PARENT, set_default_type=Optional[BDev], default_value=None
+            key=_Keys.PARENT,
+            set_default_type=Optional[BDev],
+            default_value=None,
         )
 
     @parent.setter
@@ -238,6 +254,11 @@ class BDev(BDebug):
         ### Raises:
         * TypeError: Raised when the provided value is not a BDev instance.
         """
-        self._set_data(key=_Keys.PARENT, set_default_type=Optional[BDev], value=value)
+        self._set_data(
+            key=_Keys.PARENT,
+            set_default_type=Optional[BDev],
+            value=value,
+        )
+
 
 # #[EOF]#######################################################################

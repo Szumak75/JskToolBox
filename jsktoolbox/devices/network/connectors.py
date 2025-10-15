@@ -16,7 +16,7 @@ import select
 import hashlib
 
 from abc import ABC, abstractmethod
-from typing import List, Union, Optional, Tuple
+from typing import List, Union, Optional, Tuple, TYPE_CHECKING, Any
 from inspect import currentframe
 
 from ...basetool.data import BData
@@ -25,6 +25,11 @@ from ...netaddresstool.ipv4 import Address
 from ...netaddresstool.ipv6 import Address6
 from ...attribtool import ReadOnlyClass
 from ..libs.converters import B64Converter
+
+if TYPE_CHECKING:
+    from _hashlib import HASH as HashDigest
+else:
+    HashDigest = Any
 
 
 class IConnector(ABC):
@@ -136,15 +141,25 @@ class API(IConnector, BData):
         verbose: bool = False,
     ) -> None:
         """Constructor."""
-        self._set_data(key=_Keys.OPTIONS, set_default_type=str, value="+cet1024w")
-        self._set_data(key=_Keys.TIMEOUT, set_default_type=float, value=float(timeout))
+        self._set_data(
+            key=_Keys.OPTIONS,
+            set_default_type=str,
+            value="+cet1024w",
+        )
+        self._set_data(
+            key=_Keys.TIMEOUT,
+            set_default_type=float,
+            value=float(timeout),
+        )
         self._set_data(key=_Keys.ERRORS, set_default_type=List, value=[])
         self._set_data(key=_Keys.STDIN, set_default_type=List, value=[])
         self._set_data(key=_Keys.STDERR, set_default_type=List, value=[])
         self._set_data(key=_Keys.STDOUT, set_default_type=List, value=[])
         self._set_data(key=_Keys.SSL, set_default_type=bool, value=use_ssl)
         self._set_data(
-            key=_Keys.SOCKET, set_default_type=Optional[socket.socket], value=None
+            key=_Keys.SOCKET,
+            set_default_type=Optional[socket.socket],
+            value=None,
         )
         self.port = port
         if ip_address:
@@ -211,7 +226,8 @@ class API(IConnector, BData):
             elif line.find("=b'") > -1:
                 attr_flag = True
                 cmd, attr = line.split("=", 1)
-                attr = B64Converter.base64_to_string(bytes(attr.strip("b'"), "ascii"))
+                encoded = bytes(attr.strip("b'"), "ascii")
+                attr = B64Converter.base64_to_string(encoded)
                 com_list.append(f"={cmd}={attr}")
             elif line.find("=") > -1 or line.find("detail") > -1 or attr_flag:
                 # i have an attribute
@@ -251,7 +267,7 @@ class API(IConnector, BData):
                 if idx == -1:
                     attrs[word] = ""
                 else:
-                    attrs[word[:idx]] = word[idx + 1 :]
+                    attrs[word[:idx]] = word[slice(idx + 1, None)]
             ret.append((reply, attrs))
             if reply == "!done":
                 return ret
@@ -289,29 +305,32 @@ class API(IConnector, BData):
         return ret
 
     def __write_len(self, value: int) -> None:
+        def _write(part: int) -> None:
+            self.__write_byte(part.to_bytes(1, sys.byteorder))
+
         if value < 0x80:
-            self.__write_byte((value).to_bytes(1, sys.byteorder))
+            _write(value)
         elif value < 0x4000:
             value |= 0x8000
-            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
+            _write((value >> 8) & 0xFF)
+            _write(value & 0xFF)
         elif value < 0x200000:
             value |= 0xC00000
-            self.__write_byte(((value >> 16) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
+            _write((value >> 16) & 0xFF)
+            _write((value >> 8) & 0xFF)
+            _write(value & 0xFF)
         elif value < 0x10000000:
             value |= 0xE0000000
-            self.__write_byte(((value >> 24) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte(((value >> 16) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
+            _write((value >> 24) & 0xFF)
+            _write((value >> 16) & 0xFF)
+            _write((value >> 8) & 0xFF)
+            _write(value & 0xFF)
         else:
-            self.__write_byte((0xF0).to_bytes(1, sys.byteorder))
-            self.__write_byte(((value >> 24) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte(((value >> 16) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte(((value >> 8) & 0xFF).to_bytes(1, sys.byteorder))
-            self.__write_byte((value & 0xFF).to_bytes(1, sys.byteorder))
+            _write(0xF0)
+            _write((value >> 24) & 0xFF)
+            _write((value >> 16) & 0xFF)
+            _write((value >> 8) & 0xFF)
+            _write(value & 0xFF)
 
     def __read_len(self) -> int:
         char: int = ord(self.__read_str(1))
@@ -428,9 +447,9 @@ class API(IConnector, BData):
             context.verify_mode = ssl.CERT_NONE
             self.__socket = context.wrap_socket(skt)
             # self.__socket = ssl.wrap_socket(
-            # skt,
-            # ssl_version=ssl.PROTOCOL_TLSv1_2,
-            # ciphers="ECDHE-RSA-AES256-GCM-SHA384",
+            #     skt,
+            #     ssl_version=ssl.PROTOCOL_TLSv1_2,
+            #     ciphers="ECDHE-RSA-AES256-GCM-SHA384",
             # )
         else:
             self.__socket = skt
@@ -447,6 +466,10 @@ class API(IConnector, BData):
             self.__errors.append(f"socket connection error: {ex}")
             return False
         return True
+
+    def __build_response(self, md: HashDigest) -> str:
+        """Return API login response digest."""
+        return binascii.hexlify(md.digest()).decode(sys.stdout.encoding)
 
     def __connect(self) -> bool:
         """connection method."""
@@ -468,16 +491,18 @@ class API(IConnector, BData):
             elif "=ret" in attrs.keys():
                 md: hashlib._Hash = hashlib.md5()
                 md.update(b"\x00")
-                md.update(self._get_data(key=_Keys.PASS).encode(sys.stdout.encoding))  # type: ignore
                 md.update(
-                    binascii.unhexlify((attrs["=ret"]).encode(sys.stdout.encoding))
+                    self._get_data(key=_Keys.PASS).encode(  # type: ignore
+                        sys.stdout.encoding
+                    )
                 )
+                challenge = (attrs["=ret"]).encode(sys.stdout.encoding)
+                md.update(binascii.unhexlify(challenge))
                 for repl2, attrs2 in self.__talk(
                     [
                         "/login",
                         f"=name={self._get_data(key=_Keys.USER)}",
-                        "=response=00"
-                        + binascii.hexlify(md.digest()).decode(sys.stdout.encoding),
+                        "=response=00" + self.__build_response(md),
                     ]
                 ):
                     if repl2 == "!trap":
