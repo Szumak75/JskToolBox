@@ -23,7 +23,7 @@ Wyklucz katalogi wirtualnego środowiska, pamięć podręczną i inne pliki pomo
 
 ## Instrukcje dotyczące zachowania
 
-Sekcje poniżej opisują preferowane ustawienia dla agenta Gemini.
+Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Codex i innych.
 
 ### Język i zarządzanie projektem
 
@@ -52,6 +52,7 @@ Sekcje poniżej opisują preferowane ustawienia dla agenta Gemini.
 ### Ogólne zalecenia
 
 - Odpowiadaj w języku polskim.
+- Plik konfiguracyjny AGENTS.md uzupełniaj w języku polskim.
 - Komentarze i dokumentację w repozytorium zapisuj po angielsku.
 - Zachowuj zwięzłą, techniczną formę odpowiedzi zgodną z konwencjami projektu.
 - Przy zmianach obejmujących wiele plików przedstaw plan i poproś o akceptację.
