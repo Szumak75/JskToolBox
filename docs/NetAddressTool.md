@@ -27,7 +27,7 @@ from jsktoolbox.netaddresstool import (
 **Comprehensive IPv4 Address Manipulation:**
 This submodule provides classes for representing and manipulating IPv4 addresses, network masks, network ranges, and subnet calculations. It supports multiple input formats including strings, integers, and lists, with automatic validation and conversion between representations.
 
-[Detailed NetAddressTool.IPv4 Documentation](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md)
+[Detailed NetAddressTool.IPv4 Documentation](https://github.com/Szumak75/JskToolBox/blob/1.2.0/docs/NetAddressTool4.md)
 
 ### Global Configuration for IPv4
 
@@ -61,7 +61,7 @@ Both constants define the maximum number of hosts or subnetworks materialized by
 **Modern IPv6 Address Support:**
 This submodule mirrors the IPv4 functionality for IPv6 addresses, using 128-bit addressing with prefix notation. It handles expanded and compressed IPv6 formats automatically, providing the same validation and iteration capabilities as its IPv4 counterpart.
 
-[Detailed NetAddressTool.IPv6 Documentation](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md)
+[Detailed NetAddressTool.IPv6 Documentation](https://github.com/Szumak75/JskToolBox/blob/1.2.0/docs/NetAddressTool6.md)
 
 ### Global Configuration for IPv6
 
