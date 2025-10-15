@@ -365,16 +365,19 @@ class AlgAStar(IAlg, BLogClient):
         self.__points = systems
         self.__final = []
 
-    def __get_neighbors(self, point: StarsSystem) -> List[StarsSystem]:
-        """Zwraca sąsiadów, którzy są w zasięgu max_range."""
+    def __get_neighbors(
+        self,
+        point: StarsSystem,
+        candidates: List[StarsSystem],
+    ) -> List[StarsSystem]:
+        """Return points reachable from `point` within the jump range."""
         neighbors: List[StarsSystem] = []
-        for p in self.__points:
+        for candidate in candidates:
             if (
-                p not in self.__final
-                and self.__math.distance(point.star_pos, p.star_pos)
+                self.__math.distance(point.star_pos, candidate.star_pos)
                 <= self.__jump_range
             ):
-                neighbors.append(p)
+                neighbors.append(candidate)
         return neighbors
 
     def __reconstruct_path(
@@ -399,42 +402,46 @@ class AlgAStar(IAlg, BLogClient):
             self.logger.debug = f"{p_name}->{c_name}.{m_name}{message}"
 
     def run(self) -> None:
-        """Implementacja algorytmu A*."""
-        open_set: List[StarsSystem] = [self.__start_point]
-        came_from: Dict = {}
-        g_score: Dict[StarsSystem, float] = {self.__start_point: 0.0}
-        f_score: Dict[StarsSystem, float] = {
-            self.__start_point: self.__math.distance(
-                self.__start_point.star_pos, self.__points[0].star_pos
-            )
-        }
-        # self.debug(currentframe(), f"{g_score}")
-        # self.debug(currentframe(), f"{f_score}")
-
-        while open_set:
-            current: StarsSystem = min(
-                open_set, key=lambda point: f_score.get(point, float("inf"))
-            )
-            # self.debug(currentframe(), f"{current}")
-            if current in self.__points:
-                self.__final = self.__reconstruct_path(came_from, current)
-
-            open_set.remove(current)
-            for neighbor in self.__get_neighbors(current):
-                tentative_g_score: float = g_score[current] + self.__math.distance(
-                    current.star_pos, neighbor.star_pos
-                )
-
-                if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
-                    came_from[neighbor] = current
-                    g_score[neighbor] = tentative_g_score
-                    f_score[neighbor] = g_score[neighbor] + self.__math.distance(
-                        neighbor.star_pos, self.__points[0].star_pos
-                    )
-                    if neighbor not in open_set:
-                        open_set.append(neighbor)
-
+        """Greedy path finder honoring jump range constraints."""
+        start_t: float = time.time()
+        remaining: List[StarsSystem] = [p for p in self.__points]
         self.__final = []
+
+        current: StarsSystem = self.__start_point
+
+        while remaining:
+            neighbors = self.__get_neighbors(current, remaining)
+            if not neighbors:
+                # brak dalszych punktów w zasięgu – przerywamy poszukiwanie
+                self.debug(currentframe(), "No reachable neighbors found")
+                break
+            next_point = min(
+                neighbors,
+                key=lambda point: self.__math.distance(
+                    current.star_pos, point.star_pos
+                ),
+            )
+            self.__final.append(next_point)
+            remaining.remove(next_point)
+            current = next_point
+
+        if self.__final:
+            dist = self.__math.distance(
+                self.__start_point.star_pos, self.__final[0].star_pos
+            )
+            self.__final[0].data[EdsmKeys.DISTANCE] = dist
+            for idx in range(len(self.__final) - 1):
+                dist = self.__math.distance(
+                    self.__final[idx].star_pos,
+                    self.__final[idx + 1].star_pos,
+                )
+                self.__final[idx + 1].data[EdsmKeys.DISTANCE] = dist
+
+        end_t: float = time.time()
+        self.debug(
+            currentframe(),
+            f"Path constructed in {end_t - start_t:.4f}s, visited {len(self.__final)} nodes",
+        )
 
     @property
     def final_distance(self) -> float:
