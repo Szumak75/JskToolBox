@@ -10,11 +10,13 @@ while supporting optional formatters and buffering behaviour.
 """
 
 import os
+import ssl
 import sys
 import syslog
 
 from inspect import currentframe
 from typing import Optional, Union
+from types import ModuleType
 
 from .keys import LogKeys, SysLogKeys
 
@@ -55,18 +57,12 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """
         if name is not None:
             self.name = name
-        self._data[LogKeys.BUFFERED] = buffered
-        self._data[LogKeys.FORMATTER] = None
-        if formatter is not None:
-            if isinstance(formatter, BLogFormatter):
-                self._data[LogKeys.FORMATTER] = formatter
-            else:
-                raise Raise.error(
-                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+        self._set_data(key=LogKeys.BUFFERED, value=buffered, set_default_type=bool)
+        self._set_data(
+            key=LogKeys.FORMATTER,
+            value=formatter,
+            set_default_type=Optional[BLogFormatter],
+        )
 
     def send(self, message: str) -> None:
         """Write the message to stdout honoring buffering/formatting rules.
@@ -77,12 +73,13 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Output is written to stdout.
         """
-        if self._data[LogKeys.FORMATTER]:
-            message = self._data[LogKeys.FORMATTER].format(message, self.name)
+        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        if formatter:
+            message = formatter.format(message, self.name)
         sys.stdout.write(f"{message}")
         if not f"{message}".endswith("\n"):
             sys.stdout.write("\n")
-        if not self._data[LogKeys.BUFFERED]:
+        if not self._get_data(key=LogKeys.BUFFERED):
             sys.stdout.flush()
 
 
@@ -110,18 +107,12 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """
         if name is not None:
             self.name = name
-        self._data[LogKeys.BUFFERED] = buffered
-        self._data[LogKeys.FORMATTER] = None
-        if formatter is not None:
-            if isinstance(formatter, BLogFormatter):
-                self._data[LogKeys.FORMATTER] = formatter
-            else:
-                raise Raise.error(
-                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+        self._set_data(key=LogKeys.BUFFERED, value=buffered, set_default_type=bool)
+        self._set_data(
+            key=LogKeys.FORMATTER,
+            value=formatter,
+            set_default_type=Optional[BLogFormatter],
+        )
 
     def send(self, message: str) -> None:
         """Write the message to stderr honoring buffering/formatting rules.
@@ -132,12 +123,13 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Output is written to stderr.
         """
-        if self._data[LogKeys.FORMATTER]:
-            message = self._data[LogKeys.FORMATTER].format(message, self.name)
+        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        if formatter:
+            message = formatter.format(message, self.name)
         sys.stderr.write(f"{message}")
         if not f"{message}".endswith("\n"):
             sys.stderr.write("\n")
-        if not self._data[LogKeys.BUFFERED]:
+        if not self._get_data(key=LogKeys.BUFFERED):
             sys.stderr.flush()
 
 
@@ -165,18 +157,12 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         """
         if name is not None:
             self.name = name
-        self._data[LogKeys.BUFFERED] = buffered
-        self._data[LogKeys.FORMATTER] = None
-        if formatter is not None:
-            if isinstance(formatter, BLogFormatter):
-                self._data[LogKeys.FORMATTER] = formatter
-            else:
-                raise Raise.error(
-                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+        self._set_data(key=LogKeys.BUFFERED, value=buffered, set_default_type=bool)
+        self._set_data(
+            key=LogKeys.FORMATTER,
+            value=formatter,
+            set_default_type=Optional[BLogFormatter],
+        )
 
     def send(self, message: str) -> None:
         """Append the formatted message to the configured log file.
@@ -190,8 +176,9 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         ### Raises:
         * ValueError: Raised when `logfile` is not configured.
         """
-        if self._data[LogKeys.FORMATTER]:
-            message = self._data[LogKeys.FORMATTER].format(message, self.name)
+        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        if formatter:
+            message = formatter.format(message, self.name)
             if self.logfile is None:
                 raise Raise.error(
                     f"The {self._c_name} is not configured correctly.",
@@ -212,9 +199,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         ### Returns:
         Optional[str] - Directory path or None when unset.
         """
-        if LogKeys.DIR not in self._data:
-            self._data[LogKeys.DIR] = None
-        return self._data[LogKeys.DIR]
+        return self._get_data(key=LogKeys.DIR, default_value=None)
 
     @logdir.setter
     def logdir(self, dirname: str) -> None:
@@ -232,7 +217,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         if not pc_ld.exists:
             pc_ld.create()
         if pc_ld.exists and pc_ld.is_dir:
-            self._data[LogKeys.DIR] = pc_ld.path
+            self._set_data(key=LogKeys.DIR, value=pc_ld.path)
 
     @property
     def logfile(self) -> Optional[str]:
@@ -241,9 +226,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         ### Returns:
         Optional[str] - File name or None when unset.
         """
-        if LogKeys.FILE not in self._data:
-            self._data[LogKeys.FILE] = None
-        return self._data[LogKeys.FILE]
+        return self._get_data(key=LogKeys.FILE, default_value=None)
 
     @logfile.setter
     def logfile(self, filename: str) -> None:
@@ -283,7 +266,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
                     currentframe(),
                 )
         self.logdir = pc_ld.dirname if pc_ld.dirname else ""
-        self._data[LogKeys.FILE] = pc_ld.filename
+        self._set_data(key=LogKeys.FILE, value=pc_ld.filename)
 
 
 class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
@@ -310,28 +293,29 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """
         if name is not None:
             self.name = name
-        self._data[LogKeys.BUFFERED] = buffered
-        self._data[LogKeys.FORMATTER] = None
-        self._data[LogKeys.LEVEL] = SysLogKeys.level.INFO
-        self._data[LogKeys.FACILITY] = SysLogKeys.facility.USER
-        self._data[LogKeys.SYSLOG] = None
-        if formatter is not None:
-            if isinstance(formatter, BLogFormatter):
-                self._data[LogKeys.FORMATTER] = formatter
-            else:
-                raise Raise.error(
-                    f"Expected LogFormatter type, received: '{type(formatter)}'.",
-                    TypeError,
-                    self._c_name,
-                    currentframe(),
-                )
+        self._set_data(key=LogKeys.BUFFERED, value=buffered, set_default_type=bool)
+        self._set_data(
+            key=LogKeys.FORMATTER,
+            value=formatter,
+            set_default_type=Optional[BLogFormatter],
+        )
+        self._set_data(
+            key=LogKeys.LEVEL, value=SysLogKeys.level.INFO, set_default_type=int
+        )
+        self._set_data(
+            key=LogKeys.FACILITY, value=SysLogKeys.facility.USER, set_default_type=int
+        )
+        self._set_data(
+            key=LogKeys.SYSLOG, value=None, set_default_type=Optional[ModuleType]
+        )
 
     def __del__(self) -> None:
         try:
-            self._data[LogKeys.SYSLOG].closelog()
+            s_slog: syslog = self._get_data(key=LogKeys.SYSLOG)  # type: ignore
+            s_slog.closelog()
         except:
             pass
-        self._data[LogKeys.SYSLOG] = None
+        self._set_data(key=LogKeys.SYSLOG, value=None)
 
     @property
     def facility(self) -> int:
@@ -340,7 +324,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         int - Syslog facility value.
         """
-        return self._data[LogKeys.FACILITY]
+        return self._get_data(key=LogKeys.FACILITY)  # type: ignore
 
     @facility.setter
     def facility(self, value: Union[int, str]) -> None:
@@ -358,7 +342,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """
         if isinstance(value, int):
             if value in tuple(SysLogKeys.facility_keys.values()):
-                self._data[LogKeys.FACILITY] = value
+                self._set_data(key=LogKeys.FACILITY, value=value)
             else:
                 raise Raise.error(
                     f"Syslog facility: '{value}' not found.",
@@ -368,7 +352,9 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
                 )
         if isinstance(value, str):
             if value in SysLogKeys.facility_keys:
-                self._data[LogKeys.FACILITY] = SysLogKeys.facility_keys[value]
+                self._set_data(
+                    key=LogKeys.FACILITY, value=SysLogKeys.facility_keys[value]
+                )
             else:
                 raise Raise.error(
                     f"Syslog facility name not found: '{value}'",
@@ -377,10 +363,11 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
                     currentframe(),
                 )
         try:
-            self._data[LogKeys.SYSLOG].closelog()
+            s_slog: syslog = self._get_data(key=LogKeys.SYSLOG)  # type: ignore
+            s_slog.closelog()
         except:
             pass
-        self._data[LogKeys.SYSLOG] = None
+        self._set_data(key=LogKeys.SYSLOG, value=None)
 
     @property
     def level(self) -> int:
@@ -389,7 +376,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         int - Syslog level value.
         """
-        return self._data[LogKeys.LEVEL]
+        return self._get_data(key=LogKeys.LEVEL)  # type: ignore
 
     @level.setter
     def level(self, value: Union[int, str]) -> None:
@@ -407,7 +394,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """
         if isinstance(value, int):
             if value in tuple(SysLogKeys.level_keys.values()):
-                self._data[LogKeys.LEVEL] = value
+                self._set_data(key=LogKeys.LEVEL, value=value)
             else:
                 raise Raise.error(
                     f"Syslog level: '{value}' not found.",
@@ -417,7 +404,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
                 )
         if isinstance(value, str):
             if value in SysLogKeys.level_keys:
-                self._data[LogKeys.LEVEL] = SysLogKeys.level_keys[value]
+                self._set_data(key=LogKeys.LEVEL, value=SysLogKeys.level_keys[value])
             else:
                 raise Raise.error(
                     f"Syslog level name not found: '{value}'",
@@ -426,10 +413,11 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
                     currentframe(),
                 )
         try:
-            self._data[LogKeys.SYSLOG].closelog()
+            s_slog: syslog = self._get_data(key=LogKeys.SYSLOG)  # type: ignore
+            s_slog.closelog()
         except:
             pass
-        self._data[LogKeys.SYSLOG] = None
+        self._set_data(key=LogKeys.SYSLOG, value=None)
 
     def send(self, message: str) -> None:
         """Emit the message to syslog.
@@ -440,13 +428,14 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Message is forwarded to syslog with configured facility/level.
         """
-        if self._data[LogKeys.FORMATTER]:
-            message = self._data[LogKeys.FORMATTER].format(message, self.name)
-        if self._data[LogKeys.SYSLOG] is None:
-            self._data[LogKeys.SYSLOG] = syslog
-            self._data[LogKeys.SYSLOG].openlog(facility=self._data[LogKeys.FACILITY])
-        self._data[LogKeys.SYSLOG].syslog(
-            priority=self._data[LogKeys.LEVEL], message=message
+        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        if formatter:
+            message = formatter.format(message, self.name)
+        if self._get_data(key=LogKeys.SYSLOG) is None:
+            self._set_data(key=LogKeys.SYSLOG, value=syslog)
+            self._get_data(key=LogKeys.SYSLOG).openlog(facility=self._get_data(key=LogKeys.FACILITY))  # type: ignore
+        self._get_data(key=LogKeys.SYSLOG).syslog(  # type: ignore
+            priority=self._get_data(LogKeys.LEVEL), message=message
         )
 
 
