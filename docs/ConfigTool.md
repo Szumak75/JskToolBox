@@ -1,198 +1,180 @@
-# ConfigTool
+# Config Tool Module
 
-The project contains classes that enable common operations on configuration files.
+**Source:** `jsktoolbox/configtool`
 
-## Public classes
+**High-Level Introduction:**
+The Config Tool package orchestrates reading and writing INI-like configuration files. It splits responsibilities across data models, filesystem helpers, and a high-level facade that converts raw lines into typed Python structures.
 
-1. [Config](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md#config)
+## Getting Started
 
-## Config
+Instantiate the `Config` class with a file path and primary section. Use `set`/`get` to mutate values, then call `save` to persist.
 
-The main project class.
-
-### Import
-
-```
+```python
 from jsktoolbox.configtool.main import Config
+
+config = Config("/tmp/app.ini", "main", auto_create=True)
+config.set("main", "enabled", value=True)
+config.save()
 ```
 
-### Constructor
+---
 
-```
-Config(filename: str, main_section_name: str, auto_create: bool = False)
-```
+## `VariableModel` Class
 
-- filename [str] -- *path to config file*
-- main_section_name [str] -- *name of main configuration section in config file*
-- auto_create [bool] -- *automatic file creation flag, attempts to create the file if it does not exist when the class object is created. Default value: False*
+**Class Introduction:**
+Represents a single configuration variable capturing its name, value, and optional description.
 
-### Public properties
+### `VariableModel.value`
 
-```
-.file_exists -> bool
-```
+**Detailed Description:**
+Property wrapper around the stored payload. Supports strings, numbers, booleans, and lists while enforcing declared types.
 
-Returns True if config file exists.
+**Signature:**
 
-```
-.main_section_name -> Optional[str]
-```
-
-Returns main section name string or None.
-
-### Public methods
-
-```
-.load() -> bool
+```python
+@property
+def value(self) -> Optional[Union[str, int, float, bool, List]]
+@value.setter
+def value(self, value: Optional[Union[str, int, float, bool, List]]) -> None
 ```
 
-Open the configuration file, if it exists, and load its parsed content into the internal data structure.
-The method returns True on success.
+- **Returns:**
+  - `Optional[Union[str, int, float, bool, List]]` - Raw value.
+- **Raises:**
+  - `TypeError`: When assignment violates type constraints inherited from `BData`.
 
-```
-.save() -> bool
-```
+**Usage Example:**
 
-Opens the configuration file, try create it if it does't exist, and saves the content from the internal data structure.
-The method returns True on success.
-
-```
-.get(section: str, varname: Optional[str] = None, desc: bool = False) -> Any
+```python
+var = VariableModel(name="timeout", value=30, desc="seconds")
+var.value = 45
 ```
 
-Gets data from the configuration section.
+---
 
-Arguments:
+## `SectionModel` Class
 
-- section [str] - required section name,
-- varname [str] - optional variable name to return,
-- desc [bool] - flag informing about the intention to obtain a description.
-If the 'desc' flag is set to 'False', the method returns a value of the appropiate type assigned to the variable name.
-If the 'desc' flag is set to 'True', there are two different cases for this method:
-- if the 'varname' is specified, the method will return variable description as string,
-- if the 'varname' defaults to 'None', the method will return description placed in the section, not related to any 'varname', as a list of strings.
+**Class Introduction:**
+Groups variables and comments under a named section, mirroring INI headers.
 
-```
-.set(section: str, varname: Optional[str] = None, value: Optional[Any] = None, desc: Optional[str] = None)
-```
+### `SectionModel.set_variable()`
 
-Sets data to the configuration section.
+**Detailed Description:**
+Adds or updates a variable while reusing existing instances when names match. Raising validation errors for missing identifiers prevents malformed output.
 
-Arguments:
+**Signature:**
 
-- section [str] - required section name,
-- varname [str] - optional variable name to set,
-- value [str|int|float|list] - optional value to set into 'varname'
-- desc [str] - optional description.
-The method has several different variants of operation.
-If 'varname' is defined, 'value' and 'desc' will be assigned to 'varname' depending on which of these arguments is used.
-If 'varname' is set to 'None', then 'desc' will be set as the section description.
-
-Comments:
-
-- setting 'varname' without defining the 'value' and 'desc' removes the variable value and description, if this data was previously assigned in the configuration file,
-- setting 'varname' without defining the 'value' or the 'desc' updates the defined argument,
-- providing a value without specifying 'varname' makes no sense and such an item will not be included in the configuration file.
-
-```
-.has_section(section: str) -> bool
+```python
+def set_variable(self, name: Optional[str] = None,
+                 value: Optional[Any] = None,
+                 desc: Optional[str] = None) -> None
 ```
 
-Returns True if given 'section' exists.
+- **Arguments:**
+  - `name: Optional[str]` - Variable identifier (required when `value` is provided).
+  - `value: Optional[Any]` - Payload to store.
+  - `desc: Optional[str]` - Optional inline comment.
+- **Raises:**
+  - `ValueError`: Missing name alongside a value.
 
-```
-.has_varname(section: str, varname: str) -> bool
-```
+**Usage Example:**
 
-Returns True if given 'varname' exists in 'section'.
-
-### Usage example
-
-Create configuration file from class 'Config':
-
-```
-from jsktoolbox.configtool.main import Config
-file='/tmp/example.ini'
-section='TEST'
-
-obj = Config(file, section)
-
-# main section description
-obj.set(section, desc='This is example configuration file,')
-obj.set(section, desc="showing how to use the 'Config' class.")
-
-# add subsection description
-obj.set('SUBTEST', desc='This is subsection description')
-
-# add a bundle of subsection variables with different types
-obj.set('SUBTEST', varname='test01', value=1)
-obj.set('SUBTEST', varname='test02', value=3.14, desc='PI number')
-obj.set('SUBTEST', varname='test03', value='example string')
-obj.set('SUBTEST', varname='test04', value=False)
-
-# add variable to the main section
-obj.set(section, varname='test01', value=[1, 'a', True], desc='a list value')
-
-# write configuration file
-obj.save()
+```python
+section = SectionModel("network")
+section.set_variable("host", "localhost", desc="default host")
 ```
 
-The structure of the created configuration file:
+---
 
-```
-[TEST]
-# This is example configuration file,
-# showing how to use the 'Config' class.
-test01 = [1, 'a', True] # a list value
-# -----<end of section: 'TEST'>-----
+## `DataProcessor` Class
 
-[SUBTEST]
-# This is subsection description
-test01 = 1
-test02 = 3.14 # PI number
-test03 = "example string"
-test04 = False
-# -----<end of section: 'SUBTEST'>-----
+**Class Introduction:**
+Maintains the collection of sections and variables, enabling structured access and formatted output.
 
-```
+### `DataProcessor.dump`
 
-Loading a previously created file:
+**Detailed Description:**
+Serialises the configuration into an INI-style string. Requires a designated main section to anchor ordering.
 
-```
-from jsktoolbox.configtool.main import Config
-file='/tmp/example.ini'
-section='TEST'
+**Signature:**
 
-obj = Config(file, section)
-
-# loading file
-if obj.file_exists and obj.load():
-    # getting 'SUBTEST' variables
-    var01 = obj.get('SUBTEST', varname='test01')
-    var02 = obj.get('SUBTEST', varname='test02')
-    var03 = obj.get('SUBTEST', varname='test03')
-    var04 = obj.get('SUBTEST', varname='test04')
-
-    # getting main section variable
-    var05 = obj.get(section, varname='test01')
-
-    print(f"var01: {var01}, type: {type(var01)}")
-    print(f"var02: {var02}, type: {type(var02)}")
-    print(f"var03: {var03}, type: {type(var03)}")
-    print(f"var04: {var04}, type: {type(var04)}")
-    print(f"var05: {var05}, type: {type(var05)}")
-
-    # getting non existing variable
-    print(f"If the variable does't exist, method returns: {obj.get('SUBTEST', varname='test05')}")
+```python
+@property
+def dump(self) -> str
 ```
 
-Output:
+- **Returns:**
+  - `str` - Final configuration representation.
+- **Raises:**
+  - `KeyError`: Main section not established before dumping.
 
+**Usage Example:**
+
+```python
+processor = DataProcessor()
+processor.main_section = "general"
+processor.set("general", "enabled", value=True)
+print(processor.dump)
 ```
-var01: 1, type: <class 'int'>
-var02: 3.14, type: <class 'float'>
-var03: example string, type: <class 'str'>
-var04: False, type: <class 'bool'>
-var05: [1, 'a', True], type: <class 'list'>
-If the variable does't exist, method returns: None
+
+---
+
+## `FileProcessor` Class
+
+**Class Introduction:**
+Encapsulates filesystem operations, providing safe creation and IO routines guarded by `PathChecker` validation.
+
+### `FileProcessor.readlines()`
+
+**Detailed Description:**
+Reads file contents into stripped lines while filtering internal end-of-section markers generated by the dumper.
+
+**Signature:**
+
+```python
+def readlines(self) -> List[str]
+```
+
+- **Returns:**
+  - `List[str]` - Sanitised list of lines.
+- **Raises:**
+  - `AttributeError`: Invoked before a path is configured.
+
+**Usage Example:**
+
+```python
+fp = FileProcessor()
+fp.file = "/tmp/app.ini"
+lines = fp.readlines()
+```
+
+---
+
+## `Config` Class
+
+**Class Introduction:**
+High-level façade combining file and data processors to parse, modify, and emit configuration files.
+
+### `Config.load()`
+
+**Detailed Description:**
+Parses the configuration file line by line, populating the underlying `DataProcessor` while converting values to native types.
+
+**Signature:**
+
+```python
+def load(self) -> bool
+```
+
+- **Returns:**
+  - `bool` - True once the file has been processed.
+- **Raises:**
+  - `ValueError`: Encountered malformed configuration line.
+
+**Usage Example:**
+
+```python
+cfg = Config("/tmp/app.ini", "main")
+cfg.load()
+port = cfg.get("main", "port")
 ```

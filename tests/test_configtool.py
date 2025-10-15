@@ -140,5 +140,28 @@ label=
         except Exception as ex:
             self.fail(msg=f"{ex}")
 
+    def test_04_load_invalid_line_raises(self) -> None:
+        """Test nr 04."""
+        bad_file = "/tmp/configtool_invalid.conf"
+        fp = FileProcessor()
+        fp.file = bad_file
+        fp.file_create()
+        fp.write("=value-only")
+        cfg = Config(bad_file, "main")
+        with self.assertRaisesRegex(ValueError, "Unexpected config line format"):
+            cfg.load()
+
+    def test_05_has_section_type_validation(self) -> None:
+        """Test nr 05."""
+        cfg = Config(self.filename, "configtool")
+        with self.assertRaises(TypeError):
+            cfg.has_section(123)  # type: ignore[arg-type]
+
+    def test_06_has_varname_type_validation(self) -> None:
+        """Test nr 06."""
+        cfg = Config(self.filename, "configtool")
+        with self.assertRaises(TypeError):
+            cfg.has_varname("configtool", 3.14)  # type: ignore[arg-type]
+
 
 # #[EOF]#######################################################################

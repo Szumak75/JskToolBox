@@ -82,5 +82,28 @@ value01=10
         except Exception as ex:
             self.fail(msg=f"{ex}")
 
+    def test_05_file_exists_without_path(self) -> None:
+        """Test nr 05."""
+        obj = FileProcessor()
+        with self.assertRaisesRegex(AttributeError, "file not set"):
+            _ = obj.file_exists
+
+    def test_06_readlines_strips_markers(self) -> None:
+        """Test nr 06."""
+        file: str = "/tmp/test/config.06.ini"
+        obj = FileProcessor()
+        obj.file = file
+        obj.file_create()
+        payload = """first line
+# -----<end of section: 'alpha'>-----
+keep this # <end of section marker inside text>
+"""
+        obj.write(payload)
+        lines = obj.readlines()
+        self.assertEqual(
+            lines,
+            ["first line", "keep this # <end of section marker inside text>"],
+        )
+
 
 # #[EOF]#######################################################################

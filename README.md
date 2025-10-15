@@ -1,63 +1,46 @@
 # JskToolBox
 
-The project contains sets of classes for various operations.
+JskToolBox provides curated sets of Python classes that support system automation, networking,
+configuration handling, and Tkinter-based GUI development. The documentation in `docs/` offers
+module-by-module guides; the sections below highlight the available references.
 
-## AttribTool
+## Core Utilities
 
-The project contains base classes that limit the possibility of adding new attributes without their prior declaration inside classes inheriting from them or their objects.
+- **AttribTool** – base classes that restrict dynamic attribute creation and manage declared fields  
+  [AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md)
+- **BaseTool** – mixins for metadata reporting, data storage, logging, and threading used across the project  
+  [BaseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/BaseTool.md)
+- **RaiseTool** – helpers that standardise exception formatting and error reporting  
+  [RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/RaiseTool.md)
+- **SystemTool** – utilities for interacting with the host operating system  
+  [SystemTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md)
 
-[AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md)
+## Configuration and Data
 
-## ConfigTool
+- **ConfigTool** – parsers and helpers for working with configuration files  
+  [ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md)
+- **DateTool** – date/time conversions, validation, and formatting helpers  
+  [DateTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/DateTool.md)
+- **StringTool** – routines for text manipulation and sanitising  
+  [StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md)
 
-The project contains classes that enable common operations on configuration files.
+## Logging and Networking
 
-[ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md)
+- **LogsTool** – components that assemble the project logging subsystem (queues, formatters, workers)  
+  [LogsTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md)
+- **NetTool** – general-purpose classes for networking tasks  
+  [NetTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetTool.md)
+- **NetAddressTool** – toolkits for IP addressing with dedicated IPv4 and IPv6 guides  
+  [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)  
+  [NetAddressTool IPv4 Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md)  
+  [NetAddressTool IPv6 Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md)
 
-## DateTool
+## Tkinter
 
-The project contains classes for various date/time operations.
+- **TkTool** – Tk mixins, layout helpers, clipboard adapters, and reusable widgets (excluding the unreliable `_TkClip`)  
+  [TkTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md)
 
-[DateTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/DateTool.md)
+## Examples
 
-## LogsTool
-
-The project contains several classes that create a logging subsystem for the designed solutions.
-
-[LogsTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md)
-
-## NetAddressTool
-
-The project contains sets of classes for operations on IPv4 and IPv6 addresses.
-
-[NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)
-
-## NetTool
-
-The project contains sets of classes for network operations.
-
-[NetTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetTool.md)
-
-## RaiseTool
-
-The project contains small class for formatting thrown exception messages.
-
-[RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/RaiseTool.md)
-
-## StringTool
-
-The project contains sets of classes for various operations on string.
-
-[StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md)
-
-## SystemTool
-
-The project contains a set of classes enabling interaction with the operating system.
-
-[SystemTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md)
-
-## TkTool
-
-The project contains sets of classes for tkinter framework.
-
-[TkTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md)
+Examples demonstrating selected modules can be found in  
+[docs/examples](https://github.com/Szumak75/JskToolBox/tree/master/docs/examples).

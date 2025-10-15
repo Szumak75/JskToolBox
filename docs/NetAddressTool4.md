@@ -82,11 +82,11 @@ Returns a list of four Octet objects representing the stored address. The list i
 
 Allows you to configure the network address by accepting input data in one of the selected formats:
 
-- **"192.168.0.1"** -- *as a string*
-- **3232235521** -- *as an integer*
-- **[192, 168, 0, 1]** -- *as a list of integers*
-- **["192", "168", "0", "1"]** -- *as a list of strings*
-- **[Octet(192), Octet(168), Octet(0), Octet(1)]** -- *as a list of Octet objects.*
+- **"192.168.0.1"** -- _as a string_
+- **3232235521** -- _as an integer_
+- **[192, 168, 0, 1]** -- _as a list of integers_
+- **["192", "168", "0", "1"]** -- _as a list of strings_
+- **[Octet(192), Octet(168), Octet(0), Octet(1)]** -- _as a list of Octet objects._
 
 ### Functional properties
 
@@ -113,11 +113,11 @@ Netmask(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 
 The addr argument takes values in several formats:
 
-- **16** -- *as an integer in range at 0 to 32 (CIDR format)*
-- **"32"** -- *as a string in range at "0" to "32" (CIDR format)*
-- **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
-- **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
-- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
+- **16** -- _as an integer in range at 0 to 32 (CIDR format)_
+- **"32"** -- _as a string in range at "0" to "32" (CIDR format)_
+- **[255, 255, 0, 0]** -- _as a list of integers containing valid octet values for the netmask_
+- **["255", "255", "0", "0"]** -- _as a list of strings containing valid octet values for the netmask_
+- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- _as a list of Octet objects containing valid octet values for the netmask._
 
 ### Public properties
 
@@ -141,9 +141,9 @@ Returns the netmask in CIDR format.
 
 Takes values as list:
 
-- **[255, 255, 0, 0]** -- *as a list of integers containing valid octet values for the netmask*
-- **["255", "255", "0", "0"]** -- *as a list of strings containing valid octet values for the netmask*
-- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- *as a list of Octet objects containing valid octet values for the netmask.*
+- **[255, 255, 0, 0]** -- _as a list of integers containing valid octet values for the netmask_
+- **["255", "255", "0", "0"]** -- _as a list of strings containing valid octet values for the netmask_
+- **[Octet(255), Octet(255), Octet(0), Octet(0)]** -- _as a list of Octet objects containing valid octet values for the netmask._
 
 ```
 .cidr: Union[str, int]
@@ -151,8 +151,8 @@ Takes values as list:
 
 Takes values in CIDR format:
 
-- **16** -- *as an integer in range at 0 to 32*
-- **"32"** -- *as a string in range at "0" to "32"*
+- **16** -- _as an integer in range at 0 to 32_
+- **"32"** -- _as a string in range at "0" to "32"_
 
 ### Functional properties
 
@@ -201,10 +201,20 @@ Returns the broadcast address.
 Returns the number of host addresses in the network range.
 
 ```
-.hosts: List[Address]
+.hosts(limit: Optional[int] = DEFAULT_IPV4_HOST_LIMIT): List[Address]  _(deprecated)_
 ```
 
-Returns a list of host addresses in the network range.
+Returns a list of host addresses in the network range while enforcing the safety limit. Use `iter_hosts()` for lazy iteration.
+
+```
+.iter_hosts(limit: Optional[int] = DEFAULT_IPV4_HOST_LIMIT) -> Iterator[Address]
+```
+
+Returns a generator that yields host addresses lazily. The limit prevents accidental allocation of massive host lists; pass `None` to disable the guard intentionally.
+
+> Tip: the default guard values are exported from `jsktoolbox.netaddresstool`
+> (`DEFAULT_IPV4_HOST_LIMIT`, `DEFAULT_IPV4_SUBNET_LIMIT`). Override them early in
+> your application if you need different thresholds.
 
 ```
 .mask: Netmask
@@ -236,7 +246,7 @@ Returns the network address.
 1. `str(Network("192.168.1.22/30").address)` will return the ipv4 address: `"192.168.1.22"`
 1. `str(Network("192.168.1.22/30").broadcast)` will return the ipv4 broadcast address: `"192.168.1.23"`
 1. `str(Network("192.168.1.22/30").count)` will return the number of hosts in the network range: `"2"`
-1. `str(Network("192.168.1.22/30").hosts)` will return the list of hosts in the network range: `"[Address('192.168.1.21'), Address('192.168.1.22')]"`
+1. `list(Network("192.168.1.22/30").iter_hosts())` will return the list of hosts in the network range: `[Address('192.168.1.21'), Address('192.168.1.22')]`
 1. `str(Network("192.168.1.22/30").mask)` will return the network mask: `"255.255.255.252"`
 1. `str(Network("192.168.1.22/30").max)` will return the ipv4 last host address: `"192.168.1.22"`
 1. `str(Network("192.168.1.22/30").min)` will return the ipv4 first host address: `"192.168.1.21"`
@@ -265,11 +275,17 @@ The Netmask object is the netmask value for the subnets you are looking for.
 ### Public properties
 
 ```
-.subnets: List[Network]
+.subnets(limit: Optional[int] = DEFAULT_IPV4_SUBNET_LIMIT): List[Network]  _(deprecated)_
 ```
 
-Returns a list of subnets found in the given network address with the given netmask.
+Returns a list of subnets found in the given network address with the given netmask while enforcing the safety limit. Use `iter_subnets()` for lazy iteration.
+
+```
+.iter_subnets(limit: Optional[int] = DEFAULT_IPV4_SUBNET_LIMIT) -> Iterator[Network]
+```
+
+Returns a generator that yields subnetworks lazily. The limit prevents accidental allocation of very large subnet lists; pass `None` to disable the guard intentionally.
 
 ### Functional properties
 
-1. `SubNetwork(Network('192.168.1.20/29'), Netmask(30)).subnets` will return the list of subnets: `[Network(192.168.1.16/30), Network(192.168.1.20/30)]`
+1. `list(SubNetwork(Network('192.168.1.20/29'), Netmask(30)).iter_subnets())` will return the list of subnets: `[Network(192.168.1.16/30), Network(192.168.1.20/30)]`

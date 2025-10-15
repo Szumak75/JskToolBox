@@ -1,154 +1,253 @@
-# TkTool
+# Tk Tool Module
 
-The project contains classes useful for tkinter-based projects.
+**Source:** `jsktoolbox/tktool`
 
-## Public classes
+**High-Level Introduction:**  
+`tktool` groups the foundational Tkinter utilities used across JskToolBox. It delivers mixins, layout helpers, clipboard integrations, and reusable widgets that reduce boilerplate in graphical tools. The unreliable `_TkClip` backend is intentionally omitted from this overview; rely on the remaining clipboard adapters exposed through `ClipBoard`.
 
-1. [CreateToolTip](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#createtooltip)
-1. [VerticalScrolledTkFrame](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#verticalscrolledtkframe)
-1. [VerticalScrolledTtkFrame](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md#verticalscrolledttkframe)
+## Getting Started
 
-## CreateToolTip
+Import the classes needed for your UI layer:
 
-Creates a tooltip for a given widget.
-
-### Import
-
-```
-from jsktoolbox.tktool.widgets import CreateToolTip
+```python
+from jsktoolbox.tktool.base import TkBase
+from jsktoolbox.tktool.layout import Pack, Grid, Place
+from jsktoolbox.tktool.tools import ClipBoard
+from jsktoolbox.tktool.widgets import StatusBarTkFrame, CreateToolTip
 ```
 
-### Constructor
+---
 
-```
-CreateToolTip(
-    widget: tk.Misc, 
-    text: Union[str, List[str], Tuple[str], tk.StringVar] = "widget info", 
-    wait_time: int = 500, 
-    wrap_length: int = 0, 
-    **kwargs
-)
-```
+## `base` Module
 
-Arguments:
+**Source:** `jsktoolbox/tktool/base.py`
 
-- **widget** [tk.Misc] - _Parent widget handler_
-- **text** [Union[str, List[str], Tuple[str], tk.StringVar]] - _text displayed in tooltip_
-- **wait_time** [int] - _delay of displaying tooltip [ms]_
-- **wrap_length** [int] - _limit the number of characters on each line to the specified value.
-                The default value of 0 means that lines will only be broken on newlines_
+**Module Introduction:**  
+Provides a lightweight mixin that standardises common Tkinter attributes and prevents accidental dynamic attribute creation on toolkit widgets.
 
-### Example
+### `TkBase` Class
 
-```
-import tkinter as tk
-from jsktoolbox.tktool.widgets import CreateToolTip
+**Class Introduction:**  
+Inherits from `NoDynamicAttributes` and documents the canonical Tk attributes (`master`, `children`, `widgetName`, etc.) expected on toolkit components. Subclassing `TkBase` keeps widget state predictable across the project.
 
-root = tk.Tk()
-root.title("Example")
-root.geometry("400x500")
+**Signature:**
 
-label = tk.Label(root, text="Example text")
-label.pack(side=tk.TOP)
-CreateToolTip(label, text="Example tooltip", fg="red")
-
-root.mainloop()
+```python
+class TkBase(NoDynamicAttributes)
 ```
 
-## VerticalScrolledTkFrame
+- **Attributes:**
+  - `_name`, `_w`: Internal identifiers assigned by Tkinter.
+  - `_tkloaded`, `_windowingsystem_cached`: Cached interpreter metadata.
+  - `child`, `children`, `master`, `tk`, `widgetName`: Standard widget references surfaced for derived classes.
 
-Creates vertical scrolled Frame derived from tk.Frame
+**Usage Example:**
 
-### Import
-
-```
-from jsktoolbox.tktool.widgets import VerticalScrolledTkFrame
-```
-
-## Example
-
-```
-import tkinter as tk
-from jsktoolbox.tktool.widgets import (
-    VerticalScrolledTkFrame,
-    CreateToolTip,
-)
-
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.title("Scrollbar Test")
-    root.geometry("400x500")
-    root.minsize(width=300, height=400)
-
-    frame = VerticalScrolledTkFrame(
-        root, width=300, borderwidth=2, relief=tk.SUNKEN, background="light gray"
-    )
-
-    frame.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.TRUE)  # fill window
-
-    for i in range(30):
-        line = tk.Frame(frame.interior, borderwidth=1, relief=tk.GROOVE)
-
-        line.pack(side=tk.TOP, fill=tk.X, anchor=tk.CENTER, expand=tk.TRUE)
-        label = tk.Label(line, text="This is a label " + str(i))
-        label.pack(side=tk.LEFT, expand=tk.TRUE, fill=tk.X)
-
-        text = tk.Entry(line, textvariable=tk.StringVar(value="text"))
-        sv = tk.StringVar(value=f"text nr {i}")
-        CreateToolTip(text, text=sv)
-        sv.set(f"text nr {i+1}")
-        text.pack(side=tk.RIGHT, expand=tk.TRUE, fill=tk.X)
-
-    root.mainloop()
+```python
+class StatusDisplay(TkBase, tk.Frame):
+    def __init__(self, parent: tk.Misc) -> None:
+        tk.Frame.__init__(self, parent)
+        tk.Label(self, text="Ready").pack()
 ```
 
-## VerticalScrolledTtkFrame
+---
 
-Creates vertical scrolled Frame derived from ttk.Frame
+## `layout` Module
 
-### Import
+**Source:** `jsktoolbox/tktool/layout.py`
 
+**Module Introduction:**  
+Wraps Tkinter geometry manager constants inside read-only containers, making layout code expressive and typo-resistant.
+
+### `Pack` Class
+
+**Class Introduction:**  
+Exposes namespaces for the `anchor`, `side`, and `fill` options used with `pack`.
+
+- **Nested Containers:**
+  - `Anchor`: `Pack.Anchor.N`, `Pack.Anchor.SW`, etc.
+  - `Side`: `Pack.Side.LEFT`, `Pack.Side.TOP`, etc.
+  - `Fill`: `Pack.Fill.BOTH`, `Pack.Fill.X`, etc.
+
+**Usage Example:**
+
+```python
+label.pack(side=Pack.Side.RIGHT, anchor=Pack.Anchor.NE, fill=Pack.Fill.X)
 ```
-from jsktoolbox.tktool.widgets import VerticalScrolledTtkFrame
+
+### `Grid` Class
+
+**Class Introduction:**  
+Provides the `Sticky` enumeration mirroring the sticky parameter supported by the grid geometry manager.
+
+- **Nested Containers:**
+  - `Sticky`: `Grid.Sticky.N`, `Grid.Sticky.EW`, `Grid.Sticky.SE`, and more.
+
+**Usage Example:**
+
+```python
+button.grid(row=0, column=1, sticky=Grid.Sticky.EW)
 ```
 
-### Example
+### `Place` Class
 
+**Class Introduction:**  
+Collects anchor constants for the `place` geometry manager, defining which portion of the widget aligns with supplied coordinates.
+
+- **Nested Containers:**
+  - `Anchor`: `Place.Anchor.CENTER`, `Place.Anchor.NW`, etc.
+
+**Usage Example:**
+
+```python
+tooltip.place(x=10, y=20, anchor=Place.Anchor.NW)
 ```
-import tkinter as tk
-from tkinter import ttk
-from jsktoolbox.tktool.widgets import (
-    VerticalScrolledTtkFrame,
-    CreateToolTip,
-)
 
+---
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.title("Scrollbar Test")
-    root.geometry("400x500")
-    root.minsize(width=300, height=400)
+## `tools` Module
 
-    frame = VerticalScrolledTtkFrame(root, width=300, borderwidth=2, relief=tk.SUNKEN)
+**Source:** `jsktoolbox/tktool/tools.py`
 
-    frame.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.TRUE)  # fill window
+**Module Introduction:**  
+Implements cross-platform clipboard helpers that automatically pick a working backend among X11, Gtk, Qt, Windows, and macOS implementations. The problematic `_TkClip` backend is excluded from documentation and from recommended use.
 
-    for i in range(30):
-        line = ttk.Frame(frame.interior, borderwidth=1, relief=tk.GROOVE)
+### `ClipBoard` Class
 
-        line.pack(side=tk.TOP, fill=tk.X, anchor=tk.CENTER, expand=tk.TRUE)
-        label = ttk.Label(line, text="This is a label " + str(i))
-        label.pack(side=tk.LEFT, expand=tk.TRUE, fill=tk.X)
+**Class Introduction:**  
+Serves as a façade over the available clipboard adapters, exposing unified `copy` and `paste` properties after a backend is selected.
 
-        text = ttk.Entry(line, style="info.TEntry")
-        text.insert(0, f"test {i}")
+### `ClipBoard.__init__()`
 
-        sv = tk.StringVar()
-        sv.set(f"text nr {i}")
-        CreateToolTip(text, text=sv)
-        sv.set(f"text nr {i+1}")
-        text.pack(side=tk.RIGHT, expand=tk.TRUE, fill=tk.X)
+**Detailed Description:**  
+Attempts to instantiate `_XClip`, `_XSel`, `_GtkClip`, `_QtClip`, `_WinClip`, and `_MacClip` (in that order). The first helper that reports availability is cached for subsequent operations. If none succeed, an informational message is printed.
 
-    root.mainloop()
+**Signature:**
+
+```python
+def __init__(self) -> None
 ```
+
+- **Returns:** `None` – Constructor triggers backend detection.
+- **Raises:** None – Failures lead to a disabled clipboard tool.
+
+### `ClipBoard.is_tool`
+
+**Detailed Description:**  
+Indicates whether a functional backend has been registered.
+
+**Signature:**
+
+```python
+@property
+def is_tool(self) -> bool
+```
+
+- **Returns:** `bool` – `True` when clipboard operations are available.
+
+### `ClipBoard.copy`
+
+**Detailed Description:**  
+Returns the callable responsible for copying text. When no backend is active, a no-op lambda is returned after logging the issue.
+
+**Signature:**
+
+```python
+@property
+def copy(self) -> Callable[[str], None]
+```
+
+### `ClipBoard.paste`
+
+**Detailed Description:**  
+Returns the callable that retrieves clipboard text. In inactive scenarios, the property returns a lambda producing an empty string.
+
+**Signature:**
+
+```python
+@property
+def paste(self) -> Callable[[], str]
+```
+
+**Usage Example:**
+
+```python
+clipboard = ClipBoard()
+if clipboard.is_tool:
+    clipboard.copy("Copied from JskToolBox")
+    text = clipboard.paste()
+```
+
+---
+
+## `widgets` Module
+
+**Source:** `jsktoolbox/tktool/widgets.py`
+
+**Module Introduction:**  
+Supplies reusable Tk and ttk widgets that encapsulate status bars, tooltips, and vertically scrollable frames, aligning them with toolkit mixins and conventions.
+
+### `StatusBarTkFrame` Class
+
+**Class Introduction:**  
+Implements a Tk-based status bar with a configurable `StringVar` label and optional size grip.
+
+- **Key Members:**
+  - `__init__(master, *args, **kwargs)`: Builds the frame, label, and size grip.
+  - `set(value: str)`: Updates the displayed message.
+  - `clear()`: Resets the label to an empty string.
+
+### `StatusBarTtkFrame` Class
+
+**Class Introduction:**  
+Provides the same API as `StatusBarTkFrame` but leverages ttk widgets for themed applications.
+
+### `CreateToolTip` Class
+
+**Class Introduction:**  
+Attaches delayed tooltips to any Tk widget, managing scheduling (`wait_time`), wrapping (`wrap_length`), and display attributes.
+
+- **Key Members:**
+  - `__init__(widget, text="widget info", wait_time=500, wrap_length=0, **kwargs)`: Configures the tooltip and binds events.
+  - `text` property: Accepts strings, iterables of strings (joined by newlines), or a `tk.StringVar`.
+
+**Usage Example:**
+
+```python
+button = ttk.Button(root, text="Submit")
+button.pack()
+CreateToolTip(button, text="Send data to the server", wait_time=300)
+```
+
+### `VerticalScrolledTkFrame` Class
+
+**Class Introduction:**  
+Creates a scrollable container using a Tk canvas, vertical scrollbar, and an `interior` frame that receives child widgets.
+
+- **Key Members:**
+  - `interior` property: Returns the frame used to arrange child widgets.
+  - Mouse wheel handlers: Ensure consistent scrolling across platforms.
+
+**Usage Example:**
+
+```python
+scrolled = VerticalScrolledTkFrame(root)
+scrolled.pack(fill=tk.BOTH, expand=True)
+for idx in range(20):
+    tk.Label(scrolled.interior, text=f"Item {idx}").pack(anchor=tk.W)
+```
+
+### `VerticalScrolledTtkFrame` Class
+
+**Class Introduction:**  
+The ttk counterpart to `VerticalScrolledTkFrame`, offering the same behaviour with themed controls.
+
+**Usage Example:**
+
+```python
+scrolled = VerticalScrolledTtkFrame(root)
+scrolled.pack(fill=tk.BOTH, expand=True)
+ttk.Button(scrolled.interior, text="Action").grid(row=0, column=0, sticky=Grid.Sticky.W)
+```
+
+---

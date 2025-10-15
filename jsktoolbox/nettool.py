@@ -1,10 +1,13 @@
-# -*- coding: utf-8 -*-
+# -*- coding: UTF-8 -*-
 """
-nettool.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 29.08.2025, 08:39:50
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2025-08-29
 
-Purpose: Sets of classes for various network operations.
+Purpose: Provide helpers for IPv4/IPv6 reachability checks, traceroute and host
+validation utilities used by NetTool modules.
+
+This module aggregates lightweight wrappers around `ping`, `traceroute` and
+`socket.getaddrinfo`, exposing a consistent API across supported platforms.
 """
 
 import os
@@ -13,7 +16,7 @@ import socket
 import subprocess
 
 from inspect import currentframe
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Tuple
 from socket import getaddrinfo
 from re import Pattern
 
@@ -47,13 +50,19 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
 
 class Pinger(BData):
-    """Pinger class for testing ICMP echo."""
+    """Ping remote IPv4 hosts using available system utilities."""
 
     def __init__(self, timeout: int = 1) -> None:
-        """Constructor.
+        """Initialise pinger configuration.
 
-        Arguments:
-        - timeout [int] - timeout in seconds
+        ### Arguments:
+        * timeout: int - Timeout in seconds applied to the selected system command.
+
+        ### Returns:
+        None - Constructor.
+
+        ### Raises:
+        * ValueError: Propagated from `BData._set_data` when invalid timeout is provided.
         """
         self._set_data(key=_Keys.TIMEOUT, value=timeout, set_default_type=int)
         self._set_data(key=_Keys.COMMANDS, value=[], set_default_type=List)
@@ -82,14 +91,24 @@ class Pinger(BData):
                 _Keys.OPTS: "-q -c3 -W{} {} >/dev/null 2>&1",
             }
         )
-        tmp: Optional[tuple] = self.__is_tool
+        tmp: Optional[Tuple[str, int]] = self.__is_tool
         if tmp:
             (command, multiplier) = tmp
             self._set_data(key=_Keys.COMMAND, value=command, set_default_type=str)
             self._set_data(key=_Keys.MULTIPLIER, value=multiplier)
 
     def is_alive(self, ip: str) -> bool:
-        """Check ICMP echo response."""
+        """Check whether the target host responds to ICMP echo.
+
+        ### Arguments:
+        * ip: str - IPv4 address to probe.
+
+        ### Returns:
+        bool - True when the remote host replies successfully.
+
+        ### Raises:
+        * ChildProcessError: Raised when no suitable ping command is available.
+        """
         command: Optional[str] = self._get_data(key=_Keys.COMMAND)
         timeout: int = self._get_data(key=_Keys.TIMEOUT)  # type: ignore
         multiplier: int = self._get_data(key=_Keys.MULTIPLIER)  # type: ignore
@@ -112,8 +131,13 @@ class Pinger(BData):
         return False
 
     @property
-    def __is_tool(self) -> Optional[tuple]:
-        """Check system command."""
+    def __is_tool(self) -> Optional[Tuple[str, int]]:
+        """Determine the first available ping command tuple.
+
+        ### Returns:
+        Optional[Tuple[str, int]] - Formatted command template and timeout multiplier
+        if the underlying system utility is operational, otherwise None.
+        """
         for cmd in self._get_data(key=_Keys.COMMANDS):  # type: ignore
             if find_executable(cmd[_Keys.CMD]) is not None:
                 test_cmd: str = f"{cmd[_Keys.CMD]} {cmd[_Keys.OPTS]}"
@@ -132,10 +156,14 @@ class Pinger(BData):
 
 
 class Tracert(BData):
-    """Tracert class for testing route to IPv4 address."""
+    """Execute traceroute commands against IPv4 destinations."""
 
     def __init__(self) -> None:
-        """Constructor."""
+        """Initialise traceroute command definitions.
+
+        ### Returns:
+        None - Constructor populates command candidates.
+        """
         self._set_data(key=_Keys.COMMANDS, value=[], set_default_type=List)
         self._get_data(key=_Keys.COMMANDS).append(  # type: ignore
             {
@@ -167,7 +195,12 @@ class Tracert(BData):
 
     @property
     def __is_tool(self) -> Optional[Dict]:
-        """Check system commend."""
+        """Choose a working traceroute command definition.
+
+        ### Returns:
+        Optional[Dict] - Command descriptor containing executable and options when
+        a traceroute utility is reachable, otherwise None.
+        """
         for cmd in self._get_data(key=_Keys.COMMANDS):  # type: ignore
             if find_executable(cmd[_Keys.CMD]) is not None:
                 if (
@@ -184,7 +217,17 @@ class Tracert(BData):
         return None
 
     def execute(self, ip: str) -> List[str]:
-        """Traceroute to given IPv4 address."""
+        """Run traceroute against the provided IPv4 address.
+
+        ### Arguments:
+        * ip: str - Destination IPv4 address to trace.
+
+        ### Returns:
+        List[str] - Lines captured from traceroute output.
+
+        ### Raises:
+        * ChildProcessError: Raised when no traceroute utility is available.
+        """
         command: Optional[Dict] = self._get_data(key=_Keys.COMMAND)
         if command is None:
             raise Raise.error(
@@ -199,7 +242,7 @@ class Tracert(BData):
         args.extend(command[_Keys.OPTS].split(" "))
         args.append(str(Address(ip)))
 
-        # TODO:
+        # Unexpected output but possible:
         # traceroute to 192.168.255.255 (192.168.255.255), 10 hops max, 60 byte packets
         # 1  * *
         # 2  * *
@@ -226,17 +269,17 @@ class Tracert(BData):
 
 
 class HostResolvableChecker(NoDynamicAttributes):
-    """Class to check if a hostname or IP address is resolvable."""
+    """Utility helpers for validating and resolving host identifiers."""
 
     @staticmethod
     def is_resolvable(host: str) -> bool:
-        """Check if the given host (hostname or IP) is resolvable.
+        """Check whether DNS can resolve the provided host.
 
-        Args:
-            host (str): The hostname or IP address to check.
+        ### Arguments:
+        * host: str - Hostname or IP literal to inspect.
 
-        Returns:
-            bool: True if the host is resolvable, False otherwise.
+        ### Returns:
+        bool - True when `socket.getaddrinfo` resolves the host.
         """
         try:
             getaddrinfo(host, None)
@@ -246,13 +289,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def is_ip_address(host: str) -> bool:
-        """Check if the given host is a valid IP address (IPv4 or IPv6).
+        """Check if the supplied host represents an IPv4 or IPv6 address.
 
-        Args:
-            host (str): The hostname or IP address to check.
+        ### Arguments:
+        * host: str - Hostname or IP literal to inspect.
 
-        Returns:
-            bool: True if the host is a valid IP address, False otherwise.
+        ### Returns:
+        bool - True when the string parses into either `Address` or `Address6`.
         """
         try:
             Address(host)
@@ -270,13 +313,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def is_hostname(host: str) -> bool:
-        """Check if the given host is a valid hostname.
+        """Validate whether the string matches hostname conventions.
 
-        Args:
-            host (str): The hostname or IP address to check.
+        ### Arguments:
+        * host: str - Hostname or IP literal to inspect.
 
-        Returns:
-            bool: True if the host is a valid hostname, False otherwise.
+        ### Returns:
+        bool - True when the string satisfies hostname formatting rules.
         """
         if HostResolvableChecker.is_ip_address(host):
             return False
@@ -290,13 +333,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def validate_host(host: str) -> Optional[str]:
-        """Validate if the given host is either a resolvable hostname or a valid IP address.
+        """Verify whether the host is a valid IP address or resolvable hostname.
 
-        Args:
-            host (str): The hostname or IP address to validate.
+        ### Arguments:
+        * host: str - Hostname or IP literal to validate.
 
-        Returns:
-            Optional[str]: None if valid, otherwise an error message.
+        ### Returns:
+        Optional[str] - None when valid, otherwise an explanatory error message.
         """
         if HostResolvableChecker.is_ip_address(host):
             return None
@@ -311,13 +354,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def ip_from_hostname(hostname: str) -> Optional[str]:
-        """Get the first resolved IP address for the given hostname.
+        """Return the first IP resolved for a hostname.
 
-        Args:
-            hostname (str): The hostname to resolve.
+        ### Arguments:
+        * hostname: str - Hostname to resolve using system DNS.
 
-        Returns:
-            Optional[str]: The first resolved IP address, or None if not resolvable.
+        ### Returns:
+        Optional[str] - First resolved address string or None when resolution fails.
         """
         try:
             addr_info = getaddrinfo(hostname, None)
@@ -329,13 +372,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def validate_hosts(hosts: List[str]) -> Dict[str, Optional[str]]:
-        """Validate a list of hosts.
+        """Validate multiple hosts in bulk.
 
-        Args:
-            hosts (list[str]): List of hostnames or IP addresses to validate.
+        ### Arguments:
+        * hosts: List[str] - Collection of hostnames or IP literals to validate.
 
-        Returns:
-            dict[str, Optional[str]]: Dictionary with hosts as keys and validation results as values.
+        ### Returns:
+        Dict[str, Optional[str]] - Mapping of host strings to validation errors or None.
         """
         results = {}
         for host in hosts:
@@ -344,13 +387,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def filter_valid_hosts(hosts: List[str]) -> List[str]:
-        """Filter and return only valid hosts from the given list.
+        """Return only valid hosts from the provided sequence.
 
-        Args:
-            hosts (list[str]): List of hostnames or IP addresses to filter.
+        ### Arguments:
+        * hosts: List[str] - Hostnames or IP literals to inspect.
 
-        Returns:
-            list[str]: List of valid hosts.
+        ### Returns:
+        List[str] - Subset containing only valid hosts.
         """
         return [
             host for host in hosts if HostResolvableChecker.validate_host(host) is None
@@ -358,13 +401,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def filter_invalid_hosts(hosts: List[str]) -> Dict[str, str]:
-        """Filter and return only invalid hosts from the given list along with error messages.
+        """Return invalid hosts with diagnostic messages.
 
-        Args:
-            hosts (list[str]): List of hostnames or IP addresses to filter.
+        ### Arguments:
+        * hosts: List[str] - Hostnames or IP literals to inspect.
 
-        Returns:
-            dict[str, str]: Dictionary with invalid hosts as keys and error messages as values.
+        ### Returns:
+        Dict[str, str] - Mapping of invalid host strings to error explanations.
         """
         results = {}
         for host in hosts:
@@ -375,13 +418,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def ip4_from_hostname(hostname: str) -> Optional[Address]:
-        """Resolve and return the first IPv4 address for the given hostname.
+        """Resolve the first IPv4 address for the hostname.
 
-        Args:
-            hostname (str): The hostname to resolve.
+        ### Arguments:
+        * hostname: str - Hostname to resolve as IPv4.
 
-        Returns:
-            Optional[str]: The first resolved IPv4 address, or None if not resolvable.
+        ### Returns:
+        Optional[Address] - First IPv4 `Address` instance or None when resolution fails.
         """
         try:
             addr_info = getaddrinfo(hostname, None, family=socket.AF_INET)
@@ -393,13 +436,13 @@ class HostResolvableChecker(NoDynamicAttributes):
 
     @staticmethod
     def ip6_from_hostname(hostname: str) -> Optional[Address6]:
-        """Resolve and return the first IPv6 address for the given hostname.
+        """Resolve the first IPv6 address for the hostname.
 
-        Args:
-            hostname (str): The hostname to resolve.
+        ### Arguments:
+        * hostname: str - Hostname to resolve as IPv6.
 
-        Returns:
-            Optional[str]: The first resolved IPv6 address, or None if not resolvable.
+        ### Returns:
+        Optional[Address6] - First IPv6 `Address6` instance or None when resolution fails.
         """
         try:
             addr_info = getaddrinfo(hostname, None, family=socket.AF_INET6)
