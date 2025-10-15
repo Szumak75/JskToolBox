@@ -1341,7 +1341,7 @@ class AlgGenetic2(IAlg, BLogClient):
             idx2: int = random.randint(0, len(route) - 1)
             route[idx1], route[idx2] = route[idx2], route[idx1]
 
-    def __evolve(self) -> None:
+    def __evolve(self) -> List[StarsSystem]:
         """Run the evolutionary algorithm over several generations."""
         self.__initialize_population()
         best_route: Optional[List[StarsSystem]] = None
@@ -1377,7 +1377,7 @@ class AlgGenetic2(IAlg, BLogClient):
 
         if best_route is None:
             best_route = max(self.__population, key=self.__fitness)
-        self.__final = best_route
+        return best_route
 
     def run(self) -> None:
         """Return the best route found after evolution."""
@@ -1399,8 +1399,27 @@ class AlgGenetic2(IAlg, BLogClient):
         self.__generations = max(100, points_count * 20)
         self.__stagnation_limit = max(25, points_count * 5)
         self.__population = []
-        self.__final = []
-        self.__evolve()
+        best_route = self.__evolve()
+
+        ordered: List[StarsSystem] = []
+        current = self.__start_point
+        remaining = best_route[:]
+        while remaining:
+            next_point = min(
+                remaining,
+                key=lambda point: self.__math.distance(
+                    current.star_pos, point.star_pos
+                ),
+            )
+            if (
+                self.__math.distance(current.star_pos, next_point.star_pos)
+                > self.__jump_range
+            ):
+                break
+            ordered.append(next_point)
+            remaining.remove(next_point)
+            current = next_point
+        self.__final = ordered
 
         # update distance
         if self.__final:
