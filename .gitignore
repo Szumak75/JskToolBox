@@ -167,3 +167,7 @@ cython_debug/
 
 # code counter
 .VSCodeCounter
+
+# other temps
+temp/
+tmp/
