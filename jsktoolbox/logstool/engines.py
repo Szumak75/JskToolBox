@@ -247,7 +247,6 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         * FileExistsError: When the path exists and is a directory.
         * PermissionError: When the file cannot be created.
         """
-        # TODO: check procedure
         fn = None
         if self.logdir is None:
             fn = filename

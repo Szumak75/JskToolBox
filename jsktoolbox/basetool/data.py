@@ -12,7 +12,7 @@ constraints, reliable copying, and lifecycle utilities for managed state.
 import copy
 
 from inspect import currentframe
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Type
 
 from ..raisetool import Raise
 
@@ -91,14 +91,14 @@ class BData(BClasses):
     def _get_data(
         self,
         key: str,
-        set_default_type: Optional[Any] = None,
+        set_default_type: Any = None,
         default_value: Optional[Any] = None,
-    ) -> Optional[Any]:
+    ):
         """Gets data from internal dict.
 
         ### Arguments:
         * key: str - Variable name.
-        * set_default_type: Optional[Any] - Optional type restriction to register.
+        * set_default_type: Optional[Type[Any]] - Optional type restriction to register.
         * default_value: Optional[Any] - Fallback value when the key is missing.
 
         ### Returns:
@@ -129,14 +129,17 @@ class BData(BClasses):
         return None
 
     def _set_data(
-        self, key: str, value: Optional[Any], set_default_type: Optional[Any] = None
+        self,
+        key: str,
+        value: Optional[Any],
+        set_default_type: Any = None,
     ) -> None:
         """Sets data to internal dict.
 
         ### Arguments:
         * key: str - Variable name.
         * value: Optional[Any] - Value to assign.
-        * set_default_type: Optional[Any] - Optional type restriction for the key.
+        * set_default_type: Optional[Type[Any]] - Optional type restriction for the key.
 
         ### Raises:
         * TypeError: Value violates the registered or provided type constraint.
