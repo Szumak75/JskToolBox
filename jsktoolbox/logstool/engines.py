@@ -15,7 +15,7 @@ import sys
 import syslog
 
 from inspect import currentframe
-from typing import Optional, Union
+from typing import Optional, Union, cast
 from types import ModuleType
 
 from .keys import LogKeys, SysLogKeys
@@ -134,7 +134,10 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
 
 
 class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
-    """Append formatted log records to files stored on disk."""
+    """Append formatted log records to files stored on disk.
+
+    Supports optional size-based rotation with numbered suffixes when configured.
+    """
 
     def __init__(
         self,
@@ -187,7 +190,9 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
                     currentframe(),
                 )
             log_dir: str = self.logdir if self.logdir else ""
-            with open(os.path.join(log_dir, self.logfile), "a") as file:
+            file_path = os.path.join(log_dir, self.logfile)
+            self._rotate_if_needed(file_path, len(f"{message}\n"))
+            with open(file_path, "a") as file:
                 if file.writable:
                     file.write(message)
                     file.write("\n")
@@ -267,6 +272,105 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
                 )
         self.logdir = pc_ld.dirname if pc_ld.dirname else ""
         self._set_data(key=LogKeys.FILE, value=pc_ld.filename)
+
+    @property
+    def rotation_max_bytes(self) -> Optional[int]:
+        """Return the maximum file size before rotation triggers.
+
+        ### Returns:
+        Optional[int] - Size threshold in bytes; None disables rotation.
+        """
+        value = self._get_data(key=LogKeys.ROTATE_SIZE, default_value=None)
+        return cast(Optional[int], value)
+
+    @rotation_max_bytes.setter
+    def rotation_max_bytes(self, size: Optional[int]) -> None:
+        """Configure the maximum file size before rotation triggers.
+
+        ### Arguments:
+        * size: Optional[int] - Positive size in bytes; None disables rotation.
+
+        ### Returns:
+        None - Internal configuration updated.
+
+        ### Raises:
+        * ValueError: When `size` is not positive.
+        """
+        if size is None:
+            self._delete_data(key=LogKeys.ROTATE_SIZE)
+            return
+        if size <= 0:
+            raise Raise.error(
+                f"Expected positive rotation size, received: '{size}'.",
+                ValueError,
+                self._c_name,
+                currentframe(),
+            )
+        self._set_data(key=LogKeys.ROTATE_SIZE, value=size, set_default_type=int)
+
+    @property
+    def rotation_backup_count(self) -> int:
+        """Return the number of rotated log archives retained.
+
+        ### Returns:
+        int - Number of archives; zero disables rotation.
+        """
+        value = self._get_data(key=LogKeys.ROTATE_COUNT, default_value=0)
+        return cast(int, value) if value is not None else 0
+
+    @rotation_backup_count.setter
+    def rotation_backup_count(self, count: int) -> None:
+        """Configure how many rotated log archives should be retained.
+
+        ### Arguments:
+        * count: int - Non-negative number of archives; zero disables rotation.
+
+        ### Returns:
+        None - Internal configuration updated.
+
+        ### Raises:
+        * ValueError: When `count` is negative.
+        """
+        if count < 0:
+            raise Raise.error(
+                f"Expected non-negative rotation count, received: '{count}'.",
+                ValueError,
+                self._c_name,
+                currentframe(),
+            )
+        if count == 0:
+            self._delete_data(key=LogKeys.ROTATE_COUNT)
+            return
+        self._set_data(key=LogKeys.ROTATE_COUNT, value=count, set_default_type=int)
+
+    def _rotate_if_needed(self, file_path: str, incoming_length: int) -> None:
+        """Rotate the log file when size and backup thresholds are met."""
+        max_bytes = self.rotation_max_bytes
+        backup_count = self.rotation_backup_count
+        if max_bytes is None or backup_count == 0:
+            return
+        try:
+            current_size = os.path.getsize(file_path)
+        except FileNotFoundError:
+            return
+        if (current_size + incoming_length) <= max_bytes:
+            return
+        self._perform_rotation(file_path, backup_count)
+
+    def _perform_rotation(self, file_path: str, backup_count: int) -> None:
+        """Perform numbered rotation using suffixes `.0`, `.1`, etc."""
+        if backup_count <= 0:
+            return
+        highest_path = f"{file_path}.{backup_count - 1}"
+        if os.path.exists(highest_path):
+            os.remove(highest_path)
+        for index in range(backup_count - 1, 0, -1):
+            src = f"{file_path}.{index - 1}"
+            dst = f"{file_path}.{index}"
+            if os.path.exists(src):
+                os.replace(src, dst)
+        if os.path.exists(file_path):
+            os.replace(file_path, f"{file_path}.0")
 
 
 class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):

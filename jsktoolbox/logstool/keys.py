@@ -30,6 +30,8 @@ class LogKeys(object, metaclass=ReadOnlyClass):
     NO_CONF: str = "__no_conf__"
     QUEUE: str = "__queue__"
     SYSLOG: str = "__syslog__"
+    ROTATE_SIZE: str = "__rotate_size__"
+    ROTATE_COUNT: str = "__rotate_count__"
 
 
 class SysLogKeys(object, metaclass=ReadOnlyClass):

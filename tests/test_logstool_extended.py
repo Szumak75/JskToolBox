@@ -70,8 +70,11 @@ def test_logger_queue_roundtrip() -> None:
         (LogFormatterTime, "2024-01-01 12:34:56"),
     ],
 )
-def test_log_formatters(monkeypatch: pytest.MonkeyPatch, formatter_cls, expected) -> None:
+def test_log_formatters(
+    monkeypatch: pytest.MonkeyPatch, formatter_cls, expected
+) -> None:
     if formatter_cls is LogFormatterTime:
+
         class FakeDatetime:
             @staticmethod
             def now():
@@ -81,9 +84,7 @@ def test_log_formatters(monkeypatch: pytest.MonkeyPatch, formatter_cls, expected
 
                 return Fake()
 
-        monkeypatch.setattr(
-            "jsktoolbox.logstool.formatters.datetime", FakeDatetime
-        )
+        monkeypatch.setattr("jsktoolbox.logstool.formatters.datetime", FakeDatetime)
         expected = "12:34:56"
     formatter = formatter_cls()
     assert expected in formatter.format("payload")
@@ -134,6 +135,27 @@ def test_logger_engine_file_write(tmp_path: Path) -> None:
     engine.logfile = "app.log"
     engine.send("message")
     assert (tmp_path / "app.log").read_text().strip() == "[app]: message"
+
+
+def test_logger_engine_file_rotation(tmp_path: Path) -> None:
+    engine = LoggerEngineFile(name="app", formatter=LogFormatterNull())
+    engine.logdir = str(tmp_path)
+    engine.logfile = "app.log"
+    engine.rotation_max_bytes = 30
+    engine.rotation_backup_count = 2
+
+    engine.send("first entry")
+    assert (tmp_path / "app.log").read_text().strip() == "[app]: first entry"
+
+    engine.send("second entry")
+    assert (tmp_path / "app.log").read_text().strip() == "[app]: second entry"
+    assert (tmp_path / "app.log.0").read_text().strip() == "[app]: first entry"
+    assert not (tmp_path / "app.log.1").exists()
+
+    engine.send("third entry")
+    assert (tmp_path / "app.log").read_text().strip() == "[app]: third entry"
+    assert (tmp_path / "app.log.0").read_text().strip() == "[app]: second entry"
+    assert (tmp_path / "app.log.1").read_text().strip() == "[app]: first entry"
 
 
 def test_logger_engine_file_logfile_directory_conflict(tmp_path: Path) -> None:
