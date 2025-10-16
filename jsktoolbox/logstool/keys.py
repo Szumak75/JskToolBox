@@ -11,7 +11,8 @@ attributes to keep engines, formatters, and clients aligned.
 
 import syslog
 
-from typing import Dict
+from types import MappingProxyType
+from typing import Mapping
 from ..attribtool import ReadOnlyClass
 
 
@@ -61,67 +62,40 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
         SYSLOG = syslog.LOG_SYSLOG
         USER = syslog.LOG_USER
 
-    @classmethod
-    @property
-    def level(cls) -> type[__Levels]:
-        """Return the syslog levels namespace.
-
-        ### Returns:
-        type[__Levels] - Read-only container exposing syslog log level constants.
-        """
-        return cls.__Levels
-
-    @classmethod
-    @property
-    def facility(cls) -> type[__Facilities]:
-        """Return the syslog facilities namespace.
-
-        ### Returns:
-        type[__Facilities] - Read-only container exposing syslog facility constants.
-        """
-        return cls.__Facilities
-
-    @classmethod
-    @property
-    def level_keys(cls) -> Dict:
-        """Return mapping of level strings to syslog constants.
-
-        ### Returns:
-        Dict - Dictionary mapping human-readable level names to syslog values.
-        """
-        return {
-            "ALERT": SysLogKeys.level.ALERT,
-            "CRITICAL": SysLogKeys.level.CRITICAL,
-            "DEBUG": SysLogKeys.level.DEBUG,
-            "EMERGENCY": SysLogKeys.level.EMERGENCY,
-            "ERROR": SysLogKeys.level.ERROR,
-            "INFO": SysLogKeys.level.INFO,
-            "NOTICE": SysLogKeys.level.NOTICE,
-            "WARNING": SysLogKeys.level.WARNING,
+    #: Exposes syslog level constants as read-only namespace.
+    level: type[__Levels] = __Levels
+    #: Exposes syslog facility constants as read-only namespace.
+    facility: type[__Facilities] = __Facilities
+    #: Maps human-readable level names to syslog values.
+    level_keys: Mapping[str, int] = MappingProxyType(
+        {
+            "ALERT": __Levels.ALERT,
+            "CRITICAL": __Levels.CRITICAL,
+            "DEBUG": __Levels.DEBUG,
+            "EMERGENCY": __Levels.EMERGENCY,
+            "ERROR": __Levels.ERROR,
+            "INFO": __Levels.INFO,
+            "NOTICE": __Levels.NOTICE,
+            "WARNING": __Levels.WARNING,
         }
-
-    @classmethod
-    @property
-    def facility_keys(cls) -> Dict:
-        """Return mapping of facility strings to syslog constants.
-
-        ### Returns:
-        Dict - Dictionary mapping human-readable facility names to syslog values.
-        """
-        return {
-            "DAEMON": SysLogKeys.facility.DAEMON,
-            "LOCAL0": SysLogKeys.facility.LOCAL0,
-            "LOCAL1": SysLogKeys.facility.LOCAL1,
-            "LOCAL2": SysLogKeys.facility.LOCAL2,
-            "LOCAL3": SysLogKeys.facility.LOCAL3,
-            "LOCAL4": SysLogKeys.facility.LOCAL4,
-            "LOCAL5": SysLogKeys.facility.LOCAL5,
-            "LOCAL6": SysLogKeys.facility.LOCAL6,
-            "LOCAL7": SysLogKeys.facility.LOCAL7,
-            "MAIL": SysLogKeys.facility.MAIL,
-            "SYSLOG": SysLogKeys.facility.SYSLOG,
-            "USER": SysLogKeys.facility.USER,
+    )
+    #: Maps human-readable facility names to syslog values.
+    facility_keys: Mapping[str, int] = MappingProxyType(
+        {
+            "DAEMON": __Facilities.DAEMON,
+            "LOCAL0": __Facilities.LOCAL0,
+            "LOCAL1": __Facilities.LOCAL1,
+            "LOCAL2": __Facilities.LOCAL2,
+            "LOCAL3": __Facilities.LOCAL3,
+            "LOCAL4": __Facilities.LOCAL4,
+            "LOCAL5": __Facilities.LOCAL5,
+            "LOCAL6": __Facilities.LOCAL6,
+            "LOCAL7": __Facilities.LOCAL7,
+            "MAIL": __Facilities.MAIL,
+            "SYSLOG": __Facilities.SYSLOG,
+            "USER": __Facilities.USER,
         }
+    )
 
 
 class LogsLevelKeys(object, metaclass=ReadOnlyClass):
@@ -136,26 +110,17 @@ class LogsLevelKeys(object, metaclass=ReadOnlyClass):
     NOTICE: str = "NOTICE"
     WARNING: str = "WARNING"
 
-    @classmethod
-    @property
-    def keys(cls) -> tuple:
-        """Return tuple of available log level keys.
-
-        ### Returns:
-        tuple - All supported log level identifiers.
-        """
-        return tuple(
-            [
-                LogsLevelKeys.ALERT,
-                LogsLevelKeys.CRITICAL,
-                LogsLevelKeys.DEBUG,
-                LogsLevelKeys.EMERGENCY,
-                LogsLevelKeys.ERROR,
-                LogsLevelKeys.INFO,
-                LogsLevelKeys.NOTICE,
-                LogsLevelKeys.WARNING,
-            ]
-        )
+    #: Contains all supported log level identifiers.
+    keys: tuple[str, ...] = (
+        ALERT,
+        CRITICAL,
+        DEBUG,
+        EMERGENCY,
+        ERROR,
+        INFO,
+        NOTICE,
+        WARNING,
+    )
 
 
 # #[EOF]#######################################################################
