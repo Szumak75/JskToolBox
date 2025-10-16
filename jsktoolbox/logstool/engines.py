@@ -34,7 +34,7 @@ from .formatters import BLogFormatter
 
 
 class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
-    """STDOUT Logger engine."""
+    """Emit formatted log records to standard output."""
 
     def __init__(
         self,
@@ -45,9 +45,9 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """Initialise stdout engine state.
 
         ### Arguments:
-        * name: Optional[str] - Optional logger name injected into formatted messages.
-        * formatter: Optional[BLogFormatter] - Formatter applied prior to emit.
-        * buffered: bool - When False, flush after each message.
+        * name: Optional[str] - Logger name injected into formatted messages.
+        * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
+        * buffered: bool - When False, flush the stream after each message.
 
         ### Returns:
         None - Constructor.
@@ -84,7 +84,7 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
 
 
 class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
-    """STDERR Logger engine."""
+    """Emit formatted log records to standard error."""
 
     def __init__(
         self,
@@ -95,9 +95,9 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """Initialise stderr engine state.
 
         ### Arguments:
-        * name: Optional[str]
-        * formatter: Optional[BLogFormatter]
-        * buffered: bool
+        * name: Optional[str] - Logger name injected into formatted messages.
+        * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
+        * buffered: bool - When False, flush the stream after each message.
 
         ### Returns:
         None
@@ -134,7 +134,7 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
 
 
 class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
-    """FILE Logger engine."""
+    """Append formatted log records to files stored on disk."""
 
     def __init__(
         self,
@@ -145,9 +145,9 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         """Initialise file engine configuration.
 
         ### Arguments:
-        * name: Optional[str]
-        * formatter: Optional[BLogFormatter]
-        * buffered: bool
+        * name: Optional[str] - Logger name injected into formatted messages.
+        * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
+        * buffered: bool - When False, flush the stream after each message.
 
         ### Returns:
         None
@@ -270,7 +270,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
 
 
 class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes):
-    """SYSLOG Logger engine."""
+    """Send formatted log records to the system syslog daemon."""
 
     def __init__(
         self,
@@ -281,9 +281,9 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         """Initialise syslog engine configuration.
 
         ### Arguments:
-        * name: Optional[str]
-        * formatter: Optional[BLogFormatter]
-        * buffered: bool
+        * name: Optional[str] - Logger name injected into formatted messages.
+        * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
+        * buffered: bool - When False, flush the stream after each message.
 
         ### Returns:
         None

@@ -17,10 +17,7 @@ from ..attribtool import ReadOnlyClass
 
 
 class LogKeys(object, metaclass=ReadOnlyClass):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
+    """Expose symbolic names shared across log engines, queues, and clients."""
 
     BUFFERED: str = "__buffered__"
     CONF: str = "__conf__"
@@ -36,7 +33,7 @@ class LogKeys(object, metaclass=ReadOnlyClass):
 
 
 class SysLogKeys(object, metaclass=ReadOnlyClass):
-    """SysLog keys definition container class."""
+    """Provide syslog level and facility constants as read-only namespaces."""
 
     class __Levels(object, metaclass=ReadOnlyClass):
         ALERT = syslog.LOG_ALERT
@@ -99,7 +96,7 @@ class SysLogKeys(object, metaclass=ReadOnlyClass):
 
 
 class LogsLevelKeys(object, metaclass=ReadOnlyClass):
-    """LogsLevelKeys container class."""
+    """Provide symbolic identifiers for supported log severities."""
 
     ALERT: str = "ALERT"
     CRITICAL: str = "CRITICAL"

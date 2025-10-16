@@ -39,7 +39,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
 
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):
-    """Logger Client main class."""
+    """Provide a user-facing client for enqueuing log messages."""
 
     def __init__(
         self, queue: Optional[LoggerQueue] = None, name: Optional[str] = None
@@ -122,82 +122,174 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
 
     @property
     def message_alert(self) -> None:
-        """Placeholder for ALERT message setter."""
+        """Return None for the ALERT proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_alert.setter
     def message_alert(self, message: str) -> None:
-        """Send an ALERT-level message via the client property interface."""
+        """Send an ALERT-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with ALERT severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.ALERT)
 
     @property
     def message_critical(self) -> None:
-        """Placeholder for CRITICAL message setter."""
+        """Return None for the CRITICAL proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_critical.setter
     def message_critical(self, message: str) -> None:
-        """Send a CRITICAL-level message via the client property interface."""
+        """Send a CRITICAL-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with CRITICAL severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.CRITICAL)
 
     @property
     def message_debug(self) -> None:
-        """Placeholder for DEBUG message setter."""
+        """Return None for the DEBUG proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_debug.setter
     def message_debug(self, message: str) -> None:
-        """Send a DEBUG-level message via the client property interface."""
+        """Send a DEBUG-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with DEBUG severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.DEBUG)
 
     @property
     def message_emergency(self) -> None:
-        """Placeholder for EMERGENCY message setter."""
+        """Return None for the EMERGENCY proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_emergency.setter
     def message_emergency(self, message: str) -> None:
-        """Send an EMERGENCY-level message via the client property interface."""
+        """Send an EMERGENCY-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with EMERGENCY severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.EMERGENCY)
 
     @property
     def message_error(self) -> None:
-        """Placeholder for ERROR message setter."""
+        """Return None for the ERROR proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_error.setter
     def message_error(self, message: str) -> None:
-        """Send an ERROR-level message via the client property interface."""
+        """Send an ERROR-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with ERROR severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.ERROR)
 
     @property
     def message_info(self) -> None:
-        """Placeholder for INFO message setter."""
+        """Return None for the INFO proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_info.setter
     def message_info(self, message: str) -> None:
-        """Send an INFO-level message via the client property interface."""
+        """Send an INFO-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with INFO severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.INFO)
 
     @property
     def message_notice(self) -> None:
-        """Placeholder for NOTICE message setter."""
+        """Return None for the NOTICE proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_notice.setter
     def message_notice(self, message: str) -> None:
-        """Send a NOTICE-level message via the client property interface."""
+        """Send a NOTICE-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with NOTICE severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.NOTICE)
 
     @property
     def message_warning(self) -> None:
-        """Placeholder for WARNING message setter."""
+        """Return None for the WARNING proxy property.
+
+        ### Returns:
+        None - Property exposed for write-only usage.
+        """
 
     @message_warning.setter
     def message_warning(self, message: str) -> None:
-        """Send a WARNING-level message via the client property interface."""
+        """Send a WARNING-level message via the client property interface.
+
+        ### Arguments:
+        * message: str - Log payload forwarded with WARNING severity.
+
+        ### Returns:
+        None - Delegates to `message`.
+        """
         self.message(message, LogsLevelKeys.WARNING)
 
 
 class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
-    """LoggerEngine container class."""
+    """Coordinate engines and dispatch queued log messages."""
 
     def __init__(self) -> None:
-        """Initialise the logging engine with default outputs."""
+        """Initialise the logging engine with default outputs.
+
+        ### Returns:
+        None - Constructor.
+        """
         # make logs queue object
         self.logs_queue = LoggerQueue()
         # default logs level configuration
@@ -290,10 +382,17 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
 
 
 class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
-    """LoggerProcessor thread class."""
+    """Run a background thread that continually drains the log queue."""
 
     def __init__(self, debug: bool = False) -> None:
-        """Initialise processing thread state."""
+        """Initialise processing thread state.
+
+        ### Arguments:
+        * debug: bool - When True, emit diagnostic messages via the client.
+
+        ### Returns:
+        None - Constructor.
+        """
         threading.Thread.__init__(self, name=self._c_name)
         self._stop_event = threading.Event()
         self._debug = debug
@@ -387,7 +486,11 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         self.logger_engine.send()
 
     def stop(self) -> None:
-        """Request the background thread to stop."""
+        """Request the background thread to stop.
+
+        ### Returns:
+        None - Signals the internal stop event.
+        """
         if self._debug and self.logger_client:
             self.logger_client.message_debug = f"[{self._c_name}] stopping..."
         if self._stop_event:

@@ -24,7 +24,11 @@ class LoggerQueue(BClasses, NoDynamicAttributes):
     __queue: List[List[str]] = []
 
     def __init__(self) -> None:
-        """Initialise an empty queue."""
+        """Initialise an empty queue.
+
+        ### Returns:
+        None - Constructor does not return a value.
+        """
         self.__queue = []
 
     def get(self) -> Optional[tuple[str, ...]]:

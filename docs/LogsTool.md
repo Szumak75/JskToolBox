@@ -30,6 +30,7 @@ In-memory FIFO buffer storing `(log_level, message)` tuples used to decouple cli
 Appends a new log entry to the tail of the queue while validating the log level symbol.
 
 **Signature:**
+
 ```python
 put(message: str, log_level: str = LogsLevelKeys.INFO) -> None
 ```
@@ -48,12 +49,44 @@ put(message: str, log_level: str = LogsLevelKeys.INFO) -> None
 Removes and returns the oldest queued entry if any are available.
 
 **Signature:**
+
 ```python
 get() -> Optional[tuple[str, ...]]
 ```
 
 - **Returns:**
   - `Optional[tuple[str, ...]]` – Tuple `(level, message)` or `None` when empty.
+
+---
+
+## Key Container Classes
+
+### `LogKeys`
+
+**Class Introduction:**
+Provides immutable attribute names shared by engines, queues, and clients to keep the logging state structure consistent.
+
+- **Highlights:**
+  - Centralises keys such as `__formatter__`, `__queue__`, and `__file__`.
+  - Prevents accidental reassignment thanks to the `ReadOnlyClass` metaclass.
+
+### `SysLogKeys`
+
+**Class Introduction:**
+Wraps `syslog` facilities and levels inside read-only namespaces while exposing convenient lookup dictionaries.
+
+- **Highlights:**
+  - Enables symbolic configuration like `LoggerEngineSyslog.level = "ERROR"`.
+  - Offers `facility_keys` and `level_keys` maps for validation.
+
+### `LogsLevelKeys`
+
+**Class Introduction:**
+Defines the set of supported semantic log levels that both clients and engines use for routing messages.
+
+- **Highlights:**
+  - Supplies canonical constants (`INFO`, `ERROR`, `DEBUG`, etc.).
+  - Exposes the `keys` tuple for quick membership checks.
 
 ---
 
@@ -99,6 +132,7 @@ Prefixes messages with a high-resolution timestamp from `Timestamp.now()`.
 Writes formatted log records to standard output with optional buffering.
 
 **Signature:**
+
 ```python
 LoggerEngineStdout(name: Optional[str] = None,
                    formatter: Optional[BLogFormatter] = None,
@@ -148,8 +182,15 @@ Integrates with the system syslog daemon, supporting dynamic facility and level 
 Central dispatcher that manages the shared queue and routes messages to configured engines per log level.
 
 **Key Methods:**
+
 - `add_engine(log_level: str, engine: ILoggerEngine)` – Register engines per level.
 - `send()` – Drain the queue and deliver messages.
+
+**Default Behaviour:**
+
+- Ships with stdout engines for `INFO`, `WARNING`, and `NOTICE`.
+- Mirrors high-severity levels (`ERROR`, `CRITICAL`) to both stdout and stderr.
+- Starts with a dedicated `LoggerQueue` instance exposed via `logs_queue`.
 
 ### `LoggerClient`
 
@@ -164,18 +205,28 @@ User-facing client responsible for enqueuing messages at various log levels.
   client.message("Started")
   ```
 
+**Severity Shortcut Properties:**
+
+- `message_info`, `message_error`, etc. proxy the `message()` method for all available severities and perform the same validation.
+- Getters return `None`; setters enqueue the message at the corresponding level.
+
 ### `ThLoggerProcessor`
 
 **Class Introduction:**
 Background thread that continuously drains the queue using a configured engine/client pair, ideal for asynchronous logging.
 
 - **Typical Workflow:**
+
   ```python
   processor = ThLoggerProcessor()
   processor.logger_engine = engine
   processor.logger_client = client
   processor.start()
   ```
+
+- **Runtime Requirements:**
+  - The engine and client must be assigned before `start()`; otherwise, `Raise.error` raises `ValueError`.
+  - Call `stop()` followed by `join()` to shut down gracefully.
 
 ---
 
