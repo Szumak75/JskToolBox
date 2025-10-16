@@ -158,6 +158,23 @@ Appends formatted log entries to a configured file, creating directories as requ
 - **Key Properties:**
   - `logdir` – Directory setter/ getter.
   - `logfile` – Ensures the target file exists.
+  - `rotation_max_bytes` – Optional size threshold (in bytes) that triggers rotation.
+  - `rotation_backup_count` – Number of rotated archives to keep (`app.log.0`, `app.log.1`, ...).
+
+**Rotation Behaviour:**
+
+- Rotation is disabled by default; enable it by setting both `rotation_max_bytes` and a positive `rotation_backup_count`.
+- When the active log exceeds the configured size after a write, the engine shifts existing archives up (`.1` ← `.0`, etc.) and moves the current log to `.0` before writing the next entry.
+
+**Usage Example:**
+
+```python
+engine = LoggerEngineFile(name="api", formatter=LogFormatterDateTime())
+engine.logdir = "/var/log/myapp"
+engine.logfile = "service.log"
+engine.rotation_max_bytes = 256 * 1024  # rotate after 256 KiB
+engine.rotation_backup_count = 5        # keep service.log.0 .. service.log.4
+```
 
 ### `LoggerEngineSyslog`
 
