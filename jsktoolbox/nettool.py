@@ -29,7 +29,7 @@ from .raisetool import Raise
 
 try:
     # For Python < 3.12
-    from distutils.spawn import find_executable
+    from distutils.spawn import find_executable # pyright: ignore[reportMissingModuleSource]
 except ImportError:
     # For Python >= 3.12
     from shutil import which as find_executable

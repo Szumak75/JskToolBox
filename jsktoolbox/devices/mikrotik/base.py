@@ -19,9 +19,6 @@ from .elements.libs.base import BElement
 from ..libs.base import BDev
 from ..network.connectors import IConnector
 
-TRouterOS = TypeVar("TRouterOS", bound="BRouterOS")
-# TElement = TypeVar("TElement", bound="Element")
-
 
 class _Keys(object, metaclass=ReadOnlyClass):
     """Keys definition class.
@@ -64,7 +61,7 @@ class BRouterOS(BDev, BElement):
             f")"
         )
 
-    def _add_elements(self, parent: TRouterOS, elements_dict: Dict) -> None:
+    def _add_elements(self, parent: "BRouterOS", elements_dict: Dict) -> None:
         """Add children from configuration dict."""
         if parent._ch is None:
             return None
@@ -188,7 +185,7 @@ class Element(BRouterOS):
     """MikroTik Element class."""
 
     # TODO:
-    # metody:
+    # methods:
     # - add
     # - set
     # - remove
@@ -196,9 +193,9 @@ class Element(BRouterOS):
     # - is_dirty
     # - commit
     # - _reload
-    # ze sprawdzeniem kontentu,
-    # weryfikacja wersji ROS
-    # kodowanie stringów
+    # with content verification,
+    # ROS version validation
+    # string encoding
 
     def __init__(
         self,

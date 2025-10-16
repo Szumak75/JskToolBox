@@ -536,8 +536,8 @@ class _QtClip(_BClip):
     Creates or reuses a QApplication and routes clipboard operations through Qt APIs.
     """
 
-    __app = None
-    __cb = None
+    __q_app = None 
+    __q_cb = None 
 
     def __init__(self) -> None:
         """Initialise the Qt clipboard backend.
@@ -554,19 +554,19 @@ class _QtClip(_BClip):
         try:
             # TODO: PyQt5
             # example: https://pythonprogramminglanguage.com/pyqt-clipboard/
-            from PyQt5.QtCore import QCoreApplication
-            from PyQt5.QtWidgets import QApplication
-            from PyQt5.QtGui import QClipboard
+            from PyQt5.QtCore import QCoreApplication # pyright: ignore[reportMissingImports]
+            from PyQt5.QtWidgets import QApplication # pyright: ignore[reportMissingImports]
+            from PyQt5.QtGui import QClipboard # pyright: ignore[reportMissingImports]
 
             # QApplication is a singleton
             if not QApplication.instance():
-                self.__app: Optional[Union[QApplication, QCoreApplication]] = (
+                self.__q_app: Optional[Union[QApplication, QCoreApplication]] = ( # pyright: ignore[reportRedeclaration]
                     QApplication([])
                 )
             else:
-                self.__app = QApplication.instance()
+                self.__q_app = QApplication.instance()
 
-            self.__cb: Optional[QClipboard] = QApplication.clipboard()
+            self.__q_cb: Optional[QClipboard] = QApplication.clipboard() # pyright: ignore[reportRedeclaration]
             get_cb = self.__qt_get_clipboard
             set_cb = self.__qt_set_clipboard
             self._set_data(
@@ -583,13 +583,13 @@ class _QtClip(_BClip):
 
                 # QApplication is a singleton
                 if not QApplication.instance():
-                    self.__app: Optional[Union[QApplication, QCoreApplication]] = (
+                    self.__q_app: Optional[Union[QApplication, QCoreApplication]] = (
                         QApplication([])
                     )
                 else:
-                    self.__app = QApplication.instance()
+                    self.__q_app = QApplication.instance()
 
-                self.__cb: Optional[QClipboard] = QApplication.clipboard()
+                self.__q_cb: Optional[QClipboard] = QApplication.clipboard()
                 get_cb = self.__qt_get_clipboard
                 set_cb = self.__qt_set_clipboard
                 self._set_data(
@@ -613,8 +613,8 @@ class _QtClip(_BClip):
         ### Raises:
         * None: Errors propagate from Qt when they occur.
         """
-        if self.__cb:
-            return str(self.__cb.text())
+        if self.__q_cb:
+            return str(self.__q_cb.text())
         return ""
 
     def __qt_set_clipboard(self, text: str) -> None:
@@ -629,9 +629,9 @@ class _QtClip(_BClip):
         ### Raises:
         * None: Errors propagate from Qt when they occur.
         """
-        if self.__cb:
+        if self.__q_cb:
             text = str(text)
-            self.__cb.setText(text)
+            self.__q_cb.setText(text)
 
 
 class _TkClip(_BClip, TkBase):

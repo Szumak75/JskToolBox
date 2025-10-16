@@ -23,8 +23,6 @@ from ...basetool.data import BData
 
 from ..network.connectors import IConnector
 
-TDev = TypeVar("TDev", bound="BDev")
-
 
 class _Keys(object, metaclass=ReadOnlyClass):
     """Immutable container for data keys used by device helpers."""
@@ -223,7 +221,7 @@ class BDev(BDebug):
         self._set_data(key=_Keys.ROOT, set_default_type=str, value=value)
 
     @property
-    def parent(self) -> Optional[TDev]:
+    def parent(self) -> Optional["BDev"]:
         """Return the parent device instance if assigned.
 
         ### Arguments:
@@ -242,7 +240,7 @@ class BDev(BDebug):
         )
 
     @parent.setter
-    def parent(self, value: Optional[TDev]) -> None:
+    def parent(self, value: Optional["BDev"]) -> None:
         """Assign the parent device for the current instance.
 
         ### Arguments:

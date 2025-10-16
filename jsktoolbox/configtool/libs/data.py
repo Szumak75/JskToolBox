@@ -7,15 +7,13 @@ Purpose: DataProcessor class for processing dataset operations.
 """
 
 from inspect import currentframe
-from typing import List, Tuple, Optional, Union, Any, TypeVar
+from typing import List, Tuple, Optional, Union, Any
 from abc import ABC, abstractmethod
 from copy import copy
 
 from ...attribtool import NoDynamicAttributes, ReadOnlyClass
 from ...raisetool import Raise
 from ...basetool.data import BData
-
-TVariableModel = TypeVar("TVariableModel", bound="VariableModel")
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -38,7 +36,7 @@ class IModel(ABC):
 
     @property
     @abstractmethod
-    def dump(self) -> Union[List[str], TVariableModel]:
+    def dump(self) -> Union[List[str], "VariableModel"]:
         """Dump data."""
 
     @property
@@ -142,7 +140,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         self._set_data(key=_Keys.DESC, value=desc, set_default_type=Optional[str])
 
     @property
-    def dump(self) -> TVariableModel:
+    def dump(self) -> "VariableModel":
         """Dump data.
 
         ### Returns:

@@ -18,7 +18,7 @@ from __future__ import annotations
 import threading
 import time
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import TYPE_CHECKING, Iterable, List, Optional
 from venv import logger
 
 from jsktoolbox.logstool import (
@@ -31,6 +31,10 @@ from jsktoolbox.logstool import (
     ThLoggerProcessor,
 )
 from jsktoolbox.basetool.logs import BLoggerQueue
+
+
+if TYPE_CHECKING:
+    from jsktoolbox.logstool import LoggerQueue
 
 
 class LoggingServer(ThLoggerProcessor):
@@ -91,7 +95,7 @@ class LoggingServer(ThLoggerProcessor):
             self._engine.add_engine(level, console_engine)
 
     @property
-    def logs_queue(self) -> Optional["LoggerQueue"]:
+    def logs_queue(self) -> Optional[LoggerQueue]:
         """Expose the server queue for external clients.
 
         ### Returns:

@@ -34,12 +34,12 @@ from .stars import StarsSystem
 from .edsm_keys import EdsmKeys
 
 try:
-    import numpy as np
+    import numpy as np # pyright: ignore[reportMissingImports]
 except ModuleNotFoundError:
     np = None  # type: ignore[assignment]
 
 try:
-    from scipy.spatial import distance
+    from scipy.spatial import distance # pyright: ignore[reportMissingImports]
 except ModuleNotFoundError:
     distance = None  # type: ignore[assignment]
 
@@ -282,7 +282,7 @@ class Euclid(BLogClient):
         and vectorization.
         """
         try:
-            return np.sqrt(np.sum((np.array(point_1) - np.array(point_2)) ** 2))
+            return np.sqrt(np.sum((np.array(point_1) - np.array(point_2)) ** 2)) # pyright: ignore[reportOptionalMemberAccess]
         except Exception as ex:
             self.debug(currentframe(), f"{ex}")
         return None
@@ -293,8 +293,8 @@ class Euclid(BLogClient):
         Einstein summation convention.
         """
         try:
-            tmp = np.array(point_1) - np.array(point_2)
-            return np.sqrt(np.einsum("i,i->", tmp, tmp))
+            tmp = np.array(point_1) - np.array(point_2) # pyright: ignore[reportOptionalMemberAccess]
+            return np.sqrt(np.einsum("i,i->", tmp, tmp)) # pyright: ignore[reportOptionalMemberAccess]
         except Exception as ex:
             self.debug(currentframe(), f"{ex}")
         return None
@@ -306,7 +306,7 @@ class Euclid(BLogClient):
         the Euclidean distance.
         """
         try:
-            return distance.euclidean(point_1, point_2)
+            return distance.euclidean(point_1, point_2) # pyright: ignore[reportOptionalMemberAccess]
         except Exception as ex:
             self.debug(currentframe(), f"{ex}")
         return None
