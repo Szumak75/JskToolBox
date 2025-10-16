@@ -47,28 +47,70 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
         """Constructor."""
         self.words = addr
 
-    def __eq__(self, arg: TAddress6) -> bool:
+    def __eq__(self, arg: Union[TAddress6, object]) -> bool:
         """Equal."""
+        if not isinstance(arg, Address6):
+            raise Raise.error(
+                f"Expected argument of Address6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )   
         return int(self) == int(arg)
 
-    def __ge__(self, arg: TAddress6) -> bool:
+    def __ge__(self, arg: Union[TAddress6, object]) -> bool:
         """Greater or equal."""
+        if not isinstance(arg, Address6):
+            raise Raise.error(
+                f"Expected argument of Address6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) >= int(arg)
 
-    def __gt__(self, arg: TAddress6) -> bool:
+    def __gt__(self, arg: Union[TAddress6, object]) -> bool:
         """Greater."""
+        if not isinstance(arg, Address6):
+            raise Raise.error(
+                f"Expected argument of Address6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) > int(arg)
 
-    def __le__(self, arg: TAddress6) -> bool:
+    def __le__(self, arg: Union[TAddress6, object]) -> bool:
         """Less or equal."""
+        if not isinstance(arg, Address6):
+            raise Raise.error(
+                f"Expected argument of Address6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) <= int(arg)
 
-    def __lt__(self, arg: TAddress6) -> bool:
+    def __lt__(self, arg: Union[TAddress6, object]) -> bool:
         """Less."""
+        if not isinstance(arg, Address6):
+            raise Raise.error(
+                f"Expected argument of Address6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) < int(arg)
 
-    def __ne__(self, arg: TAddress6) -> bool:
+    def __ne__(self, arg: Union[TAddress6, object]) -> bool:
         """Negative."""
+        if not isinstance(arg, Address6):
+            raise Raise.error(
+                f"Expected argument of Address6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) != int(arg)
 
     @staticmethod
@@ -243,28 +285,70 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
         """Constructor."""
         self.prefix = prefix
 
-    def __eq__(self, arg: TPrefix6) -> bool:
+    def __eq__(self, arg: Union[TPrefix6, object]) -> bool:
         """Equal."""
+        if not isinstance(arg, Prefix6):
+            raise Raise.error(
+                f"Expected argument of Prefix6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) == int(arg)
 
-    def __ge__(self, arg: TPrefix6) -> bool:
+    def __ge__(self, arg: Union[TPrefix6, object]) -> bool:
         """Greater or equal."""
+        if not isinstance(arg, Prefix6):
+            raise Raise.error(
+                f"Expected argument of Prefix6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) >= int(arg)
 
-    def __gt__(self, arg: TPrefix6) -> bool:
+    def __gt__(self, arg: Union[TPrefix6, object]) -> bool:
         """Greater."""
+        if not isinstance(arg, Prefix6):
+            raise Raise.error(
+                f"Expected argument of Prefix6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) > int(arg)
 
-    def __le__(self, arg: TPrefix6) -> bool:
+    def __le__(self, arg: Union[TPrefix6, object]) -> bool:
         """Less or equal."""
+        if not isinstance(arg, Prefix6):
+            raise Raise.error(
+                f"Expected argument of Prefix6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) <= int(arg)
 
-    def __lt__(self, arg: TPrefix6) -> bool:
+    def __lt__(self, arg: Union[TPrefix6, object]) -> bool:
         """Less."""
+        if not isinstance(arg, Prefix6):
+            raise Raise.error(
+                f"Expected argument of Prefix6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) < int(arg)
 
-    def __ne__(self, arg: TPrefix6) -> bool:
+    def __ne__(self, arg: Union[TPrefix6, object]) -> bool:
         """Negative."""
+        if not isinstance(arg, Prefix6):
+            raise Raise.error(
+                f"Expected argument of Prefix6 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) != int(arg)
 
     def __str__(self) -> str:

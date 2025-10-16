@@ -35,28 +35,70 @@ class Word16(IComparators, BClasses, NoDynamicAttributes):
         """Constructor."""
         self.value = value
 
-    def __eq__(self, arg: TWord16) -> bool:
+    def __eq__(self, arg: Union[TWord16, object]) -> bool:
         """Equal."""
+        if not isinstance(arg, Word16):
+            raise Raise.error(
+                f"Expected argument of Word16 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return self.value == arg.value
 
-    def __ge__(self, arg: TWord16) -> bool:
+    def __ge__(self, arg: Union[TWord16, object]) -> bool:
         """Greater then or equal."""
+        if not isinstance(arg, Word16):
+            raise Raise.error(
+                f"Expected argument of Word16 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return self.value >= arg.value
 
-    def __gt__(self, arg: TWord16) -> bool:
+    def __gt__(self, arg: Union[TWord16, object]) -> bool:
         """Greater then."""
+        if not isinstance(arg, Word16):
+            raise Raise.error(
+                f"Expected argument of Word16 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return self.value > arg.value
 
-    def __le__(self, arg: TWord16) -> bool:
+    def __le__(self, arg: Union[TWord16, object]) -> bool:
         """Less then or equal."""
+        if not isinstance(arg, Word16):
+            raise Raise.error(
+                f"Expected argument of Word16 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return self.value <= arg.value
 
-    def __lt__(self, arg: TWord16) -> bool:
+    def __lt__(self, arg: Union[TWord16, object]) -> bool:
         """Less then."""
+        if not isinstance(arg, Word16):
+            raise Raise.error(
+                f"Expected argument of Word16 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return self.value < arg.value
 
-    def __ne__(self, arg: TWord16) -> bool:
+    def __ne__(self, arg: Union[TWord16, object]) -> bool:
         """Negative."""
+        if not isinstance(arg, Word16):
+            raise Raise.error(
+                f"Expected argument of Word16 type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return self.value != arg.value
 
     def __int__(self) -> int:

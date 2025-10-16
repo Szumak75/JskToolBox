@@ -36,28 +36,71 @@ class Octet(IComparators, BClasses, NoDynamicAttributes):
         """Constructor."""
         self.value = value
 
-    def __eq__(self, arg: TOctet) -> bool:
+    def __eq__(self, arg: Union[TOctet, object]) -> bool:
         """Equal."""
+        if not isinstance(arg, Octet):
+            raise Raise.error(
+                f"Expected argument of Octet type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) == int(arg)
 
-    def __ge__(self, arg: TOctet) -> bool:
+    def __ge__(self, arg: Union[TOctet, object]) -> bool:
         """Greater then or equal."""
+        if not isinstance(arg, Octet):
+            raise Raise.error(
+                f"Expected argument of Octet type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) >= int(arg)
 
-    def __gt__(self, arg: TOctet) -> bool:
+    def __gt__(self, arg: Union[TOctet, object]) -> bool:
         """Greater then."""
+        if not isinstance(arg, Octet):
+            raise Raise.error(
+                f"Expected argument of Octet type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+            return False
         return int(self) > int(arg)
 
-    def __le__(self, arg: TOctet) -> bool:
+    def __le__(self, arg: Union[TOctet, object]) -> bool:
         """Less then or equal."""
+        if not isinstance(arg, Octet):
+            raise Raise.error(
+                f"Expected argument of Octet type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) <= int(arg)
 
-    def __lt__(self, arg: TOctet) -> bool:
+    def __lt__(self, arg: Union[TOctet, object]) -> bool:
         """Less then."""
+        if not isinstance(arg, Octet):
+            raise Raise.error(
+                f"Expected argument of Octet type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) < int(arg)
 
-    def __ne__(self, arg: TOctet) -> bool:
+    def __ne__(self, arg: Union[TOctet, object]) -> bool:
         """Negative."""
+        if not isinstance(arg, Octet):
+            raise Raise.error(
+                f"Expected argument of Octet type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) != int(arg)
 
     def __int__(self) -> int:

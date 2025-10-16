@@ -46,28 +46,67 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
         """Constructor."""
         self.octets = addr
 
-    def __eq__(self, arg: TAddress) -> bool:
+    def __eq__(self, arg: Union[TAddress, object]) -> bool:
         """Equal."""
+        if not isinstance(arg, Address):
+            raise Raise.error(
+                f"Expected argument of Address type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) == int(arg)
 
-    def __ge__(self, arg: TAddress) -> bool:
+    def __ge__(self, arg: Union[TAddress, object]) -> bool:
         """Greater or equal."""
+        if not isinstance(arg, Address):
+            raise Raise.error(
+                f"Expected argument of Address type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) >= int(arg)
 
-    def __gt__(self, arg: TAddress) -> bool:
+    def __gt__(self, arg: Union[TAddress, object]) -> bool:
         """Greater."""
+        if not isinstance(arg, Address):
+            raise Raise.error(
+                f"Expected argument of Address type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+            return False
         return int(self) > int(arg)
 
-    def __le__(self, arg: TAddress) -> bool:
+    def __le__(self, arg: Union[TAddress, object]) -> bool:
         """Less or equal."""
+        if not isinstance(arg, Address):
+            raise Raise.error(
+                f"Expected argument of Address type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         return int(self) <= int(arg)
 
-    def __lt__(self, arg: TAddress) -> bool:
+    def __lt__(self, arg: Union[TAddress, object]) -> bool:
         """Less."""
+        if not isinstance(arg, Address):
+            raise Raise.error(
+                f"Expected argument of Address type, received: {type(arg)}.",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
+            return False
         return int(self) < int(arg)
 
-    def __ne__(self, arg: TAddress) -> bool:
+    def __ne__(self, arg: Union[TAddress, object]) -> bool:
         """Negative."""
+        if not isinstance(arg, Address):
+            return False
         return int(self) != int(arg)
 
     @staticmethod
