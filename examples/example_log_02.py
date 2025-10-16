@@ -19,6 +19,7 @@ import threading
 import time
 from pathlib import Path
 from typing import Iterable, List, Optional
+from venv import logger
 
 from jsktoolbox.logstool import (
     LoggerClient,
@@ -58,7 +59,7 @@ class LoggingServer(ThLoggerProcessor):
         self._engine = LoggerEngine()
         self._configure_engine()
         self.logger_engine = self._engine
-        self._server_client = LoggerClient(self._engine.logs_queue, name=self.__class__.__name__)  # type: ignore[arg-type]
+        self._server_client = LoggerClient(self._engine.logs_queue, name=self._c_name)
         self.logger_client = self._server_client
 
     def _configure_engine(self) -> None:
@@ -149,7 +150,7 @@ class LoggingComponentMixin(BLoggerQueue):
         if queue is None:
             raise RuntimeError("Logging server queue is not available.")
         self.logs_queue = queue
-        resolved_name = name or self._c_name  # type: ignore[attr-defined]
+        resolved_name: str = name or self._c_name
         self._logger = LoggerClient(queue, name=resolved_name)
 
     @property
@@ -277,7 +278,11 @@ def main() -> None:
     server.start()
     time.sleep(0.2)
 
-    server.logger_client.message_notice = "Logging server started"
+    logger: Optional[LoggerClient] = server.logger_client
+    if logger is None:
+        raise RuntimeError("Logging server client not available.")
+
+    logger.message_notice = "Logging server started"
 
     worker_fast = BackgroundWorker(server, worker_id=1, interval=0.3)
     worker_slow = BackgroundWorker(server, worker_id=2, interval=0.6)
@@ -292,10 +297,10 @@ def main() -> None:
             controller.emit_status()
     finally:
         controller.request_shutdown()
-        server.logger_client.message_info = "Waiting for workers to stop"
+        logger.message_info = "Waiting for workers to stop"
         time.sleep(1.0)
         server.shutdown(timeout=3.0)
-        server.logger_client.message_notice = "Logging server stopped"
+        logger.message_notice = "Logging server stopped"
 
 
 if __name__ == "__main__":
