@@ -17,9 +17,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Iterable, List, Optional, cast, Union
 from venv import logger
 
-from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.basetool.data import BData
-from jsktoolbox.logstool import (
+from ..attribtool import ReadOnlyClass
+from ..basetool.data import BData
+from ..logstool import (
     LoggerClient,
     LoggerEngine,
     LoggerEngineFile,
@@ -28,12 +28,12 @@ from jsktoolbox.logstool import (
     LogsLevelKeys,
     ThLoggerProcessor,
 )
-from jsktoolbox.basetool.logs import BLoggerQueue
-from jsktoolbox.raisetool import Raise
+from ..basetool import BLoggerQueue
+from ..raisetool import Raise
 
 
 if TYPE_CHECKING:
-    from jsktoolbox.logstool import LoggerQueue
+    from ..logstool import LoggerQueue
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -48,7 +48,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
 class LoggerEngineConfig(BData):
     """Configuration data for logger engine destinations."""
 
-    class __LFCKeys(object, metaclass=ReadOnlyClass):
+    class _LECKeys(object, metaclass=ReadOnlyClass):
         """Predefined keys for logger engine configuration."""
 
         BACKUP_COUNT: str = "backup_count"
@@ -57,6 +57,7 @@ class LoggerEngineConfig(BData):
         FILE_LEVELS: str = "file_levels"
         FILE_OBJ: str = "__file_obj__"
         MAX_FILE_SIZE: str = "max_file_size"
+        DEBUG: str = "debug_mode"
 
     class Console(BData):
         """Console logging configuration."""
@@ -64,7 +65,7 @@ class LoggerEngineConfig(BData):
         def __init__(self) -> None:
             """Constructor."""
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.CONSOLE_LEVELS,
+                key=LoggerEngineConfig._LECKeys.CONSOLE_LEVELS,
                 set_default_type=str,
                 value=LogsLevelKeys.INFO,
             )
@@ -77,7 +78,7 @@ class LoggerEngineConfig(BData):
             str - log levels as str.
             """
             level = self._get_data(
-                key=LoggerEngineConfig.__LFCKeys.CONSOLE_LEVELS,
+                key=LoggerEngineConfig._LECKeys.CONSOLE_LEVELS,
             )
             return level or LogsLevelKeys.INFO
 
@@ -89,7 +90,7 @@ class LoggerEngineConfig(BData):
             * obj: str - List of log levels or None.
             """
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.CONSOLE_LEVELS,
+                key=LoggerEngineConfig._LECKeys.CONSOLE_LEVELS,
                 value=obj,
                 set_default_type=str,
             )
@@ -100,17 +101,17 @@ class LoggerEngineConfig(BData):
         def __init__(self) -> None:
             """Constructor."""
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.FILE_LEVELS,
+                key=LoggerEngineConfig._LECKeys.FILE_LEVELS,
                 set_default_type=str,
                 value=LogsLevelKeys.INFO,
             )
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.MAX_FILE_SIZE,
+                key=LoggerEngineConfig._LECKeys.MAX_FILE_SIZE,
                 set_default_type=Optional[int],
                 value=None,
             )
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.BACKUP_COUNT,
+                key=LoggerEngineConfig._LECKeys.BACKUP_COUNT,
                 set_default_type=int,
                 value=0,
             )
@@ -123,7 +124,7 @@ class LoggerEngineConfig(BData):
             str - Log levels as str.
             """
             level = self._get_data(
-                key=LoggerEngineConfig.__LFCKeys.FILE_LEVELS,
+                key=LoggerEngineConfig._LECKeys.FILE_LEVELS,
             )
             return level or LogsLevelKeys.INFO
 
@@ -135,7 +136,7 @@ class LoggerEngineConfig(BData):
             * obj: str - log levels as str.
             """
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.FILE_LEVELS,
+                key=LoggerEngineConfig._LECKeys.FILE_LEVELS,
                 value=obj,
                 set_default_type=str,
             )
@@ -148,7 +149,7 @@ class LoggerEngineConfig(BData):
             Optional[int] - Maximum file size in bytes or None.
             """
             return self._get_data(
-                key=LoggerEngineConfig.__LFCKeys.MAX_FILE_SIZE,
+                key=LoggerEngineConfig._LECKeys.MAX_FILE_SIZE,
             )
 
         @max_file_size.setter
@@ -159,7 +160,7 @@ class LoggerEngineConfig(BData):
             * obj: Optional[int] - Maximum file size in bytes or None.
             """
             self._set_data(
-                key=LoggerEngineConfig.__LFCKeys.MAX_FILE_SIZE,
+                key=LoggerEngineConfig._LECKeys.MAX_FILE_SIZE,
                 value=obj,
             )
 
@@ -171,7 +172,7 @@ class LoggerEngineConfig(BData):
             int - Number of backup files.
             """
             count = self._get_data(
-                key=LoggerEngineConfig.__LFCKeys.BACKUP_COUNT,
+                key=LoggerEngineConfig._LECKeys.BACKUP_COUNT,
             )
             return count or 0
 
@@ -182,19 +183,46 @@ class LoggerEngineConfig(BData):
             ### Arguments:
             * obj: int - Number of backup files.
             """
-            self._set_data(key=LoggerEngineConfig.__LFCKeys.BACKUP_COUNT, value=obj)
+            self._set_data(key=LoggerEngineConfig._LECKeys.BACKUP_COUNT, value=obj)
 
     def __init__(self) -> None:
         """Constructor."""
         self._set_data(
-            key=LoggerEngineConfig.__LFCKeys.CONSOLE_OBJ,
+            key=LoggerEngineConfig._LECKeys.CONSOLE_OBJ,
             value=LoggerEngineConfig.Console(),
             set_default_type=LoggerEngineConfig.Console,
         )
         self._set_data(
-            key=LoggerEngineConfig.__LFCKeys.FILE_OBJ,
+            key=LoggerEngineConfig._LECKeys.FILE_OBJ,
             value=LoggerEngineConfig.File(),
             set_default_type=LoggerEngineConfig.File,
+        )
+
+    @property
+    def debug(self) -> bool:
+        """Return the debug mode.
+
+        ### Returns:
+        bool - Debug mode.
+        """
+        debug = self._get_data(
+            key=LoggerEngineConfig._LECKeys.DEBUG,
+        )
+        if debug is None:
+            return False
+        return cast(bool, debug)
+
+    @debug.setter
+    def debug(self, obj: bool) -> None:
+        """Assign the debug mode.
+
+        ### Arguments:
+        * obj: bool - Debug mode.
+        """
+        self._set_data(
+            key=LoggerEngineConfig._LECKeys.DEBUG,
+            value=obj,
+            set_default_type=bool,
         )
 
     @property
@@ -205,7 +233,7 @@ class LoggerEngineConfig(BData):
         LoggerEngineConfig.Console - Console configuration instance.
         """
         console = self._get_data(
-            key=LoggerEngineConfig.__LFCKeys.CONSOLE_OBJ,
+            key=LoggerEngineConfig._LECKeys.CONSOLE_OBJ,
         )
         if console is None:
             raise Raise.error(
@@ -224,7 +252,7 @@ class LoggerEngineConfig(BData):
         LoggerEngineConfig.File - File configuration instance.
         """
         file = self._get_data(
-            key=LoggerEngineConfig.__LFCKeys.FILE_OBJ,
+            key=LoggerEngineConfig._LECKeys.FILE_OBJ,
         )
         if file is None:
             raise Raise.error(
@@ -305,15 +333,15 @@ class LoggingServer(ThLoggerProcessor):
         file_engine = LoggerEngineFile(name=app, formatter=formatter, buffered=False)
         file_engine.logdir = str(log_path.parent)
         file_engine.logfile = log_path.name
-        file_engine.max_file_size = config.file.max_file_size
-        file_engine.backup_count = config.file.backup_count
+        file_engine.rotation_max_bytes = config.file.max_file_size
+        file_engine.rotation_backup_count = config.file.backup_count
 
         console_engine = LoggerEngineStdout(
             name=app, formatter=formatter, buffered=False
         )
 
-        lvl_con=False
-        lvl_file=False
+        lvl_con = False
+        lvl_file = False
         for level in (
             LogsLevelKeys.DEBUG,
             LogsLevelKeys.INFO,
@@ -322,10 +350,10 @@ class LoggingServer(ThLoggerProcessor):
             LogsLevelKeys.ERROR,
             LogsLevelKeys.CRITICAL,
         ):
-            if level == config.console.levels:
-                lvl_con=True
-            if level == config.file.levels:
-                lvl_file=True
+            if config.debug or level == config.console.levels:
+                lvl_con = True
+            if config.debug or level == config.file.levels:
+                lvl_file = True
             if lvl_con:
                 engine.add_engine(level, console_engine)
             if lvl_file:
