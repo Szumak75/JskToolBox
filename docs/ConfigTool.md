@@ -10,7 +10,7 @@ The Config Tool package orchestrates reading and writing INI-like configuration 
 Instantiate the `Config` class with a file path and primary section. Use `set`/`get` to mutate values, then call `save` to persist.
 
 ```python
-from jsktoolbox.configtool.main import Config
+from jsktoolbox.configtool import Config
 
 config = Config("/tmp/app.ini", "main", auto_create=True)
 config.set("main", "enabled", value=True)

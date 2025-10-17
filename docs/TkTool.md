@@ -7,14 +7,22 @@
 
 ## Getting Started
 
-Import the classes needed for your UI layer:
+Import the classes needed for your UI layer. The package exposes lazy exports so Tkinter-heavy helpers are imported only when referenced, keeping headless scripts responsive.
 
 ```python
-from jsktoolbox.tktool.base import TkBase
-from jsktoolbox.tktool.layout import Pack, Grid, Place
-from jsktoolbox.tktool.tools import ClipBoard
-from jsktoolbox.tktool.widgets import StatusBarTkFrame, CreateToolTip
+from jsktoolbox.tktool import (
+    TkBase,
+    Pack,
+    Grid,
+    Place,
+    ClipBoard,
+    StatusBarTkFrame,
+    StatusBarTtkFrame,
+    CreateToolTip,
+)
 ```
+
+The lazy loader ensures the Tk event loop is not initialised until you access a GUI-facing symbol.
 
 ---
 

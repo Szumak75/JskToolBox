@@ -1,4 +1,4 @@
-from jsktoolbox.configtool.main import Config
+from jsktoolbox.configtool import Config
 
 file = "/tmp/example.ini"
 section = "TEST"

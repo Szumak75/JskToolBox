@@ -7,12 +7,14 @@ The IPv6 submodule provides comprehensive support for working with 128-bit IPv6 
 
 ## Getting Started
 
-Import the classes needed for IPv6 network operations. The module provides components ranging from low-level word representation to high-level network calculations.
+Import the classes needed for IPv6 network operations. Package-level imports resolve symbols lazily, so each submodule activates only when the requested class is accessed. The module provides components ranging from low-level word representation to high-level network calculations.
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Address6, Prefix6, Network6, SubNetwork6
-from jsktoolbox.netaddresstool.libs.words import Word16
+from jsktoolbox.netaddresstool import Address6, Prefix6, Network6, SubNetwork6
+from jsktoolbox.netaddresstool import Word16
 ```
+
+This lazy loading keeps startup time predictable even when the IPv6 helpers bring in heavier dependencies.
 
 ---
 

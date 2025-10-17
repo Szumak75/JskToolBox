@@ -7,14 +7,20 @@ The Base Tool package gathers reusable mixins that standardise metadata access, 
 
 ## Getting Started
 
-Import the component that matches your use case. Mix and match the classes to augment existing implementations with the desired capabilities.
+Import the component that matches your use case. The package now exposes lazy exports, so you can import straight from `jsktoolbox.basetool` and Python loads the backing module only when the symbol is first used.
 
 ```python
-from jsktoolbox.basetool.classes import BClasses
-from jsktoolbox.basetool.data import BData
-from jsktoolbox.basetool.logs import BLoggerQueue, BLoggerEngine, BLogFormatter
-from jsktoolbox.basetool.threads import ThBaseObject
+from jsktoolbox.basetool import (
+    BClasses,
+    BData,
+    BLoggerQueue,
+    BLoggerEngine,
+    BLogFormatter,
+    ThBaseObject,
+)
 ```
+
+Lazy loading keeps import time low for CLI utilities while preserving IDE discovery of concrete classes.
 
 ---
 

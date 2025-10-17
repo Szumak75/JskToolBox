@@ -7,12 +7,14 @@ The IPv4 submodule provides a complete toolkit for working with IPv4 addresses, 
 
 ## Getting Started
 
-Import the classes you need for IPv4 network operations. The module provides both low-level components (Octet) and high-level network manipulation (Network, SubNetwork).
+Import the classes you need for IPv4 network operations. The package-level imports resolve symbols lazily, so the heavier submodules load only when you first touch a class. The module provides both low-level components (Octet) and high-level network manipulation (Network, SubNetwork).
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Address, Netmask, Network, SubNetwork
-from jsktoolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool import Address, Netmask, Network, SubNetwork
+from jsktoolbox.netaddresstool import Octet
 ```
+
+Lazy loading keeps CLI tools responsive while still exposing the full IPv4 toolkit through a single namespace.
 
 ---
 

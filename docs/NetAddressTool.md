@@ -7,18 +7,26 @@ The NetAddressTool module provides comprehensive, type-safe utilities for workin
 
 ## Getting Started
 
-The module exposes two parallel sets of classes for IPv4 and IPv6 operations, along with configurable safety limits for legacy list-based helpers.
+The module exposes two parallel sets of classes for IPv4 and IPv6 operations, along with configurable safety limits for legacy list-based helpers. Package-level imports now resolve lazily, so each submodule activates only when the exported symbol is accessed.
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Address, Netmask, Network, SubNetwork
-from jsktoolbox.netaddresstool.ipv6 import Address6, Prefix6, Network6, SubNetwork6
 from jsktoolbox.netaddresstool import (
+    Address,
+    Address6,
     DEFAULT_IPV4_HOST_LIMIT,
     DEFAULT_IPV4_SUBNET_LIMIT,
     DEFAULT_IPV6_HOST_LIMIT,
     DEFAULT_IPV6_SUBNET_LIMIT,
+    Netmask,
+    Network,
+    Network6,
+    Prefix6,
+    SubNetwork,
+    SubNetwork6,
 )
 ```
+
+Importing through the package keeps startup time low while maintaining IDE visibility into IPv4 and IPv6 utilities.
 
 ---
 

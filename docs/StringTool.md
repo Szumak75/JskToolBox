@@ -7,10 +7,10 @@ SimpleCrypto collects lightweight helpers that let you experiment with Caesar-st
 
 ## Getting Started
 
-Import the utility class and pick the helper that matches your use case. Salts influence Caesar rotations, while multiple_encrypt chains all available codecs into a single call.
+Import the utility class and pick the helper that matches your use case. The package-level `jsktoolbox.stringtool` exposes lazy exports, so the heavy `crypto` module is only loaded when `SimpleCrypto` is touched. Salts influence Caesar rotations, while `multiple_encrypt` chains all available codecs into a single call.
 
 ```python
-from jsktoolbox.stringtool.crypto import SimpleCrypto
+from jsktoolbox.stringtool import SimpleCrypto
 ```
 
 ---
