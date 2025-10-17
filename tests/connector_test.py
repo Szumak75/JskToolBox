@@ -12,11 +12,8 @@ from typing import Optional
 from jsktoolbox.netaddresstool import Address
 from jsktoolbox.logstool.queue import LoggerQueue
 
-from jsktoolbox.devices.network.connectors import API
-from jsktoolbox.devices.mikrotik.routerboard import RouterBoard
-
+from jsktoolbox.devices import API, Element, RouterBoard
 from jsktoolbox.devices.mikrotik.elements.libs.search import RBQuery
-from jsktoolbox.devices.mikrotik.base import Element
 
 if __name__ == "__main__":
     ch = API(

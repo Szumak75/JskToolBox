@@ -9,10 +9,14 @@ Purpose: Unit tests for helper classes in `jsktoolbox.devices`.
 import unittest
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from jsktoolbox.devices.libs.base import BDebug, BDev
-from jsktoolbox.devices.libs.converters import B64Converter
-from jsktoolbox.devices.mikrotik.base import BRouterOS, Element
-from jsktoolbox.devices.network.connectors import IConnector
+from jsktoolbox.devices import (
+    B64Converter,
+    BDebug,
+    BDev,
+    BRouterOS,
+    Element,
+    IConnector,
+)
 from jsktoolbox.logstool.logs import LoggerClient
 from jsktoolbox.netaddresstool import Address, Address6
 

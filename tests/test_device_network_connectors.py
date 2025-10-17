@@ -10,7 +10,7 @@ import os
 import subprocess
 import unittest
 
-from jsktoolbox.devices.network.connectors import API, SSH
+from jsktoolbox.devices import API, SSH
 from jsktoolbox.netaddresstool import Address, Address6
 
 
