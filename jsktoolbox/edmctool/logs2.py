@@ -4,7 +4,10 @@ logs2.py
 Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 16.10.2025, 20:55:52
 
-Purpose:
+Purpose: Logging server and component mixin for EDMC toolbox.
+Description:
+  This module provides a logging server that manages logging destinations
+  and a mixin for components to easily attach to the logging server.
 """
 
 from __future__ import annotations
