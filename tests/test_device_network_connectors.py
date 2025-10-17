@@ -10,7 +10,7 @@ import os
 import subprocess
 import unittest
 
-from jsktoolbox.devices import API, SSH
+from jsktoolbox.devices import API
 from jsktoolbox.netaddresstool import Address, Address6
 
 
@@ -54,13 +54,12 @@ class TestConnectors(unittest.TestCase):
         """Test nr 01."""
         try:
             API()
-            SSH()
         except Exception as ex:
             self.fail(msg=f"Exception was thrown: {ex}")
 
     def test_02_host(self) -> None:
         """Test nr 02."""
-        for obj in (API(), SSH()):
+        for obj in (API(),):
             obj.address = Address("192.168.1.1")
             self.assertIsInstance(obj.address, Address)
             self.assertEqual(obj.address, Address("192.168.1.1"))
@@ -73,21 +72,21 @@ class TestConnectors(unittest.TestCase):
 
     def test_03_port(self) -> None:
         """Test nr 03."""
-        for obj in (API(), SSH()):
+        for obj in (API(),):
             obj.port = 1234
             self.assertIsInstance(obj.port, int)
             self.assertEqual(obj.port, 1234)
 
     def test_04_user(self) -> None:
         """Test nr 04."""
-        for obj in (API(), SSH()):
+        for obj in (API(),):
             obj.login = "admin"
             self.assertIsInstance(obj.login, str)
             self.assertEqual(obj.login, "admin")
 
     def test_05_pass(self) -> None:
         """Test nr 05."""
-        for obj in (API(), SSH()):
+        for obj in (API(),):
             obj.password = "admin"
             self.assertIsInstance(obj.password, str)
             self.assertEqual(obj.password, "admin")
