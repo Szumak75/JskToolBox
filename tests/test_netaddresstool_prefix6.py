@@ -7,7 +7,7 @@ Purpose: testing IPv6 prefix
 """
 
 import unittest
-from jsktoolbox.netaddresstool.ipv6 import Prefix6
+from jsktoolbox.netaddresstool import Prefix6
 
 
 class TestPrefix6(unittest.TestCase):

@@ -7,7 +7,7 @@ Purpose: for testing Word16 class.
 """
 
 import unittest
-from jsktoolbox.netaddresstool.libs.words import Word16
+from jsktoolbox.netaddresstool import Word16
 
 
 class TestWord16(unittest.TestCase):

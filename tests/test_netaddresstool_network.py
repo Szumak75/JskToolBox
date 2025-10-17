@@ -8,12 +8,7 @@ Purpose: Network class testing.
 
 import unittest
 
-from jsktoolbox.netaddresstool.ipv4 import (
-    Network,
-    Address,
-    Netmask,
-    SubNetwork,
-)
+from jsktoolbox.netaddresstool import Address, Netmask, Network, SubNetwork
 
 
 class TestNetwork(unittest.TestCase):

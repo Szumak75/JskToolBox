@@ -7,8 +7,7 @@ Purpose: Testing IPv4 Address class.
 """
 
 import unittest
-from jsktoolbox.netaddresstool.ipv4 import Address
-from jsktoolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool import Address, Octet
 
 
 class TestAddress(unittest.TestCase):

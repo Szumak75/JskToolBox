@@ -10,7 +10,7 @@ https://www.juniper.net/us/en/research-topics/what-is-ipv4-vs-ipv6.html
 
 import unittest
 
-from jsktoolbox.netaddresstool.ipv6 import Network6, Address6, Prefix6
+from jsktoolbox.netaddresstool import Address6, Network6, Prefix6
 
 
 class TestNetwork6(unittest.TestCase):

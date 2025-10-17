@@ -7,8 +7,7 @@ Purpose: Testing IPv6 Address class.
 """
 
 import unittest
-from jsktoolbox.netaddresstool.ipv6 import Address6
-from jsktoolbox.netaddresstool.libs.words import Word16
+from jsktoolbox.netaddresstool import Address6, Word16
 
 
 class TestAddress6(unittest.TestCase):

@@ -11,8 +11,7 @@ import subprocess
 import unittest
 
 from jsktoolbox.devices.network.connectors import API, SSH
-from jsktoolbox.netaddresstool.ipv4 import Address
-from jsktoolbox.netaddresstool.ipv6 import Address6
+from jsktoolbox.netaddresstool import Address, Address6
 
 
 _ENDPOINTS_ENV = os.environ.get("JSKTOOLBOX_ROUTEROS_ENDPOINTS")
@@ -142,12 +141,11 @@ class TestConnectors(unittest.TestCase):
                         pass
 
         if not reachable:
-            details = [
-                f"{ip} -> {error}" for ip, error in failures.items()
-            ] or ["no endpoint responded"]
+            details = [f"{ip} -> {error}" for ip, error in failures.items()] or [
+                "no endpoint responded"
+            ]
             self.skipTest(
-                "No active RouterOS endpoints. Details: "
-                + "; ".join(details)
+                "No active RouterOS endpoints. Details: " + "; ".join(details)
             )
 
 

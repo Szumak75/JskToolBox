@@ -7,7 +7,7 @@ Purpose: for testing Octet class.
 """
 
 import unittest
-from jsktoolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool import Octet
 
 
 class TestOctet(unittest.TestCase):

@@ -8,7 +8,7 @@ Purpose: Testing SubNetwork calculator.
 
 import unittest
 
-from jsktoolbox.netaddresstool.ipv6 import Network6, Prefix6, SubNetwork6
+from jsktoolbox.netaddresstool import Network6, Prefix6, SubNetwork6
 
 
 class TestSubNetwork6(unittest.TestCase):
@@ -47,7 +47,9 @@ class TestSubNetwork6(unittest.TestCase):
 
     def test_06_iter_subnets_no_limit(self) -> None:
         """Test nr 6."""
-        iterator = SubNetwork6(Network6("fd00::/124"), Prefix6(126)).iter_subnets(limit=None)
+        iterator = SubNetwork6(Network6("fd00::/124"), Prefix6(126)).iter_subnets(
+            limit=None
+        )
         first = next(iterator)
         self.assertEqual(str(first), "fd00::/126")
 

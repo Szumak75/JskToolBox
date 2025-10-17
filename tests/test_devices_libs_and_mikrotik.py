@@ -14,8 +14,7 @@ from jsktoolbox.devices.libs.converters import B64Converter
 from jsktoolbox.devices.mikrotik.base import BRouterOS, Element
 from jsktoolbox.devices.network.connectors import IConnector
 from jsktoolbox.logstool.logs import LoggerClient
-from jsktoolbox.netaddresstool.ipv4 import Address
-from jsktoolbox.netaddresstool.ipv6 import Address6
+from jsktoolbox.netaddresstool import Address, Address6
 
 
 class DummyDebug(BDebug):

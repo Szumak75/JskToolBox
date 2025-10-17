@@ -8,8 +8,7 @@ Purpose: Netmask class testing.
 
 import unittest
 
-from jsktoolbox.netaddresstool.ipv4 import Netmask
-from jsktoolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool import Netmask, Octet
 
 
 class TestNetmask(unittest.TestCase):
@@ -97,7 +96,9 @@ class TestNetmask(unittest.TestCase):
     def test_05_netmask_octets_property(self) -> None:
         """Test nr 5."""
         mask = Netmask(24)
-        self.assertEqual([str(octet) for octet in mask.octets], ["255", "255", "255", "0"])
+        self.assertEqual(
+            [str(octet) for octet in mask.octets], ["255", "255", "255", "0"]
+        )
 
     def test_06_netmask_invalid_octet_list_length(self) -> None:
         """Test nr 6."""
