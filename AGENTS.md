@@ -36,8 +36,24 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 - Pliki Markdown formatuj przy użyciu `prettier`; uruchamiaj `poetry run prettier --write <ścieżka>`.
 - Przestrzegaj PEP 8 i waliduj styl poleceniem `poetry run pycodestyle`.
 - Dodawaj adnotacje typów do nowych funkcji i metod.
-- Docstringi zachowują format: krótka linia streszczenia, sekcje (`### Arguments`, `### Returns`, `### Raises`).
 - Preferuj pojedyncze cudzysłowy, chyba że podwójne są wymagane.
+
+#### Standardy Docstringów
+
+**Wymagania bezwzględne:**
+
+- **Język angielski** - wszystkie docstringi w języku angielskim
+- **Format modułu** - `Author:  ` (dwie spacje po dwukropku), `Created: YYYY-MM-DD`, `Purpose: `
+- **Format funkcji/metod** - krótkie streszczenie, opcjonalne sekcje `### Arguments`, `### Returns`, `### Raises`
+- **Konsystencja** - jednolity autor we wszystkich modułach: `Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>`
+
+**Sekcje opcjonalne:**
+
+- `### Arguments` - **wymagana** tylko gdy metoda ma parametry (oprócz `self`/`cls`)
+- `### Returns` - **opcjonalna** dla metod `-> None` (setterzy, `__init__`)
+- `### Raises` - **opcjonalna**, tylko gdy metoda faktycznie rzuca wyjątki
+
+**Uwaga:** Pliki `__init__.py` mogą mieć uproszczone docstringi bez pełnej struktury Author/Created/Purpose.
 
 ### Testowanie
 
@@ -191,8 +207,18 @@ Raise.error("Invalid value", ValueError)
 
 ### Checklist aktualizacji dokumentacji
 
-Przy każdej zmianie kodu lub ustaleń, aktualizuj:
+**KOLEJNOŚĆ AKTUALIZACJI (OBOWIĄZKOWA):**
 
+1. **NAJPIERW: Sprawdź i zaktualizuj docstringi** w kodzie źródłowym (EN)
+2. **NASTĘPNIE: Regeneruj dokumentację API** - uruchom `make docs`
+3. **NA KOŃCU: Zaktualizuj dokumentację Markdown** - wszystkie pliki `.md`
+
+**ZASADA:** Jeśli polecenie nie wskazuje konkretnego modułu lub klasy, przeprowadź aktualizację **dla całego projektu**.
+
+**Lista plików dokumentacji:**
+
+- [ ] **Docstringi w kodzie** (EN) - **ZAWSZE NAJPIERW**
+- [ ] **Dokumentacja API** (`make docs`) - **PO DOCSTRINGACH**
 - [ ] **EXAMPLES_FOR_AI.md** - Przykłady kodu (EN)
 - [ ] **AI_AGENT_GUIDE.md** - Przewodnik architektoniczny (EN)
 - [ ] **AI_README.md** - Quick reference (EN)
@@ -201,8 +227,6 @@ Przy każdej zmianie kodu lub ustaleń, aktualizuj:
 - [ ] **README.md** - Główna dokumentacja projektu (EN)
 - [ ] **docs/\*.md** - Dokumentacja modułów w katalogu docs (EN)
 - [ ] **PREFERRED_IMPORTS.md** - Jeśli dodano nowe lenive importy
-- [ ] Docstringi w kodzie (EN)
-- [ ] `make docs` - Regeneruj dokumentację HTML/JSON
 
 ### Wzorce do sprawdzenia w dokumentacji
 
@@ -219,24 +243,32 @@ Upewnij się że wszystkie pliki dokumentacji zawierają:
 
 Docstringi tworzymy w języku angielskim według poniższych wzorców.
 
+### Standardy formatowania
+
+- **Author:** Dwie spacje po dwukropku - `Author:  `
+- **Created:** Format YYYY-MM-DD (ISO 8601)
+- **Konsystencja:** Jednolity autor - `Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>`
+
 ### Module-level Docstring
 
 ```python
 """
-Author:  [Author Name] --<[author_email@example.com]>
-Created: [YYYY-MM-DD]
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: YYYY-MM-DD
 
-Purpose: [Short, one-line summary of the module's purpose.]
+Purpose: Short, one-line summary of the module's purpose.
 
 [Optional: More detailed description of the module's functionality,
 its components, and how they fit into the larger project.]
 """
 ```
 
+**Uwaga:** Pliki `__init__.py` mogą mieć uproszczone docstringi bez pełnej struktury.
+
 ### Class-level Docstring
 
 ```python
-"""[Short, one-line summary of the class's purpose.]
+"""Short, one-line summary of the class's purpose.
 
 [Optional: More detailed description of the class's responsibilities,
 design choices, and its role (e.g., utility, data structure).]
@@ -246,22 +278,32 @@ design choices, and its role (e.g., utility, data structure).]
 ### Function/Method-level Docstring
 
 ```python
-"""[Short, one-line summary of what the function does.]
+"""Short, one-line summary of what the function does.
 
 [Optional: More detailed explanation of the function's logic,
 its use cases, or any important algorithms used.]
 
 ### Arguments:
-* arg1: [type] - [Description of the first argument.]
-* arg2: Optional[[type]] - [Description of the second, optional argument. Defaults to [DefaultValue].]
+* arg1: type - Description of the first argument.
+* arg2: Optional[type] - Description of the second, optional argument. Defaults to DefaultValue.
 
 ### Returns:
-[type] - [Description of the returned value.]
+type - Description of the returned value.
+# Dla metod zwracających None (setterzy, __init__):
+# Pomiń całą sekcję Returns lub: "None - <krótki opis działania>"
 
 ### Raises:
-* [ExceptionType]: [Description of the condition that causes this exception to be raised.]
+* ExceptionType: Description of the condition that causes this exception to be raised.
+# Sekcja opcjonalna - tylko gdy metoda rzuca wyjątki
 """
 ```
+
+**Zasady sekcji:**
+
+- `### Arguments:` - **WYMAGANA** gdy metoda ma parametry (oprócz `self`/`cls`)
+- `### Returns:` - **OPCJONALNA** dla metod `-> None`, jeśli dodana: `None - opis`
+- `### Raises:` - **OPCJONALNA**, tylko gdy metoda faktycznie rzuca wyjątki
+- Wszystkie sekcje **bez spacji przed dwukropkiem** - `### Arguments:` nie `### Arguments :`
 
 ## Markdown Documentation Template
 

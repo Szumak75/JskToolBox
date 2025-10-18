@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-math.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 10.10.2024, 13:00:50
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-10
 
-Purpose:
+Purpose: Mathematical algorithms for route optimization in Elite Dangerous.
 """
 
 from __future__ import annotations
@@ -327,6 +326,7 @@ class Euclid(BLogClient):
 
 
 class AlgAStar(IAlg, BLogClient):
+    """A* pathfinding algorithm implementation for route optimization."""
 
     __plugin_name: str = None  # type: ignore
     __math: Euclid = None  # type: ignore
@@ -488,6 +488,11 @@ class AlgAStar(IAlg, BLogClient):
 
     @property
     def final_distance(self) -> float:
+        """Calculate the total distance of the final route.
+
+        ### Returns:
+        float - Total distance in light years, or 0.0 if no route found.
+        """
         if not self.__final:
             return 0.0
         dist = self.__math.distance(
@@ -712,6 +717,11 @@ class AlgTsp(IAlg, BLogClient):
 
     @property
     def final_distance(self) -> float:
+        """Calculate the total distance of the final route.
+
+        ### Returns:
+        float - Total distance in light years, or 0.0 if no route found.
+        """
         return self.__total_distance
 
     @property
@@ -721,6 +731,7 @@ class AlgTsp(IAlg, BLogClient):
 
 
 class AlgGeneric(IAlg, BLogClient):
+    """Generic optimization algorithm for route planning."""
 
     __plugin_name: str = None  # type: ignore
     __math: Euclid = None  # type: ignore
@@ -866,6 +877,11 @@ class AlgGeneric(IAlg, BLogClient):
 
     @property
     def final_distance(self) -> float:
+        """Calculate the total distance of the final route.
+
+        ### Returns:
+        float - Total distance in light years, or 0.0 if no route found.
+        """
         if not self.__final:
             return 0.0
         dist: float = self.__math.distance(
@@ -1112,6 +1128,11 @@ class AlgGenetic(IAlg, BLogClient):
 
     @property
     def final_distance(self) -> float:
+        """Calculate the total distance of the final route.
+
+        ### Returns:
+        float - Total distance in light years, or 0.0 if no route found.
+        """
         if not self.__final:
             return 0.0
         dist: float = self.__math.distance(
@@ -1130,6 +1151,7 @@ class AlgGenetic(IAlg, BLogClient):
 
 
 class AlgGenetic2(IAlg, BLogClient):
+    """Genetic algorithm implementation (version 2) for route optimization."""
 
     __plugin_name: str = None  # type: ignore
     __math: Euclid = None  # type: ignore
@@ -1449,6 +1471,11 @@ class AlgGenetic2(IAlg, BLogClient):
 
     @property
     def final_distance(self) -> float:
+        """Calculate the total distance of the final route.
+
+        ### Returns:
+        float - Total distance in light years, or 0.0 if no route found.
+        """
         if not self.__final:
             return 0.0
         dist: float = self.__math.distance(
@@ -1467,6 +1494,7 @@ class AlgGenetic2(IAlg, BLogClient):
 
 
 class AlgSimulatedAnnealing(IAlg, BLogClient):
+    """Simulated annealing algorithm for finding optimal routes."""
 
     __plugin_name: str = None  # type: ignore
     __math: Euclid = None  # type: ignore
@@ -1666,6 +1694,11 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
 
     @property
     def final_distance(self) -> float:
+        """Calculate the total distance of the final route.
+
+        ### Returns:
+        float - Total distance in light years, or 0.0 if no route found.
+        """
         if not self.__final:
             return 0.0
         dist: float = self.__math.distance(

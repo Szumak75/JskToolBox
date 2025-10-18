@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 """
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 22.12.2023, 12:41:06
 
 Purpose: RB: /user/

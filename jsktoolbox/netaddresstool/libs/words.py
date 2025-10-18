@@ -140,7 +140,11 @@ class Word16(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def value(self) -> int:
-        """Return value of Word16 as int."""
+        """Return the word value as an integer.
+
+        ### Returns:
+        int - Integer value in range [0x0000, 0xffff].
+        """
         return self.__value
 
     @value.setter
@@ -148,6 +152,15 @@ class Word16(IComparators, BClasses, NoDynamicAttributes):
         self,
         args: Union[str, int, TWord16],
     ) -> None:
+        """Assign a new value to the word.
+
+        ### Arguments:
+        * args: Union[str, int, TWord16] - Value as integer, hex/decimal string, or another Word16.
+
+        ### Raises:
+        * ValueError: Raised when the value is out of range [0x0000, 0xffff] or invalid format.
+        * TypeError: Raised when the argument type is not int, str, or Word16.
+        """
         if isinstance(args, int):
             if Word16.__check_range(args):
                 self.__value = args

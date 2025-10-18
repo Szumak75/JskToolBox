@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-data.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 10.10.2024, 13:00:59
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-10
 
 Purpose: Data container classes.
 """
@@ -77,11 +76,20 @@ class RscanData(BData):
 
     @property
     def jump_system(self) -> StarsSystem:
-        """Return StarsSystem object."""
+        """Return the jump destination StarsSystem object.
+
+        ### Returns:
+        StarsSystem - The jump target system instance.
+        """
         return self._get_data(key=_Keys.JUMP_SYSTEM)  # type: ignore
 
     @jump_system.setter
     def jump_system(self, value: Optional[StarsSystem]) -> None:
+        """Assign the jump destination system.
+
+        ### Arguments:
+        * value: Optional[StarsSystem] - Jump target system or None to reset.
+        """
         if value is None:
             self._set_data(key=_Keys.JUMP_SYSTEM, value=StarsSystem())
             return
@@ -92,11 +100,20 @@ class RscanData(BData):
 
     @property
     def stars_system(self) -> StarsSystem:
-        """Return StarsSystem object."""
+        """Return the current StarsSystem object.
+
+        ### Returns:
+        StarsSystem - The current system instance.
+        """
         return self._get_data(key=_Keys.STARS_SYSTEM)  # type: ignore
 
     @stars_system.setter
     def stars_system(self, value: Optional[StarsSystem]) -> None:
+        """Assign the current stars system.
+
+        ### Arguments:
+        * value: Optional[StarsSystem] - Current system or None to reset.
+        """
         if value is None:
             self._set_data(key=_Keys.STARS_SYSTEM, value=StarsSystem())
             return
@@ -107,11 +124,20 @@ class RscanData(BData):
 
     @property
     def jump_range(self) -> float:
-        """Return jump_range."""
+        """Return the ship's maximum jump range.
+
+        ### Returns:
+        float - Jump range value in light years.
+        """
         return self._get_data(key=_Keys.JUMP_RANGE)  # type: ignore
 
     @jump_range.setter
     def jump_range(self, value: Union[str, int, float]) -> None:
+        """Assign the ship's jump range.
+
+        ### Arguments:
+        * value: Union[str, int, float] - Jump range to set (convertible to float).
+        """
         if value is not None and isinstance(value, (str, int, float)):
             try:
                 self._set_data(
@@ -123,23 +149,41 @@ class RscanData(BData):
 
     @property
     def plugin_name(self) -> str:
-        """Return pluginname."""
+        """Return the plugin name.
+
+        ### Returns:
+        str - Name of the EDMC plugin.
+        """
         return self._get_data(key=_Keys.PLUGIN_NAME)  # type: ignore
 
     @plugin_name.setter
     def plugin_name(self, value: Optional[str]) -> None:
+        """Assign the plugin name.
+
+        ### Arguments:
+        * value: Optional[str] - Plugin name string.
+        """
         if value is not None and isinstance(value, str):
             self._set_data(key=_Keys.PLUGIN_NAME, value=value)
 
     @property
     def version(self) -> str:
-        """Return version."""
+        """Return the plugin version.
+
+        ### Returns:
+        str - Version string of the plugin.
+        """
         return self._get_data(
             key=_Keys.VERSION,
         )  # type: ignore
 
     @version.setter
     def version(self, value: Optional[str]) -> None:
+        """Assign the plugin version.
+
+        ### Arguments:
+        * value: Optional[str] - Version string.
+        """
         if value is not None and isinstance(value, str):
             self._set_data(
                 key=_Keys.VERSION,
@@ -148,25 +192,43 @@ class RscanData(BData):
 
     @property
     def cmdr(self) -> str:
-        """Return commander name."""
+        """Return the commander name.
+
+        ### Returns:
+        str - Current commander name.
+        """
         return self._get_data(
             key=_Keys.CMDR,
         )  # type: ignore
 
     @cmdr.setter
     def cmdr(self, value: Optional[str]) -> None:
+        """Assign the commander name.
+
+        ### Arguments:
+        * value: Optional[str] - Commander name string.
+        """
         if value is not None and value != self.cmdr:
             self._set_data(key=_Keys.CMDR, value=value)
 
     @property
     def shutting_down(self) -> bool:
-        """Return access to shutting_down flag."""
+        """Return the shutting down flag status.
+
+        ### Returns:
+        bool - True if the plugin is shutting down.
+        """
         return self._get_data(
             key=_Keys.SHUTDOWN,
         )  # type: ignore
 
     @shutting_down.setter
     def shutting_down(self, value: bool) -> None:
+        """Assign the shutting down flag.
+
+        ### Arguments:
+        * value: bool - Shutdown flag status.
+        """
         self._set_data(
             key=_Keys.SHUTDOWN,
             value=value,

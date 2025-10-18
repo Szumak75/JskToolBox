@@ -55,7 +55,7 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
                 TypeError,
                 self._c_name,
                 currentframe(),
-            )   
+            )
         return int(self) == int(arg)
 
     def __ge__(self, arg: Union[TAddress6, object]) -> bool:
@@ -245,6 +245,11 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
     def words(
         self, value: Union[str, int, Union[List[int], List[str], List[Word16]]]
     ) -> None:
+        """Set IPv6 address from string, integer or list of Word16.
+
+        ### Arguments:
+        * value: Union[str, int, Union[List[int], List[str], List[Word16]]] - IPv6 address representation.
+        """
         if isinstance(value, List):
             self.__set_words_from_list(value)
         elif isinstance(value, int):

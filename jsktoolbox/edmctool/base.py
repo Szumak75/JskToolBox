@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-logs.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 7.10.2024, 13:39:19
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-07
 
 Purpose: EDMC plugins individual logging subsystem base classes.
 """
@@ -35,11 +34,20 @@ class BLogProcessor(BData):
 
     @property
     def th_log(self) -> Thread:
-        """Give me thread logger handler."""
+        """Return the thread logger handler instance.
+
+        ### Returns:
+        Thread - The thread responsible for log processing.
+        """
         return self._get_data(key=_Keys.TH_LOGGER, default_value=None)  # type: ignore
 
     @th_log.setter
     def th_log(self, value: Thread) -> None:
+        """Assign the thread logger handler.
+
+        ### Arguments:
+        * value: Thread - The thread instance to use for log processing.
+        """
         self._set_data(key=_Keys.TH_LOGGER, value=value, set_default_type=Thread)
 
     @property

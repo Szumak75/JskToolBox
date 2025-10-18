@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-stars.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 7.10.2024, 13:39:31
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-07
 
 Purpose: StarsSystem container.
 """

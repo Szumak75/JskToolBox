@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-ed.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 8.10.2024, 14:15:25
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-08
 
-Purpose:
+Purpose: Elite Dangerous journal event keys definition container.
 """
 
 

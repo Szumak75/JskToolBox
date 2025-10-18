@@ -177,6 +177,11 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
     def octets(
         self, value: Union[str, int, Union[List[str], List[int], List[Octet]]]
     ) -> None:
+        """Set IPv4 address from string, integer or list of octets.
+
+        ### Arguments:
+        * value: Union[str, int, Union[List[str], List[int], List[Octet]]] - IPv4 address representation.
+        """
         if isinstance(value, List):
             self.__set_octets_from_list(value)
         elif isinstance(value, int):
@@ -308,7 +313,11 @@ class Netmask(BClasses, NoDynamicAttributes):
     def octets(
         self, addr: Union[str, int, Union[List[str], List[int], List[Octet]]]
     ) -> None:
-        """Set netmask from list of 4 values [int||str||Octets]."""
+        """Set netmask from string, integer or list of proper format of netmask octets.
+
+        ### Arguments:
+        * addr: Union[str, int, Union[List[str], List[int], List[Octet]]] - Netmask representation.
+        """
         tmp = int(Address(addr))
         if not Netmask.__octets_validator(tmp):
             raise Raise.error(
@@ -326,6 +335,11 @@ class Netmask(BClasses, NoDynamicAttributes):
 
     @cidr.setter
     def cidr(self, value: Union[str, int]) -> None:
+        """Set netmask from CIDR format of string or integer.
+
+        ### Arguments:
+        * value: Union[str, int] - CIDR notation (0-32).
+        """
         if isinstance(value, str) and value.isdigit():
             self.__cidr_validator(int(value))
         elif isinstance(value, int):
@@ -555,8 +569,13 @@ class SubNetwork(BClasses, NoDynamicAttributes):
                 currentframe(),
             )
 
-    def subnets(self, limit: Optional[int] = DEFAULT_IPV4_SUBNET_LIMIT) -> List[Network]:
+    def subnets(
+        self, limit: Optional[int] = DEFAULT_IPV4_SUBNET_LIMIT
+    ) -> List[Network]:
         """Return subnets list. (Deprecated)
+
+        ### Arguments:
+        * limit: Optional[int] - Maximum number of subnets to generate. Defaults to DEFAULT_IPV4_SUBNET_LIMIT.
 
         ### Returns:
         [List[Network]] - List of generated subnetworks.

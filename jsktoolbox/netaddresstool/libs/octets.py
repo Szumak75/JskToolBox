@@ -131,7 +131,11 @@ class Octet(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def value(self) -> int:
-        """Return value of Octet as int."""
+        """Return the octet value as an integer.
+
+        ### Returns:
+        int - Integer value in range [0, 255].
+        """
         return self.__value
 
     @value.setter
@@ -139,6 +143,15 @@ class Octet(IComparators, BClasses, NoDynamicAttributes):
         self,
         args: Union[str, int, TOctet],
     ) -> None:
+        """Assign a new value to the octet.
+
+        ### Arguments:
+        * args: Union[str, int, TOctet] - Value as integer, numeric string, or another Octet.
+
+        ### Raises:
+        * ValueError: Raised when the value is out of range [0, 255].
+        * TypeError: Raised when the argument type is not int, str, or Octet.
+        """
         if isinstance(args, int):
             if Octet.__check_range(args):
                 self.__value = args

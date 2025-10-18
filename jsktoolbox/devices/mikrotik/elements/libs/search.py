@@ -17,6 +17,8 @@ class RBQuery(BData):
     """RBQuery class helper."""
 
     class Keys(object, metaclass=ReadOnlyClass):
+        """Immutable keys for RBQuery internal storage."""
+
         SEARCH = "_search_query_"
 
     def __init__(self) -> None:

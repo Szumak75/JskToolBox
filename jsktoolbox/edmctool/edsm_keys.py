@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-edsm_keys.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 8.10.2024, 16:32:38
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-08
 
-Purpose:
+Purpose: EDSM API response keys definition container.
 """
 
 

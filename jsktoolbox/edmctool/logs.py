@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-logs.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
-Created: 7.10.2024, 14:25:00
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Created: 2024-10-07
 
 Purpose: EDMC plugins individual logging subsystem classes.
 """
