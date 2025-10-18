@@ -40,7 +40,50 @@ module-by-module guides; the sections below highlight the available references.
 - **TkTool** – Tk mixins, layout helpers, clipboard adapters, and reusable widgets (excluding the unreliable `_TkClip`)  
   [TkTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md)
 
+## API Documentation
+
+Complete API reference documentation is available:
+
+- **Generate Documentation**: `make docs` or `poetry run python generate_docs.py`
+- **HTML Documentation**: Open `docs_api/build/html/index.html` after generation
+- **Preferred Imports**: [PREFERRED_IMPORTS.md](PREFERRED_IMPORTS.md) - Lazy import patterns
+- **AI Agent Guide**: [AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md) - Integration guide for AI agents
+- **Code Examples**: [EXAMPLES_FOR_AI.md](EXAMPLES_FOR_AI.md) - Practical usage examples
+- **Module Index**: [API_INDEX.md](API_INDEX.md) - Quick reference of all modules
+- **API Structure**: `api_structure.json` - Machine-readable API structure
+
+### Lazy Imports (Important)
+
+The library uses lazy imports for performance. Use the preferred shorter patterns:
+
+```python
+# ✓ Preferred (lazy loading)
+from jsktoolbox.configtool import Config
+from jsktoolbox.logstool import LoggerClient
+
+# ✗ Avoid (works but longer)
+from jsktoolbox.configtool.main import Config
+from jsktoolbox.logstool.logs import LoggerClient
+```
+
+### Quick Start
+
+```bash
+# Install dependencies
+poetry install
+
+# Generate all documentation
+make docs
+
+# Or use the script directly
+poetry run python generate_docs.py
+
+# Open documentation in browser
+make docs-open
+```
+
 ## Examples
 
-Examples demonstrating selected modules can be found in  
-[docs/examples](https://github.com/Szumak75/JskToolBox/tree/master/docs/examples).
+Examples demonstrating selected modules can be found in:
+- [docs/examples](https://github.com/Szumak75/JskToolBox/tree/master/docs/examples) - Module examples
+- [EXAMPLES_FOR_AI.md](EXAMPLES_FOR_AI.md) - Complete code examples

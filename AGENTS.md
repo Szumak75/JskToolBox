@@ -45,9 +45,55 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 - Klasy testowe dziedziczą po `unittest.TestCase`, a zestaw uruchamiaj przez `poetry run pytest`.
 - Zapewnij pokrycie testami każdej nowej funkcjonalności.
 
+### Dokumentacja API
+
+- Pełna dokumentacja API jest generowana automatycznie za pomocą Sphinx.
+- Przed rozpoczęciem pracy z biblioteką zawsze generuj świeżą dokumentację: `make docs` lub `poetry run python generate_docs.py`.
+- Dostępne pliki dokumentacji:
+  - `docs_api/build/html/index.html` - Kompletna dokumentacja HTML API
+  - `api_structure.json` - Struktura API w formacie JSON (do parsowania)
+  - `API_INDEX.md` - Szybki indeks modułów z przykładami importów
+  - `PREFERRED_IMPORTS.md` - Mapa leniwych importów (preferowane wzorce)
+  - `AI_AGENT_GUIDE.md` - Przewodnik integracji dla agentów AI
+  - `EXAMPLES_FOR_AI.md` - Kompletne przykłady kodu
+  - `AI_README.md` - Quick reference dla agentów AI
+  - `DOKUMENTACJA_PL.md` - Instrukcja w języku polskim
+
+### Wzorce architektury
+
+#### ReadOnlyClass - Immutable Keys
+
+Zawsze używaj `ReadOnlyClass` dla kluczy słowników w BData:
+
+```python
+from jsktoolbox.attribtool import ReadOnlyClass
+
+# Wzorzec 1: Klucze wewnątrz klasy (zakres klasy)
+class MyClass(BData):
+    class _Keys(object, metaclass=ReadOnlyClass):
+        DATA: str = "data"
+
+# Wzorzec 2: Klucze na poziomie modułu (współdzielone w module)
+class _Keys(object, metaclass=ReadOnlyClass):
+    CONFIG: str = "config"
+
+# Wzorzec 3: Klucze publiczne (całe projekty)
+class ProjectKeys(object, metaclass=ReadOnlyClass):
+    APP_NAME: str = "app_name"
+```
+
+Zobacz `EXAMPLES_FOR_AI.md` dla szczegółów każdego wzorca.
+
+#### BClasses - Automatyczne właściwości
+
+- `_c_name` - automatyczna property zwracająca `self.__class__.__name__`
+- `_f_name` - automatyczna property zwracająca nazwę bieżącej metody
+- **Nie deklaruj ich** jako zmiennych klasowych - przykryjesz automatykę
+
 ### Obsługa błędów
 
-- Do zgłaszania wyjątków używaj mechanizmu `raisetool.Raise.error(message, exception_type, class_name, frame)`.
+- Do zgłaszania wyjątków używaj mechanizmu `raise Raise.error(message, exception_type, class_name, frame)`.
+- Pamiętaj: `Raise.error()` **tworzy** wyjątek, ale go nie rzuca - używaj `raise`.
 
 ### Ogólne zalecenia
 
@@ -56,6 +102,31 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 - Komentarze i dokumentację w repozytorium zapisuj po angielsku.
 - Zachowuj zwięzłą, techniczną formę odpowiedzi zgodną z konwencjami projektu.
 - Przy zmianach obejmujących wiele plików przedstaw plan i poproś o akceptację.
+- **ZAWSZE aktualizuj CAŁĄ dokumentację** - nie tylko jeden plik.
+
+### Checklist aktualizacji dokumentacji
+
+Przy każdej zmianie kodu lub ustaleń, aktualizuj:
+
+- [ ] **EXAMPLES_FOR_AI.md** - Przykłady kodu (EN)
+- [ ] **AI_AGENT_GUIDE.md** - Przewodnik architektoniczny (EN)
+- [ ] **AI_README.md** - Quick reference (EN)
+- [ ] **DOKUMENTACJA_PL.md** - Instrukcja użytkowania (PL)
+- [ ] **AGENTS.md** - Konfiguracja i ustalenia (PL)
+- [ ] **PREFERRED_IMPORTS.md** - Jeśli dodano nowe lenive importy
+- [ ] Docstringi w kodzie (EN)
+- [ ] `make docs` - Regeneruj dokumentację HTML/JSON
+
+### Wzorce do sprawdzenia w dokumentacji
+
+Upewnij się że wszystkie pliki dokumentacji zawierają:
+
+1. **ReadOnlyClass** - Trzy wzorce (inside class, module level, public)
+2. **Raise.error()** - Zawsze z `raise` keyword
+3. **BClasses properties** - `_c_name` i `_f_name` NIE SĄ deklarowane
+4. **Lazy imports** - Preferowane krótkie formy
+5. **BData methods** - `_get_data()`, `_set_data()` zamiast `_data[]`
+6. **netaddresstool** - Rozróżnienie Address/Network i IPv4/IPv6
 
 ## Docstring Template
 

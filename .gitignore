@@ -71,6 +71,11 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs_api/build/
+
+# Generated API documentation files
+api_structure.json
+API_INDEX.md
 
 # PyBuilder
 .pybuilder/

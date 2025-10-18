@@ -91,14 +91,14 @@ class BData(BClasses):
     def _get_data(
         self,
         key: str,
-        set_default_type: Any = None,
+        set_default_type: Optional[Any] = None,
         default_value: Optional[Any] = None,
     ):
         """Gets data from internal dict.
 
         ### Arguments:
         * key: str - Variable name.
-        * set_default_type: Optional[Type[Any]] - Optional type restriction to register.
+        * set_default_type: Optional[Any] - Optional type restriction to register.
         * default_value: Optional[Any] - Fallback value when the key is missing.
 
         ### Returns:
@@ -132,14 +132,14 @@ class BData(BClasses):
         self,
         key: str,
         value: Optional[Any],
-        set_default_type: Any = None,
+        set_default_type: Optional[Any] = None,
     ) -> None:
         """Sets data to internal dict.
 
         ### Arguments:
         * key: str - Variable name.
         * value: Optional[Any] - Value to assign.
-        * set_default_type: Optional[Type[Any]] - Optional type restriction for the key.
+        * set_default_type: Optional[Any] - Optional type restriction for the key.
 
         ### Raises:
         * TypeError: Value violates the registered or provided type constraint.
