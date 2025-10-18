@@ -44,36 +44,43 @@ make docs-open
 Po uruchomieniu `make docs` otrzymujesz:
 
 ### 1. Dokumentacja HTML (Sphinx)
+
 - **Lokalizacja**: `docs_api/build/html/index.html`
 - **Przeznaczenie**: Pełna dokumentacja API z cross-referencingiem
 - **Dla kogo**: Programiści, agenty AI potrzebujące szczegółów
 
 ### 2. JSON API Structure
+
 - **Lokalizacja**: `api_structure.json`
 - **Przeznaczenie**: Struktura API w formacie JSON do parsowania
 - **Dla kogo**: Agenty AI, narzędzia automatyzujące
 
 ### 3. Markdown Index
+
 - **Lokalizacja**: `API_INDEX.md`
 - **Przeznaczenie**: Szybki indeks modułów z przykładami importów
 - **Dla kogo**: Szybkie odniesienie, quick reference
 
 ### 4. Przewodnik dla agentów AI
+
 - **Lokalizacja**: `AI_AGENT_GUIDE.md`
 - **Przeznaczenie**: Szczegółowy przewodnik integracji
 - **Dla kogo**: Agenty AI rozpoczynające pracę z biblioteką
 
 ### 5. Przykłady kodu
+
 - **Lokalizacja**: `EXAMPLES_FOR_AI.md`
 - **Przeznaczenie**: Kompletne przykłady użycia
 - **Dla kogo**: Nauka wzorców programowania
 
 ### 6. Szybki przewodnik
+
 - **Lokalizacja**: `AI_README.md`
 - **Przeznaczenie**: Quick reference dla agentów AI
 - **Dla kogo**: Szybki dostęp do najważniejszych informacji
 
 ### 7. Mapa leniwych importów
+
 - **Lokalizacja**: `PREFERRED_IMPORTS.md`
 - **Przeznaczenie**: Preferowane składnie importów
 - **Dla kogo**: Programiści, agenty AI szukające najlepszych praktyk
@@ -106,6 +113,7 @@ class ProjectKeys(object, metaclass=ReadOnlyClass):
 ### BClasses - Automatyczne właściwości
 
 **NIE DEKLARUJ** tych właściwości - są automatyczne:
+
 - `_c_name` - zwraca `self.__class__.__name__` automatycznie
 - `_f_name` - zwraca nazwę bieżącej metody
 
@@ -113,7 +121,7 @@ class ProjectKeys(object, metaclass=ReadOnlyClass):
 class MyClass(BData):
     # ✗ BŁĄD - przykrywa automatyczną property
     # _c_name: str = "MyClass"
-    
+
     def method(self):
         # ✓ POPRAWNIE - używa automatycznej property
         print(f"Class: {self._c_name}")  # "MyClass"
@@ -173,29 +181,49 @@ net6 = Network6("2001:db8::/64")     # Sieć IPv6 z prefiksem
 
 ### Threading - Architektura
 
-```python
-import threading
-from jsktoolbox.basetool import ThBaseObject
-from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
+**WAŻNE:** Nie dziedzicz bezpośrednio tylko po `threading.Thread` - użyj `ThBaseObject` jako klasy bazowej!
 
-class MyThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
-    # _c_name jest automatyczne - NIE DEKLARUJ!
-    
+```python
+from threading import Thread
+from jsktoolbox.basetool import ThBaseObject, BData
+from jsktoolbox.attribtool import ReadOnlyClass
+
+# ✓ POPRAWNIE - ThBaseObject + Thread
+class MyThread(BData, ThBaseObject, Thread):
+    """Worker thread with proper base classes."""
+
     class _Keys(object, metaclass=ReadOnlyClass):
         DATA: str = "data"
-    
+
     def __init__(self):
-        # Używa automatycznej property _c_name
-        threading.Thread.__init__(self, name=self._c_name)
-        self._stop_event = threading.Event()
-        
+        # Tylko Thread.__init__() potrzebuje wywołania
+        # ThBaseObject i BData nie mają własnego __init__
+        Thread.__init__(self, name="MyThread")
+
         # BData storage z immutable keys
         self._set_data(
             key=self._Keys.DATA,
             value="initial",
             set_default_type=str
         )
+
+    def run(self) -> None:
+        """Thread main loop."""
+        while not self.stopped:
+            data = self._get_data(self._Keys.DATA)
+            # Process data...
+            self._sleep()  # From ThBaseObject
+
+# ✗ BŁĄD - brak ThBaseObject
+# class BadThread(Thread):  # Łamie wymagania projektu!
+#     pass
 ```
+
+**Dlaczego ThBaseObject?**
+
+- Dodaje wymagane deklaracje zmiennych klasowych dla Thread
+- Dostarcza `_sleep()`, `sleep_period`, `stopped` i inne pomocne metody
+- Integruje się z architekturą projektu (BClasses, NoDynamicAttributes)
 
 ## Struktura projektu
 
@@ -247,13 +275,13 @@ Gdy agent AI pracuje z biblioteką, powinien konsultować dokumentację w tej ko
 
 ### Typowe zadania
 
-| Zadanie | Plik dokumentacji |
-|---------|-------------------|
-| Szukam modułu do obsługi logowania | `API_INDEX.md` → logstool |
-| Jak używać konfiguracji? | `EXAMPLES_FOR_AI.md` → Configuration Management |
-| Jakie parametry ma funkcja X? | `docs_api/build/html/` → Moduł → Funkcja |
-| Jak stworzyć wątek? | `EXAMPLES_FOR_AI.md` → Threading |
-| Pełny przykład aplikacji | `EXAMPLES_FOR_AI.md` → Complete Application |
+| Zadanie                            | Plik dokumentacji                               |
+| ---------------------------------- | ----------------------------------------------- |
+| Szukam modułu do obsługi logowania | `API_INDEX.md` → logstool                       |
+| Jak używać konfiguracji?           | `EXAMPLES_FOR_AI.md` → Configuration Management |
+| Jakie parametry ma funkcja X?      | `docs_api/build/html/` → Moduł → Funkcja        |
+| Jak stworzyć wątek?                | `EXAMPLES_FOR_AI.md` → Threading                |
+| Pełny przykład aplikacji           | `EXAMPLES_FOR_AI.md` → Complete Application     |
 
 ## Regeneracja dokumentacji
 
@@ -314,21 +342,21 @@ class MyApp(BData):
         config = Config(app_name="MyApp", config_name="settings")
         log_queue = LoggerQueue()
         logger = LoggerClient(log_queue)
-        
+
         # BData z immutable keys
         self._set_data(
             key=_Keys.DB_HOST,
             value="localhost",
             set_default_type=str
         )
-        
+
         # Logging
         logger.info("Application started")
-        
+
         # Config
         config.set("Database", "host", "localhost")
         config.save()
-    
+
     def process(self):
         try:
             # Your logic
@@ -388,6 +416,7 @@ class MyApp(BData):
 Projekt zawiera plik `.readthedocs.yaml` gotowy do użycia z Read the Docs.
 
 **Konfiguracja** (używa Poetry):
+
 ```yaml
 version: 2
 build:
@@ -402,12 +431,14 @@ build:
 ```
 
 **Instalacja na Read the Docs**:
+
 1. Załóż konto na https://readthedocs.org/
 2. Importuj projekt JskToolBox
 3. Dokumentacja zbuduje się automatycznie
 4. Dostępna pod: `jsktoolbox.readthedocs.io`
 
 **Zalety**:
+
 - Automatyczne budowanie z każdym push do main
 - Generuje HTML, PDF i EPUB
 - Wsparcie dla wielu wersji
@@ -436,22 +467,26 @@ cp -r docs_api/build/html/* /path/to/gh-pages/
 **Rozwiązanie**: Read the Docs wymaga explicite zainstalowania sphinx-rtd-theme.
 
 **Przyczyna**:
+
 - RTD używa pip do instalacji zależności
 - Musi mieć dostęp do wszystkich pakietów w virtualenv
 - Poetry dependency groups nie są wspierane przez pip bezpośrednio
 
 **Rozwiązanie zastosowane**:
+
 1. Wygenerowano `docs_api/requirements.txt` z Poetry dev dependencies
 2. Zaktualizowano `.readthedocs.yaml` by używał `python.install` z requirements
 3. Dodano import sphinx_rtd_theme w `conf.py`
 4. Dodano warunkowe ustawienie `html_theme_path`
 
 **Regeneracja requirements.txt** (po zmianach w pyproject.toml):
+
 ```bash
 poetry export --only dev -f requirements.txt --without-hashes -o docs_api/requirements.txt
 ```
 
 **Weryfikacja**:
+
 - sphinx-rtd-theme jest w docs_api/requirements.txt
 - conf.py importuje sphinx_rtd_theme
 - RTD instaluje wszystkie zależności przez pip
@@ -463,17 +498,20 @@ poetry export --only dev -f requirements.txt --without-hashes -o docs_api/requir
 **Rozwiązanie**: Od wersji projektu używamy wbudowanego `sphinx.ext.autodoc.typehints` zamiast zewnętrznego pakietu.
 
 **Historia problemu**:
+
 - Zewnętrzny pakiet `sphinx-autodoc-typehints` miał problemy z kompatybilnością Python 3.10
 - Wersja >=2.5.0 wymaga Sphinx >=8.0.2, projekt ma ograniczenie Sphinx <8
 - Sphinx ma wbudowane wsparcie dla type hints od wersji 2.1
 - Duplikacja funkcjonalności (wbudowane + zewnętrzne)
 
 **Rozwiązanie zastosowane**:
+
 1. Usunięto `sphinx_autodoc_typehints` z `docs_api/source/conf.py`
 2. Pozostawiono `sphinx.ext.autodoc.typehints` (wbudowane)
 3. Usunięto `sphinx-autodoc-typehints` z `pyproject.toml`
 
 **Korzyści**:
+
 - Brak problemów z kompatybilnością wersji
 - Mniej zależności do zarządzania
 - Natywne wsparcie Sphinx

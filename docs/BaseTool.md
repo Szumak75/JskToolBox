@@ -27,12 +27,12 @@ Lazy loading keeps import time low for CLI utilities while preserving IDE discov
 ## `BClasses` Class
 
 **Class Introduction:**
-Provides convenient properties that expose the current class and calling method name. Ideal for logging contexts where human-readable identifiers are required.
+Provides convenient properties that expose the current class and calling method name. Ideal for logging contexts where human-readable identifiers are required. **Important:** The `_c_name` property is automatically implemented and should not be overridden or redeclared in subclasses.
 
 ### `BClasses._c_name`
 
 **Detailed Description:**
-Returns the class name of the current instance without module qualifications. Commonly used to tag log messages or error reports with the originating class.
+Returns the class name of the current instance without module qualifications. This is an automatic property provided by the mixin - do not declare `_c_name` as a class variable in subclasses as it will shadow the property. Commonly used to tag log messages or error reports with the originating class.
 
 **Signature:**
 
@@ -86,10 +86,12 @@ Service().debug()  # prints "debug"
 **Class Introduction:**
 Acts as a typed dictionary container with convenience accessors for managing state. It lets subclasses establish type constraints, copy values safely, and purge entries.
 
+**Important:** While direct dictionary access via `self._data[key]` is possible, the **preferred approach** is to use the typed accessor methods: `_get_data()` and `_set_data()`. These methods provide automatic type checking and raise `TypeError` on type violations, helping catch bugs early.
+
 ### `BData._get_data()`
 
 **Detailed Description:**
-Retrieves a value from the internal dictionary. Callers can register expected types on demand and supply default fallbacks when missing.
+Retrieves a value from the internal dictionary with type safety. Callers can register expected types on demand and supply default fallbacks when missing. This is the **recommended way** to access data instead of direct `self._data[key]` access, as it provides type validation.
 
 **Signature:**
 
@@ -117,7 +119,7 @@ state = self._get_data("port", set_default_type=int, default_value=22)
 ### `BData._set_data()`
 
 **Detailed Description:**
-Stores a value in the managed dictionary. When a type constraint exists, the method validates new assignments and raises informative errors on mismatch.
+Stores a value in the managed dictionary with automatic type checking. When a type constraint exists, the method validates new assignments and raises informative errors on mismatch. This is the **recommended way** to set data instead of direct `self._data[key]` assignment.
 
 **Signature:**
 
@@ -269,7 +271,31 @@ entry = formatter.format("started", name="scheduler")
 ## `ThBaseObject` Class
 
 **Class Introduction:**
-Mirrors the attributes exposed by `threading.Thread` so custom thread implementations can rely on the same property names and type constraints.
+Provides essential properties and methods for threading support. This base class defines thread-related attributes that mirror `threading.Thread` functionality, including sleep management and stop event handling. **Important:** This class should be used as a base for thread implementations instead of directly inheriting from `threading.Thread`, as it provides the required class variable declarations and integrates properly with the library's architecture.
+
+**Thread Implementation Pattern:**
+
+```python
+from threading import Thread
+from jsktoolbox.basetool import ThBaseObject, BData
+
+class WorkerThread(BData, ThBaseObject, Thread):
+    """Proper thread implementation using ThBaseObject."""
+
+    def __init__(self):
+        Thread.__init__(self, name="WorkerThread")
+        # Initialize thread-related attributes
+        self.sleep_period = 1.0
+
+    def run(self) -> None:
+        while not self.stopped:
+            # Do work
+            self._sleep()
+```
+
+**Why not inherit directly from threading.Thread?**
+
+The library enforces explicit class variable declarations. Direct inheritance from `threading.Thread` without proper base classes violates this design principle. `ThBaseObject` provides all necessary thread-related properties and integrates with other base tool mixins like `BData` and `BClasses`.
 
 ### `ThBaseObject.sleep_period` and `_sleep()`
 

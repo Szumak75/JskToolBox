@@ -61,6 +61,15 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 
 ### Wzorce architektury
 
+#### Klasy bazowe z basetool
+
+Wszystkie klasy z modułu `jsktoolbox.basetool` to klasy bazowe dla dziedziczenia. Kluczowe właściwości:
+
+- **Brak własnego konstruktora** - nie wymagają wywołania `super().__init__()`
+- **Dodają właściwości i metody** - rozszerzają API klas pochodnych
+- **ThBaseObject dla wątków** - zawiera deklaracje wymagane dla threading.Thread
+- Zamiast `class Worker(threading.Thread)` używaj: `class Worker(ThBaseObject, Thread)`
+
 #### ReadOnlyClass - Immutable Keys
 
 Zawsze używaj `ReadOnlyClass` dla kluczy słowników w BData:
@@ -84,6 +93,63 @@ class ProjectKeys(object, metaclass=ReadOnlyClass):
 
 Zobacz `EXAMPLES_FOR_AI.md` dla szczegółów każdego wzorca.
 
+#### BData - Typed Storage
+
+Klasa `BData` zapewnia bezpieczny kontener słownikowy z kontrolą typów.
+
+**Preferowane metody:**
+
+```python
+# ✓ Zalecane - z kontrolą typów
+value = self._get_data("key", set_default_type=int, default_value=0)
+self._set_data("key", 42, set_default_type=int)
+
+# ✗ Możliwe, ale bez kontroli typów
+value = self._data["key"]
+self._data["key"] = 42
+```
+
+**Dodatkowe metody:**
+
+- `_copy_data(key)` - deep copy wartości
+- `_delete_data(key)` - usuwa wartość i constraint typu
+- `_clear_data(key)` - usuwa wartość, zachowuje constraint
+
+#### Lazy Imports
+
+Biblioteka wykorzystuje leniwe importy dla lepszej wydajności. Preferowane wzorce:
+
+```python
+# ✓ Zalecane (lazy loading z __init__.py)
+from jsktoolbox.configtool import Config
+from jsktoolbox.logstool import LoggerClient
+from jsktoolbox.netaddresstool import Address, Network
+
+# ✗ Unikaj (działa, ale dłuższa forma)
+from jsktoolbox.configtool.main import Config
+from jsktoolbox.logstool.logs import LoggerClient
+```
+
+Sprawdź `__init__.py` w każdym module by poznać dostępne leniwe importy.
+
+#### netaddresstool - Rozróżnienie IPv4/IPv6
+
+Moduł rozróżnia klasy dla IPv4 i IPv6 z suffixem '6':
+
+```python
+# IPv4
+from jsktoolbox.netaddresstool import Address, Netmask, Network
+
+# IPv6 - z suffixem '6'
+from jsktoolbox.netaddresstool import Address6, Prefix6, Network6
+
+# ✗ BŁĄD - Address nie obsługuje IPv6
+addr = Address("2001:db8::1/64")  # TypeError!
+
+# ✓ Poprawnie
+addr = Address6("2001:db8::1/64")
+```
+
 #### BClasses - Automatyczne właściwości
 
 - `_c_name` - automatyczna property zwracająca `self.__class__.__name__`
@@ -93,7 +159,23 @@ Zobacz `EXAMPLES_FOR_AI.md` dla szczegółów każdego wzorca.
 ### Obsługa błędów
 
 - Do zgłaszania wyjątków używaj mechanizmu `raise Raise.error(message, exception_type, class_name, frame)`.
-- Pamiętaj: `Raise.error()` **tworzy** wyjątek, ale go nie rzuca - używaj `raise`.
+- **WAŻNE:** `Raise.error()` **tworzy** wyjątek, ale go nie rzuca - zawsze używaj słowa kluczowego `raise`.
+
+```python
+import inspect
+from jsktoolbox.raisetool import Raise
+
+# ✓ Poprawnie
+raise Raise.error(
+    "Invalid value",
+    ValueError,
+    class_name=self._c_name,
+    currentframe=inspect.currentframe()
+)
+
+# ✗ BŁĄD - wyjątek nie zostanie rzucony
+Raise.error("Invalid value", ValueError)
+```
 
 ### Ogólne zalecenia
 
@@ -103,6 +185,9 @@ Zobacz `EXAMPLES_FOR_AI.md` dla szczegółów każdego wzorca.
 - Zachowuj zwięzłą, techniczną formę odpowiedzi zgodną z konwencjami projektu.
 - Przy zmianach obejmujących wiele plików przedstaw plan i poproś o akceptację.
 - **ZAWSZE aktualizuj CAŁĄ dokumentację** - nie tylko jeden plik.
+- Przy aktualizacji dokumentacji sprawdzaj także:
+  - **README.md** - Główny plik dokumentacji projektu (EN)
+  - **docs/\*.md** - Moduł-specyficzne pliki w katalogu docs (EN)
 
 ### Checklist aktualizacji dokumentacji
 
@@ -113,6 +198,8 @@ Przy każdej zmianie kodu lub ustaleń, aktualizuj:
 - [ ] **AI_README.md** - Quick reference (EN)
 - [ ] **DOKUMENTACJA_PL.md** - Instrukcja użytkowania (PL)
 - [ ] **AGENTS.md** - Konfiguracja i ustalenia (PL)
+- [ ] **README.md** - Główna dokumentacja projektu (EN)
+- [ ] **docs/\*.md** - Dokumentacja modułów w katalogu docs (EN)
 - [ ] **PREFERRED_IMPORTS.md** - Jeśli dodano nowe lenive importy
 - [ ] Docstringi w kodzie (EN)
 - [ ] `make docs` - Regeneruj dokumentację HTML/JSON

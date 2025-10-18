@@ -70,7 +70,7 @@ DataProcessor.process [line:10]: Starting data processing...
 
 **Detailed Description:**
 
-This is the core method of the module. It is a factory that creates and returns an exception instance with a rich, contextual error message. You provide a message and an exception type (like `ValueError` or `TypeError`), and it constructs an exception object that is ready to be `raise`d. This ensures all exceptions thrown by your application have a consistent and debug-friendly format.
+This is the core method of the module. It is a factory that creates and returns an exception instance with a rich, contextual error message. You provide a message and an exception type (like `ValueError` or `TypeError`), and it constructs an exception object that **must be used with the `raise` statement**. The method formats the error message but does not raise the exception itself. This ensures all exceptions thrown by your application have a consistent and debug-friendly format.
 
 **Signature:**
 

@@ -115,3 +115,66 @@ class Constants(metaclass=ReadOnlyClass):
 
 Constants.FOO = "mutated"  # AttributeError
 ```
+
+---
+
+## Best Practices for Key Storage
+
+**ReadOnlyClass for Safe Key Storage:**
+
+When working with dictionary keys throughout a project, it's recommended to use `ReadOnlyClass` metaclass to create immutable key containers. This prevents accidental modification of key names which could lead to hard-to-debug errors. Keys can be organized at different scopes:
+
+### Module-level Keys (Private)
+
+For multi-class modules where multiple classes share the same keys:
+
+```python
+from jsktoolbox.attribtool import ReadOnlyClass
+
+class _Keys(object, metaclass=ReadOnlyClass):
+    """Shared keys for module classes."""
+    KEY_DATA: str = 'my_data'
+    KEY_STATUS: str = 'status'
+
+class DataProcessor:
+    def process(self):
+        value = self._get_data(_Keys.KEY_DATA)
+```
+
+### Class-level Keys (Nested)
+
+For keys used within a single class:
+
+```python
+class MyThread(BData, ThBaseObject):
+    """Thread with typed data storage."""
+
+    class _Keys(object, metaclass=ReadOnlyClass):
+        """Private keys for this class only."""
+        KEY_DATA: str = 'my_data'
+        KEY_COUNT: str = 'count'
+
+    def run(self):
+        data = self._get_data(self._Keys.KEY_DATA)
+```
+
+### Project-level Keys (Public)
+
+For large projects with shared keys across multiple modules:
+
+```python
+# In keys.py or constants.py
+class Keys(object, metaclass=ReadOnlyClass):
+    """Global project keys."""
+    KEY_CONFIG: str = 'config'
+    KEY_LOGGER: str = 'logger'
+
+# In other modules
+from myproject.keys import Keys
+
+class Service:
+    def setup(self):
+        config = self._get_data(Keys.KEY_CONFIG)
+```
+
+This pattern ensures type safety and prevents runtime errors from typos or accidental key modification.
