@@ -9,6 +9,12 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.path.abspath('../../'))
 
+# Import RTD theme (required for proper theme loading)
+try:
+    import sphinx_rtd_theme
+except ImportError:
+    sphinx_rtd_theme = None
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -77,6 +83,10 @@ language = 'en'
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
+# Add RTD theme path if available
+if sphinx_rtd_theme:
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options
 html_theme_options = {

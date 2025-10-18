@@ -431,12 +431,40 @@ cp -r docs_api/build/html/* /path/to/gh-pages/
 
 **Rozwiązanie**: Sprawdź `docs_api/source/conf.py` - ścieżka do projektu powinna być poprawna.
 
+### Problem: Read the Docs - "no theme named 'sphinx_rtd_theme' found"
+
+**Rozwiązanie**: Read the Docs wymaga explicite zainstalowania sphinx-rtd-theme.
+
+**Przyczyna**:
+- RTD używa pip do instalacji zależności
+- Musi mieć dostęp do wszystkich pakietów w virtualenv
+- Poetry dependency groups nie są wspierane przez pip bezpośrednio
+
+**Rozwiązanie zastosowane**:
+1. Wygenerowano `docs_api/requirements.txt` z Poetry dev dependencies
+2. Zaktualizowano `.readthedocs.yaml` by używał `python.install` z requirements
+3. Dodano import sphinx_rtd_theme w `conf.py`
+4. Dodano warunkowe ustawienie `html_theme_path`
+
+**Regeneracja requirements.txt** (po zmianach w pyproject.toml):
+```bash
+poetry export --only dev -f requirements.txt --without-hashes -o docs_api/requirements.txt
+```
+
+**Weryfikacja**:
+- sphinx-rtd-theme jest w docs_api/requirements.txt
+- conf.py importuje sphinx_rtd_theme
+- RTD instaluje wszystkie zależności przez pip
+
+---
+
 ### Problem: Read the Docs - "No module named 'sphinx_autodoc_typehints'"
 
 **Rozwiązanie**: Od wersji projektu używamy wbudowanego `sphinx.ext.autodoc.typehints` zamiast zewnętrznego pakietu.
 
 **Historia problemu**:
 - Zewnętrzny pakiet `sphinx-autodoc-typehints` miał problemy z kompatybilnością Python 3.10
+- Wersja >=2.5.0 wymaga Sphinx >=8.0.2, projekt ma ograniczenie Sphinx <8
 - Sphinx ma wbudowane wsparcie dla type hints od wersji 2.1
 - Duplikacja funkcjonalności (wbudowane + zewnętrzne)
 
@@ -444,12 +472,12 @@ cp -r docs_api/build/html/* /path/to/gh-pages/
 1. Usunięto `sphinx_autodoc_typehints` z `docs_api/source/conf.py`
 2. Pozostawiono `sphinx.ext.autodoc.typehints` (wbudowane)
 3. Usunięto `sphinx-autodoc-typehints` z `pyproject.toml`
-4. Konfiguracja Poetry w `.readthedocs.yaml` działa poprawnie
 
-**Weryfikacja**:
-- Dokumentacja buduje się lokalnie: `make docs`
-- Type hints są prawidłowo wyświetlane
-- Kompatybilne z Python 3.10+
+**Korzyści**:
+- Brak problemów z kompatybilnością wersji
+- Mniej zależności do zarządzania
+- Natywne wsparcie Sphinx
+- Kompatybilne z Python 3.10+ i Sphinx <8
 
 ### Problem: Brakujące moduły w dokumentacji
 

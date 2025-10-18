@@ -24,7 +24,7 @@ This guide explains how to publish the generated documentation online.
 
 ### Configuration
 
-The `.readthedocs.yaml` file is already configured with Poetry support:
+The `.readthedocs.yaml` file is configured to use pip with requirements.txt:
 
 ```yaml
 version: 2
@@ -33,14 +33,15 @@ build:
   os: ubuntu-22.04
   tools:
     python: "3.10"
-  jobs:
-    pre_install:
-      # Install poetry
-      - pip install poetry
-    post_install:
-      # Install project with dev dependencies using poetry
-      - poetry config virtualenvs.create false
-      - poetry install --with dev --no-interaction --no-ansi
+
+# Install Python dependencies
+python:
+  install:
+    # Install project package
+    - method: pip
+      path: .
+    # Install documentation dependencies
+    - requirements: docs_api/requirements.txt
 
 sphinx:
   configuration: docs_api/source/conf.py
@@ -52,12 +53,22 @@ formats:
 ```
 
 **Key points**:
-- Uses Poetry for dependency management
+- Uses pip to install dependencies (RTD standard method)
+- `docs_api/requirements.txt` is generated from Poetry dev dependencies
 - Python 3.10+ compatible
-- Installs dev dependencies (Sphinx and theme)
 - Uses built-in `sphinx.ext.autodoc.typehints` (no external package needed)
-- Automatically handles all Python dependencies from pyproject.toml
+- Automatically handles all Python dependencies
 - Generates HTML, PDF, and EPUB formats
+
+### Updating Documentation Dependencies
+
+When you update Sphinx or documentation-related dependencies in `pyproject.toml`, regenerate the requirements file:
+
+```bash
+poetry export --only dev -f requirements.txt --without-hashes -o docs_api/requirements.txt
+```
+
+This ensures Read the Docs uses the same versions as local development.
 
 ### Updating Documentation
 
