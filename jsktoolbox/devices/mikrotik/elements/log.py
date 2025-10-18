@@ -39,7 +39,15 @@ class RBLog(BRouterOS):
         debug: bool = False,
         verbose: bool = False,
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * parent: BDev - Parent device object.
+        * connector: IConnector - Network connector interface for RouterOS communication.
+        * qlog: Optional[LoggerQueue] - Logger queue for logging operations. Defaults to None.
+        * debug: bool - Enable debug mode. Defaults to False.
+        * verbose: bool - Enable verbose output. Defaults to False.
+        """
         super().__init__(
             parent,
             connector,

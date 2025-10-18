@@ -99,9 +99,6 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
         * buffered: bool - When False, flush the stream after each message.
 
-        ### Returns:
-        None
-
         ### Raises:
         * TypeError: Raised when `formatter` is not a `BLogFormatter` instance.
         """
@@ -151,9 +148,6 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         * name: Optional[str] - Logger name injected into formatted messages.
         * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
         * buffered: bool - When False, flush the stream after each message.
-
-        ### Returns:
-        None
 
         ### Raises:
         * TypeError: Raised when `formatter` is not a `BLogFormatter` instance.
@@ -387,9 +381,6 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         * name: Optional[str] - Logger name injected into formatted messages.
         * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
         * buffered: bool - When False, flush the stream after each message.
-
-        ### Returns:
-        None
 
         ### Raises:
         * TypeError: Raised when `formatter` is not a `BLogFormatter` instance.

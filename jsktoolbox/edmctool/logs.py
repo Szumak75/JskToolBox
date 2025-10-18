@@ -37,7 +37,11 @@ class Log(BData):
     """Create Log container class."""
 
     def __init__(self, level: int) -> None:
-        """Class constructor."""
+        """Class constructor.
+
+        ### Arguments:
+        * level: int - Logging level for this log instance.
+        """
         # init data list
         self._set_data(key=_Keys.LOG_DATA, value=[], set_default_type=List)
 
@@ -95,7 +99,14 @@ class LogProcessor(BData):
         max_bytes: int = 100000,
         backup_count: int = 5,
     ) -> None:
-        """Create instance class object for processing single message."""
+        """Create instance class object for processing single message.
+
+        ### Arguments:
+        * name: str - Name of the application or logger.
+        * logs_dir: Optional[str] - Directory path for log files. Defaults to tmpdir if not provided.
+        * max_bytes: int - Maximum size of log file in bytes before rotation. Defaults to 100000.
+        * backup_count: int - Number of backup log files to keep. Defaults to 5.
+        """
         # name of app
         self._set_data(key=_Keys.LP_NAME, value=name, set_default_type=str)
         # logs directory
@@ -228,7 +239,11 @@ class LogClient(BData):
     """Log client class API."""
 
     def __init__(self, queue: Union[Queue, SimpleQueue]) -> None:
-        """Create instance class object."""
+        """Create instance class object.
+
+        ### Arguments:
+        * queue: Union[Queue, SimpleQueue] - Queue object for sending log messages.
+        """
         self._set_data(
             key=_Keys.LOG_QUEUE,
             value=queue,

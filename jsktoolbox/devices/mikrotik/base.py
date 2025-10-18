@@ -41,7 +41,15 @@ class BRouterOS(BDev, BElement):
         debug: bool,
         verbose: bool,
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * parent: Optional[BDev] - Parent device object. Can be None for root devices.
+        * connector: IConnector - Network connector interface for communication.
+        * logs: LoggerClient - Logger client for logging operations.
+        * debug: bool - Enable debug mode.
+        * verbose: bool - Enable verbose output.
+        """
         self.parent = parent
         self._ch = connector
         self.logs = logs
@@ -206,7 +214,16 @@ class Element(BRouterOS):
         debug: bool = False,
         verbose: bool = False,
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * key: str - Unique identifier key for this element.
+        * parent: BDev - Parent device object.
+        * connector: IConnector - Network connector interface for communication.
+        * qlog: Optional[LoggerQueue] - Logger queue for logging operations. Defaults to None.
+        * debug: bool - Enable debug mode. Defaults to False.
+        * verbose: bool - Enable verbose output. Defaults to False.
+        """
         super().__init__(
             parent,
             connector,

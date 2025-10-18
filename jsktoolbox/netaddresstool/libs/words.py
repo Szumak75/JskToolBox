@@ -32,7 +32,11 @@ class Word16(IComparators, BClasses, NoDynamicAttributes):
     __value: int = 0
 
     def __init__(self, value: Union[str, int, TWord16]) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * value: Union[str, int, TWord16] - 16-bit word value (0-65535) as string, integer, hex string, or Word16 object.
+        """
         self.value = value
 
     def __eq__(self, arg: Union[TWord16, object]) -> bool:

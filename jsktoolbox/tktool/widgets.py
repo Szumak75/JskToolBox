@@ -386,6 +386,16 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
     __interior_id: int = None  # type: ignore
 
     def __init__(self, parent: tk.Misc, *args, **kw) -> None:
+        """Initialize the vertical scrolled Tk frame.
+
+        Creates a scrollable frame widget with canvas and scrollbar, providing
+        an interior frame for adding child widgets.
+
+        ### Arguments:
+        * parent: tk.Misc - Parent widget container.
+        * *args - Additional positional arguments passed to tk.Frame.
+        * **kw - Additional keyword arguments passed to tk.Frame.
+        """
         tk.Frame.__init__(self, parent, *args, **kw)
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
@@ -501,6 +511,16 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
     __interior_id: int = None  # type: ignore
 
     def __init__(self, parent: tk.Misc, *args, **kw) -> None:
+        """Initialize the vertical scrolled ttk frame.
+
+        Creates a scrollable themed frame widget with canvas and scrollbar, providing
+        an interior frame for adding child widgets.
+
+        ### Arguments:
+        * parent: tk.Misc - Parent widget container.
+        * *args - Additional positional arguments passed to ttk.Frame.
+        * **kw - Additional keyword arguments passed to ttk.Frame.
+        """
         ttk.Frame.__init__(self, parent, *args, **kw)
 
         # Create a canvas object and a vertical scrollbar for scrolling it.

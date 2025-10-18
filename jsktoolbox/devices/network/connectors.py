@@ -140,7 +140,18 @@ class API(IConnector, BData):
         debug: bool = False,
         verbose: bool = False,
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * ip_address: Optional[Union[Address, Address6]] - IP address of the RouterOS device. Defaults to None.
+        * port: int - API port number. Defaults to 8728.
+        * login: Optional[str] - Username for authentication. Defaults to None.
+        * password: Optional[str] - Password for authentication. Defaults to None.
+        * timeout: float - Connection timeout in seconds. Defaults to 60.0.
+        * use_ssl: bool - Enable SSL/TLS encryption. Defaults to False.
+        * debug: bool - Enable debug mode. Defaults to False.
+        * verbose: bool - Enable verbose output. Defaults to False.
+        """
         self._set_data(
             key=_Keys.OPTIONS,
             set_default_type=str,
@@ -684,7 +695,14 @@ class SSH(IConnector, BData):
         login: Optional[str] = None,
         password: Optional[str] = None,
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * ip_address: Optional[Union[Address, Address6]] - IP address of the SSH server. Defaults to None.
+        * port: Optional[int] - SSH port number. Defaults to None (uses standard SSH port).
+        * login: Optional[str] - Username for authentication. Defaults to None.
+        * password: Optional[str] - Password for authentication. Defaults to None.
+        """
         if ip_address:
             self.address = ip_address
         if port is not None:

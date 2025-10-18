@@ -33,12 +33,12 @@ from .stars import StarsSystem
 from .edsm_keys import EdsmKeys
 
 try:
-    import numpy as np # pyright: ignore[reportMissingImports]
+    import numpy as np  # pyright: ignore[reportMissingImports]
 except ModuleNotFoundError:
     np = None  # type: ignore[assignment]
 
 try:
-    from scipy.spatial import distance # pyright: ignore[reportMissingImports]
+    from scipy.spatial import distance  # pyright: ignore[reportMissingImports]
 except ModuleNotFoundError:
     distance = None  # type: ignore[assignment]
 
@@ -89,10 +89,7 @@ def _filter_reachable_points(
     while frontier:
         current = frontier.pop(0)
         for candidate in remaining[:]:
-            if (
-                euclid_alg.distance(current.star_pos, candidate.star_pos)
-                <= jump_range
-            ):
+            if euclid_alg.distance(current.star_pos, candidate.star_pos) <= jump_range:
                 reachable.append(candidate)
                 frontier.append(candidate)
                 remaining.remove(candidate)
@@ -107,7 +104,12 @@ class Euclid(BLogClient):
     """
 
     def __init__(self, queue: Union[Queue, SimpleQueue], r_data: RscanData) -> None:
-        """Create class object."""
+        """Create class object.
+
+        ### Arguments:
+        * queue: Union[Queue, SimpleQueue] - Queue for communication and logging.
+        * r_data: RscanData - Route scan data container.
+        """
 
         methods: List[MethodType] = []
 
@@ -281,7 +283,9 @@ class Euclid(BLogClient):
         and vectorization.
         """
         try:
-            return np.sqrt(np.sum((np.array(point_1) - np.array(point_2)) ** 2)) # pyright: ignore[reportOptionalMemberAccess]
+            return np.sqrt(
+                np.sum((np.array(point_1) - np.array(point_2)) ** 2)
+            )  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as ex:
             self.debug(currentframe(), f"{ex}")
         return None
@@ -292,8 +296,12 @@ class Euclid(BLogClient):
         Einstein summation convention.
         """
         try:
-            tmp = np.array(point_1) - np.array(point_2) # pyright: ignore[reportOptionalMemberAccess]
-            return np.sqrt(np.einsum("i,i->", tmp, tmp)) # pyright: ignore[reportOptionalMemberAccess]
+            tmp = np.array(point_1) - np.array(
+                point_2
+            )  # pyright: ignore[reportOptionalMemberAccess]
+            return np.sqrt(
+                np.einsum("i,i->", tmp, tmp)
+            )  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as ex:
             self.debug(currentframe(), f"{ex}")
         return None
@@ -305,7 +313,9 @@ class Euclid(BLogClient):
         the Euclidean distance.
         """
         try:
-            return distance.euclidean(point_1, point_2) # pyright: ignore[reportOptionalMemberAccess]
+            return distance.euclidean(
+                point_1, point_2
+            )  # pyright: ignore[reportOptionalMemberAccess]
         except Exception as ex:
             self.debug(currentframe(), f"{ex}")
         return None
@@ -345,7 +355,26 @@ class AlgAStar(IAlg, BLogClient):
         euclid_alg: Euclid,
         plugin_name: str,
     ) -> None:
+        """Initialize A* pathfinding algorithm.
 
+        Sets up the A* algorithm for finding optimal routes between star systems
+        considering jump range constraints and using Euclidean distance calculations.
+
+        ### Arguments:
+        * start: StarsSystem - Starting point for pathfinding.
+        * systems: List[StarsSystem] - List of available star systems to navigate through.
+        * jump_range: int - Maximum jump distance allowed between systems.
+        * log_queue: Optional[Union[Queue, SimpleQueue]] - Queue for logging operations.
+        * euclid_alg: Euclid - Euclidean distance calculation algorithm instance.
+        * plugin_name: str - Name of the plugin using this algorithm.
+
+        ### Raises:
+        * TypeError: If log_queue is not Queue or SimpleQueue type.
+        * TypeError: If euclid_alg is not Euclid type.
+        * TypeError: If jump_range is not int type.
+        * TypeError: If start is not StarsSystem type.
+        * TypeError: If systems is not list type.
+        """
         self.__plugin_name = plugin_name
         # init log subsystem
         if isinstance(log_queue, (Queue, SimpleQueue)):
@@ -533,13 +562,13 @@ class AlgTsp(IAlg, BLogClient):
     ) -> None:
         """Construct instance object.
 
-        params:
-        start: StarsSystem - object with starting position.
-        systems: list(StarsSystem,...) - list with point of interest to visit
-        jump_range: int - jump range in ly
-        log_queue: queue for LogClient
-        euclid_alg: Euclid - object of initialized vectors class
-        plugin_name: str - name of plugin for debug log
+        ### Arguments:
+        * start: StarsSystem - Starting position object.
+        * systems: List[StarsSystem] - List of points of interest to visit.
+        * jump_range: int - Maximum jump range in light years.
+        * log_queue: Optional[Union[Queue, SimpleQueue]] - Queue for LogClient communication.
+        * euclid_alg: Euclid - Initialized Euclidean distance calculation object.
+        * plugin_name: str - Name of the plugin for debug logging.
         """
         self.__plugin_name = plugin_name
         # init log subsystem
@@ -630,9 +659,7 @@ class AlgTsp(IAlg, BLogClient):
             row: List[float] = []
             for idx2 in range(count):
                 row.append(
-                    self.__math.distance(
-                        points[idx].star_pos, points[idx2].star_pos
-                    )
+                    self.__math.distance(points[idx].star_pos, points[idx2].star_pos)
                 )
             self.__costs.append(row)
         self.debug(currentframe(), f"{self.__costs}")
@@ -659,12 +686,8 @@ class AlgTsp(IAlg, BLogClient):
                 current_path_weight += self.__costs[i[idx]][i[idx + 1]]
 
             # update minimum
-            if (
-                current_path_weight < min_path
-                or (
-                    current_path_weight == min_path
-                    and first_edge < best_first_edge
-                )
+            if current_path_weight < min_path or (
+                current_path_weight == min_path and first_edge < best_first_edge
             ):
                 out = [current_path_weight, i]
                 min_path = current_path_weight
@@ -752,13 +775,13 @@ class AlgGeneric(IAlg, BLogClient):
     ) -> None:
         """Construct instance object.
 
-        params:
-        start: StarsSystem - object with starting position.
-        systems: list(StarsSystem,...) - list with point of interest to visit
-        jump_range: int - jump range in ly
-        log_queue: queue for LogClient
-        euclid_alg: Euclid - object of initialized vectors class
-        plugin_name: str - name of plugin for debug log
+        ### Arguments:
+        * start: StarsSystem - Starting position object.
+        * systems: List[StarsSystem] - List of points of interest to visit.
+        * jump_range: int - Maximum jump range in light years.
+        * log_queue: Optional[Union[Queue, SimpleQueue]] - Queue for LogClient communication.
+        * euclid_alg: Euclid - Initialized Euclidean distance calculation object.
+        * plugin_name: str - Name of the plugin for debug logging.
         """
         self.__plugin_name = plugin_name
         # init log subsystem
@@ -927,13 +950,13 @@ class AlgGenetic(IAlg, BLogClient):
     ) -> None:
         """Construct instance object.
 
-        params:
-        start: StarsSystem - object with starting position.
-        systems: list(StarsSystem,...) - list with point of interest to visit
-        jump_range: int - jump range in ly
-        log_queue: queue for LogClient
-        euclid_alg: Euclid - object of initialized vectors class
-        plugin_name: str - name of plugin for debug log
+        ### Arguments:
+        * start: StarsSystem - Starting position object.
+        * systems: List[StarsSystem] - List of points of interest to visit.
+        * jump_range: int - Maximum jump range in light years.
+        * log_queue: Optional[Union[Queue, SimpleQueue]] - Queue for LogClient communication.
+        * euclid_alg: Euclid - Initialized Euclidean distance calculation object.
+        * plugin_name: str - Name of the plugin for debug logging.
         """
 
         self.__plugin_name = plugin_name
@@ -1178,13 +1201,13 @@ class AlgGenetic2(IAlg, BLogClient):
     ) -> None:
         """Construct instance object.
 
-        params:
-        start: StarsSystem - object with starting position.
-        systems: list(StarsSystem,...) - list with point of interest to visit
-        jump_range: int - jump range in ly
-        log_queue: queue for LogClient
-        euclid_alg: Euclid - object of initialized vectors class
-        plugin_name: str - name of plugin for debug log
+        ### Arguments:
+        * start: StarsSystem - Starting position object.
+        * systems: List[StarsSystem] - List of points of interest to visit.
+        * jump_range: int - Maximum jump range in light years.
+        * log_queue: Optional[Union[Queue, SimpleQueue]] - Queue for LogClient communication.
+        * euclid_alg: Euclid - Initialized Euclidean distance calculation object.
+        * plugin_name: str - Name of the plugin for debug logging.
         """
         self.__plugin_name = plugin_name
         # init log subsystem
@@ -1304,9 +1327,7 @@ class AlgGenetic2(IAlg, BLogClient):
         total_distance = 0.0
         current_point: StarsSystem = self.__start_point
         for system in route:
-            segment = self.__math.distance(
-                current_point.star_pos, system.star_pos
-            )
+            segment = self.__math.distance(current_point.star_pos, system.star_pos)
             if segment > self.__jump_range:
                 return 0.0
             total_distance += segment
@@ -1325,12 +1346,8 @@ class AlgGenetic2(IAlg, BLogClient):
             parent2 = random.choice(self.__population)
         else:
             probabilities: List[float] = [f / total_fitness for f in fitness_values]
-            parent1 = random.choices(
-                self.__population, weights=probabilities, k=1
-            )[0]
-            parent2 = random.choices(
-                self.__population, weights=probabilities, k=1
-            )[0]
+            parent1 = random.choices(self.__population, weights=probabilities, k=1)[0]
+            parent2 = random.choices(self.__population, weights=probabilities, k=1)[0]
 
         return parent1, parent2
 
@@ -1519,13 +1536,13 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
     ) -> None:
         """Construct instance object.
 
-        params:
-        start: StarsSystem - object with starting position.
-        systems: list(StarsSystem,...) - list with point of interest to visit
-        jump_range: int - jump range in ly
-        log_queue: queue for LogClient
-        euclid_alg: Euclid - object of initialized vectors class
-        plugin_name: str - name of plugin for debug log
+        ### Arguments:
+        * start: StarsSystem - Starting position object.
+        * systems: List[StarsSystem] - List of points of interest to visit.
+        * jump_range: int - Maximum jump range in light years.
+        * log_queue: Optional[Union[Queue, SimpleQueue]] - Queue for LogClient communication.
+        * euclid_alg: Euclid - Initialized Euclidean distance calculation object.
+        * plugin_name: str - Name of the plugin for debug logging.
         """
 
         self.__plugin_name = plugin_name

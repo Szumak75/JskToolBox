@@ -44,7 +44,11 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
     def __init__(
         self, addr: Union[str, int, Union[List[int], List[str], List[Word16]]]
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * addr: Union[str, int, Union[List[int], List[str], List[Word16]]] - IPv6 address in various formats (string, integer, or list of 16-bit words).
+        """
         self.words = addr
 
     def __eq__(self, arg: Union[TAddress6, object]) -> bool:
@@ -287,7 +291,11 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
     __prefix_int: int = 0
 
     def __init__(self, prefix: Union[str, int]) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * prefix: Union[str, int] - IPv6 prefix length (0-128) as string or integer.
+        """
         self.prefix = prefix
 
     def __eq__(self, arg: Union[TPrefix6, object]) -> bool:
@@ -438,7 +446,11 @@ class Network6(BClasses, NoDynamicAttributes):
     __prefix: Prefix6 = None  # type: ignore
 
     def __init__(self, addr: Union[str, List]) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * addr: Union[str, List] - IPv6 network address in CIDR notation (string) or list format.
+        """
         if isinstance(addr, str):
             self.__network_from_str(addr)
         elif isinstance(addr, List):
@@ -595,7 +607,12 @@ class SubNetwork6(BClasses, NoDynamicAttributes):
     __prefix: Prefix6 = None  # type: ignore
 
     def __init__(self, network: Network6, prefix: Prefix6) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * network: Network6 - IPv6 network address object.
+        * prefix: Prefix6 - Prefix object defining the subnet size.
+        """
         if isinstance(network, Network6) and isinstance(prefix, Prefix6):
             if int(network.prefix) <= int(prefix):
                 self.__network = network

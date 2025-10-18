@@ -33,7 +33,11 @@ class Octet(IComparators, BClasses, NoDynamicAttributes):
     __value: int = 0
 
     def __init__(self, value: Union[str, int, TOctet]) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * value: Union[str, int, TOctet] - Octet value (0-255) as string, integer, or Octet object.
+        """
         self.value = value
 
     def __eq__(self, arg: Union[TOctet, object]) -> bool:

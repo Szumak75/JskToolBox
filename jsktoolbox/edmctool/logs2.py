@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 logs2.py
-Author : Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 16.10.2025, 20:55:52
 
 Purpose: Logging server and component mixin for EDMC toolbox.

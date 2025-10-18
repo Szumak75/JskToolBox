@@ -37,7 +37,13 @@ class StarsSystem(BData):
         address: Optional[int] = None,
         star_pos: Optional[List] = None,
     ) -> None:
-        """Create Star System object."""
+        """Create Star System object.
+
+        ### Arguments:
+        * name: Optional[str] - Name of the star system.
+        * address: Optional[int] - System address identifier.
+        * star_pos: Optional[List] - Position coordinates of the star.
+        """
         self.name = name
         self.address = address
         self.star_pos = star_pos

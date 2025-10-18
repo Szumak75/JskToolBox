@@ -43,7 +43,11 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
     def __init__(
         self, addr: Union[str, int, Union[List[str], List[int], List[Octet]]]
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * addr: Union[str, int, Union[List[str], List[int], List[Octet]]] - IPv4 address in various formats (string, integer, or list of octets).
+        """
         self.octets = addr
 
     def __eq__(self, arg: Union[TAddress, object]) -> bool:
@@ -219,7 +223,11 @@ class Netmask(BClasses, NoDynamicAttributes):
     def __init__(
         self, addr: Union[str, int, Union[List[str], List[int], List[Octet]]]
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * addr: Union[str, int, Union[List[str], List[int], List[Octet]]] - IPv4 netmask in various formats (string, integer, or list of octets).
+        """
         if isinstance(addr, int):
             self.cidr = addr
         elif isinstance(addr, str):
@@ -376,7 +384,11 @@ class Network(BClasses, NoDynamicAttributes):
     __mask: Netmask = None  # type: ignore
 
     def __init__(self, addr: Union[str, List]) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * addr: Union[str, List] - IPv4 network address in CIDR notation (string) or list format.
+        """
         if isinstance(addr, str):
             self.__network_from_str(addr)
         elif isinstance(addr, List):
@@ -546,7 +558,12 @@ class SubNetwork(BClasses, NoDynamicAttributes):
     __mask: Netmask = None  # type: ignore
 
     def __init__(self, network: Network, mask: Netmask) -> None:
-        """Constructor."""
+        """Constructor.
+
+        ### Arguments:
+        * network: Network - Network address object.
+        * mask: Netmask - Netmask object defining the subnet size.
+        """
         if isinstance(network, Network) and isinstance(mask, Netmask):
             if int(network.mask) <= int(mask):
                 self.__network = network
