@@ -433,19 +433,23 @@ cp -r docs_api/build/html/* /path/to/gh-pages/
 
 ### Problem: Read the Docs - "No module named 'sphinx_autodoc_typehints'"
 
-**Rozwiązanie**: Plik `.readthedocs.yaml` musi używać Poetry do instalacji zależności:
-```yaml
-build:
-  jobs:
-    pre_install:
-      - pip install poetry
-    post_install:
-      - poetry install --with dev
-```
+**Rozwiązanie**: Od wersji projektu używamy wbudowanego `sphinx.ext.autodoc.typehints` zamiast zewnętrznego pakietu.
+
+**Historia problemu**:
+- Zewnętrzny pakiet `sphinx-autodoc-typehints` miał problemy z kompatybilnością Python 3.10
+- Sphinx ma wbudowane wsparcie dla type hints od wersji 2.1
+- Duplikacja funkcjonalności (wbudowane + zewnętrzne)
+
+**Rozwiązanie zastosowane**:
+1. Usunięto `sphinx_autodoc_typehints` z `docs_api/source/conf.py`
+2. Pozostawiono `sphinx.ext.autodoc.typehints` (wbudowane)
+3. Usunięto `sphinx-autodoc-typehints` z `pyproject.toml`
+4. Konfiguracja Poetry w `.readthedocs.yaml` działa poprawnie
 
 **Weryfikacja**:
-- Sprawdź czy `sphinx-autodoc-typehints` jest w `[tool.poetry.group.dev.dependencies]`
-- Read the Docs automatycznie zainstaluje wszystkie zależności z Poetry
+- Dokumentacja buduje się lokalnie: `make docs`
+- Type hints są prawidłowo wyświetlane
+- Kompatybilne z Python 3.10+
 
 ### Problem: Brakujące moduły w dokumentacji
 

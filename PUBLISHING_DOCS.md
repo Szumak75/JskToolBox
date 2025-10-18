@@ -39,7 +39,8 @@ build:
       - pip install poetry
     post_install:
       # Install project with dev dependencies using poetry
-      - poetry install --with dev
+      - poetry config virtualenvs.create false
+      - poetry install --with dev --no-interaction --no-ansi
 
 sphinx:
   configuration: docs_api/source/conf.py
@@ -52,7 +53,9 @@ formats:
 
 **Key points**:
 - Uses Poetry for dependency management
-- Installs dev dependencies (including sphinx-autodoc-typehints)
+- Python 3.10+ compatible
+- Installs dev dependencies (Sphinx and theme)
+- Uses built-in `sphinx.ext.autodoc.typehints` (no external package needed)
 - Automatically handles all Python dependencies from pyproject.toml
 - Generates HTML, PDF, and EPUB formats
 

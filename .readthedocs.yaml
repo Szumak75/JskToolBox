@@ -13,7 +13,9 @@ build:
       - pip install poetry
     post_install:
       # Install project with dev dependencies using poetry
-      - poetry install --with dev
+      # Note: sphinx-autodoc-typehints removed from dependencies - using built-in sphinx.ext.autodoc.typehints instead
+      - poetry config virtualenvs.create false
+      - poetry install --with dev --no-interaction --no-ansi
 
 sphinx:
   configuration: docs_api/source/conf.py

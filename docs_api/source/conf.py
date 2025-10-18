@@ -27,7 +27,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
-    'sphinx_autodoc_typehints',
 ]
 
 # Autodoc settings
@@ -40,11 +39,11 @@ autodoc_default_options = {
     'show-inheritance': True,
 }
 
-# Type hints settings
+# Type hints settings (using built-in sphinx.ext.autodoc.typehints)
 autodoc_typehints = 'description'
-autodoc_typehints_description_target = 'documented'
-typehints_fully_qualified = False
-always_document_param_types = True
+# Note: autodoc_typehints_description_target, typehints_fully_qualified, 
+# and always_document_param_types were specific to the external 
+# sphinx-autodoc-typehints package. Built-in extension uses autodoc_typehints only.
 
 # Napoleon settings for Google/NumPy style docstrings
 napoleon_google_docstring = True
