@@ -387,6 +387,32 @@ class MyApp(BData):
 
 Projekt zawiera plik `.readthedocs.yaml` gotowy do użycia z Read the Docs.
 
+**Konfiguracja** (używa Poetry):
+```yaml
+version: 2
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.10"
+  jobs:
+    pre_install:
+      - pip install poetry
+    post_install:
+      - poetry install --with dev
+```
+
+**Instalacja na Read the Docs**:
+1. Załóż konto na https://readthedocs.org/
+2. Importuj projekt JskToolBox
+3. Dokumentacja zbuduje się automatycznie
+4. Dostępna pod: `jsktoolbox.readthedocs.io`
+
+**Zalety**:
+- Automatyczne budowanie z każdym push do main
+- Generuje HTML, PDF i EPUB
+- Wsparcie dla wielu wersji
+- Darmowe dla projektów open source
+
 ### GitHub Pages
 
 ```bash
@@ -401,9 +427,25 @@ cp -r docs_api/build/html/* /path/to/gh-pages/
 
 ## Rozwiązywanie problemów
 
-### Problem: Import Error przy generowaniu dokumentacji
+### Problem: Import Error przy generowaniu dokumentacji lokalnie
 
 **Rozwiązanie**: Sprawdź `docs_api/source/conf.py` - ścieżka do projektu powinna być poprawna.
+
+### Problem: Read the Docs - "No module named 'sphinx_autodoc_typehints'"
+
+**Rozwiązanie**: Plik `.readthedocs.yaml` musi używać Poetry do instalacji zależności:
+```yaml
+build:
+  jobs:
+    pre_install:
+      - pip install poetry
+    post_install:
+      - poetry install --with dev
+```
+
+**Weryfikacja**:
+- Sprawdź czy `sphinx-autodoc-typehints` jest w `[tool.poetry.group.dev.dependencies]`
+- Read the Docs automatycznie zainstaluje wszystkie zależności z Poetry
 
 ### Problem: Brakujące moduły w dokumentacji
 

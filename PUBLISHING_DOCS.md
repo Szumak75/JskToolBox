@@ -24,19 +24,37 @@ This guide explains how to publish the generated documentation online.
 
 ### Configuration
 
-The `.readthedocs.yaml` file is already configured:
+The `.readthedocs.yaml` file is already configured with Poetry support:
+
 ```yaml
 version: 2
+
 build:
   os: ubuntu-22.04
   tools:
     python: "3.10"
+  jobs:
+    pre_install:
+      # Install poetry
+      - pip install poetry
+    post_install:
+      # Install project with dev dependencies using poetry
+      - poetry install --with dev
+
 sphinx:
   configuration: docs_api/source/conf.py
+  fail_on_warning: false
+
 formats:
   - pdf
   - epub
 ```
+
+**Key points**:
+- Uses Poetry for dependency management
+- Installs dev dependencies (including sphinx-autodoc-typehints)
+- Automatically handles all Python dependencies from pyproject.toml
+- Generates HTML, PDF, and EPUB formats
 
 ### Updating Documentation
 
