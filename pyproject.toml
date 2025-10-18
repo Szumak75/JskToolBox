@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "jsktoolbox"
-version = "1.2.dev"
+version = "1.2.1"
 description = "Small sets of classes for various operations."
 authors = ["Jacek 'Szumak' Kotlarski <szumak@virthost.pl>"]
 maintainers = ["Jacek 'Szumak' Kotlarski <szumak@virthost.pl>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/Szumak75/JskToolBox"
+repository = "https://github.com/Szumak75/JskToolBox/tree/1.2.1"
 classifiers = [
         "Programming Language :: Python :: 3",
         "Topic :: Software Development :: Libraries"
