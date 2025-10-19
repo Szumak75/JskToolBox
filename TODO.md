@@ -1,8 +1,70 @@
 # Project Modules
 
 - Projekt wymaga Python 3.10-3.12 - Python 3.13 zmienił threading.Thread i ma problemy z NoDynamicAttributes, sprawdzić i rozwiązać
-- BData.\_get_data i \_set_data - przemyśleć strategię set_default_type
-- BData.\_get_data i \_set_data - rozwiązać problem użycia set_default_type = Optional[type]
+- ~~BData.\_get_data i \_set_data - przemyśleć strategię set_default_type~~ ✅ ZAKOŃCZONO (2024-10-19)
+- ~~BData.\_get_data i \_set_data - rozwiązać problem użycia set_default_type = Optional[type]~~ ✅ ZAKOŃCZONO (2024-10-19)
+
+## BData Enhancements
+
+**STATUS:** ✅ ZAKOŃCZONO (Aktualizacja 2024-10-19)
+
+**Ukończone (✓):**
+
+- [x] **Refaktoryzacja set_default_type w BData** ✅
+  - set_default_type tylko w \_set_data() (nie w \_get_data())
+  - Typ raz ustawiony jest niezmienny (wymaga \_delete_data())
+  - set_default_type=None zachowuje istniejący typ
+  - Kompatybilność wsteczna z deprecation warning
+- [x] **Obsługa typów złożonych w BData** ✅
+  - Dodano metodę \_\_validate_type() z obsługą typing module
+  - Optional[T], Dict[K, V], List[T], Union[T1, T2]
+  - Zagnieżdżone typy: Optional[List[Dict[str, int]]]
+  - Rekursywna walidacja wszystkich poziomów
+- [x] **Testy dla nowej funkcjonalności** ✅
+  - 7 nowych testów dla typów złożonych
+  - Wszystkie testy przechodzą (42/42)
+- [x] **Dokumentacja** ✅
+  - Zaktualizowano EXAMPLES_FOR_AI.md
+  - Zaktualizowano AI_AGENT_GUIDE.md
+  - Zaktualizowano AGENTS.md
+  - Zregenerowano dokumentację API
+
+## AGENTS Configuration Template
+
+**STATUS:** ✅ ZAKOŃCZONO (Aktualizacja 2024-10-19)
+
+**Ukończone (✓):**
+
+- [x] **AGENTS-PYTEMPLATE.md** ✅
+  - Szablon konfiguracji dla nowych projektów Python
+  - Zmienne do wypełnienia: PROJECT_NAME, PACKAGE_NAME, AUTHOR_NAME, etc.
+  - Sekcje: konfiguracja plików, styl kodowania, testowanie, dokumentacja
+  - Wzorce JskToolBox (opcjonalne dla projektów bez tej biblioteki)
+  - Docstring templates, Git workflow, narzędzia development
+- [x] **AGENTS-PYTEMPLATE-README.md** ✅
+  - Pełna instrukcja użycia szablonu
+  - Przykłady dla różnych scenariuszy
+  - Wskazówki dla projektów z/bez JskToolBox
+- [x] **AGENTS-PYTEMPLATE-QUICKSTART.md** ✅
+  - Quick start guide z 3 metodami użycia
+  - Automatyczny skrypt, ręczna zamiana, edycja w IDE
+  - Przykłady dla Linux/macOS i Windows
+- [x] **tools/setup-agents-config.sh** ✅
+  - Interaktywny skrypt do konfiguracji
+  - Automatyczna zamiana wszystkich zmiennych
+  - Walidacja wymaganych pól
+  - Kolorowy output z podsumowaniem
+
+**Użycie:**
+
+```bash
+# Automatyczna konfiguracja
+./tools/setup-agents-config.sh
+
+# Lub ręcznie
+cp AGENTS-PYTEMPLATE.md /path/to/project/AGENTS.md
+# Zamień zmienne {PROJECT_NAME}, {PACKAGE_NAME}, etc.
+```
 
 ## Documentation Standards
 
