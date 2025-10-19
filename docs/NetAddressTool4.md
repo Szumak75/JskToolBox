@@ -55,7 +55,7 @@ Octet(value: Union[str, int, Octet])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.libs.octets import Octet
+from jsktoolbox.netaddresstool import Octet
 
 # Create octets from different input types
 octet1 = Octet(192)           # From integer
@@ -158,7 +158,7 @@ Address(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Address
+from jsktoolbox.netaddresstool import Address
 
 # Multiple input formats
 addr1 = Address("192.168.0.1")                    # String
@@ -269,7 +269,7 @@ Netmask(addr: Union[str, int, Union[List[str], List[int], List[Octet]]])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Netmask
+from jsktoolbox.netaddresstool import Netmask
 
 # Create from CIDR notation
 mask1 = Netmask(24)           # /24
@@ -421,7 +421,7 @@ Network(addr: Union[str, List])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Network, Address, Netmask
+from jsktoolbox.netaddresstool import Network, Address, Netmask
 
 # Create from CIDR notation
 net1 = Network("192.168.1.0/24")
@@ -734,7 +734,7 @@ SubNetwork(network: Network, mask: Netmask)
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import SubNetwork
+from jsktoolbox.netaddresstool import SubNetwork
 
 # Divide /24 into /26 subnets
 parent = Network("192.168.1.0/24")
@@ -834,7 +834,7 @@ for subnet in large_calc.iter_subnets(limit=None):
 ### Example 1: Network Analysis
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Network
+from jsktoolbox.netaddresstool import Network
 
 # Analyze a network
 net = Network("192.168.1.64/26")
@@ -858,7 +858,7 @@ for i, host in enumerate(net.iter_hosts(), 1):
 ### Example 2: Subnet Planning
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Network, SubNetwork, Netmask
+from jsktoolbox.netaddresstool import Network, SubNetwork, Netmask
 
 # Plan subnets for a /22 network
 parent = Network("10.10.0.0/22")
@@ -878,7 +878,7 @@ for subnet in calc.iter_subnets():
 ### Example 3: Address Validation
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Address, Network
+from jsktoolbox.netaddresstool import Address, Network
 
 def is_host_in_network(host_str, network_str):
     """Check if a host address belongs to a network."""

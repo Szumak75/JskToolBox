@@ -119,7 +119,7 @@ The module follows a consistent design pattern across IPv4 and IPv6:
 **IPv4 Network Operations:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv4 import Network
+from jsktoolbox.netaddresstool import Network
 
 # Create network from CIDR notation
 net = Network("192.168.1.0/24")
@@ -137,7 +137,7 @@ for host in net.iter_hosts():
 **IPv6 Network Operations:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Network6
+from jsktoolbox.netaddresstool import Network6
 
 # Create IPv6 network
 net = Network6("2001:db8::/32")

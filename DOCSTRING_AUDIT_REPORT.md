@@ -103,9 +103,12 @@ Purpose: Short description.
 4. ✅ Usunąć nieprawidłowe `### Returns: None` z konstruktorów
 5. ✅ Zaktualizować AGENTS.md o procedury aktualizacji dokumentacji
 
-### 🔄 Priorytet 2 (w toku):
-- [ ] Regenerować dokumentację API (Sphinx/ReadTheDocs)
-- [ ] Zaktualizować dokumentację Markdown (README.md, docs/*.md)
+### ✅ Priorytet 2 (ukończone):
+- [x] Regenerować dokumentację API (Sphinx/ReadTheDocs)
+- [x] Zaktualizować dokumentację Markdown (README.md, docs/*.md)
+  - Naprawiono wszystkie nieścisłości w preferowanych importach (lazy loading)
+  - Zaktualizowano docs/NetAddressTool4.md, docs/NetAddressTool6.md, docs/NetAddressTool.md
+  - Dodano wymagania do AGENTS.md o aktualizację całej dokumentacji
 
 ### ⏳ Priorytet 3 (opcjonalne):
 - [ ] Rozważyć dodanie `### Arguments:` do kluczowych metod API (gettery/settery)
@@ -117,8 +120,15 @@ Purpose: Short description.
 Zgodnie z AGENTS.md, każda aktualizacja dokumentacji powinna przebiegać w kolejności:
 
 1. ✅ **Sprawdzenie i aktualizacja docstringów** (kod źródłowy) - UKOŃCZONE
-2. 🔄 **Regeneracja dokumentacji API** (Sphinx/ReadTheDocs) - DO WYKONANIA
-3. 🔄 **Aktualizacja dokumentacji Markdown** (README.md, docs/*.md) - DO WYKONANIA
+2. ✅ **Regeneracja dokumentacji API** (Sphinx/ReadTheDocs) - UKOŃCZONE
+3. ✅ **Aktualizacja dokumentacji Markdown** (README.md, docs/*.md) - UKOŃCZONE
+
+**Naprawione nieścisłości w dokumentacji Markdown (2025-10-19):**
+- Wszystkie importy w docs/*.md zmienione na preferowane wzorce lazy loading
+- Usunięto `from jsktoolbox.netaddresstool.ipv4 import` → `from jsktoolbox.netaddresstool import`
+- Usunięto `from jsktoolbox.netaddresstool.ipv6 import` → `from jsktoolbox.netaddresstool import`
+- Usunięto `from jsktoolbox.netaddresstool.libs.octets import` → `from jsktoolbox.netaddresstool import`
+- Zaktualizowano AGENTS.md z procedurą aktualizacji dokumentacji
 
 ## Statystyki
 
@@ -142,11 +152,12 @@ Zgodnie z AGENTS.md, każda aktualizacja dokumentacji powinna przebiegać w kole
 1. ✅ **UKOŃCZONE:** Dodać `### Arguments:` do konstruktorów `__init__`
 2. ✅ **UKOŃCZONE:** Dodać pełne docstringi do metod bez dokumentacji
 3. ✅ **UKOŃCZONE:** Ujednolicić standardy dla metod magicznych
-4. 🔄 **W TOKU:** Regenerować dokumentację API (Sphinx/ReadTheDocs)
-5. ⏳ **ZAPLANOWANE:** Zaktualizować dokumentację Markdown
-6. ⏳ **ZAPLANOWANE:** Walidacja dokumentacji na ReadTheDocs
+4. ✅ **UKOŃCZONE:** Regenerować dokumentację API (Sphinx/ReadTheDocs)
+5. ✅ **UKOŃCZONE:** Zaktualizować dokumentację Markdown
+6. ✅ **UKOŃCZONE:** Naprawić nieścisłości w importach (lazy loading patterns)
+7. ⏳ **ZAPLANOWANE:** Walidacja dokumentacji na ReadTheDocs
 
 ---
 
-**Podsumowanie:** Projekt osiągnął 100% pokrycia dokumentacją zgodnie z ustalonymi standardami. Wszystkie 47 metod `__init__` oraz 3 metody bez docstringów zostały zaktualizowane. Standard metod magicznych został doprecyzowany i zastosowany we wszystkich modułach. Kolejne kroki to regeneracja dokumentacji API i aktualizacja dokumentacji Markdown.
+**Podsumowanie:** Projekt osiągnął 100% pokrycia dokumentacją zgodnie z ustalonymi standardami. Wszystkie 47 metod `__init__` oraz 3 metody bez docstringów zostały zaktualizowane. Standard metod magicznych został doprecyzowany i zastosowany we wszystkich modułach. Dokumentacja API została zregenerowana, a dokumentacja Markdown (README.md, docs/*.md) zaktualizowana z poprawnymi wzorcami importów i spójnymi przykładami. Konfiguracja AGENTS.md zawiera pełne procedury aktualizacji dokumentacji dla przyszłych zmian.
 

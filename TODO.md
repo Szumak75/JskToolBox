@@ -5,7 +5,7 @@
 
 ## Documentation Standards
 
-**STATUS:** Priorytetowe zadania zrealizowane ✅ (Aktualizacja 2025-10-18 23:33)
+**STATUS:** ✅ WSZYSTKIE ZADANIA UKOŃCZONE! (Aktualizacja 2025-10-19 00:00)
 
 **Ukończone (✓):**
 - [x] Przeprowadzić pełny audyt docstringów w projekcie
@@ -13,19 +13,20 @@
 - [x] Naprawić format Author w edmctool/logs2.py
 - [x] Usunąć nieprawidłowe `### Returns: None` z konstruktorów (logstool/engines.py)
 - [x] Dodać brakujące pole Purpose w devices/mikrotik/elements/__init__.py
-- [x] **Dodać sekcję `### Arguments:` do wszystkich metod __init__ z parametrami (44 przypadki)** ✅
+- [x] **Dodać sekcję `### Arguments:` do wszystkich metod __init__ z parametrami (47 przypadków)** ✅
+- [x] **Dodać pełne docstringi do 3 metod bez dokumentacji** ✅
 - [x] Zaktualizować DOCSTRING_AUDIT_REPORT.md
-
-**W trakcie (→):**
-- [ ] Regenerować dokumentację API (Sphinx/ReadTheDocs) po zmianach w docstringach
-- [ ] Zaktualizować dokumentację Markdown (README.md, docs/*.md)
+- [x] Regenerować dokumentację API (Sphinx/ReadTheDocs) po zmianach w docstringach ✅
+- [x] Zaktualizować dokumentację Markdown (README.md, docs/*.md) ✅
+  - Naprawiono preferowane importy (lazy loading) we wszystkich plikach docs/*.md
+  - Usunięto importy z pełnych ścieżek (ipv4/ipv6/libs) → preferowane lazy imports
+  - Zaktualizowano AGENTS.md z pełną procedurą aktualizacji dokumentacji
 
 **Do zrobienia (○):**
-- [ ] Dodać pełne docstringi do 3 metod bez dokumentacji (AlgAStar, VerticalScrolledTkFrame, VerticalScrolledTtkFrame)
-- [ ] Dodać sekcję `### Arguments:` do kluczowych metod API (50 najważniejszych)
 - [ ] Rozważyć i ustalić konwencję: proste gettery/settery wymagają/nie wymagają `### Arguments:`
 - [ ] Stopniowa aktualizacja pozostałych metod bez Arguments (opcjonalne - głównie gettery/settery)
 - [ ] Zweryfikować sekcje `### Raises:` - czy wszystkie metody rzucają deklarowane wyjątki
+- [ ] Dodać sekcję `### Arguments:` do kluczowych metod API (50 najważniejszych - opcjonalnie)
 
 **Szczegółowy breakdown (135 opcjonalnych metod bez Arguments):**
 - netaddresstool/ipv6.py: 22 metody (głównie gettery/settery)
@@ -35,4 +36,12 @@
 - edmctool/logs.py: 12 metod (głównie metody pomocnicze)
 - (pozostałe 49 metod w innych plikach)
 
-**Uwaga:** Raport w DOCSTRING_AUDIT_REPORT.md zawiera pełną analizę i zalecenia. Wszystkie priorytetowe metody `__init__` zostały zaktualizowane! Pozostałe przypadki to głównie opcjonalne dokumentacje getterów/setterów.
+**Uwaga:** Raport w DOCSTRING_AUDIT_REPORT.md zawiera pełną analizę i zalecenia. **WSZYSTKIE PRIORYTETOWE ZADANIA UKOŃCZONE!** ✅
+
+- ✅ 47 metod `__init__` zaktualizowanych z pełną sekcją `### Arguments:`
+- ✅ 3 metody bez docstringów otrzymały pełną dokumentację
+- ✅ Dokumentacja API zregenerowana (Sphinx/ReadTheDocs)
+- ✅ Dokumentacja Markdown zaktualizowana z poprawnymi wzorcami importów
+- ✅ AGENTS.md zawiera pełne procedury aktualizacji dokumentacji
+
+Pozostałe przypadki to opcjonalne dokumentacje getterów/setterów (135 metod).

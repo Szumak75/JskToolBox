@@ -55,7 +55,7 @@ Word16(value: Union[str, int, Word16])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.libs.words import Word16
+from jsktoolbox.netaddresstool import Word16
 
 # Create words from different formats
 word1 = Word16(255)           # Decimal integer
@@ -164,7 +164,7 @@ Address6(addr: Union[str, int, Union[List[int], List[str], List[Word16]]])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Address6
+from jsktoolbox.netaddresstool import Address6
 
 # Multiple input formats
 addr1 = Address6("2001:db8::1")                           # Compressed
@@ -277,7 +277,7 @@ Prefix6(prefix: Union[str, int])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Prefix6
+from jsktoolbox.netaddresstool import Prefix6
 
 # Create prefixes
 prefix1 = Prefix6(64)      # Standard /64 subnet
@@ -380,7 +380,7 @@ Network6(addr: Union[str, List])
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Network6, Address6, Prefix6
+from jsktoolbox.netaddresstool import Network6, Address6, Prefix6
 
 # Create from CIDR notation
 net1 = Network6("2001:db8::/32")
@@ -667,7 +667,7 @@ SubNetwork6(network: Network6, prefix: Prefix6)
 **Usage Example:**
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import SubNetwork6
+from jsktoolbox.netaddresstool import SubNetwork6
 
 # Divide /48 into /64 subnets (65,536 subnets)
 parent = Network6("2001:db8::/48")
@@ -769,7 +769,7 @@ for i, subnet in enumerate(large_calc.iter_subnets(limit=None)):
 ### Example 1: IPv6 Network Analysis
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Network6
+from jsktoolbox.netaddresstool import Network6
 
 # Analyze a network
 net = Network6("2001:db8::/48")
@@ -794,7 +794,7 @@ for i, addr in enumerate(small_net.iter_hosts(), 1):
 ### Example 2: IPv6 Subnet Planning
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Network6, SubNetwork6, Prefix6
+from jsktoolbox.netaddresstool import Network6, SubNetwork6, Prefix6
 
 # Plan /64 subnets within a /48 allocation
 parent = Network6("2001:db8::/48")
@@ -816,7 +816,7 @@ for i, subnet in enumerate(calc.iter_subnets(limit=None), 1):
 ### Example 3: IPv6 Address Validation and Comparison
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Address6, Network6
+from jsktoolbox.netaddresstool import Address6, Network6
 
 def is_address_in_network(addr_str, network_str):
     """Check if an IPv6 address belongs to a network."""
@@ -848,7 +848,7 @@ for addr in sorted(addrs):
 ### Example 4: Working with Link-Local Addresses
 
 ```python
-from jsktoolbox.netaddresstool.ipv6 import Network6
+from jsktoolbox.netaddresstool import Network6
 
 # IPv6 link-local prefix
 link_local = Network6("fe80::/10")
