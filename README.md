@@ -7,38 +7,38 @@ module-by-module guides; the sections below highlight the available references.
 ## Core Utilities
 
 - **AttribTool** – base classes that restrict dynamic attribute creation and manage declared fields  
-  [AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/AttribTool.md)
+  [AttribTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/AttribTool.md)
 - **BaseTool** – mixins for metadata reporting, data storage, logging, and threading used across the project  
-  [BaseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/BaseTool.md)
+  [BaseTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/BaseTool.md)
 - **RaiseTool** – helpers that standardise exception formatting and error reporting  
-  [RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/RaiseTool.md)
+  [RaiseTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/RaiseTool.md)
 - **SystemTool** – utilities for interacting with the host operating system  
-  [SystemTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/SystemTool.md)
+  [SystemTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/SystemTool.md)
 
 ## Configuration and Data
 
 - **ConfigTool** – parsers and helpers for working with configuration files  
-  [ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/ConfigTool.md)
+  [ConfigTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/ConfigTool.md)
 - **DateTool** – date/time conversions, validation, and formatting helpers  
-  [DateTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/DateTool.md)
+  [DateTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/DateTool.md)
 - **StringTool** – routines for text manipulation and sanitising  
-  [StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/StringTool.md)
+  [StringTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/StringTool.md)
 
 ## Logging and Networking
 
 - **LogsTool** – components that assemble the project logging subsystem (queues, formatters, workers)  
-  [LogsTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/LogsTool.md)
+  [LogsTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/LogsTool.md)
 - **NetTool** – general-purpose classes for networking tasks  
-  [NetTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetTool.md)
+  [NetTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/NetTool.md)
 - **NetAddressTool** – toolkits for IP addressing with dedicated IPv4 and IPv6 guides  
-  [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool.md)  
-  [NetAddressTool IPv4 Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool4.md)  
-  [NetAddressTool IPv6 Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/NetAddressTool6.md)
+  [NetAddressTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/NetAddressTool.md)  
+  [NetAddressTool IPv4 Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/NetAddressTool4.md)  
+  [NetAddressTool IPv6 Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/NetAddressTool6.md)
 
 ## Tkinter
 
 - **TkTool** – Tk mixins, layout helpers, clipboard adapters, and reusable widgets (excluding the unreliable `_TkClip`)  
-  [TkTool Readme](https://github.com/Szumak75/JskToolBox/blob/master/docs/TkTool.md)
+  [TkTool Readme](https://github.com/Szumak75/JskToolBox/blob/1.2.2/docs/TkTool.md)
 
 ## API Documentation
 
@@ -85,5 +85,5 @@ make docs-open
 ## Examples
 
 Examples demonstrating selected modules can be found in:
-- [docs/examples](https://github.com/Szumak75/JskToolBox/tree/master/docs/examples) - Module examples
+- [docs/examples](https://github.com/Szumak75/JskToolBox/tree/1.2.2/docs/examples) - Module examples
 - [EXAMPLES_FOR_AI.md](EXAMPLES_FOR_AI.md) - Complete code examples
