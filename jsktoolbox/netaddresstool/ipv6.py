@@ -523,7 +523,7 @@ class Network6(BClasses, NoDynamicAttributes):
         [List[Address6]] - Host addresses contained within the subnet.
 
         ### Raises:
-        * ValueError: Raised when the host count exceeds the configured limit.
+        * ValueError: Propagated from `iter_hosts()` when the host count exceeds the configured limit.
         """
         warnings.warn(
             "Network6.hosts() is deprecated; use Network6.iter_hosts() for lazy iteration.",
@@ -647,7 +647,7 @@ class SubNetwork6(BClasses, NoDynamicAttributes):
         [List[Network6]] - Generated IPv6 subnetworks.
 
         ### Raises:
-        * ValueError: Raised when the subnet count exceeds the configured limit.
+        * ValueError: Propagated from `iter_subnets()` when the subnet count exceeds the configured limit.
         """
         warnings.warn(
             "SubNetwork6.subnets() is deprecated; use SubNetwork6.iter_subnets() for lazy iteration.",

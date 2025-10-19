@@ -2,10 +2,11 @@
 
 - Projekt wymaga Python 3.10-3.12 - Python 3.13 zmienił threading.Thread i ma problemy z NoDynamicAttributes, sprawdzić i rozwiązać
 - BData._get_data i _set_data - przemyśleć strategię set_default_type
+- BData._get_data i _set_data - rozwiązać problem użycia set_default_type = Optional[type]
 
 ## Documentation Standards
 
-**STATUS:** ✅ WSZYSTKIE ZADANIA UKOŃCZONE! (Aktualizacja 2025-10-19 00:00)
+**STATUS:** ✅ WSZYSTKIE ZADANIA UKOŃCZONE! (Aktualizacja 2025-10-19 01:09)
 
 **Ukończone (✓):**
 - [x] Przeprowadzić pełny audyt docstringów w projekcie
@@ -21,10 +22,12 @@
   - Naprawiono preferowane importy (lazy loading) we wszystkich plikach docs/*.md
   - Usunięto importy z pełnych ścieżek (ipv4/ipv6/libs) → preferowane lazy imports
   - Zaktualizowano AGENTS.md z pełną procedurą aktualizacji dokumentacji
+- [x] **Ustalić i zadokumentować konwencję getterów/setterów** ✅
+  - Settery (3/3) wymagają sekcji `### Arguments:`
+  - Gettery (11/11) bez parametrów (oprócz self) nie wymagają tej sekcji
+  - Standard dodany do AGENTS.md i DOCSTRING_AUDIT_REPORT.md
 
 **Do zrobienia (○):**
-- [ ] Rozważyć i ustalić konwencję: proste gettery/settery wymagają/nie wymagają `### Arguments:`
-- [ ] Stopniowa aktualizacja pozostałych metod bez Arguments (opcjonalne - głównie gettery/settery)
 - [ ] Zweryfikować sekcje `### Raises:` - czy wszystkie metody rzucają deklarowane wyjątki
 - [ ] Dodać sekcję `### Arguments:` do kluczowych metod API (50 najważniejszych - opcjonalnie)
 
@@ -40,8 +43,10 @@
 
 - ✅ 47 metod `__init__` zaktualizowanych z pełną sekcją `### Arguments:`
 - ✅ 3 metody bez docstringów otrzymały pełną dokumentację
+- ✅ 3 settery i 11 getterów zweryfikowane i zgodne ze standardem
 - ✅ Dokumentacja API zregenerowana (Sphinx/ReadTheDocs)
 - ✅ Dokumentacja Markdown zaktualizowana z poprawnymi wzorcami importów
 - ✅ AGENTS.md zawiera pełne procedury aktualizacji dokumentacji
+- ✅ Ustalony i zadokumentowany standard getterów/setterów
 
-Pozostałe przypadki to opcjonalne dokumentacje getterów/setterów (135 metod).
+Pozostałe przypadki to opcjonalne dokumentacje innych metod (~135 metod).

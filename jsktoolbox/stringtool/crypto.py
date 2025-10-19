@@ -49,10 +49,10 @@ class SimpleCrypto(NoDynamicAttributes):
             chr(code)
             for block in unicode_blocks
             for code in block
-            if unicodedata.category(chr(code))[0] != 'C'
+            if unicodedata.category(chr(code))[0] != "C"
         ]
-        combined: str = base_chars + ''.join(extra_chars)
-        return ''.join(dict.fromkeys(combined))
+        combined: str = base_chars + "".join(extra_chars)
+        return "".join(dict.fromkeys(combined))
 
     @classmethod
     def salt_generator(cls, length: int = 8) -> int:

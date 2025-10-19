@@ -51,9 +51,6 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
 
         ### Returns:
         None - Constructor.
-
-        ### Raises:
-        * TypeError: Raised when `formatter` does not inherit from `BLogFormatter`.
         """
         if name is not None:
             self.name = name
@@ -98,9 +95,6 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         * name: Optional[str] - Logger name injected into formatted messages.
         * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
         * buffered: bool - When False, flush the stream after each message.
-
-        ### Raises:
-        * TypeError: Raised when `formatter` is not a `BLogFormatter` instance.
         """
         if name is not None:
             self.name = name
@@ -148,9 +142,6 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         * name: Optional[str] - Logger name injected into formatted messages.
         * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
         * buffered: bool - When False, flush the stream after each message.
-
-        ### Raises:
-        * TypeError: Raised when `formatter` is not a `BLogFormatter` instance.
         """
         if name is not None:
             self.name = name
@@ -381,9 +372,6 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         * name: Optional[str] - Logger name injected into formatted messages.
         * formatter: Optional[BLogFormatter] - Formatter applied prior to emission.
         * buffered: bool - When False, flush the stream after each message.
-
-        ### Raises:
-        * TypeError: Raised when `formatter` is not a `BLogFormatter` instance.
         """
         if name is not None:
             self.name = name

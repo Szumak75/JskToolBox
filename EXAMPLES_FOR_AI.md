@@ -184,15 +184,17 @@ if int(Address("192.168.1.50")) in range(int(network.min), int(network.max) + 1)
 
 ### IPv6 Address Manipulation
 
+**IMPORTANT**: Use `Address6` for single addresses without prefix, `Network6` for addresses with prefix.
+
 ```python
 from jsktoolbox.netaddresstool import Address6, Network6, Prefix6
 
-# Single IPv6 address (no prefix)
+# Single IPv6 address (no prefix) - Address6
 addr6 = Address6("2001:db8::1")
 print(f"Address: {addr6}")  # 2001:db8::1
 print(f"As integer: {int(addr6)}")
 
-# IPv6 network (with prefix)
+# IPv6 network (with prefix) - Network6
 network6 = Network6("2001:db8::/64")
 print(f"Network: {network6}")  # 2001:db8::/64
 print(f"Network address: {network6.network}")  # 2001:db8::
@@ -229,10 +231,10 @@ print(f"As int: {int(prefix)}")  # 64
 ### Network Validation
 
 ```python
-from jsktoolbox.netaddresstool import Address, Network
+from jsktoolbox.netaddresstool import Address, Network, Address6, Network6
 
 def validate_ipv4_address(ip_string: str) -> bool:
-    """Validate IPv4 address format (single address)."""
+    """Validate IPv4 address format (single address without mask)."""
     try:
         addr = Address(ip_string)
         return True
@@ -247,11 +249,31 @@ def validate_ipv4_network(network_string: str) -> bool:
     except Exception:
         return False
 
+def validate_ipv6_address(ip_string: str) -> bool:
+    """Validate IPv6 address format (single address without prefix)."""
+    try:
+        addr = Address6(ip_string)
+        return True
+    except Exception:
+        return False
+
+def validate_ipv6_network(network_string: str) -> bool:
+    """Validate IPv6 network format (address with prefix)."""
+    try:
+        net = Network6(network_string)
+        return True
+    except Exception:
+        return False
+
 # Usage
 print(validate_ipv4_address("192.168.1.1"))  # True
 print(validate_ipv4_address("192.168.1.1/24"))  # False (needs Network)
 print(validate_ipv4_network("192.168.1.0/24"))  # True
 print(validate_ipv4_network("invalid"))  # False
+
+print(validate_ipv6_address("2001:db8::1"))  # True
+print(validate_ipv6_address("2001:db8::1/64"))  # False (needs Network6)
+print(validate_ipv6_network("2001:db8::/64"))  # True
 ```
 
 ### Subnet Calculations
@@ -272,13 +294,6 @@ for subnet in subnets.iter_subnets(limit=10):
     print(f"Subnet: {subnet}")
     print(f"  Range: {subnet.min} - {subnet.max}")
     print(f"  Broadcast: {subnet.broadcast}")
-```
-    except Exception:
-        return False
-
-# Usage
-print(validate_ip_address("192.168.1.1"))  # True
-print(validate_ip_address("invalid"))      # False
 ```
 
 ---

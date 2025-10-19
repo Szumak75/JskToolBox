@@ -50,6 +50,10 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 **Sekcje opcjonalne:**
 
 - `### Arguments` - **wymagana** tylko gdy metoda ma parametry (oprócz `self`/`cls`)
+  - **Wyjątki:** comparatory (`__lt__`, `__le__`, `__gt__`, `__ge__`, `__eq__`, `__ne__`)
+  - **Wyjątki:** utilities (`__str__`, `__repr__`, `__len__`, `__bool__`, `__hash__`, `__iter__`, `__next__`)
+  - **Wymagana:** settery (metody `set_*`) z parametrami
+  - **Opcjonalna:** gettery (metody `get_*`) bez parametrów (oprócz self)
 - `### Returns` - **opcjonalna** dla metod `-> None` (setterzy, `__init__`)
 - `### Raises` - **opcjonalna**, tylko gdy metoda faktycznie rzuca wyjątki
 
@@ -160,10 +164,16 @@ from jsktoolbox.netaddresstool import Address, Netmask, Network
 from jsktoolbox.netaddresstool import Address6, Prefix6, Network6
 
 # ✗ BŁĄD - Address nie obsługuje IPv6
-addr = Address("2001:db8::1/64")  # TypeError!
+addr = Address("2001:db8::1/64")  # ValueError!
 
-# ✓ Poprawnie
-addr = Address6("2001:db8::1/64")
+# ✗ BŁĄD - Address6 nie obsługuje prefiksu w adresie
+addr = Address6("2001:db8::1/64")  # ValueError!
+
+# ✓ Poprawnie - pojedynczy adres IPv6 bez prefiksu
+addr = Address6("2001:db8::1")
+
+# ✓ Poprawnie - sieć IPv6 z prefiksem
+net = Network6("2001:db8::/64")
 ```
 
 #### BClasses - Automatyczne właściwości

@@ -29,7 +29,9 @@ from .raisetool import Raise
 
 try:
     # For Python < 3.12
-    from distutils.spawn import find_executable # pyright: ignore[reportMissingModuleSource]
+    from distutils.spawn import (
+        find_executable,
+    )  # pyright: ignore[reportMissingModuleSource]
 except ImportError:
     # For Python >= 3.12
     from shutil import which as find_executable
@@ -62,7 +64,7 @@ class Pinger(BData):
         None - Constructor.
 
         ### Raises:
-        * ValueError: Propagated from `BData._set_data` when invalid timeout is provided.
+        * TypeError: Propagated from `BData._set_data` when invalid timeout type is provided.
         """
         self._set_data(key=_Keys.TIMEOUT, value=timeout, set_default_type=int)
         self._set_data(key=_Keys.COMMANDS, value=[], set_default_type=List)

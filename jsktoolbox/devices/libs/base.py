@@ -214,9 +214,6 @@ class BDev(BDebug):
 
         ### Returns:
         None - Updates internal state only.
-
-        ### Raises:
-        * TypeError: Raised when the provided value is not a string.
         """
         self._set_data(key=_Keys.ROOT, set_default_type=str, value=value)
 
@@ -248,9 +245,6 @@ class BDev(BDebug):
 
         ### Returns:
         None - Updates internal state only.
-
-        ### Raises:
-        * TypeError: Raised when the provided value is not a BDev instance.
         """
         self._set_data(
             key=_Keys.PARENT,

@@ -471,7 +471,7 @@ class Network(BClasses, NoDynamicAttributes):
         [List[Address]] - List of host addresses within the network.
 
         ### Raises:
-        * ValueError: Raised when the number of hosts exceeds the configured limit.
+        * ValueError: Propagated from `iter_hosts()` when the number of hosts exceeds the configured limit.
         """
         warnings.warn(
             "Network.hosts() is deprecated; use Network.iter_hosts() for lazy iteration.",
@@ -598,7 +598,7 @@ class SubNetwork(BClasses, NoDynamicAttributes):
         [List[Network]] - List of generated subnetworks.
 
         ### Raises:
-        * ValueError: Raised when the number of subnets exceeds the configured limit.
+        * ValueError: Propagated from `iter_subnets()` when the number of subnets exceeds the configured limit.
         """
         warnings.warn(
             "SubNetwork.subnets() is deprecated; use SubNetwork.iter_subnets() for lazy iteration.",

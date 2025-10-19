@@ -45,9 +45,6 @@ class _IClip(ABC):
 
         ### Returns:
         str - Text currently stored on the clipboard.
-
-        ### Raises:
-        * RuntimeError: Raised when clipboard access fails in a concrete backend.
         """
 
     @abstractmethod
@@ -59,9 +56,6 @@ class _IClip(ABC):
 
         ### Returns:
         None - This method performs side effects only.
-
-        ### Raises:
-        * RuntimeError: Raised when clipboard access fails in a concrete backend.
         """
 
     @property
@@ -505,9 +499,6 @@ class _GtkClip(_BClip):
 
         ### Returns:
         str - Clipboard text retrieved via the Gtk clipboard.
-
-        ### Raises:
-        * RuntimeError: Raised when Gtk fails to supply clipboard text.
         """
         return gtk.Clipboard().wait_for_text()  # type: ignore
 
@@ -519,9 +510,6 @@ class _GtkClip(_BClip):
 
         ### Returns:
         None - Performs clipboard update side effects.
-
-        ### Raises:
-        * RuntimeError: Raised when Gtk fails to update clipboard text.
         """
         global cb
         text = str(text)
@@ -536,8 +524,8 @@ class _QtClip(_BClip):
     Creates or reuses a QApplication and routes clipboard operations through Qt APIs.
     """
 
-    __q_app = None 
-    __q_cb = None 
+    __q_app = None
+    __q_cb = None
 
     def __init__(self) -> None:
         """Initialise the Qt clipboard backend.
@@ -554,19 +542,25 @@ class _QtClip(_BClip):
         try:
             # TODO: PyQt5
             # example: https://pythonprogramminglanguage.com/pyqt-clipboard/
-            from PyQt5.QtCore import QCoreApplication # pyright: ignore[reportMissingImports]
-            from PyQt5.QtWidgets import QApplication # pyright: ignore[reportMissingImports]
-            from PyQt5.QtGui import QClipboard # pyright: ignore[reportMissingImports]
+            from PyQt5.QtCore import (
+                QCoreApplication,
+            )  # pyright: ignore[reportMissingImports]
+            from PyQt5.QtWidgets import (
+                QApplication,
+            )  # pyright: ignore[reportMissingImports]
+            from PyQt5.QtGui import QClipboard  # pyright: ignore[reportMissingImports]
 
             # QApplication is a singleton
             if not QApplication.instance():
-                self.__q_app: Optional[Union[QApplication, QCoreApplication]] = ( # pyright: ignore[reportRedeclaration]
-                    QApplication([])
+                self.__q_app: Optional[Union[QApplication, QCoreApplication]] = (
+                    QApplication([])  # pyright: ignore[reportRedeclaration]
                 )
             else:
                 self.__q_app = QApplication.instance()
 
-            self.__q_cb: Optional[QClipboard] = QApplication.clipboard() # pyright: ignore[reportRedeclaration]
+            self.__q_cb: Optional[QClipboard] = (
+                QApplication.clipboard()
+            )  # pyright: ignore[reportRedeclaration]
             get_cb = self.__qt_get_clipboard
             set_cb = self.__qt_set_clipboard
             self._set_data(
