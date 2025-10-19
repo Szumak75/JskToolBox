@@ -233,7 +233,7 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
     @property
     def words(self) -> List[Word16]:
         """Return words list of eight Word16.
-        
+
         ### Returns:
         List[Word16] - List of eight Word16 objects representing each 16-bit segment.
         """
@@ -370,7 +370,7 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
 
     def __str__(self) -> str:
         """Return prefix as string.
-        
+
         ### Returns:
         str - The prefix value as string.
         """
@@ -406,7 +406,7 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
     @property
     def prefix(self) -> str:
         """Return prefix as string.
-        
+
         ### Returns:
         str - The prefix value as string.
         """
@@ -415,7 +415,7 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
     @prefix.setter
     def prefix(self, value: Union[str, int]) -> None:
         """Set prefix from string or integer.
-        
+
         ### Arguments:
         * value: Union[str, int] - Prefix value as integer (0-128) or string representation.
         """
@@ -522,7 +522,7 @@ class Network6(BClasses, NoDynamicAttributes):
     @property
     def address(self) -> Address6:
         """Return IPv6 address.
-        
+
         ### Returns:
         Address6 - The IPv6 address object.
         """
@@ -531,7 +531,7 @@ class Network6(BClasses, NoDynamicAttributes):
     @property
     def count(self) -> int:
         """Return number of hosts in subnet.
-        
+
         ### Returns:
         int - Number of addresses in the subnet.
         """
@@ -589,7 +589,7 @@ class Network6(BClasses, NoDynamicAttributes):
     @property
     def max(self) -> Address6:
         """Return last IPv6 address from subnet.
-        
+
         ### Returns:
         Address6 - The last address in the subnet.
         """
@@ -598,7 +598,7 @@ class Network6(BClasses, NoDynamicAttributes):
     @property
     def min(self) -> Address6:
         """Return first IPv6 address from subnet.
-        
+
         ### Returns:
         Address6 - The first address in the subnet.
         """
@@ -614,7 +614,7 @@ class Network6(BClasses, NoDynamicAttributes):
     @property
     def network(self) -> Address6:
         """Return network address.
-        
+
         ### Returns:
         Address6 - The network address.
         """
@@ -623,7 +623,7 @@ class Network6(BClasses, NoDynamicAttributes):
     @property
     def prefix(self) -> Prefix6:
         """Return IPv6 network prefix.
-        
+
         ### Returns:
         Prefix6 - The network prefix object.
         """

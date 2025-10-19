@@ -36,7 +36,7 @@ class Directory(BData):
     @property
     def dir(self) -> str:
         """Property that returns directory string.
-        
+
         ### Returns:
         str - The configured directory path.
         """
@@ -76,7 +76,7 @@ class EnvLocal(Env):
     @property
     def plugin_dir(self) -> str:
         """Return plugin dir path.
-        
+
         ### Returns:
         str - The plugin directory path.
         """

@@ -7,7 +7,7 @@ import os
 import sys
 
 # Add project root to path
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath("../../"))
 
 # Import RTD theme (required for proper theme loading)
 try:
@@ -18,37 +18,37 @@ except ImportError:
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'JskToolBox'
+project = "JskToolBox"
 copyright = "2025, Jacek 'Szumak' Kotlarski"
 author = "Jacek 'Szumak' Kotlarski"
-release = '1.2.dev'
-version = '1.2.dev'
+release = "1.2.dev"
+version = "1.2.dev"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autodoc.typehints',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.intersphinx',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autodoc.typehints",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.intersphinx",
 ]
 
 # Autodoc settings
 autodoc_default_options = {
-    'members': True,
-    'member-order': 'bysource',
-    'special-members': '__init__',
-    'undoc-members': True,
-    'exclude-members': '__weakref__',
-    'show-inheritance': True,
+    "members": True,
+    "member-order": "bysource",
+    "special-members": "__init__",
+    "undoc-members": True,
+    "exclude-members": "__weakref__",
+    "show-inheritance": True,
 }
 
 # Type hints settings (using built-in sphinx.ext.autodoc.typehints)
-autodoc_typehints = 'description'
-# Note: autodoc_typehints_description_target, typehints_fully_qualified, 
-# and always_document_param_types were specific to the external 
+autodoc_typehints = "description"
+# Note: autodoc_typehints_description_target, typehints_fully_qualified,
+# and always_document_param_types were specific to the external
 # sphinx-autodoc-typehints package. Built-in extension uses autodoc_typehints only.
 
 # Napoleon settings for Google/NumPy style docstrings
@@ -69,20 +69,20 @@ napoleon_attr_annotations = True
 
 # Intersphinx mapping
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'requests': ('https://requests.readthedocs.io/en/latest/', None),
+    "python": ("https://docs.python.org/3", None),
+    "requests": ("https://requests.readthedocs.io/en/latest/", None),
 }
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 exclude_patterns = []
 
-language = 'en'
+language = "en"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_theme = "sphinx_rtd_theme"
+html_static_path = ["_static"]
 
 # Add RTD theme path if available
 if sphinx_rtd_theme:
@@ -90,11 +90,11 @@ if sphinx_rtd_theme:
 
 # Theme options
 html_theme_options = {
-    'navigation_depth': 4,
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'includehidden': True,
-    'titles_only': False,
+    "navigation_depth": 4,
+    "collapse_navigation": False,
+    "sticky_navigation": True,
+    "includehidden": True,
+    "titles_only": False,
 }
 
 # Add module index

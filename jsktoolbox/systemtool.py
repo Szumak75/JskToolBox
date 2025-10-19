@@ -332,7 +332,7 @@ class Env(BData):
     @property
     def home(self) -> str:
         """Return the detected home directory path.
-        
+
         ### Returns:
         str - The path to the detected home directory.
         """
@@ -341,7 +341,7 @@ class Env(BData):
     @property
     def tmpdir(self) -> str:
         """Return the detected temporary directory path.
-        
+
         ### Returns:
         str - The path to the detected temporary directory.
         """
@@ -350,7 +350,7 @@ class Env(BData):
     @property
     def username(self) -> str:
         """Return the effective login name if available.
-        
+
         ### Returns:
         str - The effective login name, or empty string if not available.
         """
@@ -389,7 +389,7 @@ class Env(BData):
     @property
     def is_64bits(self) -> bool:
         """Return True when the interpreter runs in 64-bit mode.
-        
+
         ### Returns:
         bool - True if running in 64-bit mode, False otherwise.
         """

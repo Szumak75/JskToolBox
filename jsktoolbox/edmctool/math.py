@@ -58,7 +58,7 @@ class IAlg(ABC):
     @abstractmethod
     def get_final(self) -> list:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """
@@ -67,7 +67,7 @@ class IAlg(ABC):
     @abstractmethod
     def final_distance(self) -> float:
         """Return final distance.
-        
+
         ### Returns:
         float - The total distance of the final route.
         """
@@ -175,7 +175,7 @@ class Euclid(BLogClient):
     @property
     def __r_data(self) -> RscanData:
         """Return data.
-        
+
         ### Returns:
         RscanData - The route scan data object.
         """
@@ -184,7 +184,7 @@ class Euclid(BLogClient):
     @property
     def __euclid_methods(self) -> List[MethodType]:
         """Return test list.
-        
+
         ### Returns:
         List[MethodType] - List of euclidean distance calculation methods.
         """
@@ -552,7 +552,7 @@ class AlgAStar(IAlg, BLogClient):
     @property
     def get_final(self) -> List[StarsSystem]:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """
@@ -770,7 +770,7 @@ class AlgTsp(IAlg, BLogClient):
     @property
     def get_final(self) -> List[StarsSystem]:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """
@@ -943,7 +943,7 @@ class AlgGeneric(IAlg, BLogClient):
     @property
     def get_final(self) -> List[StarsSystem]:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """
@@ -1198,7 +1198,7 @@ class AlgGenetic(IAlg, BLogClient):
     @property
     def get_final(self) -> List[StarsSystem]:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """
@@ -1539,7 +1539,7 @@ class AlgGenetic2(IAlg, BLogClient):
     @property
     def get_final(self) -> List[StarsSystem]:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """
@@ -1766,7 +1766,7 @@ class AlgSimulatedAnnealing(IAlg, BLogClient):
     @property
     def get_final(self) -> List[StarsSystem]:
         """Return final data.
-        
+
         ### Returns:
         List[StarsSystem] - List of star systems in the final route.
         """

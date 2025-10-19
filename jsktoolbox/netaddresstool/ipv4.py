@@ -174,7 +174,7 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
     @property
     def octets(self) -> List[Octet]:
         """Return octets list of four Octets.
-        
+
         ### Returns:
         List[Octet] - List of four Octet objects representing each byte.
         """
@@ -318,7 +318,7 @@ class Netmask(BClasses, NoDynamicAttributes):
     @property
     def octets(self) -> List[Octet]:
         """Return octets list of four Octets.
-        
+
         ### Returns:
         List[Octet] - List of four Octet objects representing each byte.
         """
@@ -347,7 +347,7 @@ class Netmask(BClasses, NoDynamicAttributes):
     @property
     def cidr(self) -> str:
         """Return CIDR netmask as string type.
-        
+
         ### Returns:
         str - CIDR notation string (e.g., '255.255.255.0').
         """
@@ -456,7 +456,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def address(self) -> Address:
         """Return IPv4 address.
-        
+
         ### Returns:
         Address - The IPv4 address object.
         """
@@ -465,7 +465,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def broadcast(self) -> Address:
         """Return broadcast address.
-        
+
         ### Returns:
         Address - The broadcast address for this network.
         """
@@ -477,7 +477,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def count(self) -> int:
         """Return count hosts addresses in network range.
-        
+
         ### Returns:
         int - Number of host addresses in the network.
         """
@@ -538,7 +538,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def mask(self) -> Netmask:
         """Return IPv4 network mask.
-        
+
         ### Returns:
         Netmask - The network mask object.
         """
@@ -547,7 +547,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def max(self) -> Address:
         """Return last address of host in network range.
-        
+
         ### Returns:
         Address - The last usable host address.
         """
@@ -559,7 +559,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def min(self) -> Address:
         """Return first host address in network range.
-        
+
         ### Returns:
         Address - The first usable host address.
         """
@@ -571,7 +571,7 @@ class Network(BClasses, NoDynamicAttributes):
     @property
     def network(self) -> Address:
         """Return network address.
-        
+
         ### Returns:
         Address - The network address.
         """

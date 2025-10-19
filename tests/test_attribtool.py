@@ -103,9 +103,7 @@ class TestNoDynamicAttributes(unittest.TestCase):
 
     def test_prevent_dynamic_attribute(self) -> None:
         """Test nr 2."""
-        with self.assertRaisesRegex(
-            AttributeError, "Cannot add new attribute 'abc'"
-        ):
+        with self.assertRaisesRegex(AttributeError, "Cannot add new attribute 'abc'"):
             setattr(self.workclass, "abc", 1)
 
 

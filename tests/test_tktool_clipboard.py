@@ -1,8 +1,10 @@
 import unittest
 
+
 def _tk_available():
     try:
         import tkinter as tk  # noqa: F401
+
         return True
     except Exception:
         return False

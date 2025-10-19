@@ -62,7 +62,7 @@ class Log(BData):
     @property
     def loglevel(self) -> int:
         """Return loglevel.
-        
+
         ### Returns:
         int - The configured log level.
         """
@@ -71,7 +71,7 @@ class Log(BData):
     @property
     def log(self) -> List[str]:
         """Get list of logs.
-        
+
         ### Returns:
         List[str] - List of log messages.
         """
@@ -236,7 +236,7 @@ class LogProcessor(BData):
     @property
     def loglevel(self) -> int:
         """Property that returns loglevel.
-        
+
         ### Returns:
         int - The configured log level.
         """
@@ -288,7 +288,7 @@ class LogClient(BData):
     @property
     def queue(self) -> Union[Queue, SimpleQueue]:
         """Give me queue object.
-        
+
         ### Returns:
         Union[Queue, SimpleQueue] - The queue object for log messages.
         """
@@ -299,7 +299,7 @@ class LogClient(BData):
     @property
     def critical(self) -> str:
         """Property that returns nothing.
-        
+
         ### Returns:
         str - Empty string.
         """
@@ -319,7 +319,7 @@ class LogClient(BData):
     @property
     def debug(self) -> str:
         """Property that returns nothing.
-        
+
         ### Returns:
         str - Empty string.
         """
@@ -339,7 +339,7 @@ class LogClient(BData):
     @property
     def error(self) -> str:
         """Property that returns nothing.
-        
+
         ### Returns:
         str - Empty string.
         """
@@ -359,7 +359,7 @@ class LogClient(BData):
     @property
     def info(self) -> str:
         """Property that returns nothing.
-        
+
         ### Returns:
         str - Empty string.
         """
@@ -379,7 +379,7 @@ class LogClient(BData):
     @property
     def warning(self) -> str:
         """Property that returns nothing.
-        
+
         ### Returns:
         str - Empty string.
         """
@@ -399,7 +399,7 @@ class LogClient(BData):
     @property
     def notset(self) -> str:
         """Property that returns nothing.
-        
+
         ### Returns:
         str - Empty string.
         """
@@ -455,7 +455,7 @@ class LogLevels(NoDynamicAttributes):
 
     def has_key(self, level: Union[int, str]) -> bool:
         """Check, if level is in proper keys.
-        
+
         ### Returns:
         bool - True if level is valid, False otherwise.
         """
@@ -466,7 +466,7 @@ class LogLevels(NoDynamicAttributes):
     @property
     def info(self) -> int:
         """Return info level.
-        
+
         ### Returns:
         int - The INFO log level constant.
         """
@@ -475,7 +475,7 @@ class LogLevels(NoDynamicAttributes):
     @property
     def debug(self) -> int:
         """Return debug level.
-        
+
         ### Returns:
         int - The DEBUG log level constant.
         """
@@ -484,7 +484,7 @@ class LogLevels(NoDynamicAttributes):
     @property
     def warning(self) -> int:
         """Return warning level.
-        
+
         ### Returns:
         int - The WARNING log level constant.
         """
@@ -493,7 +493,7 @@ class LogLevels(NoDynamicAttributes):
     @property
     def error(self) -> int:
         """Return error level.
-        
+
         ### Returns:
         int - The ERROR log level constant.
         """
@@ -502,7 +502,7 @@ class LogLevels(NoDynamicAttributes):
     @property
     def critical(self) -> int:
         """Return critical level.
-        
+
         ### Returns:
         int - The CRITICAL log level constant.
         """
@@ -511,7 +511,7 @@ class LogLevels(NoDynamicAttributes):
     @property
     def notset(self) -> int:
         """Return notset level.
-        
+
         ### Returns:
         int - The NOTSET log level constant.
         """

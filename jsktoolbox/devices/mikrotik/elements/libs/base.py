@@ -29,7 +29,7 @@ class BElement(BData):
     @property
     def attrib(self) -> Dict[str, Any]:
         """Returns attributes dict.
-        
+
         ### Returns:
         Dict[str, Any] - Dictionary containing element attributes.
         """
@@ -40,7 +40,7 @@ class BElement(BData):
     @property
     def list(self) -> List[str]:
         """Returns lists of items.
-        
+
         ### Returns:
         List[str] - List of item identifiers.
         """

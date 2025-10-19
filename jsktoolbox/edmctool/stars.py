@@ -60,7 +60,7 @@ class StarsSystem(BData):
     @property
     def address(self) -> Optional[int]:
         """Returns address of the star system.
-        
+
         ### Returns:
         Optional[int] - The system address, or None if not set.
         """
@@ -89,7 +89,7 @@ class StarsSystem(BData):
         """Returns data container.
 
         This is dictionary object for storing various elements.
-        
+
         ### Returns:
         Dict - Dictionary containing system data.
         """
@@ -112,7 +112,7 @@ class StarsSystem(BData):
     @property
     def name(self) -> Optional[str]:
         """Returns name of the star system.
-        
+
         ### Returns:
         Optional[str] - The system name, or None if not set.
         """
@@ -130,7 +130,7 @@ class StarsSystem(BData):
     @property
     def pos_x(self) -> Optional[Union[float, int]]:
         """Returns pos_x of the star system.
-        
+
         ### Returns:
         Optional[Union[float, int]] - X coordinate value, or None if not set.
         """
@@ -150,7 +150,7 @@ class StarsSystem(BData):
     @property
     def pos_y(self) -> Optional[Union[float, int]]:
         """Returns pos_y of the star system.
-        
+
         ### Returns:
         Optional[Union[float, int]] - Y coordinate value, or None if not set.
         """
@@ -170,7 +170,7 @@ class StarsSystem(BData):
     @property
     def pos_z(self) -> Optional[Union[float, int]]:
         """Returns pos_z of the star system.
-        
+
         ### Returns:
         Optional[Union[float, int]] - Z coordinate value, or None if not set.
         """
@@ -190,7 +190,7 @@ class StarsSystem(BData):
     @property
     def star_class(self) -> str:
         """Returns star class string.
-        
+
         ### Returns:
         str - Star classification identifier.
         """
@@ -208,7 +208,7 @@ class StarsSystem(BData):
     @property
     def star_pos(self) -> List:
         """Returns the star position list.
-        
+
         ### Returns:
         List - List containing [pos_x, pos_y, pos_z] coordinates.
         """

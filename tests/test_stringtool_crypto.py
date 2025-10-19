@@ -88,9 +88,9 @@ class TestStringtoolCrypto(unittest.TestCase):
     def test_11_chars_table_includes_extended_alphabets(self) -> None:
         """Test nr 11."""
         table: str = SimpleCrypto.chars_table_generator()
-        self.assertIn('Ω', table)
-        self.assertIn('Ж', table)
-        self.assertIn('ي', table)
+        self.assertIn("Ω", table)
+        self.assertIn("Ж", table)
+        self.assertIn("ي", table)
 
     def test_12_chars_table_has_unique_characters(self) -> None:
         """Test nr 12."""

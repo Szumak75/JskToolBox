@@ -677,7 +677,7 @@ class API(IConnector, BData):
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
         """Get host address property.
-        
+
         ### Returns:
         Optional[Union[Address, Address6]] - The configured IP address object, or None if not set.
         """
@@ -700,7 +700,7 @@ class API(IConnector, BData):
     @property
     def is_alive(self) -> bool:
         """Get alive flag from connected protocol.
-        
+
         ### Returns:
         bool - True if connection is alive and responding, False otherwise.
         """
@@ -724,7 +724,7 @@ class API(IConnector, BData):
     @property
     def login(self) -> Optional[str]:
         """Get login property.
-        
+
         ### Returns:
         Optional[str] - The configured login name, or None if not set.
         """
@@ -746,7 +746,7 @@ class API(IConnector, BData):
     @property
     def password(self) -> Optional[str]:
         """Get password property.
-        
+
         ### Returns:
         Optional[str] - The configured password, or None if not set.
         """
@@ -764,7 +764,7 @@ class API(IConnector, BData):
     @property
     def port(self) -> Optional[int]:
         """Get port property.
-        
+
         ### Returns:
         Optional[int] - The configured port number, or None if not set.
         """
@@ -782,7 +782,7 @@ class API(IConnector, BData):
     @property
     def prototype(self) -> str:
         """Returns protocol type.
-        
+
         ### Returns:
         str - The protocol type identifier ('API').
         """
@@ -835,7 +835,7 @@ class SSH(IConnector, BData):
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
         """Get host address property.
-        
+
         ### Returns:
         Optional[Union[Address, Address6]] - The configured IP address object, or None if not set.
         """
@@ -858,7 +858,7 @@ class SSH(IConnector, BData):
     @property
     def is_alive(self) -> bool:
         """Get alive flag from connected protocol.
-        
+
         ### Returns:
         bool - True if connection is alive and responding, False otherwise.
         """
@@ -867,7 +867,7 @@ class SSH(IConnector, BData):
     @property
     def login(self) -> Optional[str]:
         """Get login property.
-        
+
         ### Returns:
         Optional[str] - The configured login name, or None if not set.
         """
@@ -889,7 +889,7 @@ class SSH(IConnector, BData):
     @property
     def password(self) -> Optional[str]:
         """Get password property.
-        
+
         ### Returns:
         Optional[str] - The configured password, or None if not set.
         """
@@ -907,7 +907,7 @@ class SSH(IConnector, BData):
     @property
     def port(self) -> Optional[int]:
         """Get port property.
-        
+
         ### Returns:
         Optional[int] - The configured port number, or None if not set.
         """
@@ -925,7 +925,7 @@ class SSH(IConnector, BData):
     @property
     def prototype(self) -> str:
         """Returns protocol type.
-        
+
         ### Returns:
         str - The protocol type identifier ('SSH').
         """

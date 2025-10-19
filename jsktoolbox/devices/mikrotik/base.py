@@ -143,7 +143,7 @@ class BRouterOS(BDev, BElement):
     @property
     def elements(self) -> Dict[str, Any]:
         """Return elements dict.
-        
+
         ### Returns:
         Dict[str, Any] - Dictionary containing element objects indexed by their names.
         """
@@ -156,7 +156,7 @@ class BRouterOS(BDev, BElement):
     @property
     def is_loaded(self) -> bool:
         """Returns True if loaded.
-        
+
         ### Returns:
         bool - True if configuration has been loaded, False otherwise.
         """

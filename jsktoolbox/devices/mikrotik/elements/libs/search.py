@@ -44,7 +44,7 @@ class RBQuery(BData):
     @property
     def query(self) -> Dict:
         """Returns query dict.
-        
+
         ### Returns:
         Dict - Copy of the search query dictionary.
         """

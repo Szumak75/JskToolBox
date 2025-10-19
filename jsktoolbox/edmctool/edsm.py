@@ -99,7 +99,7 @@ class Url(BData):
     @property
     def options(self) -> str:
         """Get url options string.
-        
+
         ### Returns:
         str - Formatted URL parameter string.
         """
