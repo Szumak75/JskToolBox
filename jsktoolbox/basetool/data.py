@@ -11,9 +11,10 @@ constraints, reliable copying, and lifecycle utilities for managed state.
 
 import copy
 import warnings
+import sys
 
 from inspect import currentframe
-from typing import Dict, List, Any, Optional, Type
+from typing import Dict, List, Any, Optional, Type, Union, get_origin, get_args
 
 from ..raisetool import Raise
 
@@ -25,6 +26,111 @@ class BData(BClasses):
 
     __data: Optional[Dict[str, Any]] = None
     __types: Optional[Dict[str, Any]] = None
+
+    @staticmethod
+    def __validate_type(value: Any, expected_type: Any) -> bool:
+        """Validate if value matches expected type including complex generic types.
+
+        ### Arguments:
+        * value: Any - Value to check.
+        * expected_type: Any - Expected type (can be simple or generic type from typing).
+
+        ### Returns:
+        [bool] - True if value matches expected type.
+
+        ### Note:
+        Supports simple types (int, str, list) and complex generic types
+        (Optional[str], Dict[str, int], List[Any], etc.).
+        """
+        # Handle None for Optional types
+        if value is None:
+            origin = get_origin(expected_type)
+            # Check if it's Optional (Union with None)
+            if origin is Union:
+                args = get_args(expected_type)
+                return type(None) in args
+            # None is only valid for Optional types
+            return False
+
+        # Try simple isinstance first (works for simple types and some generics)
+        try:
+            if isinstance(value, expected_type):
+                return True
+        except TypeError:
+            # isinstance() doesn't work with some generic types, continue to detailed check
+            pass
+
+        # Get origin and args for generic types
+        origin = get_origin(expected_type)
+        args = get_args(expected_type)
+
+        # No origin means it's a simple type - use isinstance
+        if origin is None:
+            try:
+                return isinstance(value, expected_type)
+            except TypeError:
+                return False
+
+        # Handle Union types (including Optional)
+        if origin is Union:
+            # Check if value matches any of the union types
+            return any(BData.__validate_type(value, arg) for arg in args)
+
+        # Handle List, list
+        if origin in (list, List):
+            if not isinstance(value, list):
+                return False
+            # If no type args or List[Any], any list is valid
+            if not args or args == (Any,):
+                return True
+            # Check all elements match the specified type
+            element_type = args[0]
+            return all(BData.__validate_type(item, element_type) for item in value)
+
+        # Handle Dict, dict
+        if origin in (dict, Dict):
+            if not isinstance(value, dict):
+                return False
+            # If no type args or Dict[Any, Any], any dict is valid
+            if not args or len(args) < 2:
+                return True
+            key_type, value_type = args[0], args[1]
+            # Check all keys and values match specified types
+            return all(
+                BData.__validate_type(k, key_type)
+                and BData.__validate_type(v, value_type)
+                for k, v in value.items()
+            )
+
+        # Handle Tuple
+        if origin is tuple:
+            if not isinstance(value, tuple):
+                return False
+            if not args:
+                return True
+            # Variable length tuple: Tuple[int, ...]
+            if len(args) == 2 and args[1] is Ellipsis:
+                element_type = args[0]
+                return all(BData.__validate_type(item, element_type) for item in value)
+            # Fixed length tuple: Tuple[int, str, bool]
+            if len(value) != len(args):
+                return False
+            return all(BData.__validate_type(v, t) for v, t in zip(value, args))
+
+        # Handle Set, set
+        if origin in (set, frozenset):
+            if not isinstance(value, (set, frozenset)):
+                return False
+            if not args or args == (Any,):
+                return True
+            element_type = args[0]
+            return all(BData.__validate_type(item, element_type) for item in value)
+
+        # For other generic types, fall back to origin check
+        try:
+            return isinstance(value, origin)
+        except TypeError:
+            return False
 
     def __check_keys(self, key: str) -> bool:
         """Check if the key is available in the storage dictionary.
@@ -127,7 +233,7 @@ class BData(BClasses):
             if (
                 self.__types
                 and self.__has_type(key)
-                and not isinstance(default_value, self.__types[key])
+                and not self.__validate_type(default_value, self.__types[key])
             ):
                 raise Raise.error(
                     f"Expected '{self.__types[key]}' type, received default_value type is: {type(default_value)}",
@@ -175,7 +281,7 @@ class BData(BClasses):
                 )
 
             # Verify value matches existing type
-            if isinstance(value, self.__types[key]):
+            if self.__validate_type(value, self.__types[key]):
                 self._clear_data(key)
                 self._data[key] = value
             else:
@@ -190,7 +296,7 @@ class BData(BClasses):
             if set_default_type is not None:
                 # Register new type and verify value matches
                 self.__types[key] = set_default_type
-                if isinstance(value, set_default_type):
+                if self.__validate_type(value, set_default_type):
                     self._data[key] = value
                 else:
                     # Clean up type registration if value doesn't match

@@ -7,7 +7,7 @@ Purpose: for testing DData class
 """
 
 import unittest
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from jsktoolbox.basetool.data import BData
 
 
@@ -250,6 +250,152 @@ class TestBData(unittest.TestCase):
         # Default value with correct type should work
         result = self.obj._get_data("test1", default_value=42)
         self.assertEqual(result, 42)
+
+    def test_19_optional_type(self) -> None:
+        """Test nr 19: Optional[str] type support."""
+        # Set with Optional[str] type
+        self.obj._set_data(key="test1", value="hello", set_default_type=Optional[str])
+        self.assertEqual(self.obj._get_data("test1"), "hello")
+
+        # None should be valid for Optional types
+        try:
+            self.obj._set_data(key="test1", value=None, set_default_type=None)
+            self.assertIsNone(self.obj._get_data("test1"))
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # Non-string should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value=123, set_default_type=None)
+
+    def test_20_dict_with_types(self) -> None:
+        """Test nr 20: Dict[str, int] type support."""
+        # Set with Dict[str, int] type
+        test_dict = {"a": 1, "b": 2, "c": 3}
+        self.obj._set_data(
+            key="test1", value=test_dict, set_default_type=Dict[str, int]
+        )
+        self.assertEqual(self.obj._get_data("test1"), test_dict)
+
+        # Valid dict update
+        try:
+            self.obj._set_data(
+                key="test1", value={"x": 10, "y": 20}, set_default_type=None
+            )
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # Invalid value type should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(
+                key="test1", value={"x": "not an int"}, set_default_type=None
+            )
+
+    def test_21_optional_list(self) -> None:
+        """Test nr 21: Optional[List[str]] type support."""
+        # Set with Optional[List[str]] type
+        test_list = ["a", "b", "c"]
+        self.obj._set_data(
+            key="test1", value=test_list, set_default_type=Optional[List[str]]
+        )
+        self.assertEqual(self.obj._get_data("test1"), test_list)
+
+        # None should be valid
+        try:
+            self.obj._set_data(key="test1", value=None, set_default_type=None)
+            self.assertIsNone(self.obj._get_data("test1"))
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # List with wrong element type should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(
+                key="test1", value=[1, 2, 3], set_default_type=None  # ints not strings
+            )
+
+    def test_22_list_any(self) -> None:
+        """Test nr 22: List[Any] type support."""
+        # Set with List[Any] type - should accept any list
+        self.obj._set_data(
+            key="test1", value=[1, "string", 3.14, None], set_default_type=List[Any]
+        )
+        result = self.obj._get_data("test1")
+        self.assertIsInstance(result, list)
+        self.assertEqual(len(result), 4)
+
+        # Any list should be valid
+        try:
+            self.obj._set_data(
+                key="test1", value=["a", {"b": 2}, [3, 4]], set_default_type=None
+            )
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # Non-list should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value="not a list", set_default_type=None)
+
+    def test_23_nested_optional_dict(self) -> None:
+        """Test nr 23: Dict[str, Optional[int]] type support."""
+        # Set with Dict[str, Optional[int]]
+        test_dict = {"a": 1, "b": None, "c": 3}
+        self.obj._set_data(
+            key="test1", value=test_dict, set_default_type=Dict[str, Optional[int]]
+        )
+        self.assertEqual(self.obj._get_data("test1"), test_dict)
+
+        # Update with valid data
+        try:
+            self.obj._set_data(
+                key="test1", value={"x": None, "y": 42}, set_default_type=None
+            )
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # Invalid value (string instead of int/None) should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(
+                key="test1", value={"x": "not an int"}, set_default_type=None
+            )
+
+    def test_24_default_value_with_optional_type(self) -> None:
+        """Test nr 24: default_value validation with Optional types."""
+        # Register Optional[str] type
+        self.obj._set_data(key="test1", value="hello", set_default_type=Optional[str])
+        self.obj._clear_data("test1")
+
+        # None default should work for Optional
+        result = self.obj._get_data("test1", default_value=None)
+        self.assertIsNone(result)
+
+        # String default should work for Optional[str]
+        result = self.obj._get_data("test1", default_value="default")
+        self.assertEqual(result, "default")
+
+        # Invalid type default should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._get_data("test1", default_value=123)
+
+    def test_25_list_of_dicts(self) -> None:
+        """Test nr 25: List[Dict[str, int]] type support."""
+        # Set with complex nested type
+        test_data = [{"a": 1}, {"b": 2, "c": 3}]
+        self.obj._set_data(
+            key="test1", value=test_data, set_default_type=List[Dict[str, int]]
+        )
+        self.assertEqual(self.obj._get_data("test1"), test_data)
+
+        # Update with valid data
+        try:
+            self.obj._set_data(key="test1", value=[{"x": 10}], set_default_type=None)
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # Invalid nested structure should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(
+                key="test1", value=[{"x": "not an int"}], set_default_type=None
+            )
 
 
 # #[EOF]#######################################################################

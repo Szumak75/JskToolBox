@@ -854,6 +854,125 @@ store.clear_items()
 print(f"After clear: {store.get_items()}")
 ```
 
+### Complex Generic Types (New in 2024)
+
+BData now supports complex generic types from the `typing` module including `Optional`, `Union`, `Dict` with type parameters, `List` with type parameters, and nested combinations.
+
+```python
+from typing import Optional, Dict, List, Any, Union
+from jsktoolbox.basetool import BData
+from jsktoolbox.attribtool import ReadOnlyClass
+
+class ComplexDataStore(BData):
+    """Demonstrates support for complex generic types."""
+    
+    class _Keys(object, metaclass=ReadOnlyClass):
+        OPTIONAL_STR: str = "optional_str"
+        TYPED_DICT: str = "typed_dict"
+        OPTIONAL_LIST: str = "optional_list"
+        NESTED_DICT: str = "nested_dict"
+        LIST_ANY: str = "list_any"
+        COMPLEX_NESTED: str = "complex_nested"
+    
+    def set_optional_string(self, value: Optional[str]) -> None:
+        """Set optional string - accepts str or None."""
+        self._set_data(
+            key=self._Keys.OPTIONAL_STR,
+            value=value,
+            set_default_type=Optional[str]
+        )
+    
+    def set_typed_dict(self, value: Dict[str, int]) -> None:
+        """Set dictionary with typed keys and values."""
+        self._set_data(
+            key=self._Keys.TYPED_DICT,
+            value=value,
+            set_default_type=Dict[str, int]
+        )
+    
+    def set_optional_list(self, value: Optional[List[str]]) -> None:
+        """Set optional list of strings."""
+        self._set_data(
+            key=self._Keys.OPTIONAL_LIST,
+            value=value,
+            set_default_type=Optional[List[str]]
+        )
+    
+    def set_nested_dict(self, value: Dict[str, Optional[int]]) -> None:
+        """Set dict with optional values."""
+        self._set_data(
+            key=self._Keys.NESTED_DICT,
+            value=value,
+            set_default_type=Dict[str, Optional[int]]
+        )
+    
+    def set_any_list(self, value: List[Any]) -> None:
+        """Set list accepting any element types."""
+        self._set_data(
+            key=self._Keys.LIST_ANY,
+            value=value,
+            set_default_type=List[Any]
+        )
+    
+    def set_complex_nested(self, value: List[Dict[str, int]]) -> None:
+        """Set list of dictionaries with typed elements."""
+        self._set_data(
+            key=self._Keys.COMPLEX_NESTED,
+            value=value,
+            set_default_type=List[Dict[str, int]]
+        )
+
+# Usage examples
+store = ComplexDataStore()
+
+# Optional[str] - accepts string or None
+store.set_optional_string("hello")
+store.set_optional_string(None)  # Valid
+
+# Dict[str, int] - typed dictionary
+store.set_typed_dict({"a": 1, "b": 2, "c": 3})
+# store.set_typed_dict({"a": "not int"})  # TypeError!
+
+# Optional[List[str]] - optional list of strings
+store.set_optional_list(["a", "b", "c"])
+store.set_optional_list(None)  # Valid
+# store.set_optional_list([1, 2, 3])  # TypeError - wrong element type!
+
+# Dict[str, Optional[int]] - dict with optional int values
+store.set_nested_dict({"a": 1, "b": None, "c": 3})  # None is valid
+
+# List[Any] - list with any element types
+store.set_any_list([1, "string", 3.14, None, {"key": "value"}])
+
+# List[Dict[str, int]] - complex nested structure
+store.set_complex_nested([
+    {"a": 1, "b": 2},
+    {"x": 10, "y": 20, "z": 30}
+])
+# store.set_complex_nested([{"a": "not int"}])  # TypeError!
+
+print("All complex types validated successfully!")
+```
+
+**Supported Complex Types:**
+
+- `Optional[T]` - Value can be `T` or `None`
+- `Union[T1, T2, ...]` - Value can be any of the specified types
+- `Dict[K, V]` - Dictionary with typed keys and values
+- `List[T]` - List with typed elements
+- `Tuple[T1, T2, ...]` - Tuple with typed elements
+- `Set[T]` - Set with typed elements
+- Nested combinations like `Optional[List[Dict[str, int]]]`
+- `List[Any]`, `Dict[Any, Any]` - Collections accepting any types
+
+**Type Validation Rules:**
+
+1. **Simple types** (int, str, float, bool) - direct `isinstance()` check
+2. **Optional types** - `None` is valid, or value must match inner type
+3. **Collections** - container type and all elements are validated
+4. **Nested types** - recursive validation at all levels
+5. **Any** - always valid (no type constraint)
+
 ### Deep Copy Support
 
 ```python

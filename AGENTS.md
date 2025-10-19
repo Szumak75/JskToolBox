@@ -127,6 +127,7 @@ Klasa `BData` zapewnia bezpieczny kontener słownikowy z kontrolą typów.
 2. **Gettery bez rejestracji typu**: `_get_data()` nie używa `set_default_type` (przestarzałe)
 3. **Typ raz ustawiony jest niezmienny**: Wymagane `_delete_data()` przed zmianą typu
 4. **None zachowuje typ**: `set_default_type=None` nie zmienia istniejącego typu
+5. **Typy złożone**: Obsługa `Optional[T]`, `Dict[K, V]`, `List[T]`, `Union`, zagnieżdżenia
 
 **Preferowane metody:**
 
@@ -146,6 +147,29 @@ value = self._get_data("key", set_default_type=int, default_value=0)  # Deprecat
 # ✗ Możliwe, ale bez kontroli typów
 value = self._data["key"]
 self._data["key"] = 42
+```
+
+**Typy złożone (nowość 2024):**
+
+```python
+from typing import Optional, Dict, List
+
+# ✓ Optional - akceptuje wartość lub None
+self._set_data("key", "text", set_default_type=Optional[str])
+self._set_data("key", None, set_default_type=None)  # Valid
+
+# ✓ Dict z typami - weryfikuje klucze i wartości
+self._set_data("config", {"a": 1, "b": 2}, set_default_type=Dict[str, int])
+
+# ✓ List z typem - weryfikuje wszystkie elementy
+self._set_data("items", ["a", "b"], set_default_type=List[str])
+
+# ✓ Zagnieżdżone typy - rekursywna walidacja
+self._set_data("data", [{"a": 1}], set_default_type=List[Dict[str, int]])
+
+# ✓ Optional List - lista lub None
+self._set_data("maybe", ["x"], set_default_type=Optional[List[str]])
+self._set_data("maybe", None, set_default_type=None)  # Valid
 ```
 
 **Zmiana typu:**
@@ -281,6 +305,7 @@ Upewnij się że wszystkie pliki dokumentacji zawierają:
    - `_get_data()` NIE używa `set_default_type` (przestarzałe)
    - Typ raz ustawiony jest niezmienny (wymaga `_delete_data()` przed zmianą)
    - `set_default_type=None` zachowuje istniejący typ
+   - **Typy złożone**: Obsługa `Optional[T]`, `Dict[K, V]`, `List[T]`, `Union`, zagnieżdżenia (2024)
 6. **netaddresstool** - Rozróżnienie Address/Network i IPv4/IPv6
 
 ## Docstring Template

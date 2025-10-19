@@ -346,6 +346,30 @@ class MyClass(BData):
 
 **Important**: Type constraints are registered in **setters only** using `_set_data()`. Getters use `_get_data()` without `set_default_type` parameter.
 
+**Complex Generic Types** (New in 2024): BData supports complex types from `typing` module including `Optional[T]`, `Dict[K, V]`, `List[T]`, `Union[T1, T2]`, and nested combinations like `Optional[List[Dict[str, int]]]`. Type validation is recursive and checks all nested elements.
+
+```python
+from typing import Optional, Dict, List
+from jsktoolbox.basetool import BData
+from jsktoolbox.attribtool import ReadOnlyClass
+
+class TypedData(BData):
+    class _Keys(object, metaclass=ReadOnlyClass):
+        CONFIG: str = "config"
+    
+    def set_config(self, value: Dict[str, Optional[int]]) -> None:
+        """Accept dict with optional int values."""
+        self._set_data(
+            key=self._Keys.CONFIG,
+            value=value,
+            set_default_type=Dict[str, Optional[int]]
+        )
+
+data = TypedData()
+data.set_config({"a": 1, "b": None, "c": 3})  # Valid
+# data.set_config({"a": "string"})  # TypeError!
+```
+
 #### Singleton Pattern
 
 ```python
