@@ -142,7 +142,11 @@ class BRouterOS(BDev, BElement):
 
     @property
     def elements(self) -> Dict[str, Any]:
-        """Return elements dict."""
+        """Return elements dict.
+        
+        ### Returns:
+        Dict[str, Any] - Dictionary containing element objects indexed by their names.
+        """
         return self._get_data(key=_Keys.ELEMENTS)  # type: ignore
 
     def get(self) -> bool:
@@ -151,7 +155,11 @@ class BRouterOS(BDev, BElement):
 
     @property
     def is_loaded(self) -> bool:
-        """Returns True if loaded."""
+        """Returns True if loaded.
+        
+        ### Returns:
+        bool - True if configuration has been loaded, False otherwise.
+        """
         return self._get_data(key=_Keys.LOADED)  # type: ignore
 
     def load(self, root: str) -> bool:

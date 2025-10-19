@@ -61,19 +61,31 @@ class Log(BData):
 
     @property
     def loglevel(self) -> int:
-        """Return loglevel."""
+        """Return loglevel.
+        
+        ### Returns:
+        int - The configured log level.
+        """
         return self._get_data(key=_Keys.LOG_LEVEL)  # type: ignore
 
     @property
     def log(self) -> List[str]:
-        """Get list of logs."""
+        """Get list of logs.
+        
+        ### Returns:
+        List[str] - List of log messages.
+        """
         return self._get_data(
             key=_Keys.LOG_DATA,
         )  # type: ignore
 
     @log.setter
     def log(self, arg: Optional[Union[List, str]]) -> None:
-        """Set data log."""
+        """Set data log.
+
+        ### Arguments:
+        * arg: Optional[Union[List, str]] - Log message or list of messages to append, None to clear.
+        """
         if arg is None or (isinstance(arg, List) and not bool(arg)):
             # cleanup list of logs
             self._set_data(
@@ -138,12 +150,20 @@ class LogProcessor(BData):
 
     @property
     def __engine(self) -> logging.Logger:
-        """Return logger instance."""
+        """Return logger instance.
+
+        ### Returns:
+        logging.Logger - The underlying Python logging engine.
+        """
         return self._get_data(key=_Keys.LP_ENGINE)  # type: ignore
 
     @__engine.setter
     def __engine(self, arg: logging.Logger) -> None:
-        """Sets engine instance."""
+        """Sets engine instance.
+
+        ### Arguments:
+        * arg: logging.Logger - Logger engine instance to assign.
+        """
         self._set_data(key=_Keys.LP_ENGINE, value=arg, set_default_type=logging.Logger)
 
     def __logger_init(self) -> None:
@@ -175,7 +195,14 @@ class LogProcessor(BData):
                 self.__engine.removeHandler(handler)
 
     def send(self, message: Log) -> None:
-        """Send single message to log engine."""
+        """Send single message to log engine.
+
+        ### Arguments:
+        * message: Log - Log object containing messages and log level.
+
+        ### Raises:
+        * TypeError: Provided argument is not a Log instance.
+        """
         if self.__engine is None:
             return
         lgl = LogLevels()
@@ -208,14 +235,22 @@ class LogProcessor(BData):
 
     @property
     def loglevel(self) -> int:
-        """Property that returns loglevel."""
+        """Property that returns loglevel.
+        
+        ### Returns:
+        int - The configured log level.
+        """
         return self._get_data(
             key=_Keys.LOG_LEVEL, default_value=LogLevels().notset
         )  # type: ignore
 
     @loglevel.setter
     def loglevel(self, arg: int) -> None:
-        """Setter for log level parameter."""
+        """Setter for log level parameter.
+
+        ### Arguments:
+        * arg: int - Log level constant from LogLevels.
+        """
         if self.loglevel == arg:
             log = Log(LogLevels().debug)
             log.log = "LogLevel has not changed"
@@ -252,21 +287,30 @@ class LogClient(BData):
 
     @property
     def queue(self) -> Union[Queue, SimpleQueue]:
-        """Give me queue object."""
+        """Give me queue object.
+        
+        ### Returns:
+        Union[Queue, SimpleQueue] - The queue object for log messages.
+        """
         return self._get_data(
             key=_Keys.LOG_QUEUE,
         )  # type: ignore
 
     @property
     def critical(self) -> str:
-        """Property that returns nothing."""
+        """Property that returns nothing.
+        
+        ### Returns:
+        str - Empty string.
+        """
         return ""
 
     @critical.setter
     def critical(self, message: Union[str, List]) -> None:
         """Setter for critical messages.
 
-        message: [str|list]
+        ### Arguments:
+        * message: Union[str, List] - Critical level log message or list of messages.
         """
         log = Log(LogLevels().critical)
         log.log = message
@@ -274,14 +318,19 @@ class LogClient(BData):
 
     @property
     def debug(self) -> str:
-        """Property that returns nothing."""
+        """Property that returns nothing.
+        
+        ### Returns:
+        str - Empty string.
+        """
         return ""
 
     @debug.setter
     def debug(self, message: Union[str, List]) -> None:
         """Setter for debug messages.
 
-        message: [str|list]
+        ### Arguments:
+        * message: Union[str, List] - Debug level log message or list of messages.
         """
         log = Log(LogLevels().debug)
         log.log = message
@@ -289,14 +338,19 @@ class LogClient(BData):
 
     @property
     def error(self) -> str:
-        """Property that returns nothing."""
+        """Property that returns nothing.
+        
+        ### Returns:
+        str - Empty string.
+        """
         return ""
 
     @error.setter
     def error(self, message: Union[str, List]) -> None:
         """Setter for error messages.
 
-        message: [str|list]
+        ### Arguments:
+        * message: Union[str, List] - Error level log message or list of messages.
         """
         log = Log(LogLevels().error)
         log.log = message
@@ -304,14 +358,19 @@ class LogClient(BData):
 
     @property
     def info(self) -> str:
-        """Property that returns nothing."""
+        """Property that returns nothing.
+        
+        ### Returns:
+        str - Empty string.
+        """
         return ""
 
     @info.setter
     def info(self, message: Union[str, List]) -> None:
         """Setter for info messages.
 
-        message: [str|list]
+        ### Arguments:
+        * message: Union[str, List] - Info level log message or list of messages.
         """
         log = Log(LogLevels().info)
         log.log = message
@@ -319,14 +378,19 @@ class LogClient(BData):
 
     @property
     def warning(self) -> str:
-        """Property that returns nothing."""
+        """Property that returns nothing.
+        
+        ### Returns:
+        str - Empty string.
+        """
         return ""
 
     @warning.setter
     def warning(self, message: Union[str, List]) -> None:
         """Setter for warning messages.
 
-        message: [str|list]
+        ### Arguments:
+        * message: Union[str, List] - Warning level log message or list of messages.
         """
         log = Log(LogLevels().warning)
         log.log = message
@@ -334,14 +398,19 @@ class LogClient(BData):
 
     @property
     def notset(self) -> str:
-        """Property that returns nothing."""
+        """Property that returns nothing.
+        
+        ### Returns:
+        str - Empty string.
+        """
         return ""
 
     @notset.setter
     def notset(self, message: Union[str, List]) -> None:
         """Setter for notset level messages.
 
-        message: [str|list]
+        ### Arguments:
+        * message: Union[str, List] - Message or list of messages to log.
         """
         log = Log(LogLevels().notset)
         log.log = message
@@ -385,39 +454,67 @@ class LogLevels(NoDynamicAttributes):
         return None
 
     def has_key(self, level: Union[int, str]) -> bool:
-        """Check, if level is in proper keys."""
+        """Check, if level is in proper keys.
+        
+        ### Returns:
+        bool - True if level is valid, False otherwise.
+        """
         if level in self.__keys or level in self.__txt:
             return True
         return False
 
     @property
     def info(self) -> int:
-        """Return info level."""
+        """Return info level.
+        
+        ### Returns:
+        int - The INFO log level constant.
+        """
         return logging.INFO
 
     @property
     def debug(self) -> int:
-        """Return debug level."""
+        """Return debug level.
+        
+        ### Returns:
+        int - The DEBUG log level constant.
+        """
         return logging.DEBUG
 
     @property
     def warning(self) -> int:
-        """Return warning level."""
+        """Return warning level.
+        
+        ### Returns:
+        int - The WARNING log level constant.
+        """
         return logging.WARNING
 
     @property
     def error(self) -> int:
-        """Return error level."""
+        """Return error level.
+        
+        ### Returns:
+        int - The ERROR log level constant.
+        """
         return logging.ERROR
 
     @property
     def critical(self) -> int:
-        """Return critical level."""
+        """Return critical level.
+        
+        ### Returns:
+        int - The CRITICAL log level constant.
+        """
         return logging.CRITICAL
 
     @property
     def notset(self) -> int:
-        """Return notset level."""
+        """Return notset level.
+        
+        ### Returns:
+        int - The NOTSET log level constant.
+        """
         return logging.NOTSET
 
 

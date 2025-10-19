@@ -37,17 +37,29 @@ class IModel(ABC):
     @property
     @abstractmethod
     def dump(self) -> Union[List[str], "VariableModel"]:
-        """Dump data."""
+        """Dump data.
+        
+        ### Returns:
+        Union[List[str], VariableModel] - Dumped data as list of strings or model object.
+        """
 
     @property
     @abstractmethod
     def name(self) -> Optional[str]:
-        """Get name property."""
+        """Get name property.
+        
+        ### Returns:
+        Optional[str] - The name property value, or None if not set.
+        """
 
     @name.setter
     @abstractmethod
     def name(self, name: str) -> None:
-        """Set name property."""
+        """Set name property.
+        
+        ### Arguments:
+        * name: str - The name to set.
+        """
 
     @abstractmethod
     def parser(self, value: str) -> None:

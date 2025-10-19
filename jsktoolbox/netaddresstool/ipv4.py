@@ -173,7 +173,11 @@ class Address(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def octets(self) -> List[Octet]:
-        """Return octets list of four Octets."""
+        """Return octets list of four Octets.
+        
+        ### Returns:
+        List[Octet] - List of four Octet objects representing each byte.
+        """
         tmp: list[str] = str(self).split(".")
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
@@ -313,7 +317,11 @@ class Netmask(BClasses, NoDynamicAttributes):
 
     @property
     def octets(self) -> List[Octet]:
-        """Return octets list of four Octets."""
+        """Return octets list of four Octets.
+        
+        ### Returns:
+        List[Octet] - List of four Octet objects representing each byte.
+        """
         tmp: list[str] = str(self).split(".")
         return [Octet(tmp[0]), Octet(tmp[1]), Octet(tmp[2]), Octet(tmp[3])]
 
@@ -338,7 +346,11 @@ class Netmask(BClasses, NoDynamicAttributes):
 
     @property
     def cidr(self) -> str:
-        """Return CIDR netmask as string type."""
+        """Return CIDR netmask as string type.
+        
+        ### Returns:
+        str - CIDR notation string (e.g., '255.255.255.0').
+        """
         return str(self.__cidr)
 
     @cidr.setter
@@ -443,12 +455,20 @@ class Network(BClasses, NoDynamicAttributes):
 
     @property
     def address(self) -> Address:
-        """Return IPv4 address."""
+        """Return IPv4 address.
+        
+        ### Returns:
+        Address - The IPv4 address object.
+        """
         return self.__address
 
     @property
     def broadcast(self) -> Address:
-        """Return broadcast address."""
+        """Return broadcast address.
+        
+        ### Returns:
+        Address - The broadcast address for this network.
+        """
         ip = int(self.address)
         mask = int(Address(self.mask.octets))
         broadcast: int = ip | (mask ^ (1 << 32) - 1)
@@ -456,7 +476,11 @@ class Network(BClasses, NoDynamicAttributes):
 
     @property
     def count(self) -> int:
-        """Return count hosts addresses in network range."""
+        """Return count hosts addresses in network range.
+        
+        ### Returns:
+        int - Number of host addresses in the network.
+        """
         net = int(self.network)
         broadcast = int(self.broadcast)
         return broadcast - net - 1 if broadcast - net > 2 else 0
@@ -513,12 +537,20 @@ class Network(BClasses, NoDynamicAttributes):
 
     @property
     def mask(self) -> Netmask:
-        """Return IPv4 network mask."""
+        """Return IPv4 network mask.
+        
+        ### Returns:
+        Netmask - The network mask object.
+        """
         return self.__mask
 
     @property
     def max(self) -> Address:
-        """Return last address of host in network range."""
+        """Return last address of host in network range.
+        
+        ### Returns:
+        Address - The last usable host address.
+        """
         net = int(self.network)
         broadcast = int(self.broadcast)
         ip = broadcast - 1
@@ -526,7 +558,11 @@ class Network(BClasses, NoDynamicAttributes):
 
     @property
     def min(self) -> Address:
-        """Return first host address in network range."""
+        """Return first host address in network range.
+        
+        ### Returns:
+        Address - The first usable host address.
+        """
         net = int(self.network)
         broadcast = int(self.broadcast)
         ip: int = net + 1
@@ -534,7 +570,11 @@ class Network(BClasses, NoDynamicAttributes):
 
     @property
     def network(self) -> Address:
-        """Return network address."""
+        """Return network address.
+        
+        ### Returns:
+        Address - The network address.
+        """
         ip = int(self.address)
         mask = int(Address(self.mask.octets))
         net: int = ip & mask

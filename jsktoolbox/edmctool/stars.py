@@ -59,12 +59,20 @@ class StarsSystem(BData):
 
     @property
     def address(self) -> Optional[int]:
-        """Returns address of the star system."""
+        """Returns address of the star system.
+        
+        ### Returns:
+        Optional[int] - The system address, or None if not set.
+        """
         return self._get_data(key=_Keys.SS_ADDRESS, default_value=None)
 
     @address.setter
     def address(self, arg: Optional[Union[int, str]]) -> None:
-        """Sets  address of the star system."""
+        """Sets address of the star system.
+
+        ### Arguments:
+        * arg: Optional[Union[int, str]] - System address as integer or string representation.
+        """
         if isinstance(arg, str):
             self._set_data(
                 key=_Keys.SS_ADDRESS,
@@ -81,6 +89,9 @@ class StarsSystem(BData):
         """Returns data container.
 
         This is dictionary object for storing various elements.
+        
+        ### Returns:
+        Dict - Dictionary containing system data.
         """
         if self._get_data(key=_Keys.SS_DATA, default_value=None) is None:
             self._set_data(key=_Keys.SS_DATA, value={}, set_default_type=Dict)
@@ -88,7 +99,11 @@ class StarsSystem(BData):
 
     @data.setter
     def data(self, value: Optional[Dict]) -> None:
-        """Initialize or set data container."""
+        """Initialize or set data container.
+
+        ### Arguments:
+        * value: Optional[Dict] - Dictionary for storing system data or None to initialize empty.
+        """
         if value is None:
             self._set_data(key=_Keys.SS_DATA, value={}, set_default_type=Dict)
         else:
@@ -96,68 +111,119 @@ class StarsSystem(BData):
 
     @property
     def name(self) -> Optional[str]:
-        """Returns name of the  star system."""
+        """Returns name of the star system.
+        
+        ### Returns:
+        Optional[str] - The system name, or None if not set.
+        """
         return self._get_data(key=_Keys.SS_NAME, default_value=None)
 
     @name.setter
     def name(self, arg: Optional[str]) -> None:
-        """Sets name of the star system."""
+        """Sets name of the star system.
+
+        ### Arguments:
+        * arg: Optional[str] - Name of the star system.
+        """
         self._set_data(key=_Keys.SS_NAME, value=arg, set_default_type=Optional[str])
 
     @property
     def pos_x(self) -> Optional[Union[float, int]]:
-        """Returns pos_x of the star system."""
+        """Returns pos_x of the star system.
+        
+        ### Returns:
+        Optional[Union[float, int]] - X coordinate value, or None if not set.
+        """
         return self._get_data(key=_Keys.SS_POS_X, default_value=None)
 
     @pos_x.setter
     def pos_x(self, arg: Optional[Union[float, int]]) -> None:
-        """Sets pos_x of the star system."""
+        """Sets pos_x of the star system.
+
+        ### Arguments:
+        * arg: Optional[Union[float, int]] - X coordinate value.
+        """
         self._set_data(
             key=_Keys.SS_POS_X, value=arg, set_default_type=Optional[Union[float, int]]
         )
 
     @property
     def pos_y(self) -> Optional[Union[float, int]]:
-        """Returns pos_y of the star system."""
+        """Returns pos_y of the star system.
+        
+        ### Returns:
+        Optional[Union[float, int]] - Y coordinate value, or None if not set.
+        """
         return self._get_data(key=_Keys.SS_POS_Y, default_value=None)
 
     @pos_y.setter
     def pos_y(self, arg: Optional[Union[float, int]]) -> None:
-        """Sets pos_y of the star system."""
+        """Sets pos_y of the star system.
+
+        ### Arguments:
+        * arg: Optional[Union[float, int]] - Y coordinate value.
+        """
         self._set_data(
             key=_Keys.SS_POS_Y, value=arg, set_default_type=Optional[Union[float, int]]
         )
 
     @property
     def pos_z(self) -> Optional[Union[float, int]]:
-        """Returns pos_z of the star system."""
+        """Returns pos_z of the star system.
+        
+        ### Returns:
+        Optional[Union[float, int]] - Z coordinate value, or None if not set.
+        """
         return self._get_data(key=_Keys.SS_POS_Z, default_value=None)
 
     @pos_z.setter
     def pos_z(self, arg: Optional[Union[float, int]]) -> None:
-        """Sets pos_z of the star system."""
+        """Sets pos_z of the star system.
+
+        ### Arguments:
+        * arg: Optional[Union[float, int]] - Z coordinate value.
+        """
         self._set_data(
             key=_Keys.SS_POS_Z, value=arg, set_default_type=Optional[Union[float, int]]
         )
 
     @property
     def star_class(self) -> str:
-        """Returns star class string."""
+        """Returns star class string.
+        
+        ### Returns:
+        str - Star classification identifier.
+        """
         return self._get_data(key=_Keys.SS_STAR_CLASS, default_value="")  # type: ignore
 
     @star_class.setter
     def star_class(self, value: str) -> None:
-        """Sets star class string."""
+        """Sets star class string.
+
+        ### Arguments:
+        * value: str - Star classification identifier.
+        """
         self._set_data(key=_Keys.SS_STAR_CLASS, value=value, set_default_type=str)
 
     @property
     def star_pos(self) -> List:
-        """Returns the star position list."""
+        """Returns the star position list.
+        
+        ### Returns:
+        List - List containing [pos_x, pos_y, pos_z] coordinates.
+        """
         return [self.pos_x, self.pos_y, self.pos_z]
 
     @star_pos.setter
     def star_pos(self, arg: Optional[List] = None) -> None:
-        """Sets  the star position list."""
+        """Sets the star position list.
+
+        ### Arguments:
+        * arg: Optional[List] - List with three coordinates [x, y, z] or None to clear.
+
+        ### Raises:
+        * TypeError: Argument is not a List or has incorrect length.
+        """
         if arg is None:
             (self.pos_x, self.pos_y, self.pos_z) = (None, None, None)
         elif isinstance(arg, List) and len(arg) == 3:
@@ -171,7 +237,11 @@ class StarsSystem(BData):
             )
 
     def update_from_edsm(self, data: Dict) -> None:
-        """Update records from given EDSM Api dict."""
+        """Update records from given EDSM Api dict.
+
+        ### Arguments:
+        * data: Dict - Dictionary containing EDSM API response data.
+        """
         if data is None or not isinstance(data, Dict):
             return
 

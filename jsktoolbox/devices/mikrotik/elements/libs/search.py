@@ -43,7 +43,11 @@ class RBQuery(BData):
 
     @property
     def query(self) -> Dict:
-        """Returns query dict."""
+        """Returns query dict.
+        
+        ### Returns:
+        Dict - Copy of the search query dictionary.
+        """
         return copy(self._get_data(key=RBQuery.Keys.SEARCH))  # type: ignore
 
 

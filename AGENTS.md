@@ -47,13 +47,17 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 - **Format funkcji/metod** - krótkie streszczenie, opcjonalne sekcje `### Arguments`, `### Returns`, `### Raises`
 - **Konsystencja** - jednolity autor we wszystkich modułach: `Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>`
 
+**Sekcja `### Arguments:` - kiedy wymagana:**
+
+- **ZAWSZE dla metod z parametrami** (oprócz `self`/`cls`)
+- **WYJĄTEK:** comparatory (`__lt__`, `__le__`, `__gt__`, `__ge__`, `__eq__`, `__ne__`) - NIE wymagają
+- **ZAWSZE dla setterów** - properties z parametrem value/arg
+- **NIGDY dla getterów** - properties bez parametrów
+- **ZAWSZE dla `__init__`** jeśli ma parametry
+- **ZAWSZE dla pozostałych metod magicznych** z parametrami (`__setitem__`, `__getitem__`, etc.)
+
 **Sekcje opcjonalne:**
 
-- `### Arguments` - **wymagana** tylko gdy metoda ma parametry (oprócz `self`/`cls`)
-  - **Wyjątki:** comparatory (`__lt__`, `__le__`, `__gt__`, `__ge__`, `__eq__`, `__ne__`)
-  - **Wyjątki:** utilities (`__str__`, `__repr__`, `__len__`, `__bool__`, `__hash__`, `__iter__`, `__next__`)
-  - **Wymagana:** settery (metody `set_*`) z parametrami
-  - **Opcjonalna:** gettery (metody `get_*`) bez parametrów (oprócz self)
 - `### Returns` - **opcjonalna** dla metod `-> None` (setterzy, `__init__`)
 - `### Raises` - **opcjonalna**, tylko gdy metoda faktycznie rzuca wyjątki
 
@@ -311,6 +315,9 @@ type - Description of the returned value.
 **Zasady sekcji:**
 
 - `### Arguments:` - **WYMAGANA** gdy metoda ma parametry (oprócz `self`/`cls`)
+  - **WYJĄTEK:** Metody magiczne comparatory (`__lt__`, `__le__`, `__gt__`, `__ge__`, `__eq__`, `__ne__`) - sekcja NIE JEST wymagana
+  - **Settery** (`set_*`, `add_*`, `update_*`, itp.) - sekcja **WYMAGANA**
+- `### Returns:` - **WYMAGANA** dla getterów (`get_*`, `is_*`, `has_*`, `@property`)
 - `### Returns:` - **OPCJONALNA** dla metod `-> None`, jeśli dodana: `None - opis`
 - `### Raises:` - **OPCJONALNA**, tylko gdy metoda faktycznie rzuca wyjątki
 - Wszystkie sekcje **bez spacji przed dwukropkiem** - `### Arguments:` nie `### Arguments :`

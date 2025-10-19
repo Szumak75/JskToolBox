@@ -52,12 +52,20 @@ class BLogProcessor(BData):
 
     @property
     def qlog(self) -> Union[Queue, SimpleQueue]:
-        """Give me access to queue handler."""
+        """Return the logging queue instance.
+
+        ### Returns:
+        Union[Queue, SimpleQueue] - The queue used for log message passing.
+        """
         return self._get_data(key=_Keys.LOG_QUEUE, default_value=None)  # type: ignore
 
     @qlog.setter
     def qlog(self, value: Union[Queue, SimpleQueue]) -> None:
-        """Setter for logging queue."""
+        """Assign the logging queue instance.
+
+        ### Arguments:
+        * value: Union[Queue, SimpleQueue] - Queue instance for log processing.
+        """
         self._set_data(
             key=_Keys.LOG_QUEUE,
             value=value,
@@ -66,14 +74,22 @@ class BLogProcessor(BData):
 
     @property
     def log_processor(self) -> LogProcessor:
-        """Give me handler for log processor."""
+        """Return the log processor handler.
+
+        ### Returns:
+        LogProcessor - The processor instance responsible for log message handling.
+        """
         return self._get_data(
             key=_Keys.LOG_PROCESSOR, default_value=None
         )  # type: ignore
 
     @log_processor.setter
     def log_processor(self, value: LogProcessor) -> None:
-        """Setter for log processor instance."""
+        """Assign the log processor instance.
+
+        ### Arguments:
+        * value: LogProcessor - Processor instance to handle log messages.
+        """
         self._set_data(
             key=_Keys.LOG_PROCESSOR, value=value, set_default_type=LogProcessor
         )
@@ -87,12 +103,20 @@ class BLogClient(BData):
 
     @property
     def logger(self) -> LogClient:
-        """Give me logger handler."""
+        """Return the logger client handler.
+
+        ### Returns:
+        LogClient - The client interface for logging operations.
+        """
         return self._get_data(key=_Keys.LOGGER, default_value=None)  # type: ignore
 
     @logger.setter
     def logger(self, arg: LogClient) -> None:
-        """Set logger instance."""
+        """Assign the logger client instance.
+
+        ### Arguments:
+        * arg: LogClient - Logger client instance to use for logging operations.
+        """
         self._set_data(key=_Keys.LOGGER, value=arg, set_default_type=LogClient)
 
 

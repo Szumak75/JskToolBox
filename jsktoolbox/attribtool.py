@@ -71,6 +71,11 @@ class NoDynamicAttributes:
     """
 
     def __setattr__(self, name: str, value: Any) -> None:
+        """Prevent dynamic attribute assignment on instances.
+
+        ### Raises:
+        * AttributeError: Attribute not previously declared.
+        """
         if not hasattr(self, name):
             raise AttributeError(
                 f"Cannot add new attribute '{name}' to {self.__class__.__name__} object"
@@ -86,6 +91,11 @@ class ReadOnlyClass(type):
     """
 
     def __setattr__(self, name: str, value: Any) -> None:
+        """Block assignment to class-level attributes.
+
+        ### Raises:
+        * AttributeError: Always raised to prevent modification.
+        """
         raise AttributeError(f"Read only attribute: {name}.")
 
 

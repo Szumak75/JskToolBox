@@ -54,27 +54,47 @@ class IConnector(ABC):
     @property
     @abstractmethod
     def address(self) -> Optional[Union[Address, Address6]]:
-        """Get host address."""
+        """Get host address.
+
+        ### Returns:
+        Optional[Union[Address, Address6]] - The configured IP address object, or None if not set.
+        """
 
     @address.setter
     @abstractmethod
     def address(self, ip_address: Union[Address, Address6]) -> None:
-        """Set host address."""
+        """Set host address.
+
+        ### Arguments:
+        * ip_address: Union[Address, Address6] - The IP address object to set.
+        """
 
     @property
     @abstractmethod
     def is_alive(self) -> bool:
-        """Get alive flag from connected protocol."""
+        """Get alive flag from connected protocol.
+
+        ### Returns:
+        bool - True if connection is alive, False otherwise.
+        """
 
     @property
     @abstractmethod
     def login(self) -> Optional[str]:
-        """Get login property."""
+        """Get login name.
+
+        ### Returns:
+        Optional[str] - The configured login name, or None if not set.
+        """
 
     @login.setter
     @abstractmethod
     def login(self, username: str) -> None:
-        """Set login property."""
+        """Set login property.
+
+        ### Arguments:
+        * username: str - The username to set.
+        """
 
     @abstractmethod
     def outputs(self) -> Tuple:
@@ -83,27 +103,47 @@ class IConnector(ABC):
     @property
     @abstractmethod
     def password(self) -> Optional[str]:
-        """Get password property."""
+        """Get password property.
+
+        ### Returns:
+        Optional[str] - The configured password, or None if not set.
+        """
 
     @password.setter
     @abstractmethod
     def password(self, passwd: str) -> None:
-        """Set password property."""
+        """Set password property.
+
+        ### Arguments:
+        * passwd: str - The password to set.
+        """
 
     @property
     @abstractmethod
     def port(self) -> Optional[int]:
-        """Get port property."""
+        """Get port property.
+
+        ### Returns:
+        Optional[int] - The configured port number, or None if not set.
+        """
 
     @port.setter
     @abstractmethod
     def port(self, port: int) -> None:
-        """Set port property."""
+        """Set port property.
+
+        ### Arguments:
+        * port: int - The port number to set.
+        """
 
     @property
     @abstractmethod
     def prototype(self) -> str:
-        """Get protocol type property."""
+        """Get protocol type.
+
+        ### Returns:
+        str - The protocol type identifier.
+        """
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -186,27 +226,47 @@ class API(IConnector, BData):
 
     @property
     def __stdin(self) -> List:
-        """Returns stdin list."""
+        """Returns stdin list.
+
+        ### Returns:
+        List - List of commands sent to stdin.
+        """
         return self._get_data(key=_Keys.STDIN)  # type: ignore
 
     @property
     def __stderr(self) -> List:
-        """Returns stderr list."""
+        """Returns stderr list.
+
+        ### Returns:
+        List - List of error messages received from stderr.
+        """
         return self._get_data(key=_Keys.STDERR)  # type: ignore
 
     @property
     def __stdout(self) -> List:
-        """Returns stdout list."""
+        """Returns stdout list.
+
+        ### Returns:
+        List - List of outputs received from stdout.
+        """
         return self._get_data(key=_Keys.STDOUT)  # type: ignore
 
     @property
     def __socket(self) -> Optional[socket.socket]:
-        """Returns connection socket."""
+        """Returns connection socket.
+
+        ### Returns:
+        Optional[socket.socket] - The active socket connection, or None if not connected.
+        """
         return self._get_data(key=_Keys.SOCKET)  # type: ignore
 
     @__socket.setter
     def __socket(self, connection_socket: Optional[socket.socket]) -> None:
-        """Sets connection socket."""
+        """Sets connection socket.
+
+        ### Arguments:
+        * connection_socket: Optional[socket.socket] - The socket object to set or None.
+        """
         self._set_data(key=_Keys.SOCKET, value=connection_socket)
 
     def __command_translator(self, command: str) -> List[str]:
@@ -426,7 +486,11 @@ class API(IConnector, BData):
 
     @property
     def __errors(self) -> List[str]:
-        """Returns ERRORS list."""
+        """Returns ERRORS list.
+
+        ### Returns:
+        List[str] - List of error messages that occurred during operations.
+        """
         return self._get_data(key=_Keys.ERRORS)  # type: ignore
 
     def __get_socket(self) -> bool:
@@ -612,12 +676,20 @@ class API(IConnector, BData):
 
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
-        """Get host address property."""
+        """Get host address property.
+        
+        ### Returns:
+        Optional[Union[Address, Address6]] - The configured IP address object, or None if not set.
+        """
         return self._get_data(key=_Keys.IPADDR, default_value=None)
 
     @address.setter
     def address(self, ip_address: Union[Address, Address6]) -> None:
-        """Set host address setter."""
+        """Set host address setter.
+
+        ### Arguments:
+        * ip_address: Union[Address, Address6] - The IP address object to set.
+        """
         if ip_address:
             self._set_data(
                 key=_Keys.IPADDR,
@@ -627,7 +699,11 @@ class API(IConnector, BData):
 
     @property
     def is_alive(self) -> bool:
-        """Get alive flag from connected protocol."""
+        """Get alive flag from connected protocol.
+        
+        ### Returns:
+        bool - True if connection is alive and responding, False otherwise.
+        """
         if self.__socket is None:
             return False
         try:
@@ -647,12 +723,20 @@ class API(IConnector, BData):
 
     @property
     def login(self) -> Optional[str]:
-        """Get login property."""
+        """Get login property.
+        
+        ### Returns:
+        Optional[str] - The configured login name, or None if not set.
+        """
         return self._get_data(key=_Keys.USER, default_value=None)
 
     @login.setter
     def login(self, username: str) -> None:
-        """Set login property."""
+        """Set login property.
+
+        ### Arguments:
+        * username: str - The username to set.
+        """
         self._set_data(key=_Keys.USER, value=username, set_default_type=str)
 
     def outputs(self) -> Tuple:
@@ -661,27 +745,47 @@ class API(IConnector, BData):
 
     @property
     def password(self) -> Optional[str]:
-        """Get password property."""
+        """Get password property.
+        
+        ### Returns:
+        Optional[str] - The configured password, or None if not set.
+        """
         return self._get_data(key=_Keys.PASS, default_value=None)
 
     @password.setter
     def password(self, passwd: str) -> None:
-        """Set password property."""
+        """Set password property.
+
+        ### Arguments:
+        * passwd: str - The password to set.
+        """
         self._set_data(key=_Keys.PASS, value=passwd, set_default_type=str)
 
     @property
     def port(self) -> Optional[int]:
-        """Get port property."""
+        """Get port property.
+        
+        ### Returns:
+        Optional[int] - The configured port number, or None if not set.
+        """
         return self._get_data(key=_Keys.PORT, default_value=None)
 
     @port.setter
     def port(self, port: int) -> None:
-        """Set port property."""
+        """Set port property.
+
+        ### Arguments:
+        * port: int - The port number to set.
+        """
         self._set_data(key=_Keys.PORT, value=port, set_default_type=int)
 
     @property
     def prototype(self) -> str:
-        """Returns protocol type."""
+        """Returns protocol type.
+        
+        ### Returns:
+        str - The protocol type identifier ('API').
+        """
         return "API"
 
 
@@ -730,12 +834,20 @@ class SSH(IConnector, BData):
 
     @property
     def address(self) -> Optional[Union[Address, Address6]]:
-        """Get host address property."""
+        """Get host address property.
+        
+        ### Returns:
+        Optional[Union[Address, Address6]] - The configured IP address object, or None if not set.
+        """
         return self._get_data(key=_Keys.IPADDR, default_value=None)
 
     @address.setter
     def address(self, ip_address: Union[Address, Address6]) -> None:
-        """Set host address setter."""
+        """Set host address setter.
+
+        ### Arguments:
+        * ip_address: Union[Address, Address6] - The IP address object to set.
+        """
         if ip_address:
             self._set_data(
                 key=_Keys.IPADDR,
@@ -745,17 +857,29 @@ class SSH(IConnector, BData):
 
     @property
     def is_alive(self) -> bool:
-        """Get alive flag from connected protocol."""
+        """Get alive flag from connected protocol.
+        
+        ### Returns:
+        bool - True if connection is alive and responding, False otherwise.
+        """
         return False
 
     @property
     def login(self) -> Optional[str]:
-        """Get login property."""
+        """Get login property.
+        
+        ### Returns:
+        Optional[str] - The configured login name, or None if not set.
+        """
         return self._get_data(key=_Keys.USER, default_value=None)
 
     @login.setter
     def login(self, username: str) -> None:
-        """Set login property."""
+        """Set login property.
+
+        ### Arguments:
+        * username: str - The username to set.
+        """
         self._set_data(key=_Keys.USER, value=username, set_default_type=str)
 
     def outputs(self) -> Tuple:
@@ -764,27 +888,47 @@ class SSH(IConnector, BData):
 
     @property
     def password(self) -> Optional[str]:
-        """Get password property."""
+        """Get password property.
+        
+        ### Returns:
+        Optional[str] - The configured password, or None if not set.
+        """
         return self._get_data(key=_Keys.PASS, default_value=None)
 
     @password.setter
     def password(self, passwd: str) -> None:
-        """Set password property."""
+        """Set password property.
+
+        ### Arguments:
+        * passwd: str - The password to set.
+        """
         self._set_data(key=_Keys.PASS, value=passwd, set_default_type=str)
 
     @property
     def port(self) -> Optional[int]:
-        """Get port property."""
+        """Get port property.
+        
+        ### Returns:
+        Optional[int] - The configured port number, or None if not set.
+        """
         return self._get_data(key=_Keys.PORT, default_value=None)
 
     @port.setter
     def port(self, port: int) -> None:
-        """Set port property."""
+        """Set port property.
+
+        ### Arguments:
+        * port: int - The port number to set.
+        """
         self._set_data(key=_Keys.PORT, value=port, set_default_type=int)
 
     @property
     def prototype(self) -> str:
-        """Returns protocol type."""
+        """Returns protocol type.
+        
+        ### Returns:
+        str - The protocol type identifier ('SSH').
+        """
         return "SSH"
 
 

@@ -59,10 +59,20 @@ class Url(BData):
 
     @property
     def __options(self) -> Dict:
+        """Return the options dictionary for URL parameters.
+
+        ### Returns:
+        Dict - URL query options mapping.
+        """
         return self._get_data(key=_Keys.OPTIONS)  # type: ignore
 
     @__options.setter
     def __options(self, value: Optional[Dict]) -> None:
+        """Assign the options dictionary.
+
+        ### Arguments:
+        * value: Optional[Dict] - Options dictionary or None to initialize empty.
+        """
         if value is None:
             self._set_data(key=_Keys.OPTIONS, value={}, set_default_type=Dict)
         else:
@@ -70,22 +80,46 @@ class Url(BData):
 
     @property
     def __system_url(self) -> str:
+        """Return the system API endpoint URL.
+
+        ### Returns:
+        str - URL for single system queries.
+        """
         return self._get_data(key=_Keys.SYSTEM_URL)  # type: ignore
 
     @property
     def __systems_url(self) -> str:
+        """Return the systems API endpoint URL.
+
+        ### Returns:
+        str - URL for multiple systems queries.
+        """
         return self._get_data(key=_Keys.SYSTEMS_URL)  # type: ignore
 
     @property
     def options(self) -> str:
-        """Get url options string."""
+        """Get url options string.
+        
+        ### Returns:
+        str - Formatted URL parameter string.
+        """
         out: str = ""
         for key, value in self.__options.items():
             out += f"&{key}={value}"
         return out
 
     def bodies_url(self, s_system: StarsSystem) -> str:
-        """Returns proper API url for getting bodies information data."""
+        """Returns proper API url for getting bodies information data.
+
+        ### Arguments:
+        * s_system: StarsSystem - System object containing name or address.
+
+        ### Returns:
+        str - Formatted URL for bodies query.
+
+        ### Raises:
+        * TypeError: If s_system is not a StarsSystem instance.
+        """
         if not isinstance(s_system, StarsSystem):
             raise Raise.error(
                 f"StarsSystem type expected, '{type(s_system)}' received",
@@ -101,7 +135,17 @@ class Url(BData):
         return ""
 
     def system_url(self, s_system: StarsSystem) -> str:
-        """Returns proper API url for getting system data."""
+        """Returns proper API url for getting system data.
+
+        ### Arguments:
+        * s_system: StarsSystem - System object containing name.
+
+        ### Returns:
+        str - Formatted URL for system query.
+
+        ### Raises:
+        * TypeError: If s_system is not a StarsSystem instance.
+        """
         if not isinstance(s_system, StarsSystem):
             raise Raise.error(
                 f"StarsSystem type expected, '{type(s_system)}' received",
@@ -117,7 +161,18 @@ class Url(BData):
         return ""
 
     def radius_url(self, s_system: StarsSystem, radius: int) -> str:
-        """Returns proper API url for getting systems data in radius."""
+        """Returns proper API url for getting systems data in radius.
+
+        ### Arguments:
+        * s_system: StarsSystem - System object containing name.
+        * radius: int - Search radius in light years (clamped to 5-100).
+
+        ### Returns:
+        str - Formatted URL for sphere-systems query.
+
+        ### Raises:
+        * TypeError: If s_system is not a StarsSystem instance.
+        """
         if not isinstance(s_system, StarsSystem):
             raise Raise.error(
                 f"StarsSystem type expected, '{type(s_system)}' received",
@@ -140,7 +195,18 @@ class Url(BData):
         return ""
 
     def cube_url(self, s_system: StarsSystem, size: int) -> str:
-        """Returns proper API url for getting systems data in radius."""
+        """Returns proper API url for getting systems data in cube.
+
+        ### Arguments:
+        * s_system: StarsSystem - System object containing name.
+        * size: int - Cube size in light years (clamped to 10-200).
+
+        ### Returns:
+        str - Formatted URL for cube-systems query.
+
+        ### Raises:
+        * TypeError: If s_system is not a StarsSystem instance.
+        """
         if not isinstance(s_system, StarsSystem):
             raise Raise.error(
                 f"StarsSystem type expected, '{type(s_system)}' received",
@@ -163,7 +229,17 @@ class Url(BData):
         return ""
 
     def system_query(self, s_system: StarsSystem) -> Optional[Dict]:
-        """Returns result of query for system data."""
+        """Returns result of query for system data.
+
+        ### Arguments:
+        * s_system: StarsSystem - System object containing name.
+
+        ### Returns:
+        Optional[Dict] - System data from EDSM API or None on failure.
+
+        ### Raises:
+        * TypeError: If s_system is not a StarsSystem instance.
+        """
         if not isinstance(s_system, StarsSystem):
             raise Raise.error(
                 f"StarsSystem type expected, '{type(s_system)}' received",
@@ -186,7 +262,14 @@ class Url(BData):
         return None
 
     def url_query(self, url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
-        """Returns result of query for url."""
+        """Returns result of query for url.
+
+        ### Arguments:
+        * url: str - Full API URL to query.
+
+        ### Returns:
+        Union[List[Dict[str, Any]], Dict[str, Any]] - Response data from EDSM API or empty list on failure.
+        """
         out = []
         if not url:
             return out

@@ -28,14 +28,22 @@ class BElement(BData):
 
     @property
     def attrib(self) -> Dict[str, Any]:
-        """Returns attributes dict."""
+        """Returns attributes dict.
+        
+        ### Returns:
+        Dict[str, Any] - Dictionary containing element attributes.
+        """
         if self._get_data(key=_Keys.ATTRIB) is None:
             self._set_data(key=_Keys.ATTRIB, set_default_type=Dict, value={})
         return self._get_data(key=_Keys.ATTRIB)  # type: ignore
 
     @property
     def list(self) -> List[str]:
-        """Returns lists od items."""
+        """Returns lists of items.
+        
+        ### Returns:
+        List[str] - List of item identifiers.
+        """
         if self._get_data(key=_Keys.LIST) is None:
             self._set_data(key=_Keys.LIST, set_default_type=List, value=[])
         return self._get_data(key=_Keys.LIST)  # type: ignore

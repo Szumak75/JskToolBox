@@ -232,7 +232,11 @@ class Address6(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def words(self) -> List[Word16]:
-        """Return words list of eight Word16."""
+        """Return words list of eight Word16.
+        
+        ### Returns:
+        List[Word16] - List of eight Word16 objects representing each 16-bit segment.
+        """
         tmp: list[str] = Address6.__expand_ipv6(str(self)).split(":")
         return [
             Word16(tmp[0]),
@@ -365,7 +369,11 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
         return int(self) != int(arg)
 
     def __str__(self) -> str:
-        """Return prefix as string."""
+        """Return prefix as string.
+        
+        ### Returns:
+        str - The prefix value as string.
+        """
         return str(self.__prefix_int)
 
     def __int__(self) -> int:
@@ -397,12 +405,20 @@ class Prefix6(IComparators, BClasses, NoDynamicAttributes):
 
     @property
     def prefix(self) -> str:
-        """Return prefix as string."""
+        """Return prefix as string.
+        
+        ### Returns:
+        str - The prefix value as string.
+        """
         return str(self)
 
     @prefix.setter
     def prefix(self, value: Union[str, int]) -> None:
-        """Set prefix from string or integer."""
+        """Set prefix from string or integer.
+        
+        ### Arguments:
+        * value: Union[str, int] - Prefix value as integer (0-128) or string representation.
+        """
         if isinstance(value, int) and self.__range_validator(value):
             self.__prefix_int = value
         elif isinstance(value, str):
@@ -505,12 +521,20 @@ class Network6(BClasses, NoDynamicAttributes):
 
     @property
     def address(self) -> Address6:
-        """Return IPv6 address."""
+        """Return IPv6 address.
+        
+        ### Returns:
+        Address6 - The IPv6 address object.
+        """
         return self.__address
 
     @property
     def count(self) -> int:
-        """Return number of hosts in subnet."""
+        """Return number of hosts in subnet.
+        
+        ### Returns:
+        int - Number of addresses in the subnet.
+        """
         return 2 ** (128 - int(self.prefix))
 
     def hosts(self, limit: Optional[int] = DEFAULT_IPV6_HOST_LIMIT) -> List[Address6]:
@@ -564,12 +588,20 @@ class Network6(BClasses, NoDynamicAttributes):
 
     @property
     def max(self) -> Address6:
-        """Return last IPv6 address from subnet."""
+        """Return last IPv6 address from subnet.
+        
+        ### Returns:
+        Address6 - The last address in the subnet.
+        """
         return Address6(int(self.network) + self.count - 1)
 
     @property
     def min(self) -> Address6:
-        """Return first IPv6 address from subnet."""
+        """Return first IPv6 address from subnet.
+        
+        ### Returns:
+        Address6 - The first address in the subnet.
+        """
         ip = int(self.address)
         mask: int = (1 << 128 - int(self.prefix)) - 1
         net: int = ip & ~mask
@@ -581,12 +613,20 @@ class Network6(BClasses, NoDynamicAttributes):
 
     @property
     def network(self) -> Address6:
-        """Return network address."""
+        """Return network address.
+        
+        ### Returns:
+        Address6 - The network address.
+        """
         return self.min
 
     @property
     def prefix(self) -> Prefix6:
-        """Return IPv6 network prefix."""
+        """Return IPv6 network prefix.
+        
+        ### Returns:
+        Prefix6 - The network prefix object.
+        """
         return self.__prefix
 
 
