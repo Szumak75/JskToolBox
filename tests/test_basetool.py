@@ -103,14 +103,30 @@ class TestBData(unittest.TestCase):
 
     def test_08_get_and_set_method(self) -> None:
         """Test nr 8."""
-        self.assertTrue(self.obj._get_data("TEST", Optional[str]) is None)
-        self.obj._set_data("TEST", "abc")
+        # Test deprecated parameter warning - pass as keyword argument
+        with self.assertWarns(DeprecationWarning):
+            self.assertTrue(
+                self.obj._get_data("TEST", set_default_type=Optional[str]) is None
+            )
+
+        # Set type constraint via _set_data
+        self.obj._set_data("TEST", "abc", set_default_type=str)
         self.assertEqual(self.obj._get_data("TEST"), "abc")
+
+        # Type mismatch should raise TypeError
         with self.assertRaises(TypeError):
             self.obj._set_data("TEST", 12)
-        self.assertTrue(self.obj._get_data("TEST2", int, 10) == 10)
+
+        # Set type constraint and get with default value
+        self.obj._set_data("TEST2", 10, set_default_type=int)
+        self.assertTrue(self.obj._get_data("TEST2") == 10)
+
+        # Clear TEST3 value but keep type constraint, then test default_value type check
+        self.obj._set_data("TEST3", "value", set_default_type=str)
+        self.obj._clear_data("TEST3")
         with self.assertRaises(TypeError):
-            self.obj._get_data("TEST3", str, 10)
+            # int default for str type should raise TypeError
+            self.obj._get_data("TEST3", default_value=10)
 
     def test_09_reset_dict_with_different_types(self) -> None:
         """Test nr 9."""

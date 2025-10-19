@@ -75,14 +75,30 @@ class TestBData(unittest.TestCase):
 
     def test_08_get_and_set_method(self) -> None:
         """Test nr 8."""
-        self.assertTrue(self.obj._get_data("TEST", Optional[str]) is None)
-        self.obj._set_data("TEST", "abc")
+        # Test deprecated parameter warning - pass as keyword argument
+        with self.assertWarns(DeprecationWarning):
+            self.assertTrue(
+                self.obj._get_data("TEST", set_default_type=Optional[str]) is None
+            )
+
+        # Set type constraint via _set_data
+        self.obj._set_data("TEST", "abc", set_default_type=str)
         self.assertEqual(self.obj._get_data("TEST"), "abc")
+
+        # Type mismatch should raise TypeError
         with self.assertRaises(TypeError):
             self.obj._set_data("TEST", 12)
-        self.assertTrue(self.obj._get_data("TEST2", int, 10) == 10)
+
+        # Set type constraint and get with default value
+        self.obj._set_data("TEST2", 10, set_default_type=int)
+        self.assertTrue(self.obj._get_data("TEST2") == 10)
+
+        # Clear TEST3 value but keep type constraint, then test default_value type check
+        self.obj._set_data("TEST3", "value", set_default_type=str)
+        self.obj._clear_data("TEST3")
         with self.assertRaises(TypeError):
-            self.obj._get_data("TEST3", str, 10)
+            # int default for str type should raise TypeError
+            self.obj._get_data("TEST3", default_value=10)
 
     def test_09_reset_dict_with_different_types(self) -> None:
         """Test nr 9."""
@@ -156,6 +172,84 @@ class TestBData(unittest.TestCase):
         del self.obj._data
         self.assertTrue(isinstance(self.obj._data, Dict))
         self.assertEqual(len(self.obj._data.keys()), 0)
+
+    def test_14_reset_type(self) -> None:
+        """Test nr 14."""
+        self.obj._set_data(key="test1", value=100, set_default_type=int)
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value="abc")
+        # Attempting to overwrite type constraint should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value="abc", set_default_type=str)
+        # Attempting to set with mismatched value and new type should raise TypeError
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value=200, set_default_type=str)
+        # Proper way: delete first, then set with new type
+        try:
+            self.obj._delete_data(key="test1")
+            self.obj._set_data(key="test1", value="abc", set_default_type=str)
+        except Exception as ex:
+            self.fail(ex)
+
+    def test_15_set_data_with_none_type(self) -> None:
+        """Test nr 15: Setting data with set_default_type=None should not register type."""
+        # Set value without type constraint
+        self.obj._set_data(key="test1", value=100, set_default_type=None)
+        self.assertEqual(self.obj._get_data("test1"), 100)
+
+        # Should allow changing value to different type when no constraint
+        try:
+            self.obj._set_data(key="test1", value="abc", set_default_type=None)
+            self.assertEqual(self.obj._get_data("test1"), "abc")
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+    def test_16_preserve_type_on_none(self) -> None:
+        """Test nr 16: Setting set_default_type=None should preserve existing type."""
+        # Register type constraint
+        self.obj._set_data(key="test1", value=100, set_default_type=int)
+
+        # Setting with None should preserve type constraint
+        try:
+            self.obj._set_data(key="test1", value=200, set_default_type=None)
+            self.assertEqual(self.obj._get_data("test1"), 200)
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+        # Type should still be enforced
+        with self.assertRaises(TypeError):
+            self.obj._set_data(key="test1", value="abc", set_default_type=None)
+
+    def test_17_type_constraint_same_type(self) -> None:
+        """Test nr 17: Setting same type constraint should work."""
+        self.obj._set_data(key="test1", value=100, set_default_type=int)
+
+        # Setting same type should work
+        try:
+            self.obj._set_data(key="test1", value=200, set_default_type=int)
+            self.assertEqual(self.obj._get_data("test1"), 200)
+        except Exception as ex:
+            self.fail(f"Unexpected exception: {ex}")
+
+    def test_18_get_data_default_value_type_check(self) -> None:
+        """Test nr 18: _get_data should check default_value type against registered type."""
+        # Register type constraint
+        self.obj._set_data(key="test1", value=100, set_default_type=int)
+
+        # Getting non-existent key with matching default_value type should work
+        result = self.obj._get_data("test2", default_value=50)
+        self.assertEqual(result, 50)
+
+        # Delete test1 to test default_value on registered but deleted key
+        self.obj._delete_data("test1")
+
+        # Re-register type
+        self.obj._set_data(key="test1", value=100, set_default_type=int)
+        self.obj._clear_data("test1")  # Clear value but keep type
+
+        # Default value with correct type should work
+        result = self.obj._get_data("test1", default_value=42)
+        self.assertEqual(result, 42)
 
 
 # #[EOF]#######################################################################

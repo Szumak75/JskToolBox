@@ -38,7 +38,7 @@ class IModel(ABC):
     @abstractmethod
     def dump(self) -> Union[List[str], "VariableModel"]:
         """Dump data.
-        
+
         ### Returns:
         Union[List[str], VariableModel] - Dumped data as list of strings or model object.
         """
@@ -47,7 +47,7 @@ class IModel(ABC):
     @abstractmethod
     def name(self) -> Optional[str]:
         """Get name property.
-        
+
         ### Returns:
         Optional[str] - The name property value, or None if not set.
         """
@@ -56,7 +56,7 @@ class IModel(ABC):
     @abstractmethod
     def name(self, name: str) -> None:
         """Set name property.
-        
+
         ### Arguments:
         * name: str - The name to set.
         """
@@ -140,7 +140,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         ### Returns:
         [Optional[str]] - Description string or None.
         """
-        return self._get_data(key=_Keys.DESC, set_default_type=Optional[str])
+        return self._get_data(key=_Keys.DESC)
 
     @desc.setter
     def desc(self, desc: Optional[str]) -> None:
@@ -167,7 +167,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         ### Returns:
         [Optional[str]] - Section name.
         """
-        return self._get_data(key=_Keys.NAME, set_default_type=Optional[str])
+        return self._get_data(key=_Keys.NAME)
 
     @name.setter
     def name(self, name: Optional[str]) -> None:
@@ -231,10 +231,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         ### Returns:
         [Optional[Union[str, int, float, bool, List]]] - Stored value.
         """
-        return self._get_data(
-            key=_Keys.VALUE,
-            set_default_type=Optional[Union[str, int, float, bool, List]],
-        )
+        return self._get_data(key=_Keys.VALUE)
 
     @value.setter
     def value(self, value: Optional[Union[str, int, float, bool, List]]) -> None:
@@ -432,7 +429,7 @@ class DataProcessor(BData, NoDynamicAttributes):
         ### Returns:
         [Optional[str]] - Name of the primary section.
         """
-        return self._get_data(key=_Keys.MAIN, set_default_type=Optional[str])
+        return self._get_data(key=_Keys.MAIN)
 
     @main_section.setter
     def main_section(self, name: str) -> None:

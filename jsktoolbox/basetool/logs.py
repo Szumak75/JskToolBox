@@ -32,7 +32,6 @@ class BLoggerQueue(BData):
         return self._get_data(
             key=LogKeys.QUEUE,
             default_value=None,
-            set_default_type=Optional[LoggerQueue],
         )
 
     @logs_queue.setter
@@ -59,7 +58,6 @@ class BLoggerEngine(BData):
         """
         return self._get_data(
             key=LogKeys.NAME,
-            set_default_type=Optional[str],
             default_value=None,
         )
 

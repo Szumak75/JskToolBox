@@ -327,21 +327,24 @@ class MyClass(BData):
     @property
     def value(self) -> str:
         """Get value with type checking."""
+        # Getter does NOT use set_default_type (deprecated)
         return self._get_data(
             key=self._Keys.VALUE,
-            set_default_type=str,
             default_value=""
         )
     
     @value.setter
     def value(self, val: str) -> None:
         """Set value with type validation."""
+        # Setter registers type constraint
         self._set_data(
             key=self._Keys.VALUE,
             value=val,
-            set_default_type=str
+            set_default_type=str  # Type registered here
         )
 ```
+
+**Important**: Type constraints are registered in **setters only** using `_set_data()`. Getters use `_get_data()` without `set_default_type` parameter.
 
 #### Singleton Pattern
 

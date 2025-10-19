@@ -66,7 +66,7 @@ class LoggerClient(BLoggerQueue, NoDynamicAttributes):
         ### Returns:
         Optional[str] - Client identifier or None.
         """
-        return self._get_data(key=LogKeys.NAME, set_default_type=Optional[str])
+        return self._get_data(key=LogKeys.NAME)
 
     @name.setter
     def name(self, name: Optional[str]) -> None:
@@ -406,7 +406,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         ### Returns:
         Optional[LoggerEngine] - Engine reference or None.
         """
-        return self._get_data(key=_Keys.LEO, set_default_type=Optional[LoggerEngine])
+        return self._get_data(key=_Keys.LEO)
 
     @logger_engine.setter
     def logger_engine(self, engine: LoggerEngine) -> None:
@@ -431,7 +431,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         ### Returns:
         Optional[LoggerClient] - Client reference or None.
         """
-        return self._get_data(key=_Keys.LCO, set_default_type=Optional[LoggerClient])
+        return self._get_data(key=_Keys.LCO)
 
     @logger_client.setter
     def logger_client(self, client: LoggerClient) -> None:

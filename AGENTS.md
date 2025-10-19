@@ -121,16 +121,42 @@ Zobacz `EXAMPLES_FOR_AI.md` dla szczegółów każdego wzorca.
 
 Klasa `BData` zapewnia bezpieczny kontener słownikowy z kontrolą typów.
 
+**Zasady (od 2024):**
+
+1. **Rejestracja typów w setterach**: Używaj `set_default_type` w `_set_data()`
+2. **Gettery bez rejestracji typu**: `_get_data()` nie używa `set_default_type` (przestarzałe)
+3. **Typ raz ustawiony jest niezmienny**: Wymagane `_delete_data()` przed zmianą typu
+4. **None zachowuje typ**: `set_default_type=None` nie zmienia istniejącego typu
+
 **Preferowane metody:**
 
 ```python
-# ✓ Zalecane - z kontrolą typów
-value = self._get_data("key", set_default_type=int, default_value=0)
-self._set_data("key", 42, set_default_type=int)
+# ✓ Zalecane - setter rejestruje typ
+self._set_data("key", 42, set_default_type=int)  # Rejestruje typ int
+
+# ✓ Zalecane - getter bez set_default_type
+value = self._get_data("key", default_value=0)
+
+# ✓ Aktualizacja z zachowaniem typu
+self._set_data("key", 100, set_default_type=None)  # Zachowuje typ int
+
+# ✗ Przestarzałe - _get_data z set_default_type
+value = self._get_data("key", set_default_type=int, default_value=0)  # DeprecationWarning
 
 # ✗ Możliwe, ale bez kontroli typów
 value = self._data["key"]
 self._data["key"] = 42
+```
+
+**Zmiana typu:**
+
+```python
+# ✗ BŁĄD - nie można zmienić typu bez usunięcia
+self._set_data("key", "text", set_default_type=str)  # TypeError!
+
+# ✓ Poprawnie - najpierw usuń, potem ustaw nowy typ
+self._delete_data("key")  # Usuwa wartość I typ
+self._set_data("key", "text", set_default_type=str)  # Nowy typ
 ```
 
 **Dodatkowe metody:**
@@ -250,7 +276,11 @@ Upewnij się że wszystkie pliki dokumentacji zawierają:
 2. **Raise.error()** - Zawsze z `raise` keyword
 3. **BClasses properties** - `_c_name` i `_f_name` NIE SĄ deklarowane
 4. **Lazy imports** - Preferowane krótkie formy
-5. **BData methods** - `_get_data()`, `_set_data()` zamiast `_data[]`
+5. **BData methods** - Nowe zasady (2024):
+   - Typ rejestrowany TYLKO w `_set_data()` przez `set_default_type`
+   - `_get_data()` NIE używa `set_default_type` (przestarzałe)
+   - Typ raz ustawiony jest niezmienny (wymaga `_delete_data()` przed zmianą)
+   - `set_default_type=None` zachowuje istniejący typ
 6. **netaddresstool** - Rozróżnienie Address/Network i IPv4/IPv6
 
 ## Docstring Template

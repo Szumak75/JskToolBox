@@ -39,11 +39,11 @@ class DummyEngine(ILoggerEngine, BLoggerEngine, BData):
 
     @property
     def messages(self) -> list[str]:
-        messages = self._get_data(self._KEY, set_default_type=list)
+        messages = self._get_data(self._KEY)
         return messages if messages is not None else []
 
     def send(self, message: str) -> None:
-        messages = self._get_data(self._KEY, set_default_type=list)
+        messages = self._get_data(self._KEY)
         if messages is None:
             messages = []
             self._set_data(self._KEY, messages, list)

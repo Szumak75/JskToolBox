@@ -10,6 +10,7 @@ constraints, reliable copying, and lifecycle utilities for managed state.
 """
 
 import copy
+import warnings
 
 from inspect import currentframe
 from typing import Dict, List, Any, Optional, Type
@@ -91,14 +92,13 @@ class BData(BClasses):
     def _get_data(
         self,
         key: str,
-        set_default_type: Optional[Any] = None,
         default_value: Optional[Any] = None,
+        **kwargs,
     ):
         """Gets data from internal dict.
 
         ### Arguments:
         * key: str - Variable name.
-        * set_default_type: Optional[Any] - Optional type restriction to register.
         * default_value: Optional[Any] - Fallback value when the key is missing.
 
         ### Returns:
@@ -106,13 +106,23 @@ class BData(BClasses):
 
         ### Raises:
         * TypeError: Default value does not match the registered type.
+
+        ### Note:
+        The `set_default_type` parameter is deprecated and ignored if passed.
+        Use `_set_data()` with `set_default_type` to register type constraints.
         """
+        # Handle deprecated set_default_type parameter for backward compatibility
+        if "set_default_type" in kwargs:
+            warnings.warn(
+                "The 'set_default_type' parameter in _get_data() is deprecated. "
+                "Use _set_data() with set_default_type to register type constraints.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
         if self.__check_keys(key):
             return self._data[key]
-        elif set_default_type:
-            if self.__types is None:
-                self.__types = {}
-            self.__types[key] = set_default_type
+
         if default_value is not None:
             if (
                 self.__types
@@ -140,18 +150,32 @@ class BData(BClasses):
         * key: str - Variable name.
         * value: Optional[Any] - Value to assign.
         * set_default_type: Optional[Any] - Optional type restriction for the key.
+          If None, no type constraint is registered (existing constraints are preserved).
 
         ### Raises:
         * TypeError: Value violates the registered or provided type constraint.
+        * TypeError: Attempting to overwrite an existing type constraint.
+          Use _delete_data(key) first to change the type.
+        * TypeError: default_value type does not match set_default_type.
         """
         if self.__types is None:
             self.__types = {}
+
         if self.__has_type(key):
+            # Key already has a registered type
+            if set_default_type is not None and set_default_type != self.__types[key]:
+                # Attempting to change the type without deleting first
+                raise Raise.error(
+                    f"Cannot overwrite existing type constraint for key '{key}'. "
+                    f"Current type: '{self.__types[key]}', attempted type: '{set_default_type}'. "
+                    f"Use _delete_data('{key}') first to change the type constraint.",
+                    TypeError,
+                    self._c_name,
+                    currentframe(),
+                )
+
+            # Verify value matches existing type
             if isinstance(value, self.__types[key]):
-                # check if value is instance of type in [List,Dict] with type of elements
-                # then clear data set for this type for proper freeing of memory
-                # if isinstance(value, (List, Dict)):
-                #     self._clear_data(key)
                 self._clear_data(key)
                 self._data[key] = value
             else:
@@ -162,11 +186,15 @@ class BData(BClasses):
                     currentframe(),
                 )
         else:
-            if set_default_type:
+            # No type registered yet
+            if set_default_type is not None:
+                # Register new type and verify value matches
                 self.__types[key] = set_default_type
                 if isinstance(value, set_default_type):
                     self._data[key] = value
                 else:
+                    # Clean up type registration if value doesn't match
+                    del self.__types[key]
                     raise Raise.error(
                         f"The type of the value: '{type(value)}' does not match the type passed in the 'set_default_type': '{set_default_type}' variable",
                         TypeError,
@@ -174,9 +202,7 @@ class BData(BClasses):
                         currentframe(),
                     )
             else:
-                # data types was not set, so we can set any type
-                # if self.__check_keys(key) and isinstance(self._data[key], (List, Dict)):
-                #     self._clear_data(key)
+                # No type constraint - accept any type
                 self._clear_data(key)
                 self._data[key] = value
 

@@ -51,9 +51,7 @@ class BDebug(BData):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        return self._get_data(
-            key=_Keys.DEBUG, set_default_type=bool, default_value=False
-        )  # type: ignore
+        return self._get_data(key=_Keys.DEBUG, default_value=False)  # type: ignore
 
     @debug.setter
     def debug(self, debug: bool) -> None:
@@ -83,9 +81,7 @@ class BDebug(BData):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        return self._get_data(
-            key=_Keys.VERBOSE, set_default_type=bool, default_value=False
-        )  # type: ignore
+        return self._get_data(key=_Keys.VERBOSE, default_value=False)  # type: ignore
 
     @verbose.setter
     def verbose(self, verbose: bool) -> None:
@@ -119,10 +115,7 @@ class BDev(BDebug):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        return self._get_data(
-            key=_Keys.CH,
-            set_default_type=Optional[IConnector],
-        )
+        return self._get_data(key=_Keys.CH)
 
     @_ch.setter
     def _ch(self, value: IConnector) -> None:
@@ -156,10 +149,7 @@ class BDev(BDebug):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        return self._get_data(
-            key=_Keys.LC,
-            set_default_type=Optional[LoggerClient],
-        )
+        return self._get_data(key=_Keys.LC)
 
     @logs.setter
     def logs(self, value: LoggerClient) -> None:
@@ -196,9 +186,7 @@ class BDev(BDebug):
         ### Raises:
         * None: Accessors do not raise exceptions.
         """
-        tmp: str = self._get_data(
-            key=_Keys.ROOT, set_default_type=str, default_value=""
-        )  # type: ignore
+        tmp: str = self._get_data(key=_Keys.ROOT, default_value="")  # type: ignore
 
         if self.parent is not None:
             item: BDev = self.parent
@@ -232,7 +220,6 @@ class BDev(BDebug):
         """
         return self._get_data(
             key=_Keys.PARENT,
-            set_default_type=Optional[BDev],
             default_value=None,
         )
 

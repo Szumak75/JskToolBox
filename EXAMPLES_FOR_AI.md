@@ -604,6 +604,8 @@ class ComponentB(BData):
 
 **Best Practice**: Use `ReadOnlyClass` metaclass for immutable keys to prevent accidental modification.
 
+**Type Registration**: Register types in **setters** using `_set_data()`, getters only retrieve values.
+
 ```python
 from jsktoolbox.basetool import BData
 from jsktoolbox.attribtool import ReadOnlyClass
@@ -626,15 +628,16 @@ class ApplicationConfig(BData):
     @property
     def host(self) -> str:
         """Get host with type checking."""
+        # Getter does NOT use set_default_type - type is already registered
         return self._get_data(
             key=self._Keys.HOST,
-            set_default_type=str,
             default_value="localhost"
         )
     
     @host.setter
     def host(self, value: str) -> None:
         """Set host with type validation."""
+        # Setter registers type constraint
         self._set_data(
             key=self._Keys.HOST,
             value=value,
@@ -644,9 +647,9 @@ class ApplicationConfig(BData):
     @property
     def port(self) -> int:
         """Get port with type checking."""
+        # Getter does NOT use set_default_type
         return self._get_data(
             key=self._Keys.PORT,
-            set_default_type=int,
             default_value=8080
         )
     
@@ -662,15 +665,16 @@ class ApplicationConfig(BData):
     @property
     def enabled(self) -> bool:
         """Get enabled status."""
+        # Getter does NOT use set_default_type
         return self._get_data(
             key=self._Keys.ENABLED,
-            set_default_type=bool,
             default_value=True
         )
     
     @enabled.setter
     def enabled(self, value: bool) -> None:
         """Set enabled status."""
+        # Setter registers type constraint
         self._set_data(
             key=self._Keys.ENABLED,
             value=value,
@@ -694,70 +698,146 @@ except TypeError as e:
     print(f"Type error caught: {e}")
 ```
 
+### Type Constraint Management
+
+**Important Rules** (New in 2024):
+
+1. **Type registration in setters only**: Use `set_default_type` in `_set_data()` to register type constraints
+2. **Getters don't register types**: `_get_data()` no longer accepts `set_default_type` (deprecated)
+3. **Once set, types are immutable**: Cannot change type without calling `_delete_data()` first
+4. **None preserves type**: Calling `_set_data(key, value, set_default_type=None)` keeps existing constraint
+
+```python
+from jsktoolbox.basetool import BData
+from jsktoolbox.attribtool import ReadOnlyClass
+
+class TypeSafeStore(BData):
+    """Demonstrates new type constraint rules."""
+    
+    class _Keys(object, metaclass=ReadOnlyClass):
+        VALUE: str = "value"
+    
+    def set_int_value(self, value: int) -> None:
+        """Register type constraint for integer."""
+        self._set_data(
+            key=self._Keys.VALUE,
+            value=value,
+            set_default_type=int  # Type registered here
+        )
+    
+    def get_value(self) -> int:
+        """Get value - type already registered."""
+        return self._get_data(
+            key=self._Keys.VALUE,
+            default_value=0  # No set_default_type needed
+        )
+    
+    def update_value(self, value: int) -> None:
+        """Update existing value - type is preserved."""
+        self._set_data(
+            key=self._Keys.VALUE,
+            value=value,
+            set_default_type=None  # None preserves existing int type
+        )
+
+# Example usage
+store = TypeSafeStore()
+store.set_int_value(42)  # Registers int type
+print(store.get_value())  # 42
+
+store.update_value(100)  # OK - int type preserved
+print(store.get_value())  # 100
+
+# This will raise TypeError - type mismatch
+try:
+    store.update_value("string")  # TypeError!
+except TypeError as e:
+    print(f"Type error: {e}")
+
+# This will also raise TypeError - cannot change type
+try:
+    store._set_data(
+        key=store._Keys.VALUE,
+        value="string",
+        set_default_type=str  # Trying to change type from int to str
+    )
+except TypeError as e:
+    print(f"Cannot change type: {e}")
+
+# To change type, delete first
+store._delete_data(store._Keys.VALUE)  # Remove value AND type
+store._set_data(
+    key=store._Keys.VALUE,
+    value="now a string",
+    set_default_type=str  # New type registered
+)
+print(store.get_value())  # "now a string"
+```
+
 ### Advanced: Working with Collections
 
 ```python
 from typing import List, Dict
 from jsktoolbox.basetool import BData
+from jsktoolbox.attribtool import ReadOnlyClass
 
 class DataStore(BData):
     """Store collections with type safety."""
     
-    _KEY_ITEMS = "items"
-    _KEY_METADATA = "metadata"
+    class _Keys(object, metaclass=ReadOnlyClass):
+        ITEMS: str = "items"
+        METADATA: str = "metadata"
     
     def add_item(self, item: str) -> None:
         """Add item to list."""
+        # Get existing list or default
         items = self._get_data(
-            key=self._KEY_ITEMS,
-            set_default_type=List,
+            key=self._Keys.ITEMS,
             default_value=[]
         )
         items.append(item)
+        # Register type on first set, preserve on updates
         self._set_data(
-            key=self._KEY_ITEMS,
+            key=self._Keys.ITEMS,
             value=items,
-            set_default_type=List
+            set_default_type=List  # Registers type on first call
         )
     
     def get_items(self) -> List[str]:
         """Get items list."""
         return self._get_data(
-            key=self._KEY_ITEMS,
-            set_default_type=List,
+            key=self._Keys.ITEMS,
             default_value=[]
         )
     
     def set_metadata(self, key: str, value: str) -> None:
         """Set metadata entry."""
         metadata = self._get_data(
-            key=self._KEY_METADATA,
-            set_default_type=Dict,
+            key=self._Keys.METADATA,
             default_value={}
         )
         metadata[key] = value
         self._set_data(
-            key=self._KEY_METADATA,
+            key=self._Keys.METADATA,
             value=metadata,
-            set_default_type=Dict
+            set_default_type=Dict  # Registers type on first call
         )
     
     def get_metadata(self, key: str) -> str:
         """Get metadata entry."""
         metadata = self._get_data(
-            key=self._KEY_METADATA,
-            set_default_type=Dict,
+            key=self._Keys.METADATA,
             default_value={}
         )
         return metadata.get(key, "")
     
     def clear_items(self) -> None:
         """Clear items efficiently."""
-        self._clear_data(self._KEY_ITEMS)
+        self._clear_data(self._Keys.ITEMS)
     
     def delete_metadata(self) -> None:
         """Delete metadata completely."""
-        self._delete_data(self._KEY_METADATA)
+        self._delete_data(self._Keys.METADATA)
 
 # Usage
 store = DataStore()
