@@ -32,6 +32,12 @@ class XSelTest(unittest.TestCase):
         except Exception as e:
             self.fail(f"Failed to create XSel instance: {e}")
 
+        # Skip all tests if xsel is not available
+        if not self.cb.is_tool:
+            self.skipTest(
+                "xsel command-line tool is not available - skipping xsel tests"
+            )
+
     def test_is_tool(self) -> None:
         """Test nr 01."""
         self.assertTrue(self.cb.is_tool)
@@ -53,6 +59,12 @@ class XClipTest(unittest.TestCase):
             self.cb = _XClip()
         except Exception as e:
             self.fail(f"Failed to create XClip instance: {e}")
+
+        # Skip all tests if xclip is not available
+        if not self.cb.is_tool:
+            self.skipTest(
+                "xclip command-line tool is not available - skipping xclip tests"
+            )
 
     def test_is_tool(self) -> None:
         """Test nr 01."""
@@ -100,6 +112,12 @@ class QtClipTest(unittest.TestCase):
             self.cb = _QtClip()
         except Exception as e:
             self.fail(f"Failed to create QtClip instance: {e}")
+
+        # Skip all tests if Qt is not available
+        if not self.cb.is_tool:
+            self.skipTest(
+                "Qt (PyQt5/PyQt6) is not available - skipping Qt clipboard tests"
+            )
 
     def test_is_tool(self) -> None:
         """Test nr 01."""

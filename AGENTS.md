@@ -27,8 +27,10 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 
 ### Język i zarządzanie projektem
 
-- `language`: `Python 3.10+`
+- `language`: `Python 3.10-3.13` (fully compatible)
 - `project_management`: Projekt używa Poetry. Uruchamiaj narzędzia poprzez `poetry run <polecenie>` (np. `poetry run pytest`).
+
+**Python 3.13 Compatibility:** Projekt jest w pełni kompatybilny z Python 3.13, który wprowadził zmiany w module `threading` (`_thread._ThreadHandle` zamiast `LockType` dla thread handles). Kompatybilność wsteczna z Python 3.10-3.12 jest zachowana.
 
 ### Styl kodowania
 

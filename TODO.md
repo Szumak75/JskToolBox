@@ -1,8 +1,49 @@
 # Project Modules
 
-- Projekt wymaga Python 3.10-3.12 - Python 3.13 zmienił threading.Thread i ma problemy z NoDynamicAttributes, sprawdzić i rozwiązać
+- ~~Projekt wymaga Python 3.10-3.12 - Python 3.13 zmienił threading.Thread i ma problemy z NoDynamicAttributes, sprawdzić i rozwiązać~~ ✅ ZAKOŃCZONO (2024-10-19)
+  - Python 3.13 zmienił typ `threading.Thread._handle` z `LockType` na `_thread._ThreadHandle`
+  - Dodano kompatybilność wsteczną z Python 3.10-3.12 w `jsktoolbox/basetool/threads.py`
+  - Użyto `Union[_thread._ThreadHandle, LockType, None]` dla Python 3.13+
+  - Testy przechodzą na Python 3.13.9
 - ~~BData.\_get_data i \_set_data - przemyśleć strategię set_default_type~~ ✅ ZAKOŃCZONO (2024-10-19)
 - ~~BData.\_get_data i \_set_data - rozwiązać problem użycia set_default_type = Optional[type]~~ ✅ ZAKOŃCZONO (2024-10-19)
+
+## Python 3.13 Compatibility
+
+**STATUS:** ✅ ZAKOŃCZONO (Aktualizacja 2024-10-19)
+
+**Problem:**
+
+Python 3.13 wprowadził breaking change w module `threading`:
+
+- `threading.Thread._handle` zmienił typ z `_thread.LockType` na `_thread._ThreadHandle`
+- Powodowało to problemy z type hints w `jsktoolbox/basetool/threads.py`
+- NoDynamicAttributes działało poprawnie, problem był tylko w typowaniu
+
+**Rozwiązanie:**
+
+- [x] **Dodano kompatybilność wsteczną dla Python 3.10-3.13** ✅
+  - Wykrywanie wersji Python przez `sys.version_info`
+  - Dla Python 3.13+: `Union[_thread._ThreadHandle, LockType, None]`
+  - Dla Python 3.10-3.12: `Optional[LockType]`
+  - Użycie `ThreadHandleType` jako aliasu typu
+- [x] **Zaktualizowano property `_handle` w ThBaseObject** ✅
+  - Type hint używa `ThreadHandleType`
+  - Setter akceptuje `Any` dla maksymalnej kompatybilności
+  - Dodano notatki w docstringach o różnicach między wersjami
+- [x] **Testy** ✅
+  - Przetestowano na Python 3.13.9 - ✓ działa
+  - Przetestowano na Python 3.12.12 (venv) - ✓ działa
+  - ThLoggerProcessor działa poprawnie z nowym typowaniem
+  - NoDynamicAttributes działa poprawnie
+
+**Kompatybilność:**
+
+Projekt teraz obsługuje **Python 3.10, 3.11, 3.12 i 3.13** ✅
+
+**Pliki zmienione:**
+
+- `jsktoolbox/basetool/threads.py` - dodano kompatybilność typów dla \_handle
 
 ## BData Enhancements
 

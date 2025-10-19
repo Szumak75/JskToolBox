@@ -9,15 +9,30 @@ Provides attribute containers mirroring `threading.Thread` internals so custom
 thread implementations can share consistent state management behaviour.
 """
 
+import sys
 from io import TextIOWrapper
 from time import sleep
 from types import FunctionType
-from typing import Any, Callable, Optional, Tuple, Dict
+from typing import Any, Callable, Optional, Tuple, Dict, Union
 from threading import Event
 from _thread import LockType
+import _thread
 
 from .data import BData
 from ..attribtool import ReadOnlyClass
+
+# Python 3.13+ introduced _thread._ThreadHandle to replace LockType for thread handles
+# For backward compatibility with Python 3.10-3.12, we need to handle both types
+if sys.version_info >= (3, 13):
+    # Python 3.13+: Use _ThreadHandle for thread handle type
+    if hasattr(_thread, "_ThreadHandle"):
+        ThreadHandleType = Union[_thread._ThreadHandle, LockType, None]
+    else:
+        # Fallback if _ThreadHandle is not available
+        ThreadHandleType = Optional[LockType]  # type: ignore
+else:
+    # Python 3.10-3.12: Use LockType
+    ThreadHandleType = Optional[LockType]  # type: ignore
 
 
 class _Keys(object, metaclass=ReadOnlyClass):
@@ -26,6 +41,7 @@ class _Keys(object, metaclass=ReadOnlyClass):
     ARGS: str = "_args"
     DAEMONIC: str = "_daemonic"
     DEBUG: str = "_debug"
+    HANDLE: str = "_handle"
     IDENT: str = "_ident"
     INVOKE_EXCEPTHOOK: str = "_invoke_excepthook"
     IS_STOPPED: str = "_is_stopped"
@@ -42,6 +58,31 @@ class _Keys(object, metaclass=ReadOnlyClass):
 
 class ThBaseObject(BData):
     """Base mixin mirroring attributes of `threading.Thread`."""
+
+    @property
+    def _handle(self) -> ThreadHandleType:  # type: ignore
+        """Return the thread handle.
+
+        ### Returns:
+        [ThreadHandleType] - Thread handle or None.
+
+        ### Note:
+        In Python 3.13+, returns _thread._ThreadHandle.
+        In Python 3.10-3.12, returns _thread.LockType.
+        """
+        return self._get_data(key=_Keys.HANDLE, default_value=None)
+
+    @_handle.setter
+    def _handle(self, value: Any) -> None:
+        """Assign the thread handle.
+
+        ### Arguments:
+        * value: Any - Thread handle value (type varies by Python version).
+
+        ### Note:
+        Accepts _thread._ThreadHandle (Python 3.13+) or LockType (Python 3.10-3.12).
+        """
+        self._set_data(key=_Keys.HANDLE, value=value, set_default_type=None)
 
     @property
     def _target(self) -> Optional[Callable]:
