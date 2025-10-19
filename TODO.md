@@ -92,10 +92,11 @@ cp AGENTS-PYTEMPLATE.md /path/to/project/AGENTS.md
   - Standard dodany do AGENTS.md i DOCSTRING_AUDIT_REPORT.md
 - [x] Zweryfikować sekcje `### Raises:` - czy wszystkie metody rzucają deklarowane wyjątki ✅
 
-**Pozostałe zadania:**
+**Zadania ciągłe (maintenance):**
 
-- [ ] Dodać brakujące docstringi do ~88 metod (głównie prywatne properties) - priorytet niski
 - [ ] Okresowa aktualizacja dokumentacji przy zmianach w kodzie
+- [ ] Dodawanie docstringów do nowych metod zgodnie ze standardem
+- [ ] Opcjonalnie: Dodać docstringi do ~88 prywatnych properties (priorytet niski)
 
 **Standard obowiązujący:**
 
@@ -107,10 +108,13 @@ cp AGENTS-PYTEMPLATE.md /path/to/project/AGENTS.md
 - Pozostałe metody magiczne z parametrami: wymagają sekcji `### Arguments:`
 - Metody z parametrami (poza self/cls): wymagają sekcji `### Arguments:`
 
-**Moduły priorytetowe do ukończenia:**
+**Weryfikacja modułów priorytetowych:**
 
-1. jsktoolbox/systemtool.py (2 metody)
-2. jsktoolbox/configtool/**init**.py (1 metoda)
-3. jsktoolbox/edmctool/logs.py (3 pozostałe metody)
-4. jsktoolbox/edmctool/edsm.py (3 metody)
-5. Pozostałe moduły zgodnie z analizą check_docstrings.py
+✅ jsktoolbox/systemtool.py - wszystkie funkcje mają docstringi
+✅ jsktoolbox/configtool/**init**.py - wszystkie funkcje mają docstringi
+✅ jsktoolbox/edmctool/logs.py - wszystkie funkcje mają docstringi
+✅ jsktoolbox/edmctool/edsm.py - wszystkie funkcje mają docstringi
+
+**Podsumowanie:**
+
+Kompleksowa standaryzacja docstringów w projekcie została zakończona. Wszystkie publiczne metody, gettery i settery mają wymagane sekcje dokumentacji. Standard jest udokumentowany w AGENTS.md i stosowany konsekwentnie w całym projekcie. Pozostaje tylko okresowa aktualizacja przy dodawaniu nowego kodu.
