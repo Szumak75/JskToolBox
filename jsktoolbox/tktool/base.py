@@ -78,7 +78,7 @@ class TkBase(BData):
     @property
     def _windowingsystem_cached(self) -> str:
         """Cached windowing system information."""
-        value = self._get_data(key=_Keys.WINDOWING_SYSTEM_CACHED)
+        value = self._get_data(key=_Keys.WINDOWING_SYSTEM_CACHED, default_value="")
         if value is not None:
             return value
         return ""
