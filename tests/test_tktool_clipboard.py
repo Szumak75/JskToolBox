@@ -1,7 +1,7 @@
 import unittest
 
 
-def _tk_available():
+def _tk_available() -> bool:
     try:
         import tkinter as tk  # noqa: F401
 
