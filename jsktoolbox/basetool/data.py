@@ -200,7 +200,7 @@ class BData(BClasses):
         key: str,
         default_value: Optional[Any] = None,
         **kwargs,
-    ):
+    ) -> Optional[Any]:
         """Gets data from internal dict.
 
         ### Arguments:
