@@ -9,7 +9,7 @@ Tk modules rely on these helpers to align Tkinter widget attributes with the bro
 conventions, reducing boilerplate for derived classes.
 """
 
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 from ..attribtool import ReadOnlyClass
 from ..basetool import BData
 
@@ -40,40 +40,54 @@ class TkBase(BData):
     """
 
     @property
-    def _name(self) -> Optional[Any]:
+    def _name(self) -> str:
         """The name of this widget."""
-        return self._get_data(key=_Keys.NAME)
+        value = self._get_data(key=_Keys.NAME, default_value="")
+        if value is not None:
+            return value
+        return ""
 
     @_name.setter
-    def _name(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.NAME, value=value)
+    def _name(self, value: str) -> None:
+        self._set_data(key=_Keys.NAME, value=value, set_default_type=str)
 
     @property
-    def _tkloaded(self) -> Optional[Any]:
+    def _tkloaded(self) -> bool:
         """Indicates if the widget has been loaded into the Tk environment."""
-        return self._get_data(key=_Keys.TK_LOADED)
+        value = self._get_data(key=_Keys.TK_LOADED, default_value=False)
+        if value is not None:
+            return value
+        return False
 
     @_tkloaded.setter
-    def _tkloaded(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.TK_LOADED, value=value)
+    def _tkloaded(self, value: bool) -> None:
+        self._set_data(key=_Keys.TK_LOADED, value=value, set_default_type=bool)
 
     @property
-    def _w(self) -> Optional[Any]:
+    def _w(self) -> str:
         """The Tkinter widget identifier."""
-        return self._get_data(key=_Keys.W)
+        value = self._get_data(key=_Keys.W, default_value="")
+        if value is not None:
+            return value
+        return ""
 
     @_w.setter
-    def _w(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.W, value=value)
+    def _w(self, value: Optional[str]) -> None:
+        self._set_data(key=_Keys.W, value=value, set_default_type=str)
 
     @property
-    def _windowingsystem_cached(self) -> Optional[Any]:
+    def _windowingsystem_cached(self) -> str:
         """Cached windowing system information."""
-        return self._get_data(key=_Keys.WINDOWING_SYSTEM_CACHED)
+        value = self._get_data(key=_Keys.WINDOWING_SYSTEM_CACHED)
+        if value is not None:
+            return value
+        return ""
 
     @_windowingsystem_cached.setter
-    def _windowingsystem_cached(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.WINDOWING_SYSTEM_CACHED, value=value)
+    def _windowingsystem_cached(self, value: str) -> None:
+        self._set_data(
+            key=_Keys.WINDOWING_SYSTEM_CACHED, value=value, set_default_type=str
+        )
 
     @property
     def child(self) -> Optional[Any]:
@@ -82,16 +96,24 @@ class TkBase(BData):
 
     @child.setter
     def child(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.CHILD, value=value)
+        if value is not None:
+            self._set_data(
+                key=_Keys.CHILD, value=value, set_default_type=Optional[type(value)]
+            )
+        else:
+            self._set_data(key=_Keys.CHILD, value=value)
 
     @property
-    def children(self) -> Optional[Any]:
+    def children(self) -> Dict[str, Any]:
         """The children widgets."""
-        return self._get_data(key=_Keys.CHILDREN)
+        value = self._get_data(key=_Keys.CHILDREN, default_value={})
+        if value is not None:
+            return value
+        return {}
 
     @children.setter
-    def children(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.CHILDREN, value=value)
+    def children(self, value: Dict[str, Any]) -> None:
+        self._set_data(key=_Keys.CHILDREN, value=value, set_default_type=Dict[str, Any])
 
     @property
     def master(self) -> Optional[Any]:
@@ -100,7 +122,12 @@ class TkBase(BData):
 
     @master.setter
     def master(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.MASTER, value=value)
+        if value is not None:
+            self._set_data(
+                key=_Keys.MASTER, value=value, set_default_type=Optional[type(value)]
+            )
+        else:
+            self._set_data(key=_Keys.MASTER, value=value)
 
     @property
     def tk(self) -> Optional[Any]:
@@ -109,16 +136,24 @@ class TkBase(BData):
 
     @tk.setter
     def tk(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.TK, value=value)
+        if value is not None:
+            self._set_data(
+                key=_Keys.TK, value=value, set_default_type=Optional[type(value)]
+            )
+        else:
+            self._set_data(key=_Keys.TK, value=value)
 
     @property
-    def widgetName(self) -> Optional[Any]:
+    def widgetName(self) -> str:
         """The widget name."""
-        return self._get_data(key=_Keys.WIDGET_NAME)
+        value = self._get_data(key=_Keys.WIDGET_NAME, default_value="")
+        if value is not None:
+            return value
+        return ""
 
     @widgetName.setter
-    def widgetName(self, value: Optional[Any]) -> None:
-        self._set_data(key=_Keys.WIDGET_NAME, value=value)
+    def widgetName(self, value: str) -> None:
+        self._set_data(key=_Keys.WIDGET_NAME, value=value, set_default_type=str)
 
 
 # #[EOF]#######################################################################
