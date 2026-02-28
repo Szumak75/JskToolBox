@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2024-01-15
 
 Purpose: Deliver lightweight base classes with runtime metadata helpers.
@@ -17,7 +17,7 @@ from ..attribtool import NoDynamicAttributes
 
 
 class BClasses(NoDynamicAttributes):
-    """Common base class exposing class and frame metadata helpers."""
+    """Base mixin exposing class and frame metadata helpers."""
 
     @property
     def _c_name(self) -> str:

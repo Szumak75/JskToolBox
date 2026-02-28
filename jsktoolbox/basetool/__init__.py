@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 """
-Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2024-01-15
 
 Purpose: Provide common base classes shared across JskToolBox modules.
@@ -61,5 +61,9 @@ def __getattr__(name: str) -> Any:
 
 
 def __dir__() -> list[str]:
-    """Expose lazy exports to dir()."""
+    """Expose lazy exports in `dir()` calls.
+
+    ### Returns:
+    [list[str]] - Sorted list of exported symbols.
+    """
     return sorted(__all__)
