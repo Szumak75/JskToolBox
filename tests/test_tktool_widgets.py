@@ -3,7 +3,7 @@
 Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2026-02-28
 
-Purpose: Validate Tk widget helper object creation and typed property behaviour.
+Purpose: Validate Tk widget helper object creation and base mixin behaviour.
 """
 
 import unittest
@@ -16,6 +16,7 @@ from jsktoolbox.tktool.widgets import (
     VerticalScrolledTkFrame,
     VerticalScrolledTtkFrame,
 )
+from jsktoolbox.tktool.base import TkBase
 from tkinter import ttk
 
 
@@ -94,20 +95,6 @@ class TestTkToolWidgets(unittest.TestCase):
         self.assertIs(tooltip.text, text_var)
         anchor.destroy()
 
-    def test_master_property_rejects_invalid_type(self) -> None:
-        """Reject invalid master assignment under strict BData typing."""
-        widget = StatusBarTkFrame(self.root)
-        with self.assertRaises(TypeError):
-            widget.master = "invalid-master"  # type: ignore[assignment]
-        widget.destroy()
-
-    def test_children_property_rejects_invalid_mapping(self) -> None:
-        """Reject invalid children mapping under strict BData typing."""
-        widget = StatusBarTkFrame(self.root)
-        with self.assertRaises(TypeError):
-            widget.children = {"child": object()}  # type: ignore[assignment]
-        widget.destroy()
-
     def test_children_property_accepts_widget_mapping(self) -> None:
         """Accept mapping with str keys and widget values."""
         widget = StatusBarTkFrame(self.root)
@@ -116,6 +103,45 @@ class TestTkToolWidgets(unittest.TestCase):
         self.assertIn("child", widget.children)
         child.destroy()
         widget.destroy()
+
+
+class _DummyTkBase(TkBase):
+    """Test helper class for validating TkBase attribute contract."""
+
+
+class TestTkBaseContract(unittest.TestCase):
+    """Validate simple TkBase mixin behaviour with class variables."""
+
+    def test_class_variables_are_declared(self) -> None:
+        """Expose canonical Tk attributes with `None` defaults."""
+        obj = _DummyTkBase()
+        expected = (
+            "_name",
+            "_tkloaded",
+            "_w",
+            "_windowingsystem_cached",
+            "child",
+            "children",
+            "master",
+            "tk",
+            "widgetName",
+        )
+        for key in expected:
+            self.assertTrue(hasattr(obj, key))
+            self.assertIsNone(getattr(obj, key))
+
+    def test_assignment_to_declared_attribute_is_allowed(self) -> None:
+        """Allow assignment to attributes declared by TkBase."""
+        obj = _DummyTkBase()
+        value = object()
+        obj.master = value
+        self.assertIs(obj.master, value)
+
+    def test_dynamic_attribute_assignment_is_blocked(self) -> None:
+        """Reject undeclared attributes via NoDynamicAttributes."""
+        obj = _DummyTkBase()
+        with self.assertRaises(AttributeError):
+            obj.not_declared = "value"  # type: ignore[attr-defined]
 
 
 # #[EOF]#######################################################################

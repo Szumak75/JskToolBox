@@ -178,9 +178,7 @@ class _StatusBarMixin(BData):
         )
 
 
-class StatusBarTkFrame( # pyright: ignore[reportIncompatibleVariableOverride]
-    tk.Frame, TkBase, _StatusBarMixin
-):  # pyright: ignore[reportIncompatibleVariableOverride]
+class StatusBarTkFrame(tk.Frame, TkBase, _StatusBarMixin):
     """Tkinter status bar frame.
 
     Renders a label-driven status bar with a size grip for resizing actions.
@@ -214,9 +212,7 @@ class StatusBarTkFrame( # pyright: ignore[reportIncompatibleVariableOverride]
         self._sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
 
 
-class StatusBarTtkFrame( # pyright: ignore[reportIncompatibleVariableOverride]
-    ttk.Frame, TkBase, _StatusBarMixin
-):  # pyright: ignore[reportIncompatibleVariableOverride]
+class StatusBarTtkFrame(ttk.Frame, TkBase, _StatusBarMixin):
     """ttk status bar frame.
 
     Provides a themed status label with an optional size grip.
@@ -623,22 +619,22 @@ class _VerticalScrolledMixin(BData):
         )
 
 
-class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):  # pyright: ignore[reportIncompatibleVariableOverride]
+class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):
     """Scrollable Tk frame container.
 
     Provides a canvas-driven vertical scroller and exposes an interior frame for child widgets.
     """
 
     def __init__(self, master: tk.Misc, *args, **kw) -> None:
-        """Initialize the vertical scrolled Tk frame.
-
-        Creates a scrollable frame widget with canvas and scrollbar, providing
-        an interior frame for adding child widgets.
+        """Initialise the vertical scrolled Tk frame.
 
         ### Arguments:
         * master: tk.Misc - Parent widget container.
-        * *args - Additional positional arguments passed to tk.Frame.
-        * **kw - Additional keyword arguments passed to tk.Frame.
+        * *args: Any - Additional positional arguments passed to `tk.Frame`.
+        * **kw: Any - Additional keyword arguments passed to `tk.Frame`.
+
+        ### Returns:
+        None - Constructor configures the scrolling container and event bindings.
         """
         tk.Frame.__init__(self, master, *args, **kw)
 
@@ -682,9 +678,17 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):  # pyri
         ### Raises:
         * None: Accessors return cached references only.
         """
-        return self._interior # type: ignore
+        return self._interior  # type: ignore
 
     def __configure_interior(self, event: Optional[tk.Event] = None) -> None:
+        """Recompute the canvas scroll region from interior frame geometry.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Configure>`.
+
+        ### Returns:
+        None - Updates canvas scroll region and optional width synchronisation.
+        """
         # Update the scrollbar to match the size of the inner frame.
         self._canvas.config(
             scrollregion=(
@@ -699,8 +703,14 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):  # pyri
             self._canvas.config(width=self._interior.winfo_reqwidth())
 
     def __configure_canvas(self, event: Optional[tk.Event] = None) -> None:
-        # print(f"{event}")
-        # print(f"{type(event)}")
+        """Synchronise the interior frame width with the visible canvas width.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Configure>`.
+
+        ### Returns:
+        None - Updates canvas window item width when dimensions differ.
+        """
         if self._interior.winfo_reqwidth() != self._canvas.winfo_width():
             # Update the inner frame's width to fill the canvas.
             self._canvas.itemconfigure(
@@ -708,15 +718,27 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):  # pyri
             )
 
     def __bind_mouse(self, event: Optional[tk.Event] = None) -> None:
-        # print(f"{event}")
-        # print(f"{type(event)}")
+        """Bind global mouse wheel handlers when cursor enters the canvas.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Enter>`.
+
+        ### Returns:
+        None - Registers wheel bindings for Linux and Windows/macOS patterns.
+        """
         self._canvas.bind_all("<4>", self.__on_mousewheel)
         self._canvas.bind_all("<5>", self.__on_mousewheel)
         self._canvas.bind_all("<MouseWheel>", self.__on_mousewheel)
 
     def __unbind_mouse(self, event: Optional[tk.Event] = None) -> None:
-        # print(f"{event}")
-        # print(f"{type(event)}")
+        """Remove global mouse wheel handlers when cursor leaves the canvas.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Leave>`.
+
+        ### Returns:
+        None - Unregisters wheel bindings installed by `__bind_mouse`.
+        """
         self._canvas.unbind_all("<4>")
         self._canvas.unbind_all("<5>")
         self._canvas.unbind_all("<MouseWheel>")
@@ -735,30 +757,28 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):  # pyri
         ### Raises:
         * None: Scroll handling defers to Tkinter canvas methods.
         """
-        # print(f"{event}")
-        # print(f"{type(event)}")
         if event.num == 4 or event.delta > 0:
             self._canvas.yview_scroll(-1, "units")
         elif event.num == 5 or event.delta < 0:
             self._canvas.yview_scroll(1, "units")
 
 
-class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):  # pyright: ignore[reportIncompatibleVariableOverride]
+class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):
     """Scrollable ttk frame container.
 
     Uses a Tk canvas plus a themed frame to offer vertical scrolling for child widgets.
     """
 
     def __init__(self, master: tk.Misc, *args, **kw) -> None:
-        """Initialize the vertical scrolled ttk frame.
-
-        Creates a scrollable themed frame widget with canvas and scrollbar, providing
-        an interior frame for adding child widgets.
+        """Initialise the vertical scrolled ttk frame.
 
         ### Arguments:
         * master: tk.Misc - Parent widget container.
-        * *args - Additional positional arguments passed to ttk.Frame.
-        * **kw - Additional keyword arguments passed to ttk.Frame.
+        * *args: Any - Additional positional arguments passed to `ttk.Frame`.
+        * **kw: Any - Additional keyword arguments passed to `ttk.Frame`.
+
+        ### Returns:
+        None - Constructor configures the scrolling container and event bindings.
         """
         ttk.Frame.__init__(self, master, *args, **kw)
 
@@ -802,9 +822,17 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):  # py
         ### Raises:
         * None: Accessors return cached references only.
         """
-        return self._interior # type: ignore
+        return self._interior  # type: ignore
 
     def __configure_interior(self, event: Optional[tk.Event] = None) -> None:
+        """Recompute the canvas scroll region from interior frame geometry.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Configure>`.
+
+        ### Returns:
+        None - Updates canvas scroll region and optional width synchronisation.
+        """
         # Update the scrollbar to match the size of the inner frame.
         self._canvas.config(
             scrollregion=(
@@ -819,8 +847,14 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):  # py
             self._canvas.config(width=self._interior.winfo_reqwidth())
 
     def __configure_canvas(self, event: tk.Event) -> None:
-        # print(f"{event}")
-        # print(f"{type(event)}")
+        """Synchronise the interior frame width with the visible canvas width.
+
+        ### Arguments:
+        * event: tk.Event - Tkinter event payload from `<Configure>`.
+
+        ### Returns:
+        None - Updates canvas window item width when dimensions differ.
+        """
         if self._interior.winfo_reqwidth() != self._canvas.winfo_width():
             # Update the inner frame's width to fill the canvas.
             self._canvas.itemconfigure(
@@ -828,15 +862,27 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):  # py
             )
 
     def __bind_mouse(self, event: Optional[tk.Event] = None) -> None:
-        # print(f"{event}")
-        # print(f"{type(event)}")
+        """Bind global mouse wheel handlers when cursor enters the canvas.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Enter>`.
+
+        ### Returns:
+        None - Registers wheel bindings for Linux and Windows/macOS patterns.
+        """
         self._canvas.bind_all("<4>", self.__on_mousewheel)
         self._canvas.bind_all("<5>", self.__on_mousewheel)
         self._canvas.bind_all("<MouseWheel>", self.__on_mousewheel)
 
     def __unbind_mouse(self, event: Optional[tk.Event] = None) -> None:
-        # print(f"{event}")
-        # print(f"{type(event)}")
+        """Remove global mouse wheel handlers when cursor leaves the canvas.
+
+        ### Arguments:
+        * event: Optional[tk.Event] - Tkinter event payload from `<Leave>`.
+
+        ### Returns:
+        None - Unregisters wheel bindings installed by `__bind_mouse`.
+        """
         self._canvas.unbind_all("<4>")
         self._canvas.unbind_all("<5>")
         self._canvas.unbind_all("<MouseWheel>")
@@ -855,8 +901,6 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):  # py
         ### Raises:
         * None: Scroll handling defers to Tkinter canvas methods.
         """
-        # print(f"{event}")
-        # print(f"{type(event)}")
         if event.num == 4 or event.delta > 0:
             self._canvas.yview_scroll(-1, "units")
         elif event.num == 5 or event.delta < 0:
