@@ -22,25 +22,54 @@ from jsktoolbox.basetool import BData
 from .base import TkBase
 
 
-class _Keys(object, metaclass=ReadOnlyClass):
-    """Read-only class for defining constant keys.
-
-    Prevents modification of class attributes after definition, ensuring immutability of key values.
-    """
-
-    STATUS: str = "__status__"
-    LABEL: str = "__label__"
-    SIZEGRIP: str = "__sizegrip__"
-
-
 class _StatusBarMixin(BData):
     """Mixin for status bar widgets.
 
     Defines common properties and methods for status bar implementations.
     """
 
+    class __Keys(object, metaclass=ReadOnlyClass):
+        """Read-only class for defining constant keys.
+
+        Prevents modification of class attributes after definition, ensuring immutability of key values.
+        """
+
+        STATUS: str = "__status__"
+        LABEL: str = "__label__"
+        SIZEGRIP: str = "__sizegrip__"
+
+    def set(self, value: str) -> None:
+        """Update the status label text.
+
+        ### Arguments:
+        * value: str - Text displayed inside the status label.
+
+        ### Returns:
+        None - Performs widget update side effects.
+
+        ### Raises:
+        * None: Tkinter handles rendering errors internally.
+        """
+        self._status.set(value)
+        self._status_label.update_idletasks()
+
+    def clear(self) -> None:
+        """Reset the status label to an empty string.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        None - Performs widget update side effects.
+
+        ### Raises:
+        * None: Tkinter handles rendering errors internally.
+        """
+        self._status.set("")
+        self._status_label.update_idletasks()
+
     @property
-    def __status(self) -> tk.StringVar:
+    def _status(self) -> tk.StringVar:
         """Return the internal status StringVar.
 
         ### Arguments:
@@ -52,13 +81,13 @@ class _StatusBarMixin(BData):
         ### Raises:
         * None: Accessors return cached references only.
         """
-        obj: Optional[tk.StringVar] = self._get_data(key=_Keys.STATUS)
+        obj: Optional[tk.StringVar] = self._get_data(key=self.__Keys.STATUS)
         if obj is None:
             obj = tk.StringVar()
         return obj
 
-    @__status.setter
-    def __status(self, value: tk.StringVar) -> None:
+    @_status.setter
+    def _status(self, value: tk.StringVar) -> None:
         """Set the internal status StringVar.
 
         ### Arguments:
@@ -70,10 +99,12 @@ class _StatusBarMixin(BData):
         ### Raises:
         * None: Assignment updates internal state without validation errors.
         """
-        self._set_data(key=_Keys.STATUS, value=value, set_default_type=tk.StringVar)
+        self._set_data(
+            key=self.__Keys.STATUS, value=value, set_default_type=tk.StringVar
+        )
 
     @property
-    def __status_label(self) -> Union[tk.Label, ttk.Label]:
+    def _status_label(self) -> Union[tk.Label, ttk.Label]:
         """Return the internal status label widget.
 
         ### Arguments:
@@ -85,13 +116,15 @@ class _StatusBarMixin(BData):
         ### Raises:
         * None: Accessors return cached references only.
         """
-        obj: Optional[Union[tk.Label, ttk.Label]] = self._get_data(key=_Keys.LABEL)
+        obj: Optional[Union[tk.Label, ttk.Label]] = self._get_data(
+            key=self.__Keys.LABEL
+        )
         if obj is None:
             obj = tk.Label()
         return obj
 
-    @__status_label.setter
-    def __status_label(self, value: Union[tk.Label, ttk.Label]) -> None:
+    @_status_label.setter
+    def _status_label(self, value: Union[tk.Label, ttk.Label]) -> None:
         """Set the internal status label widget.
 
         ### Arguments:
@@ -103,10 +136,14 @@ class _StatusBarMixin(BData):
         ### Raises:
         * None: Assignment updates internal state without validation errors.
         """
-        self._set_data(key=_Keys.LABEL, value=value, set_default_type=tk.Label)
+        self._set_data(
+            key=self.__Keys.LABEL,
+            value=value,
+            set_default_type=Union[tk.Label, ttk.Label],
+        )
 
     @property
-    def __sizegrip(self) -> ttk.Sizegrip:
+    def _sizegrip(self) -> ttk.Sizegrip:
         """Return the internal size grip widget.
 
         ### Arguments:
@@ -118,13 +155,13 @@ class _StatusBarMixin(BData):
         ### Raises:
         * None: Accessors return cached references only.
         """
-        obj: Optional[ttk.Sizegrip] = self._get_data(key=_Keys.SIZEGRIP)
+        obj: Optional[ttk.Sizegrip] = self._get_data(key=self.__Keys.SIZEGRIP)
         if obj is None:
             obj = ttk.Sizegrip()
         return obj
 
-    @__sizegrip.setter
-    def __sizegrip(self, value: ttk.Sizegrip) -> None:
+    @_sizegrip.setter
+    def _sizegrip(self, value: ttk.Sizegrip) -> None:
         """Set the internal size grip widget.
 
         ### Arguments:
@@ -136,10 +173,14 @@ class _StatusBarMixin(BData):
         ### Raises:
         * None: Assignment updates internal state without validation errors.
         """
-        self._set_data(key=_Keys.SIZEGRIP, value=value, set_default_type=ttk.Sizegrip)
+        self._set_data(
+            key=self.__Keys.SIZEGRIP, value=value, set_default_type=ttk.Sizegrip
+        )
 
 
-class StatusBarTkFrame(tk.Frame, TkBase, _StatusBarMixin):
+class StatusBarTkFrame( # pyright: ignore[reportIncompatibleVariableOverride]
+    tk.Frame, TkBase, _StatusBarMixin
+):  # pyright: ignore[reportIncompatibleVariableOverride]
     """Tkinter status bar frame.
 
     Renders a label-driven status bar with a size grip for resizing actions.
@@ -161,51 +202,21 @@ class StatusBarTkFrame(tk.Frame, TkBase, _StatusBarMixin):
         """
         tk.Frame.__init__(self, master, *args, **kwargs)
 
-        self.__status = tk.StringVar()
-        self.__status.set("Status Bar")
-        self.__status_label = tk.Label(
-            self, bd=1, relief=tk.FLAT, anchor=tk.W, textvariable=self.__status
+        self._status = tk.StringVar()
+        self._status.set("Status Bar")
+        self._status_label = tk.Label(
+            self, bd=1, relief=tk.FLAT, anchor=tk.W, textvariable=self._status
         )
-        self.__status_label.pack(
-            side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=1
-        )
+        self._status_label.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=1)
 
         # size grip
-        self.__sizegrip = ttk.Sizegrip(self)
-        self.__sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
-
-    def set(self, value: str) -> None:
-        """Update the status label text.
-
-        ### Arguments:
-        * value: str - Text displayed inside the status label.
-
-        ### Returns:
-        None - Performs widget update side effects.
-
-        ### Raises:
-        * None: Tkinter handles rendering errors internally.
-        """
-        self.__status.set(value)
-        self.__status_label.update_idletasks()
-
-    def clear(self) -> None:
-        """Reset the status label to an empty string.
-
-        ### Arguments:
-        * None: No public arguments.
-
-        ### Returns:
-        None - Performs widget update side effects.
-
-        ### Raises:
-        * None: Tkinter handles rendering errors internally.
-        """
-        self.__status.set("")
-        self.__status_label.update_idletasks()
+        self._sizegrip = ttk.Sizegrip(self)
+        self._sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
 
 
-class StatusBarTtkFrame(ttk.Frame, TkBase, _StatusBarMixin):
+class StatusBarTtkFrame( # pyright: ignore[reportIncompatibleVariableOverride]
+    ttk.Frame, TkBase, _StatusBarMixin
+):  # pyright: ignore[reportIncompatibleVariableOverride]
     """ttk status bar frame.
 
     Provides a themed status label with an optional size grip.
@@ -227,46 +238,14 @@ class StatusBarTtkFrame(ttk.Frame, TkBase, _StatusBarMixin):
         """
         ttk.Frame.__init__(self, master, *args, **kwargs)
 
-        self.__status = tk.StringVar()
-        self.__status.set("Status Bar")
-        self.__status_label = ttk.Label(self, anchor=tk.W, textvariable=self.__status)
-        self.__status_label.pack(
-            side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=1
-        )
+        self._status = tk.StringVar()
+        self._status.set("Status Bar")
+        self._status_label = ttk.Label(self, anchor=tk.W, textvariable=self._status)
+        self._status_label.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=1)
 
         # size grip
-        self.__sizegrip = ttk.Sizegrip(self)
-        self.__sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
-
-    def set(self, value: str) -> None:
-        """Update the status label text.
-
-        ### Arguments:
-        * value: str - Text displayed inside the status label.
-
-        ### Returns:
-        None - Performs widget update side effects.
-
-        ### Raises:
-        * None: Tkinter handles rendering errors internally.
-        """
-        self.__status.set(value)
-        self.__status_label.update_idletasks()
-
-    def clear(self) -> None:
-        """Reset the status label to an empty string.
-
-        ### Arguments:
-        * None: No public arguments.
-
-        ### Returns:
-        None - Performs widget update side effects.
-
-        ### Raises:
-        * None: Tkinter handles rendering errors internally.
-        """
-        self.__status.set("")
-        self.__status_label.update_idletasks()
+        self._sizegrip = ttk.Sizegrip(self)
+        self._sizegrip.pack(side=tk.RIGHT, anchor=tk.SE)
 
 
 class CreateToolTip(TkBase):
@@ -486,16 +465,169 @@ class CreateToolTip(TkBase):
             self.__text = value
 
 
-class VerticalScrolledTkFrame(tk.Frame, TkBase):
+class _VerticalScrolledMixin(BData):
+    """Mixin for vertical scrolled frame widgets.
+
+    Defines common properties and methods for scrollable frame implementations.
+    """
+
+    class __Keys(object, metaclass=ReadOnlyClass):
+        """Read-only class for defining constant keys.
+
+        Prevents modification of class attributes after definition, ensuring immutability of key values.
+        """
+
+        INTERIOR: str = "__interior__"
+        INTERIOR_ID: str = "__interior_id__"
+        CANVAS: str = "__canvas__"
+        VSCROLLBAR: str = "__vscrollbar__"
+
+    @property
+    def _interior(self) -> Union[tk.Frame, ttk.Frame]:
+        """Return the interior frame container.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        Union[tk.Frame, ttk.Frame] - The frame that should receive child widgets.
+        """
+        obj: Optional[Union[tk.Frame, ttk.Frame]] = self._get_data(
+            key=self.__Keys.INTERIOR
+        )
+        if obj is None:
+            obj = tk.Frame()
+        return obj
+
+    @_interior.setter
+    def _interior(self, value: Union[tk.Frame, ttk.Frame]) -> None:
+        """Set the interior frame container.
+
+        ### Arguments:
+        * value: Union[tk.Frame, ttk.Frame] - The frame to set as the interior container.
+
+        ### Returns:
+        None - Updates internal reference for the interior frame.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(
+            key=self.__Keys.INTERIOR,
+            value=value,
+            set_default_type=Union[tk.Frame, ttk.Frame],
+        )
+
+    @property
+    def _interior_id(self) -> int:
+        """Return the interior frame's canvas window ID.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        int - The canvas item ID for the interior frame, or 0 if not available.
+
+        ### Raises:
+        * None: Accessors return cached references only.
+        """
+        obj: Optional[int] = self._get_data(
+            key=self.__Keys.INTERIOR_ID, default_value=0
+        )
+        if obj is None:
+            return 0
+        return obj
+
+    @_interior_id.setter
+    def _interior_id(self, value: int) -> None:
+        """Set the interior frame's canvas window ID.
+
+        ### Arguments:
+        * value: int - The canvas item ID to associate with the interior frame.
+
+        ### Returns:
+        None - Updates internal reference for the interior frame's canvas ID.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(key=self.__Keys.INTERIOR_ID, value=value, set_default_type=int)
+
+    @property
+    def _canvas(self) -> tk.Canvas:
+        """Return the canvas widget.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        tk.Canvas - The canvas that provides the scrolling mechanism.
+        """
+        obj: Optional[tk.Canvas] = self._get_data(key=self.__Keys.CANVAS)
+        if obj is None:
+            obj = tk.Canvas()
+        return obj
+
+    @_canvas.setter
+    def _canvas(self, value: tk.Canvas) -> None:
+        """Set the canvas widget.
+
+        ### Arguments:
+        * value: tk.Canvas - The canvas to set as the scrolling mechanism.
+
+        ### Returns:
+        None - Updates internal reference for the canvas widget.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(key=self.__Keys.CANVAS, value=value, set_default_type=tk.Canvas)
+
+    @property
+    def _vscrollbar(self) -> Union[tk.Scrollbar, ttk.Scrollbar]:
+        """Return the vertical scrollbar widget.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        Union[tk.Scrollbar, ttk.Scrollbar] - The scrollbar that controls vertical scrolling.
+
+        ### Raises:
+        * None: Accessors return cached references only.
+        """
+        obj: Optional[Union[tk.Scrollbar, ttk.Scrollbar]] = self._get_data(
+            key=self.__Keys.VSCROLLBAR
+        )
+        if obj is None:
+            obj = tk.Scrollbar()
+        return obj
+
+    @_vscrollbar.setter
+    def _vscrollbar(self, value: Union[tk.Scrollbar, ttk.Scrollbar]) -> None:
+        """Set the vertical scrollbar widget.
+
+        ### Arguments:
+        * value: Union[tk.Scrollbar, ttk.Scrollbar] - The scrollbar to set as the vertical scroller.
+
+        ### Returns:
+        None - Updates internal reference for the vertical scrollbar widget.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(
+            key=self.__Keys.VSCROLLBAR,
+            value=value,
+            set_default_type=Union[tk.Scrollbar, ttk.Scrollbar],
+        )
+
+
+class VerticalScrolledTkFrame(tk.Frame, TkBase, _VerticalScrolledMixin):  # pyright: ignore[reportIncompatibleVariableOverride]
     """Scrollable Tk frame container.
 
     Provides a canvas-driven vertical scroller and exposes an interior frame for child widgets.
     """
-
-    __vscrollbar: tk.Scrollbar = None  # type: ignore
-    __canvas: tk.Canvas = None  # type: ignore
-    __interior: tk.Frame = None  # type: ignore
-    __interior_id: int = None  # type: ignore
 
     def __init__(self, master: tk.Misc, *args, **kw) -> None:
         """Initialize the vertical scrolled Tk frame.
@@ -512,30 +644,30 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
         # vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-        self.__vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.__vscrollbar.pack(fill=tk.Y, side=tk.RIGHT)
-        self.__canvas = tk.Canvas(
-            self, bd=0, highlightthickness=0, yscrollcommand=self.__vscrollbar.set
+        self._vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
+        self._vscrollbar.pack(fill=tk.Y, side=tk.RIGHT)
+        self._canvas = tk.Canvas(
+            self, bd=0, highlightthickness=0, yscrollcommand=self._vscrollbar.set
         )
-        self.__canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
-        self.__vscrollbar.config(command=self.__canvas.yview)
+        self._canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
+        self._vscrollbar.config(command=self._canvas.yview)
 
         # Reset the view
-        self.__canvas.xview_moveto(0)
-        self.__canvas.yview_moveto(0)
+        self._canvas.xview_moveto(0)
+        self._canvas.yview_moveto(0)
 
         # Create a frame inside the canvas which will be scrolled with it.
         # self.interior = interior = ttk.Frame(canvas)
-        self.__interior = tk.Frame(self.__canvas)
-        self.__interior_id: int = self.__canvas.create_window(
-            0, 0, window=self.__interior, anchor=tk.NW
+        self._interior = tk.Frame(self._canvas)
+        self._interior_id: int = self._canvas.create_window(
+            0, 0, window=self._interior, anchor=tk.NW
         )
 
         # Configure Events
-        self.__interior.bind("<Configure>", self.__configure_interior)
-        self.__canvas.bind("<Configure>", self.__configure_canvas)
-        self.__canvas.bind("<Enter>", self.__bind_mouse)
-        self.__canvas.bind("<Leave>", self.__unbind_mouse)
+        self._interior.bind("<Configure>", self.__configure_interior)
+        self._canvas.bind("<Configure>", self.__configure_canvas)
+        self._canvas.bind("<Enter>", self.__bind_mouse)
+        self._canvas.bind("<Leave>", self.__unbind_mouse)
 
     @property
     def interior(self) -> tk.Frame:
@@ -550,44 +682,44 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
         ### Raises:
         * None: Accessors return cached references only.
         """
-        return self.__interior
+        return self._interior # type: ignore
 
     def __configure_interior(self, event: Optional[tk.Event] = None) -> None:
         # Update the scrollbar to match the size of the inner frame.
-        self.__canvas.config(
+        self._canvas.config(
             scrollregion=(
                 0,
                 0,
-                self.__interior.winfo_reqwidth(),
-                self.__interior.winfo_reqheight(),
+                self._interior.winfo_reqwidth(),
+                self._interior.winfo_reqheight(),
             )
         )
-        if self.__interior.winfo_reqwidth() != self.__canvas.winfo_width():
+        if self._interior.winfo_reqwidth() != self._canvas.winfo_width():
             # Update the canvas's width to fit the inner frame.
-            self.__canvas.config(width=self.__interior.winfo_reqwidth())
+            self._canvas.config(width=self._interior.winfo_reqwidth())
 
     def __configure_canvas(self, event: Optional[tk.Event] = None) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
-        if self.__interior.winfo_reqwidth() != self.__canvas.winfo_width():
+        if self._interior.winfo_reqwidth() != self._canvas.winfo_width():
             # Update the inner frame's width to fill the canvas.
-            self.__canvas.itemconfigure(
-                self.__interior_id, width=self.__canvas.winfo_width()
+            self._canvas.itemconfigure(
+                self._interior_id, width=self._canvas.winfo_width()
             )
 
     def __bind_mouse(self, event: Optional[tk.Event] = None) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
-        self.__canvas.bind_all("<4>", self.__on_mousewheel)
-        self.__canvas.bind_all("<5>", self.__on_mousewheel)
-        self.__canvas.bind_all("<MouseWheel>", self.__on_mousewheel)
+        self._canvas.bind_all("<4>", self.__on_mousewheel)
+        self._canvas.bind_all("<5>", self.__on_mousewheel)
+        self._canvas.bind_all("<MouseWheel>", self.__on_mousewheel)
 
     def __unbind_mouse(self, event: Optional[tk.Event] = None) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
-        self.__canvas.unbind_all("<4>")
-        self.__canvas.unbind_all("<5>")
-        self.__canvas.unbind_all("<MouseWheel>")
+        self._canvas.unbind_all("<4>")
+        self._canvas.unbind_all("<5>")
+        self._canvas.unbind_all("<MouseWheel>")
 
     def __on_mousewheel(self, event: tk.Event) -> None:
         """Translate mouse wheel events into vertical scrolling.
@@ -606,21 +738,16 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
         # print(f"{event}")
         # print(f"{type(event)}")
         if event.num == 4 or event.delta > 0:
-            self.__canvas.yview_scroll(-1, "units")
+            self._canvas.yview_scroll(-1, "units")
         elif event.num == 5 or event.delta < 0:
-            self.__canvas.yview_scroll(1, "units")
+            self._canvas.yview_scroll(1, "units")
 
 
-class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
+class VerticalScrolledTtkFrame(ttk.Frame, TkBase, _VerticalScrolledMixin):  # pyright: ignore[reportIncompatibleVariableOverride]
     """Scrollable ttk frame container.
 
     Uses a Tk canvas plus a themed frame to offer vertical scrolling for child widgets.
     """
-
-    __vscrollbar: ttk.Scrollbar = None  # type: ignore
-    __canvas: tk.Canvas = None  # type: ignore
-    __interior: ttk.Frame = None  # type: ignore
-    __interior_id: int = None  # type: ignore
 
     def __init__(self, master: tk.Misc, *args, **kw) -> None:
         """Initialize the vertical scrolled ttk frame.
@@ -637,30 +764,30 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
         # vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-        self.__vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
-        self.__vscrollbar.pack(fill=tk.Y, side=tk.RIGHT)
-        self.__canvas = tk.Canvas(
-            self, bd=0, highlightthickness=0, yscrollcommand=self.__vscrollbar.set
+        self._vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
+        self._vscrollbar.pack(fill=tk.Y, side=tk.RIGHT)
+        self._canvas = tk.Canvas(
+            self, bd=0, highlightthickness=0, yscrollcommand=self._vscrollbar.set
         )
-        self.__canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
-        self.__vscrollbar.config(command=self.__canvas.yview)
+        self._canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.TRUE)
+        self._vscrollbar.config(command=self._canvas.yview)
 
         # Reset the view
-        self.__canvas.xview_moveto(0)
-        self.__canvas.yview_moveto(0)
+        self._canvas.xview_moveto(0)
+        self._canvas.yview_moveto(0)
 
         # Create a frame inside the canvas which will be scrolled with it.
         # self.interior = interior = ttk.Frame(canvas)
-        self.__interior = ttk.Frame(self.__canvas)
-        self.__interior_id: int = self.__canvas.create_window(
-            0, 0, window=self.__interior, anchor=tk.NW
+        self._interior = ttk.Frame(self._canvas)
+        self._interior_id: int = self._canvas.create_window(
+            0, 0, window=self._interior, anchor=tk.NW
         )
 
         # Configure Events
-        self.__interior.bind("<Configure>", self.__configure_interior)
-        self.__canvas.bind("<Configure>", self.__configure_canvas)
-        self.__canvas.bind("<Enter>", self.__bind_mouse)
-        self.__canvas.bind("<Leave>", self.__unbind_mouse)
+        self._interior.bind("<Configure>", self.__configure_interior)
+        self._canvas.bind("<Configure>", self.__configure_canvas)
+        self._canvas.bind("<Enter>", self.__bind_mouse)
+        self._canvas.bind("<Leave>", self.__unbind_mouse)
 
     @property
     def interior(self) -> ttk.Frame:
@@ -675,44 +802,44 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
         ### Raises:
         * None: Accessors return cached references only.
         """
-        return self.__interior
+        return self._interior # type: ignore
 
     def __configure_interior(self, event: Optional[tk.Event] = None) -> None:
         # Update the scrollbar to match the size of the inner frame.
-        self.__canvas.config(
+        self._canvas.config(
             scrollregion=(
                 0,
                 0,
-                self.__interior.winfo_reqwidth(),
-                self.__interior.winfo_reqheight(),
+                self._interior.winfo_reqwidth(),
+                self._interior.winfo_reqheight(),
             )
         )
-        if self.__interior.winfo_reqwidth() != self.__canvas.winfo_width():
+        if self._interior.winfo_reqwidth() != self._canvas.winfo_width():
             # Update the canvas's width to fit the inner frame.
-            self.__canvas.config(width=self.__interior.winfo_reqwidth())
+            self._canvas.config(width=self._interior.winfo_reqwidth())
 
     def __configure_canvas(self, event: tk.Event) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
-        if self.__interior.winfo_reqwidth() != self.__canvas.winfo_width():
+        if self._interior.winfo_reqwidth() != self._canvas.winfo_width():
             # Update the inner frame's width to fill the canvas.
-            self.__canvas.itemconfigure(
-                self.__interior_id, width=self.__canvas.winfo_width()
+            self._canvas.itemconfigure(
+                self._interior_id, width=self._canvas.winfo_width()
             )
 
     def __bind_mouse(self, event: Optional[tk.Event] = None) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
-        self.__canvas.bind_all("<4>", self.__on_mousewheel)
-        self.__canvas.bind_all("<5>", self.__on_mousewheel)
-        self.__canvas.bind_all("<MouseWheel>", self.__on_mousewheel)
+        self._canvas.bind_all("<4>", self.__on_mousewheel)
+        self._canvas.bind_all("<5>", self.__on_mousewheel)
+        self._canvas.bind_all("<MouseWheel>", self.__on_mousewheel)
 
     def __unbind_mouse(self, event: Optional[tk.Event] = None) -> None:
         # print(f"{event}")
         # print(f"{type(event)}")
-        self.__canvas.unbind_all("<4>")
-        self.__canvas.unbind_all("<5>")
-        self.__canvas.unbind_all("<MouseWheel>")
+        self._canvas.unbind_all("<4>")
+        self._canvas.unbind_all("<5>")
+        self._canvas.unbind_all("<MouseWheel>")
 
     def __on_mousewheel(self, event: tk.Event) -> None:
         """Translate mouse wheel events into vertical scrolling.
@@ -731,9 +858,9 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
         # print(f"{event}")
         # print(f"{type(event)}")
         if event.num == 4 or event.delta > 0:
-            self.__canvas.yview_scroll(-1, "units")
+            self._canvas.yview_scroll(-1, "units")
         elif event.num == 5 or event.delta < 0:
-            self.__canvas.yview_scroll(1, "units")
+            self._canvas.yview_scroll(1, "units")
 
 
 # #[EOF]#######################################################################
