@@ -9,6 +9,7 @@ Tk modules rely on these helpers to align Tkinter widget attributes with the bro
 conventions, reducing boilerplate for derived classes.
 """
 
+import tkinter as tk
 from typing import Any, Dict, Optional
 from ..attribtool import ReadOnlyClass
 from ..basetool import BData
@@ -104,7 +105,7 @@ class TkBase(BData):
             self._set_data(key=_Keys.CHILD, value=value)
 
     @property
-    def children(self) -> Dict[str, Any]:
+    def children(self) -> Dict[str, tk.Widget]:
         """The children widgets."""
         value = self._get_data(key=_Keys.CHILDREN, default_value={})
         if value is not None:
@@ -112,22 +113,21 @@ class TkBase(BData):
         return {}
 
     @children.setter
-    def children(self, value: Dict[str, Any]) -> None:
-        self._set_data(key=_Keys.CHILDREN, value=value, set_default_type=Dict[str, Any])
+    def children(self, value: Dict[str, tk.Widget]) -> None:
+        self._set_data(
+            key=_Keys.CHILDREN, value=value, set_default_type=Dict[str, tk.Widget]
+        )
 
     @property
-    def master(self) -> Optional[Any]:
+    def master(self) -> Optional[tk.Misc]:
         """The master widget."""
         return self._get_data(key=_Keys.MASTER)
 
     @master.setter
-    def master(self, value: Optional[Any]) -> None:
-        if value is not None:
-            self._set_data(
-                key=_Keys.MASTER, value=value, set_default_type=Optional[type(value)]
-            )
-        else:
-            self._set_data(key=_Keys.MASTER, value=value)
+    def master(self, value: Optional[tk.Misc]) -> None:
+        self._set_data(
+            key=_Keys.MASTER, value=value, set_default_type=Optional[tk.Misc]
+        )
 
     @property
     def tk(self) -> Optional[Any]:

@@ -29,7 +29,7 @@ class StatusBarTkFrame(tk.Frame, TkBase):
     __status_label: tk.Label = None  # type: ignore
     __sizegrip: ttk.Sizegrip = None  # type: ignore
 
-    def __init__(self, master: tk.Misc, *args, **kwargs) -> None:
+    def __init__(self, master: Optional[tk.Misc], *args, **kwargs) -> None:
         """Initialise the Tkinter status bar.
 
         ### Arguments:
@@ -99,7 +99,7 @@ class StatusBarTtkFrame(ttk.Frame, TkBase):
     __status_label: ttk.Label = None  # type: ignore
     __sizegrip: ttk.Sizegrip = None  # type: ignore
 
-    def __init__(self, master: tk.Misc, *args, **kwargs) -> None:
+    def __init__(self, master: Optional[tk.Misc], *args, **kwargs) -> None:
         """Initialise the ttk status bar.
 
         ### Arguments:
@@ -385,18 +385,18 @@ class VerticalScrolledTkFrame(tk.Frame, TkBase):
     __interior: tk.Frame = None  # type: ignore
     __interior_id: int = None  # type: ignore
 
-    def __init__(self, parent: tk.Misc, *args, **kw) -> None:
+    def __init__(self, master: tk.Misc, *args, **kw) -> None:
         """Initialize the vertical scrolled Tk frame.
 
         Creates a scrollable frame widget with canvas and scrollbar, providing
         an interior frame for adding child widgets.
 
         ### Arguments:
-        * parent: tk.Misc - Parent widget container.
+        * master: tk.Misc - Parent widget container.
         * *args - Additional positional arguments passed to tk.Frame.
         * **kw - Additional keyword arguments passed to tk.Frame.
         """
-        tk.Frame.__init__(self, parent, *args, **kw)
+        tk.Frame.__init__(self, master, *args, **kw)
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
         # vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
@@ -510,18 +510,18 @@ class VerticalScrolledTtkFrame(ttk.Frame, TkBase):
     __interior: ttk.Frame = None  # type: ignore
     __interior_id: int = None  # type: ignore
 
-    def __init__(self, parent: tk.Misc, *args, **kw) -> None:
+    def __init__(self, master: tk.Misc, *args, **kw) -> None:
         """Initialize the vertical scrolled ttk frame.
 
         Creates a scrollable themed frame widget with canvas and scrollbar, providing
         an interior frame for adding child widgets.
 
         ### Arguments:
-        * parent: tk.Misc - Parent widget container.
+        * master: tk.Misc - Parent widget container.
         * *args - Additional positional arguments passed to ttk.Frame.
         * **kw - Additional keyword arguments passed to ttk.Frame.
         """
-        ttk.Frame.__init__(self, parent, *args, **kw)
+        ttk.Frame.__init__(self, master, *args, **kw)
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
         # vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
