@@ -16,8 +16,8 @@ import tkinter as tk
 from tkinter import Toplevel, ttk
 from typing import Any, Optional, List, Tuple, Union, Dict
 
-from jsktoolbox.attribtool import ReadOnlyClass
-from jsktoolbox.basetool import BData
+from ..attribtool import ReadOnlyClass
+from ..basetool import BData
 
 from .base import TkBase
 
