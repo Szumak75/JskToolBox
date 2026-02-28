@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2024-01-15
 
-Purpose: Provide foundational classes for the logging subsystem.
+Purpose: Provide foundational mixins for the logging subsystem.
 
-Defines base containers for logger queues, engine metadata, and formatting
+Defines base mixins for logger queues, engine metadata, and formatting
 behaviour leveraged by higher-level logging utilities.
 """
-
-
 from typing import Optional, List, Any
 
 from ..logstool.keys import LogKeys
@@ -20,7 +18,7 @@ from ..attribtool import NoDynamicAttributes
 
 
 class BLoggerQueue(BData):
-    """Base container that exposes a lazily-created logging queue."""
+    """Base mixin that exposes a lazily-created logging queue."""
 
     @property
     def logs_queue(self) -> Optional[LoggerQueue]:
@@ -47,7 +45,7 @@ class BLoggerQueue(BData):
 
 
 class BLoggerEngine(BData):
-    """Base container for logger engine metadata."""
+    """Base mixin for logger engine metadata."""
 
     @property
     def name(self) -> Optional[str]:
@@ -72,10 +70,10 @@ class BLoggerEngine(BData):
 
 
 class BLogFormatter(NoDynamicAttributes):
-    """Base class for log formatters leveraging simple templates."""
+    """Base mixin for log formatters leveraging simple templates."""
 
-    __template: Optional[str] = None
-    __forms: Optional[List] = None
+    __blf_template: Optional[str] = None
+    __blf_forms: Optional[List] = None
 
     def format(self, message: str, name: Optional[str] = None) -> str:
         """Render a log message based on the configured forms list.
@@ -110,9 +108,9 @@ class BLogFormatter(NoDynamicAttributes):
         ### Returns:
         [List] - Current forms definition list.
         """
-        if self.__forms is None:
-            self.__forms = []
-        return self.__forms
+        if self.__blf_forms is None:
+            self.__blf_forms = []
+        return self.__blf_forms
 
     @_forms_.setter
     def _forms_(self, item: Any) -> None:

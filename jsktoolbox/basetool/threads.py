@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2024-01-15
 
 Purpose: Offer foundational helpers for thread-based utilities.
@@ -14,15 +14,16 @@ from io import TextIOWrapper
 from time import sleep
 from types import FunctionType
 from typing import Any, Callable, Optional, Tuple, Dict, Union
-from threading import Event
+from threading import Event, Thread
 from _thread import LockType
 import _thread
 
 from .data import BData
 from ..attribtool import ReadOnlyClass
 
-# Python 3.13+ introduced _thread._ThreadHandle to replace LockType for thread handles
-# For backward compatibility with Python 3.10-3.12, we need to handle both types
+# Python 3.13+ introduced _thread._ThreadHandle for thread handles.
+# Python 3.14 uses _os_thread_handle internally.
+# For backward compatibility with Python 3.10-3.12, we handle both variants.
 if sys.version_info >= (3, 13):
     # Python 3.13+: Use _ThreadHandle for thread handle type
     if hasattr(_thread, "_ThreadHandle"):
@@ -48,79 +49,18 @@ class _Keys(object, metaclass=ReadOnlyClass):
     KWARGS: str = "_kwargs"
     NAME: str = "_name"
     NATIVE_ID: str = "_native_id"
+    OS_THREAD_HANDLE: str = "_os_thread_handle"
     SLEEP_PERIOD: str = "_sleep_period"
     STARTED: str = "_started"
     STDERR: str = "_stderr"
     STOP_EVENT: str = "_stop_event"
     TARGET: str = "_target"
     TSTATE_LOCK: str = "_tstate_lock"
+    THREAD: str = "_thread"
 
 
 class ThBaseObject(BData):
     """Base mixin mirroring attributes of `threading.Thread`."""
-
-    @property
-    def _handle(self) -> ThreadHandleType:  # type: ignore
-        """Return the thread handle.
-
-        ### Returns:
-        [ThreadHandleType] - Thread handle or None.
-
-        ### Note:
-        In Python 3.13+, returns _thread._ThreadHandle.
-        In Python 3.10-3.12, returns _thread.LockType.
-        """
-        return self._get_data(key=_Keys.HANDLE, default_value=None)
-
-    @_handle.setter
-    def _handle(self, value: Any) -> None:
-        """Assign the thread handle.
-
-        ### Arguments:
-        * value: Any - Thread handle value (type varies by Python version).
-
-        ### Note:
-        Accepts _thread._ThreadHandle (Python 3.13+) or LockType (Python 3.10-3.12).
-        """
-        self._set_data(key=_Keys.HANDLE, value=value, set_default_type=None)
-
-    @property
-    def _target(self) -> Optional[Callable]:
-        """Return the thread target callable.
-
-        ### Returns:
-        [Optional[Callable]] - Function executed by the thread.
-        """
-        return self._get_data(key=_Keys.TARGET, default_value=None)
-
-    @_target.setter
-    def _target(self, value: Optional[Callable]) -> None:
-        """Assign the thread target callable.
-
-        ### Arguments:
-        * value: Optional[Callable] - Callable to execute or None.
-        """
-        self._set_data(
-            key=_Keys.TARGET, value=value, set_default_type=Optional[Callable]
-        )
-
-    @property
-    def _name(self) -> Optional[str]:
-        """Return the thread name.
-
-        ### Returns:
-        [Optional[str]] - Name string or None.
-        """
-        return self._get_data(key=_Keys.NAME, default_value=None)
-
-    @_name.setter
-    def _name(self, value: Optional[str]) -> None:
-        """Assign the thread name.
-
-        ### Arguments:
-        * value: Optional[str] - Thread name value.
-        """
-        self._set_data(key=_Keys.NAME, value=value, set_default_type=Optional[str])
 
     @property
     def _args(self) -> Optional[Tuple]:
@@ -139,24 +79,6 @@ class ThBaseObject(BData):
         * value: Tuple - Positional argument tuple.
         """
         self._set_data(key=_Keys.ARGS, value=value, set_default_type=Tuple)
-
-    @property
-    def _kwargs(self) -> Optional[Dict]:
-        """Return keyword arguments for the target callable.
-
-        ### Returns:
-        [Optional[Dict]] - Keyword argument mapping.
-        """
-        return self._get_data(key=_Keys.KWARGS, default_value=None)
-
-    @_kwargs.setter
-    def _kwargs(self, value: Dict) -> None:
-        """Assign keyword arguments for the target callable.
-
-        ### Arguments:
-        * value: Dict - Keyword argument dictionary.
-        """
-        self._set_data(key=_Keys.KWARGS, value=value, set_default_type=Dict)
 
     @property
     def _daemonic(self) -> Optional[bool]:
@@ -195,6 +117,32 @@ class ThBaseObject(BData):
         self._set_data(key=_Keys.DEBUG, value=value, set_default_type=bool)
 
     @property
+    def _handle(self) -> ThreadHandleType:  # type: ignore
+        """Return the thread handle.
+
+        ### Returns:
+        [ThreadHandleType] - Thread handle or None.
+
+        ### Note:
+        In Python 3.13+, returns _thread._ThreadHandle.
+        In Python 3.10-3.12, returns _thread.LockType.
+        """
+        return self._get_data(key=_Keys.HANDLE, default_value=None)
+
+    @_handle.setter
+    def _handle(self, value: Any) -> None:
+        """Assign the thread handle.
+
+        ### Arguments:
+        * value: Any - Thread handle value (type varies by Python version).
+
+        ### Note:
+        Accepts _thread._ThreadHandle (Python 3.13+)
+        or LockType (Python 3.10-3.12).
+        """
+        self._set_data(key=_Keys.HANDLE, value=value, set_default_type=None)
+
+    @property
     def _ident(self) -> Optional[int]:
         """Return the Python thread identifier.
 
@@ -211,101 +159,6 @@ class ThBaseObject(BData):
         * value: Optional[int] - Identifier value.
         """
         self._set_data(key=_Keys.IDENT, value=value, set_default_type=Optional[int])
-
-    @property
-    def _native_id(self) -> Optional[int]:
-        """Return the native thread identifier where available.
-
-        ### Returns:
-        [Optional[int]] - Native identifier or None.
-        """
-        return self._get_data(key=_Keys.NATIVE_ID, default_value=None)
-
-    @_native_id.setter
-    def _native_id(self, value: Optional[int]) -> None:
-        """Assign the native thread identifier.
-
-        ### Arguments:
-        * value: Optional[int] - Native thread ID.
-        """
-        self._set_data(key=_Keys.NATIVE_ID, value=value, set_default_type=Optional[int])
-
-    @property
-    def _tstate_lock(self) -> Optional[LockType]:
-        """Return the thread state lock object.
-
-        ### Returns:
-        [Optional[LockType]] - Thread state lock or None.
-        """
-        return self._get_data(key=_Keys.TSTATE_LOCK, default_value=None)
-
-    @_tstate_lock.setter
-    def _tstate_lock(self, value: Any) -> None:
-        """Assign the thread state lock object.
-
-        ### Arguments:
-        * value: Any - Lock-like object.
-        """
-        self._set_data(
-            key=_Keys.TSTATE_LOCK, value=value, set_default_type=Optional[LockType]
-        )
-
-    @property
-    def _started(self) -> Optional[Event]:
-        """Return the event tracking thread start status.
-
-        ### Returns:
-        [Optional[Event]] - Event instance or None.
-        """
-        return self._get_data(key=_Keys.STARTED, default_value=None)
-
-    @_started.setter
-    def _started(self, value: Event) -> None:
-        """Assign the start event value.
-
-        ### Arguments:
-        * value: Event - Event indicating thread start.
-        """
-        self._set_data(key=_Keys.STARTED, value=value, set_default_type=Event)
-
-    @property
-    def _is_stopped(self) -> Optional[bool]:
-        """Return the cached stopped state flag.
-
-        ### Returns:
-        [Optional[bool]] - Boolean state or None.
-        """
-        return self._get_data(key=_Keys.IS_STOPPED, default_value=None)
-
-    @_is_stopped.setter
-    def _is_stopped(self, value: bool) -> None:
-        """Assign the cached stopped state flag.
-
-        ### Arguments:
-        * value: bool - Stopped state.
-        """
-        self._set_data(key=_Keys.IS_STOPPED, value=value, set_default_type=bool)
-
-    @property
-    def _stderr(self) -> Optional[TextIOWrapper]:
-        """Return the thread-specific stderr stream.
-
-        ### Returns:
-        [Optional[TextIOWrapper]] - Text IO wrapper or None.
-        """
-        return self._get_data(
-            key=_Keys.STDERR,
-            default_value=None,
-        )
-
-    @_stderr.setter
-    def _stderr(self, value: Optional[TextIOWrapper]) -> None:
-        """Assign the stderr stream.
-
-        ### Arguments:
-        * value: Optional[TextIOWrapper] - Stream or None.
-        """
-        self._set_data(key=_Keys.STDERR, value=value, set_default_type=TextIOWrapper)
 
     @property
     def _invoke_excepthook(self) -> Optional[FunctionType]:
@@ -333,6 +186,145 @@ class ThBaseObject(BData):
         )
 
     @property
+    def _is_stopped(self) -> Optional[bool]:
+        """Return the cached stopped state flag.
+
+        ### Returns:
+        [Optional[bool]] - Boolean state or None.
+        """
+        return self._get_data(key=_Keys.IS_STOPPED, default_value=None)
+
+    @_is_stopped.setter
+    def _is_stopped(self, value: bool) -> None:
+        """Assign the cached stopped state flag.
+
+        ### Arguments:
+        * value: bool - Stopped state.
+        """
+        self._set_data(key=_Keys.IS_STOPPED, value=value, set_default_type=bool)
+
+    @property
+    def _kwargs(self) -> Optional[Dict]:
+        """Return keyword arguments for the target callable.
+
+        ### Returns:
+        [Optional[Dict]] - Keyword argument mapping.
+        """
+        return self._get_data(key=_Keys.KWARGS, default_value=None)
+
+    @_kwargs.setter
+    def _kwargs(self, value: Dict) -> None:
+        """Assign keyword arguments for the target callable.
+
+        ### Arguments:
+        * value: Dict - Keyword argument dictionary.
+        """
+        self._set_data(key=_Keys.KWARGS, value=value, set_default_type=Dict)
+
+    @property
+    def _name(self) -> Optional[str]:
+        """Return the thread name.
+
+        ### Returns:
+        [Optional[str]] - Name string or None.
+        """
+        return self._get_data(key=_Keys.NAME, default_value=None)
+
+    @_name.setter
+    def _name(self, value: Optional[str]) -> None:
+        """Assign the thread name.
+
+        ### Arguments:
+        * value: Optional[str] - Thread name value.
+        """
+        self._set_data(key=_Keys.NAME, value=value, set_default_type=Optional[str])
+
+    @property
+    def _native_id(self) -> Optional[int]:
+        """Return the native thread identifier where available.
+
+        ### Returns:
+        [Optional[int]] - Native identifier or None.
+        """
+        return self._get_data(key=_Keys.NATIVE_ID, default_value=None)
+
+    @_native_id.setter
+    def _native_id(self, value: Optional[int]) -> None:
+        """Assign the native thread identifier.
+
+        ### Arguments:
+        * value: Optional[int] - Native thread ID.
+        """
+        self._set_data(key=_Keys.NATIVE_ID, value=value, set_default_type=Optional[int])
+
+    @property
+    def _os_thread_handle(self) -> ThreadHandleType:  # type: ignore
+        """Return the OS thread handle used by Python 3.14+ internals.
+
+        ### Returns:
+        [ThreadHandleType] - OS thread handle or None.
+        """
+        return self._get_data(key=_Keys.OS_THREAD_HANDLE, default_value=None)
+
+    @_os_thread_handle.setter
+    def _os_thread_handle(self, value: Any) -> None:
+        """Assign the OS thread handle used by Python 3.14+ internals.
+
+        ### Arguments:
+        * value: Any - OS thread handle value (type varies by Python version).
+        """
+        self._set_data(key=_Keys.OS_THREAD_HANDLE, value=value, set_default_type=None)
+
+    def _sleep(self, sleep_period: Optional[float] = None) -> None:
+        """Pause execution for the configured period.
+
+        ### Arguments:
+        * sleep_period: Optional[float] - Custom sleep duration override.
+        """
+        if sleep_period is None:
+            sleep_period = self.sleep_period
+        sleep(sleep_period)
+
+    @property
+    def _started(self) -> Optional[Event]:
+        """Return the event tracking thread start status.
+
+        ### Returns:
+        [Optional[Event]] - Event instance or None.
+        """
+        return self._get_data(key=_Keys.STARTED, default_value=None)
+
+    @_started.setter
+    def _started(self, value: Event) -> None:
+        """Assign the start event value.
+
+        ### Arguments:
+        * value: Event - Event indicating thread start.
+        """
+        self._set_data(key=_Keys.STARTED, value=value, set_default_type=Event)
+
+    @property
+    def _stderr(self) -> Optional[TextIOWrapper]:
+        """Return the thread-specific stderr stream.
+
+        ### Returns:
+        [Optional[TextIOWrapper]] - Text IO wrapper or None.
+        """
+        return self._get_data(
+            key=_Keys.STDERR,
+            default_value=None,
+        )
+
+    @_stderr.setter
+    def _stderr(self, value: Optional[TextIOWrapper]) -> None:
+        """Assign the stderr stream.
+
+        ### Arguments:
+        * value: Optional[TextIOWrapper] - Stream or None.
+        """
+        self._set_data(key=_Keys.STDERR, value=value, set_default_type=TextIOWrapper)
+
+    @property
     def _stop_event(self) -> Optional[Event]:
         """Return the stop event object, if set.
 
@@ -351,26 +343,62 @@ class ThBaseObject(BData):
         self._set_data(key=_Keys.STOP_EVENT, value=obj, set_default_type=Event)
 
     @property
-    def started(self) -> bool:
-        """Return whether the thread has started.
+    def _target(self) -> Optional[Callable]:
+        """Return the thread target callable.
 
         ### Returns:
-        [bool] - True when the thread start event is set.
+        [Optional[Callable]] - Function executed by the thread.
         """
-        if self._started is not None:
-            return self._started.is_set()
-        return False
+        return self._get_data(key=_Keys.TARGET, default_value=None)
+
+    @_target.setter
+    def _target(self, value: Optional[Callable]) -> None:
+        """Assign the thread target callable.
+
+        ### Arguments:
+        * value: Optional[Callable] - Callable to execute or None.
+        """
+        self._set_data(
+            key=_Keys.TARGET, value=value, set_default_type=Optional[Callable]
+        )
 
     @property
-    def stopped(self) -> bool:
-        """Return whether the stop event flag is set.
+    def _thread(self) -> Optional[Thread]:
+        """Return a reference to the `threading.Thread` instance.
 
         ### Returns:
-        [bool] - True when stop event exists and is set, otherwise False.
+        [Optional[Thread]] - Thread object reference or None.
         """
-        if self._stop_event:
-            return self._stop_event.is_set()
-        return True
+        return self._get_data(key=_Keys.THREAD, default_value=None)
+
+    @_thread.setter
+    def _thread(self, value: Optional[Thread]) -> None:
+        """Assign a reference to the `threading.Thread` instance.
+
+        ### Arguments:
+        * value: Optional[Thread] - Thread object reference or None.
+        """
+        self._set_data(key=_Keys.THREAD, value=value, set_default_type=Optional[Thread])
+
+    @property
+    def _tstate_lock(self) -> Optional[LockType]:
+        """Return the thread state lock object.
+
+        ### Returns:
+        [Optional[LockType]] - Thread state lock or None.
+        """
+        return self._get_data(key=_Keys.TSTATE_LOCK, default_value=None)
+
+    @_tstate_lock.setter
+    def _tstate_lock(self, value: Any) -> None:
+        """Assign the thread state lock object.
+
+        ### Arguments:
+        * value: Any - Lock-like object.
+        """
+        self._set_data(
+            key=_Keys.TSTATE_LOCK, value=value, set_default_type=Optional[LockType]
+        )
 
     @property
     def sleep_period(self) -> float:
@@ -392,20 +420,32 @@ class ThBaseObject(BData):
             key=_Keys.SLEEP_PERIOD, value=float(value), set_default_type=float
         )
 
-    def _sleep(self, sleep_period: Optional[float] = None) -> None:
-        """Pause execution for the configured period.
+    @property
+    def started(self) -> bool:
+        """Return whether the thread has started.
 
-        ### Arguments:
-        * sleep_period: Optional[float] - Custom sleep duration override.
+        ### Returns:
+        [bool] - True when the thread start event is set.
         """
-        if sleep_period is None:
-            sleep_period = self.sleep_period
-        sleep(sleep_period)
+        if self._started is not None:
+            return self._started.is_set()
+        return False
 
     def stop(self) -> None:
-        """Signal the stop event for the thread."""
+        """Signal the stop event to request thread termination."""
         if self._stop_event:
             self._stop_event.set()
+
+    @property
+    def stopped(self) -> bool:
+        """Return whether the stop event flag is set.
+
+        ### Returns:
+        [bool] - True when stop event exists and is set, otherwise False.
+        """
+        if self._stop_event:
+            return self._stop_event.is_set()
+        return True
 
 
 # #[EOF]#######################################################################
