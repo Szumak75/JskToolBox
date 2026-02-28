@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Author:  Jacek Kotlarski --<szumak@virthost.pl>
+Author:  Jacek 'Szumak' Kotlarski --<szumak@virthost.pl>
 Created: 2024-01-15
 
 Purpose: Provide a typed container mixin with helper accessors.
@@ -22,10 +22,10 @@ from .classes import BClasses
 
 
 class BData(BClasses):
-    """Container base class that adds typed dictionary semantics."""
+    """Base mixin that adds typed dictionary semantics."""
 
-    __data: Optional[Dict[str, Any]] = None
-    __types: Optional[Dict[str, Any]] = None
+    __bdata_storage: Optional[Dict[str, Any]] = None
+    __bdata_types: Optional[Dict[str, Any]] = None
 
     @staticmethod
     def __validate_type(value: Any, expected_type: Any) -> bool:
@@ -141,7 +141,7 @@ class BData(BClasses):
         ### Returns:
         [bool] - True when the key exists, False otherwise.
         """
-        if self.__data and key in self.__data:
+        if self.__bdata_storage and key in self.__bdata_storage:
             return True
         return False
 
@@ -154,7 +154,7 @@ class BData(BClasses):
         ### Returns:
         [bool] - True when a type constraint is registered.
         """
-        if self.__types and key in self.__types:
+        if self.__bdata_types and key in self.__bdata_types:
             return True
         return False
 
@@ -171,8 +171,8 @@ class BData(BClasses):
         ### Raises:
         * KeyError: Raised when the key has no registered type constraint.
         """
-        if self.__types and self.__has_type(key):
-            if received_type == self.__types[key]:
+        if self.__bdata_types and self.__has_type(key):
+            if received_type == self.__bdata_types[key]:
                 return True
             return False
         raise Raise.error(
@@ -200,8 +200,8 @@ class BData(BClasses):
         key: str,
         default_value: Optional[Any] = None,
         **kwargs,
-    ) -> Optional[Any]:
-        """Gets data from internal dict.
+    ):
+        """Return data from the internal dictionary.
 
         ### Arguments:
         * key: str - Variable name.
@@ -231,12 +231,12 @@ class BData(BClasses):
 
         if default_value is not None:
             if (
-                self.__types
+                self.__bdata_types
                 and self.__has_type(key)
-                and not self.__validate_type(default_value, self.__types[key])
+                and not self.__validate_type(default_value, self.__bdata_types[key])
             ):
                 raise Raise.error(
-                    f"Expected '{self.__types[key]}' type, received default_value type is: {type(default_value)}",
+                    f"Expected '{self.__bdata_types[key]}' type, received default_value type is: {type(default_value)}",
                     TypeError,
                     self._c_name,
                     currentframe(),
@@ -250,7 +250,7 @@ class BData(BClasses):
         value: Optional[Any],
         set_default_type: Optional[Any] = None,
     ) -> None:
-        """Sets data to internal dict.
+        """Set data in the internal dictionary.
 
         ### Arguments:
         * key: str - Variable name.
@@ -264,16 +264,19 @@ class BData(BClasses):
           Use _delete_data(key) first to change the type.
         * TypeError: default_value type does not match set_default_type.
         """
-        if self.__types is None:
-            self.__types = {}
+        if self.__bdata_types is None:
+            self.__bdata_types = {}
 
         if self.__has_type(key):
             # Key already has a registered type
-            if set_default_type is not None and set_default_type != self.__types[key]:
+            if (
+                set_default_type is not None
+                and set_default_type != self.__bdata_types[key]
+            ):
                 # Attempting to change the type without deleting first
                 raise Raise.error(
                     f"Cannot overwrite existing type constraint for key '{key}'. "
-                    f"Current type: '{self.__types[key]}', attempted type: '{set_default_type}'. "
+                    f"Current type: '{self.__bdata_types[key]}', attempted type: '{set_default_type}'. "
                     f"Use _delete_data('{key}') first to change the type constraint.",
                     TypeError,
                     self._c_name,
@@ -281,12 +284,12 @@ class BData(BClasses):
                 )
 
             # Verify value matches existing type
-            if self.__validate_type(value, self.__types[key]):
+            if self.__validate_type(value, self.__bdata_types[key]):
                 self._clear_data(key)
                 self._data[key] = value
             else:
                 raise Raise.error(
-                    f"Expected '{self.__types[key]}' type, received: '{type(value)}'",
+                    f"Expected '{self.__bdata_types[key]}' type, received: '{type(value)}'",
                     TypeError,
                     self._c_name,
                     currentframe(),
@@ -295,12 +298,12 @@ class BData(BClasses):
             # No type registered yet
             if set_default_type is not None:
                 # Register new type and verify value matches
-                self.__types[key] = set_default_type
+                self.__bdata_types[key] = set_default_type
                 if self.__validate_type(value, set_default_type):
                     self._data[key] = value
                 else:
                     # Clean up type registration if value doesn't match
-                    del self.__types[key]
+                    del self.__bdata_types[key]
                     raise Raise.error(
                         f"The type of the value: '{type(value)}' does not match the type passed in the 'set_default_type': '{set_default_type}' variable",
                         TypeError,
@@ -313,7 +316,7 @@ class BData(BClasses):
                 self._data[key] = value
 
     def _delete_data(self, key: str) -> None:
-        """Delete data and data type from internal dict.
+        """Delete data and type constraint from the internal dictionary.
 
         ### Arguments:
         * key: str - Variable name to delete.
@@ -321,12 +324,12 @@ class BData(BClasses):
         if self.__check_keys(key):
             del self._data[key]
         if self.__has_type(key):
-            del self.__types[key]  # type: ignore
+            del self.__bdata_types[key]  # type: ignore
 
     def _clear_data(self, key: str) -> None:
-        """Clear data from internal dict.
-        Does not delete data type.
-        If key is not found, does nothing.
+        """Clear data from the internal dictionary.
+
+        Preserve the key type constraint. If the key is missing, do nothing.
 
         ### Arguments:
         * key: str - Variable name to delete.
@@ -343,11 +346,11 @@ class BData(BClasses):
         ### Returns:
         [Dict[str, Any]] - Mutable storage dictionary.
         """
-        if self.__data is None:
-            self.__data = {}
-        if self.__types is None:
-            self.__types = {}
-        return self.__data
+        if self.__bdata_storage is None:
+            self.__bdata_storage = {}
+        if self.__bdata_types is None:
+            self.__bdata_types = {}
+        return self.__bdata_storage
 
     @_data.setter
     def _data(self, value: Optional[Dict[str, Any]]) -> None:
@@ -361,22 +364,22 @@ class BData(BClasses):
         * TypeError: Incoming values conflict with registered type constraints.
         """
         if value is None:
-            if self.__data is not None:
-                self.__data.clear()
-            if self.__types is not None:
-                self.__types.clear()
+            if self.__bdata_storage is not None:
+                self.__bdata_storage.clear()
+            if self.__bdata_types is not None:
+                self.__bdata_types.clear()
             return None
-        if isinstance(value, Dict) and self.__data is not None:
+        if isinstance(value, Dict) and self.__bdata_storage is not None:
             for key in value.keys():
-                if self.__types and self.__has_type(key):
+                if self.__bdata_types and self.__has_type(key):
                     if not self.__check_type(key, type(value[key])):
                         raise Raise.error(
-                            f"Expected '{self.__types[key]}' type, received: '{type(value[key])}'",
+                            f"Expected '{self.__bdata_types[key]}' type, received: '{type(value[key])}'",
                             TypeError,
                             self._c_name,
                             currentframe(),
                         )
-                self.__data[key] = value[key]
+                self.__bdata_storage[key] = value[key]
         else:
             raise Raise.error(
                 f"Expected Dict type, received: '{type(value)}'.",
@@ -388,12 +391,12 @@ class BData(BClasses):
     @_data.deleter
     def _data(self) -> None:
         """Delete the data dictionary and registered types."""
-        if self.__data is not None:
-            self.__data.clear()
-        if self.__types is not None:
-            self.__types.clear()
-        self.__data = None
-        self.__types = None
+        if self.__bdata_storage is not None:
+            self.__bdata_storage.clear()
+        if self.__bdata_types is not None:
+            self.__bdata_types.clear()
+        self.__bdata_storage = None
+        self.__bdata_types = None
 
 
 #
