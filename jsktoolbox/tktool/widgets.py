@@ -16,18 +16,134 @@ import tkinter as tk
 from tkinter import Toplevel, ttk
 from typing import Any, Optional, List, Tuple, Union, Dict
 
+from jsktoolbox.attribtool import ReadOnlyClass
+from jsktoolbox.basetool import BData
+
 from .base import TkBase
 
 
-class StatusBarTkFrame(tk.Frame, TkBase):
+class _Keys(object, metaclass=ReadOnlyClass):
+    """Read-only class for defining constant keys.
+
+    Prevents modification of class attributes after definition, ensuring immutability of key values.
+    """
+
+    STATUS: str = "__status__"
+    LABEL: str = "__label__"
+    SIZEGRIP: str = "__sizegrip__"
+
+
+class _StatusBarMixin(BData):
+    """Mixin for status bar widgets.
+
+    Defines common properties and methods for status bar implementations.
+    """
+
+    @property
+    def __status(self) -> tk.StringVar:
+        """Return the internal status StringVar.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        tk.StringVar - The StringVar instance that holds the status text.
+
+        ### Raises:
+        * None: Accessors return cached references only.
+        """
+        obj: Optional[tk.StringVar] = self._get_data(key=_Keys.STATUS)
+        if obj is None:
+            obj = tk.StringVar()
+        return obj
+
+    @__status.setter
+    def __status(self, value: tk.StringVar) -> None:
+        """Set the internal status StringVar.
+
+        ### Arguments:
+        * value: tk.StringVar - The StringVar instance to store as the status variable.
+
+        ### Returns:
+        None - Updates the internal reference for the status variable.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(key=_Keys.STATUS, value=value, set_default_type=tk.StringVar)
+
+    @property
+    def __status_label(self) -> Union[tk.Label, ttk.Label]:
+        """Return the internal status label widget.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        Union[tk.Label, ttk.Label] - The Label instance that displays the status text.
+
+        ### Raises:
+        * None: Accessors return cached references only.
+        """
+        obj: Optional[Union[tk.Label, ttk.Label]] = self._get_data(key=_Keys.LABEL)
+        if obj is None:
+            obj = tk.Label()
+        return obj
+
+    @__status_label.setter
+    def __status_label(self, value: Union[tk.Label, ttk.Label]) -> None:
+        """Set the internal status label widget.
+
+        ### Arguments:
+        * value: Union[tk.Label, ttk.Label] - The Label instance to store as the status label.
+
+        ### Returns:
+        None - Updates the internal reference for the status label widget.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(key=_Keys.LABEL, value=value, set_default_type=tk.Label)
+
+    @property
+    def __sizegrip(self) -> ttk.Sizegrip:
+        """Return the internal size grip widget.
+
+        ### Arguments:
+        * None: No public arguments.
+
+        ### Returns:
+        ttk.Sizegrip - The Sizegrip instance that provides resizing functionality.
+
+        ### Raises:
+        * None: Accessors return cached references only.
+        """
+        obj: Optional[ttk.Sizegrip] = self._get_data(key=_Keys.SIZEGRIP)
+        if obj is None:
+            obj = ttk.Sizegrip()
+        return obj
+
+    @__sizegrip.setter
+    def __sizegrip(self, value: ttk.Sizegrip) -> None:
+        """Set the internal size grip widget.
+
+        ### Arguments:
+        * value: ttk.Sizegrip - The Sizegrip instance to store as the size grip.
+
+        ### Returns:
+        None - Updates the internal reference for the size grip widget.
+
+        ### Raises:
+        * None: Assignment updates internal state without validation errors.
+        """
+        self._set_data(key=_Keys.SIZEGRIP, value=value, set_default_type=ttk.Sizegrip)
+
+
+class StatusBarTkFrame(tk.Frame, TkBase, _StatusBarMixin):
     """Tkinter status bar frame.
 
     Renders a label-driven status bar with a size grip for resizing actions.
     """
-
-    __status: tk.StringVar = None  # type: ignore
-    __status_label: tk.Label = None  # type: ignore
-    __sizegrip: ttk.Sizegrip = None  # type: ignore
 
     def __init__(self, master: Optional[tk.Misc], *args, **kwargs) -> None:
         """Initialise the Tkinter status bar.
@@ -89,15 +205,11 @@ class StatusBarTkFrame(tk.Frame, TkBase):
         self.__status_label.update_idletasks()
 
 
-class StatusBarTtkFrame(ttk.Frame, TkBase):
+class StatusBarTtkFrame(ttk.Frame, TkBase, _StatusBarMixin):
     """ttk status bar frame.
 
     Provides a themed status label with an optional size grip.
     """
-
-    __status: tk.StringVar = None  # type: ignore
-    __status_label: ttk.Label = None  # type: ignore
-    __sizegrip: ttk.Sizegrip = None  # type: ignore
 
     def __init__(self, master: Optional[tk.Misc], *args, **kwargs) -> None:
         """Initialise the ttk status bar.
