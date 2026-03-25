@@ -22,6 +22,16 @@ Allowed types:
 
 ## [Unreleased]
 
+## [1.2.4]
+
+### Chore
+
+- `chore: bump version to 1.2.4`
+
+### Documentation
+
+- `docs: fix README content for public PyPI and GitHub presentation`
+
 ## [1.2.3]
 
 ### Chore
