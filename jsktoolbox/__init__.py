@@ -13,5 +13,5 @@ from typing import Tuple
 
 __author__ = "Jacek 'Szumak' Kotlarski"
 __version_info__: Tuple[int, int, int] = (1, 2, 4)  # Major, Minor, Patch
-__suffix__: str = "-DEV"  # Optional suffix for pre-release versions
+__suffix__: str = ""  # Optional suffix for pre-release versions
 __version__: str = ".".join(map(str, __version_info__)) + __suffix__
