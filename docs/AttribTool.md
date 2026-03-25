@@ -118,11 +118,15 @@ Constants.FOO = "mutated"  # AttributeError
 
 ---
 
-## Best Practices for Key Storage
+## Best Practices for Immutable Keys
 
 **ReadOnlyClass for Safe Key Storage:**
 
-When working with dictionary keys throughout a project, it's recommended to use `ReadOnlyClass` metaclass to create immutable key containers. This prevents accidental modification of key names which could lead to hard-to-debug errors. Keys can be organized at different scopes:
+When working with dictionary keys throughout a project, use `ReadOnlyClass` metaclass to create immutable key containers. This prevents accidental modification of key names which could lead to hard-to-debug errors. Choose the narrowest sensible scope for every key set:
+
+- `__Keys` for a single class
+- `_Keys` for multiple classes within one module
+- public `NameKeys` classes for project-wide reuse in easy-to-find public key modules
 
 ### Module-level Keys (Private)
 
@@ -149,13 +153,13 @@ For keys used within a single class:
 class MyThread(BData, ThBaseObject):
     """Thread with typed data storage."""
 
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Private keys for this class only."""
         KEY_DATA: str = 'my_data'
         KEY_COUNT: str = 'count'
 
     def run(self):
-        data = self._get_data(self._Keys.KEY_DATA)
+        data = self._get_data(self.__Keys.KEY_DATA)
 ```
 
 ### Project-level Keys (Public)
@@ -163,18 +167,18 @@ class MyThread(BData, ThBaseObject):
 For large projects with shared keys across multiple modules:
 
 ```python
-# In keys.py or constants.py
-class Keys(object, metaclass=ReadOnlyClass):
+# In keys.py or service_keys.py
+class ServiceKeys(object, metaclass=ReadOnlyClass):
     """Global project keys."""
     KEY_CONFIG: str = 'config'
     KEY_LOGGER: str = 'logger'
 
 # In other modules
-from myproject.keys import Keys
+from myproject.keys import ServiceKeys
 
 class Service:
     def setup(self):
-        config = self._get_data(Keys.KEY_CONFIG)
+        config = self._get_data(ServiceKeys.KEY_CONFIG)
 ```
 
-This pattern ensures type safety and prevents runtime errors from typos or accidental key modification.
+When these keys are used with `BData`, remember that `_get_data()` should be treated as returning `Optional[T]`. If your public API exposes a strict type, handle `None` explicitly or provide a `default_value`.

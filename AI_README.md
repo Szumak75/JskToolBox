@@ -1,7 +1,7 @@
 # JskToolBox - Quick Reference for AI Agents
 
 **Version**: 1.2.dev  
-**Python**: 3.10, 3.11, 3.12 (3.13+ support pending)  
+**Python**: 3.10, 3.11, 3.12, 3.13  
 **Repository**: https://github.com/Szumak75/JskToolBox
 
 ## Installation
@@ -29,6 +29,15 @@ poetry run python generate_docs.py
 ```
 
 This creates all documentation files needed for AI agent integration.
+
+### 1a. Project Development Rules
+
+- Run project tooling through `poetry run <command>`
+- Use full type hints for methods, properties, and class-level constants
+- Keep class members sorted alphabetically inside each section
+- Structure classes with 80-character section markers such as `# #[PUBLIC METHODS]####################################################################`
+- Use Semantic Versioning in `X.Y.Z` format for code changes
+- Record every change, including documentation changes, in `CHANGELOG.md`
 
 ### 2. Preferred Import Patterns
 
@@ -143,30 +152,44 @@ raise Raise.error(
 
 #### Immutable Keys Pattern
 
-**Always use ReadOnlyClass** for dictionary keys to prevent accidental modification:
+Use `ReadOnlyClass` for all constant `BData` keys to reduce typo-related bugs.
+
+Pattern selection:
+
+- Single class only: `__Keys` inside the class
+- Shared across classes in one module: module-level `_Keys`
+- Shared across the project: public `NameKeys` class in an easy-to-find public keys module
 
 ```python
 from jsktoolbox.basetool import BData
 from jsktoolbox.attribtool import ReadOnlyClass
+from typing import Optional
 
 class MyClass(BData):
-    # Three patterns:
-    
-    # 1. Inside class (class-specific)
-    class _Keys(object, metaclass=ReadOnlyClass):
-        DATA: str = "data"
-    
-    def method(self):
-        self._set_data(key=self._Keys.DATA, value="test", set_default_type=str)
+    class __Keys(object, metaclass=ReadOnlyClass):
+        COUNT: str = "__count__"
+        DATA: str = "__data__"
 
-# 2. Module level (shared in module)
+    def __init__(self) -> None:
+        self._set_data(
+            key=self.__Keys.DATA,
+            value=None,
+            set_default_type=Optional[str],
+        )
+
 class _Keys(object, metaclass=ReadOnlyClass):
-    CONFIG: str = "config"
+    CONFIG: str = "__config__"
+    STATE: str = "__state__"
 
-# 3. Public (project-wide in separate module)
 class ProjectKeys(object, metaclass=ReadOnlyClass):
     APP_NAME: str = "app_name"
 ```
+
+For project-wide keys, the file location is flexible. In this repository there are several public `keys.py` and `*_keys.py` files inside module directories.
+
+#### BData Getter Rule
+
+Treat `_get_data(...)` as returning `Optional[T]`. If a property must return strict `T`, handle `None` explicitly or provide a `default_value`.
 
 ## Module Structure
 
@@ -209,7 +232,7 @@ def setup(name: str) -> Optional[Config]:
 5. **No super() for mixins**: Don't call __init__() on base tool classes
 6. **Configuration**: Use Config class for settings management
 7. **Logging**: Use LoggerClient for thread-safe logging
-8. **Python Version**: Target Python 3.10-3.12 (3.13+ may need updates)
+8. **Python Version**: Target Python 3.10-3.13
 
 ## Documentation Access Priority
 

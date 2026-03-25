@@ -16,7 +16,7 @@ Or if using Poetry:
 poetry add jsktoolbox
 ```
 
-**Python Requirements**: 3.10, 3.11, or 3.12 (Python 3.13+ support pending - threading changes)
+**Python Requirements**: 3.10, 3.11, 3.12, or 3.13
 
 ## Quick Start for AI Agents
 
@@ -55,6 +55,18 @@ from jsktoolbox.basetool.data import BData
 - TYPE_CHECKING provides full IDE support
 
 See `PREFERRED_IMPORTS.md` for the complete mapping.
+
+### 2a. Project Rules for Code Changes
+
+When editing this repository:
+
+- Run tools through `poetry run <command>`
+- Keep full type annotations on methods, properties, and class-level constants
+- Organize classes into ordered sections separated by 80-character markers
+- Sort methods and properties alphabetically inside each class section
+- Use Semantic Versioning `X.Y.Z` for code changes only
+- Update both `pyproject.toml` and `jsktoolbox/__init__.py` when a code change requires a version bump
+- Record all changes in `CHANGELOG.md` using `<type>: <subject>` entries
 
 ### 3. Core Modules
 
@@ -227,7 +239,7 @@ class MyThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     """
     
     # Immutable keys using ReadOnlyClass metaclass
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Immutable data keys."""
         DATA: str = "my_data"
     
@@ -240,7 +252,7 @@ class MyThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
         
         # Store data using BData methods with immutable key:
         self._set_data(
-            key=self._Keys.DATA,
+            key=self.__Keys.DATA,
             value=data,
             set_default_type=str
         )
@@ -248,11 +260,13 @@ class MyThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     @property
     def data(self) -> str:
         """Get data from BData storage."""
-        return self._get_data(
-            key=self._Keys.DATA,
-            set_default_type=str,
+        value: Optional[str] = self._get_data(
+            key=self.__Keys.DATA,
             default_value=""
         )
+        if value is None:
+            return ""
+        return value
     
     def run(self) -> None:
         """Thread execution."""
@@ -261,7 +275,7 @@ class MyThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
             self._sleep()
 ```
 
-**Python Version Note**: Requires Python 3.10-3.12. Python 3.13+ may need threading updates.
+**Python Version Note**: Supports Python 3.10-3.13.
 
 **Key Points**:
 - Don't call ThBaseObject.__init__() - it's a mixin
@@ -280,7 +294,7 @@ All data storage should use BData methods with immutable keys via `ReadOnlyClass
 1. **Inside class** (class-specific keys):
 ```python
 class MyClass(BData):
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         VALUE: str = "value"
 ```
 
@@ -298,13 +312,15 @@ class ClassA(BData):
 
 3. **Public class** (project-wide):
 ```python
-# myproject/keys.py
+# public keys module in a location that is easy to find
 class ProjectKeys(object, metaclass=ReadOnlyClass):
     """Public keys for entire project."""
     APP_NAME: str = "app_name"
 
 # Other modules import and use ProjectKeys
 ```
+
+For project-wide keys, the file path is not fixed. Prefer a public keys module that is easy to discover. In this repository, several module directories already expose `keys.py` or `*_keys.py` files.
 
 **Complete example**:
 
@@ -316,7 +332,7 @@ class MyClass(BData):
     """Class using type-safe data storage with immutable keys."""
     
     # Define immutable keys using ReadOnlyClass
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Immutable data keys."""
         VALUE: str = "value"
     
@@ -328,23 +344,28 @@ class MyClass(BData):
     def value(self) -> str:
         """Get value with type checking."""
         # Getter does NOT use set_default_type (deprecated)
-        return self._get_data(
-            key=self._Keys.VALUE,
+        value: Optional[str] = self._get_data(
+            key=self.__Keys.VALUE,
             default_value=""
         )
+        if value is None:
+            return ""
+        return value
     
     @value.setter
     def value(self, val: str) -> None:
         """Set value with type validation."""
         # Setter registers type constraint
         self._set_data(
-            key=self._Keys.VALUE,
+            key=self.__Keys.VALUE,
             value=val,
             set_default_type=str  # Type registered here
         )
 ```
 
 **Important**: Type constraints are registered in **setters only** using `_set_data()`. Getters use `_get_data()` without `set_default_type` parameter.
+
+Treat `_get_data()` as returning `Optional[T]`. If a getter or property exposes a strict type, handle the `None` case explicitly with `raise Raise.error(...)` or by using a suitable `default_value`.
 
 **Complex Generic Types** (New in 2024): BData supports complex types from `typing` module including `Optional[T]`, `Dict[K, V]`, `List[T]`, `Union[T1, T2]`, and nested combinations like `Optional[List[Dict[str, int]]]`. Type validation is recursive and checks all nested elements.
 
@@ -423,8 +444,8 @@ for module_name in api['modules']:
 
 ### 7. Version Compatibility
 
-- **Python**: 3.10, 3.11, 3.12 recommended
-- **Python 3.13+**: Threading may require library updates due to changes in threading.Thread internals
+- **Python**: 3.10, 3.11, 3.12, 3.13
+- **Python 3.13**: Supported
 - **Dependencies**: See `pyproject.toml`
 - **API Stability**: Check module docstrings for stability notes
 

@@ -2,6 +2,14 @@
 
 This directory contains the Sphinx-based API documentation for JskToolBox library.
 
+## Repository Rules
+
+- Run project commands through `poetry run <command>`
+- Keep docstrings current before rebuilding API documentation
+- Use Semantic Versioning `X.Y.Z` for code changes only
+- Update `CHANGELOG.md` for code and documentation changes
+- Keep class definitions organized with ordered section separators and full type annotations
+
 ## Structure
 
 ```
@@ -165,6 +173,7 @@ When working with this library, AI agents should:
 3. **Browse HTML docs**: Open `build/html/index.html` for detailed API info
 4. **Use examples**: See `EXAMPLES_FOR_AI.md` for usage patterns
 5. **Check module index**: See `API_INDEX.md` for quick module reference
+6. **Review repo rules**: Check `AGENTS.md` and `CHANGELOG.md` before changing code or docs
 
 ## CI/CD Integration
 

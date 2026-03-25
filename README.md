@@ -4,6 +4,51 @@ JskToolBox provides curated sets of Python classes that support system automatio
 configuration handling, and Tkinter-based GUI development. The documentation in `docs/` offers
 module-by-module guides; the sections below highlight the available references.
 
+## Development Rules
+
+The project uses Poetry for development workflows. Run project tools through `poetry run <command>`.
+
+### Code Formatting and Class Layout
+
+- Format Python code with `black` via `poetry run black .`
+- Validate style with `poetry run pycodestyle`
+- Use full type annotations for methods, properties, and class-level constants
+- Prefer single quotes unless double quotes are required
+- Organize each class into ordered sections separated by 80-character markers such as `# #[PUBLIC METHODS]####################################################################`
+
+Required class section order:
+
+1. `CONSTANTS`
+2. `CONSTRUCTOR`
+3. `PUBLIC PROPERTIES`
+4. `PROTECTED PROPERTIES`
+5. `PRIVATE PROPERTIES`
+6. `PUBLIC METHODS`
+7. `PROTECTED METHODS`
+8. `PRIVATE METHODS`
+9. `STATIC/CLASS METHODS`
+10. `EOF` as the single final marker of the module file
+
+Methods and properties inside each section must be sorted alphabetically.
+
+### Versioning and Changelog
+
+The project follows Semantic Versioning in `X.Y.Z` format.
+
+- `MAJOR` for breaking API changes
+- `MINOR` for backward-compatible features
+- `PATCH` for fixes, small improvements, and refactoring
+- Documentation-only changes do not require a version bump
+- Code changes must update both `pyproject.toml` and `jsktoolbox/__init__.py`
+
+Project history is tracked in [CHANGELOG.md](CHANGELOG.md). Changelog entries use the format `<type>: <subject>` with these types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
+
+For `BData` dictionary keys, use `ReadOnlyClass` constants with the narrowest sensible scope:
+
+- `__Keys` for a single class
+- `_Keys` for a shared module scope
+- public `NameKeys` classes for project-wide reuse in easy-to-find public keys modules
+
 ## Core Utilities
 
 - **AttribTool** – base classes that restrict dynamic attribute creation and manage declared fields  
@@ -49,6 +94,7 @@ Complete API reference documentation is available:
 - **Preferred Imports**: [PREFERRED_IMPORTS.md](PREFERRED_IMPORTS.md) - Lazy import patterns
 - **AI Agent Guide**: [AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md) - Integration guide for AI agents
 - **Code Examples**: [EXAMPLES_FOR_AI.md](EXAMPLES_FOR_AI.md) - Practical usage examples
+- **Project Changelog**: [CHANGELOG.md](CHANGELOG.md) - Versioned history of project changes
 - **Module Index**: [API_INDEX.md](API_INDEX.md) - Quick reference of all modules
 - **API Structure**: `api_structure.json` - Machine-readable API structure
 

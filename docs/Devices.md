@@ -195,9 +195,17 @@ Abstract base class defining the contract implemented by device connectors. It s
 **Usage Example:**
 
 ```python
+from inspect import currentframe
+from jsktoolbox.raisetool import Raise
+
 def ensure_connected(connector: IConnector) -> None:
     if not connector.connect():
-        raise RuntimeError("Unable to connect")
+        raise Raise.error(
+            "Unable to connect",
+            RuntimeError,
+            "Example",
+            currentframe(),
+        )
 ```
 
 ---

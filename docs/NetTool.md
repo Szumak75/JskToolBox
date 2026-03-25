@@ -61,8 +61,16 @@ is_alive(ip: str) -> bool
 
 **Usage Example:**
 ```python
+from inspect import currentframe
+from jsktoolbox.raisetool import Raise
+
 if not pinger.is_alive("203.0.113.10"):
-    raise RuntimeError("Host down")
+    raise Raise.error(
+        "Host down",
+        RuntimeError,
+        "Example",
+        currentframe(),
+    )
 ```
 
 ---

@@ -433,24 +433,24 @@ obj.my_method()
 - Memory management helpers
 - No constructor - it's a mixin
 
-**Best Practice - Immutable Keys**: Always use `ReadOnlyClass` metaclass for dictionary keys to prevent accidental modification:
+**Best Practice - Immutable Keys**: Use `ReadOnlyClass` for all constant `BData` keys to prevent accidental modification and reduce typo-related bugs.
 
 ```python
 from jsktoolbox.attribtool import ReadOnlyClass
 
 class MyClass(BData):
-    # ✓ RECOMMENDED: Immutable keys
-    class _Keys(object, metaclass=ReadOnlyClass):
+    # ✓ RECOMMENDED: private keys for one class
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Immutable data keys."""
         DATA: str = "data_key"
         COUNT: str = "count_key"
     
-    # ✗ AVOID: Mutable class variables
-    # _KEY_DATA = "data_key"  # Can be accidentally modified!
+    # ✗ AVOID: mutable class variables
+    # _KEY_DATA = "data_key"
 ```
 
 **Why ReadOnlyClass?**
-- Prevents accidental modification: `MyClass._Keys.DATA = "wrong"` → `AttributeError`
+- Prevents accidental modification: `MyClass._MyClass__Keys.DATA = "wrong"` → `AttributeError`
 - Self-documenting code
 - Standard pattern used throughout JskToolBox
 - IDE autocomplete support
@@ -459,29 +459,39 @@ class MyClass(BData):
 
 There are **three common patterns** for organizing keys with `ReadOnlyClass`:
 
-#### Pattern 1: Keys Inside Class (Class-Scoped)
+#### Pattern 1: Private `__Keys` Inside Class
 
 **Use when**: Keys are specific to a single class.
 
 ```python
 from jsktoolbox.basetool import BData
 from jsktoolbox.attribtool import ReadOnlyClass
+from typing import Optional
 
 class MyClass(BData):
     """Keys scoped to this class only."""
     
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Private keys for MyClass."""
-        DATA: str = "data"
-        CONFIG: str = "config"
+        CONFIG: str = "__config__"
+        DATA: str = "__data__"
     
-    def set_data(self, value: str):
+    def __init__(self) -> None:
         self._set_data(
-            key=self._Keys.DATA,
+            key=self.__Keys.DATA,
+            value=None,
+            set_default_type=Optional[str],
+        )
+
+    def set_data(self, value: str) -> None:
+        self._set_data(
+            key=self.__Keys.DATA,
             value=value,
-            set_default_type=str
+            set_default_type=str,
         )
 ```
+
+Python name mangling turns `self.__Keys` into `self._MyClass__Keys`, which avoids collisions in inheritance and mixin-heavy code.
 
 #### Pattern 2: Keys at Module Level (Shared Between Classes)
 
@@ -494,28 +504,28 @@ class _Keys(object, metaclass=ReadOnlyClass):
     
     For internal purpose only.
     """
-    CONFIG: str = "config"
-    STATE: str = "state"
-    LOGGER: str = "logger"
+    CONFIG: str = "__config__"
+    LOGGER: str = "__logger__"
+    STATE: str = "__state__"
 
 class ServiceA(BData):
     """Service A using shared keys."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         self._set_data(
             key=_Keys.CONFIG,
             value={},
-            set_default_type=dict
+            set_default_type=dict,
         )
 
 class ServiceB(BData):
     """Service B using same shared keys."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         self._set_data(
             key=_Keys.CONFIG,
             value={},
-            set_default_type=dict
+            set_default_type=dict,
         )
 ```
 
@@ -540,60 +550,65 @@ class Config(BData, NoDynamicAttributes):
         )
 ```
 
-#### Pattern 3: Public Keys (Project-Wide)
+#### Pattern 3: Public `NameKeys` (Project-Wide)
 
 **Use when**: Keys need to be shared across multiple modules/packages.
 
 ```python
-# myproject/keys.py - Public keys module
+# public keys module in a location that is easy to discover
 from jsktoolbox.attribtool import ReadOnlyClass
 
-class ProjectKeys(object, metaclass=ReadOnlyClass):
+class ProjectConfigKeys(object, metaclass=ReadOnlyClass):
     """Public keys for entire project.
     
     Can be imported and used by any module.
     """
-    VERSION: str = "app_version"
     APP_NAME: str = "app_name"
     CONFIG_PATH: str = "config_path"
     LOG_LEVEL: str = "log_level"
+    VERSION: str = "app_version"
 
 # myproject/component_a.py
 from jsktoolbox.basetool import BData
-from .keys import ProjectKeys
+from .keys import ProjectConfigKeys
 
 class ComponentA(BData):
     """Component using project-wide keys."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         self._set_data(
-            key=ProjectKeys.APP_NAME,
+            key=ProjectConfigKeys.APP_NAME,
             value="MyApp",
-            set_default_type=str
+            set_default_type=str,
         )
 
 # myproject/component_b.py
 from jsktoolbox.basetool import BData
-from .keys import ProjectKeys
+from .keys import ProjectConfigKeys
+from typing import Optional
 
 class ComponentB(BData):
     """Another component using same keys."""
     
     def get_app_name(self) -> str:
-        return self._get_data(
-            key=ProjectKeys.APP_NAME,
-            set_default_type=str,
-            default_value="Unknown"
+        value: Optional[str] = self._get_data(
+            key=ProjectConfigKeys.APP_NAME,
+            default_value="Unknown",
         )
+        if value is None:
+            return "Unknown"
+        return value
 ```
+
+In JskToolBox, project-visible keys are not restricted to one exact path. They can live in `keys.py` or `*_keys.py` files inside module directories, as long as they are easy to discover.
 
 **Summary of Patterns**:
 
 | Pattern | Scope | Naming | Use Case |
 |---------|-------|--------|----------|
-| Inside Class | Single class | `_Keys` (private) | Class-specific keys |
+| Inside Class | Single class | `__Keys` | Class-specific keys |
 | Module Level | Multiple classes in module | `_Keys` (private) | Shared within module |
-| Public Class | Entire project | `ProjectKeys` (public) | Cross-module sharing |
+| Public Class | Entire project | `NameKeys` (public) | Cross-module sharing |
 
 **Choose based on**:
 - **Scope**: How widely are keys shared?
@@ -614,13 +629,13 @@ class ApplicationConfig(BData):
     """Configuration storage using BData with immutable keys."""
     
     # Define immutable keys using ReadOnlyClass metaclass
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Immutable data keys - prevents accidental modification."""
         HOST: str = "host"
         PORT: str = "port"
         ENABLED: str = "enabled"
     
-    def __init__(self):
+    def __init__(self) -> None:
         # BData has no constructor - it's a mixin
         # Just start using _get_data and _set_data
         pass
@@ -629,56 +644,65 @@ class ApplicationConfig(BData):
     def host(self) -> str:
         """Get host with type checking."""
         # Getter does NOT use set_default_type - type is already registered
-        return self._get_data(
-            key=self._Keys.HOST,
-            default_value="localhost"
+        value: Optional[str] = self._get_data(
+            key=self.__Keys.HOST,
+            default_value="localhost",
         )
+        if value is None:
+            return "localhost"
+        return value
     
     @host.setter
     def host(self, value: str) -> None:
         """Set host with type validation."""
         # Setter registers type constraint
         self._set_data(
-            key=self._Keys.HOST,
+            key=self.__Keys.HOST,
             value=value,
-            set_default_type=str
+            set_default_type=str,
         )
     
     @property
     def port(self) -> int:
         """Get port with type checking."""
         # Getter does NOT use set_default_type
-        return self._get_data(
-            key=self._Keys.PORT,
-            default_value=8080
+        value: Optional[int] = self._get_data(
+            key=self.__Keys.PORT,
+            default_value=8080,
         )
+        if value is None:
+            return 8080
+        return value
     
     @port.setter
     def port(self, value: int) -> None:
         """Set port with type validation."""
         self._set_data(
-            key=self._Keys.PORT,
+            key=self.__Keys.PORT,
             value=value,
-            set_default_type=int
+            set_default_type=int,
         )
     
     @property
     def enabled(self) -> bool:
         """Get enabled status."""
         # Getter does NOT use set_default_type
-        return self._get_data(
-            key=self._Keys.ENABLED,
-            default_value=True
+        value: Optional[bool] = self._get_data(
+            key=self.__Keys.ENABLED,
+            default_value=True,
         )
+        if value is None:
+            return True
+        return value
     
     @enabled.setter
     def enabled(self, value: bool) -> None:
         """Set enabled status."""
         # Setter registers type constraint
         self._set_data(
-            key=self._Keys.ENABLED,
+            key=self.__Keys.ENABLED,
             value=value,
-            set_default_type=bool
+            set_default_type=bool,
         )
 
 # Usage
@@ -714,30 +738,30 @@ from jsktoolbox.attribtool import ReadOnlyClass
 class TypeSafeStore(BData):
     """Demonstrates new type constraint rules."""
     
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         VALUE: str = "value"
     
     def set_int_value(self, value: int) -> None:
         """Register type constraint for integer."""
         self._set_data(
-            key=self._Keys.VALUE,
+            key=self.__Keys.VALUE,
             value=value,
-            set_default_type=int  # Type registered here
+            set_default_type=int,  # Type registered here
         )
     
-    def get_value(self) -> int:
+    def get_value(self) -> Optional[int]:
         """Get value - type already registered."""
         return self._get_data(
-            key=self._Keys.VALUE,
-            default_value=0  # No set_default_type needed
+            key=self.__Keys.VALUE,
+            default_value=0,  # No set_default_type needed
         )
     
     def update_value(self, value: int) -> None:
         """Update existing value - type is preserved."""
         self._set_data(
-            key=self._Keys.VALUE,
+            key=self.__Keys.VALUE,
             value=value,
-            set_default_type=None  # None preserves existing int type
+            set_default_type=None,  # None preserves existing int type
         )
 
 # Example usage
@@ -757,7 +781,7 @@ except TypeError as e:
 # This will also raise TypeError - cannot change type
 try:
     store._set_data(
-        key=store._Keys.VALUE,
+        key=store._TypeSafeStore__Keys.VALUE,
         value="string",
         set_default_type=str  # Trying to change type from int to str
     )
@@ -765,9 +789,9 @@ except TypeError as e:
     print(f"Cannot change type: {e}")
 
 # To change type, delete first
-store._delete_data(store._Keys.VALUE)  # Remove value AND type
+store._delete_data(store._TypeSafeStore__Keys.VALUE)  # Remove value AND type
 store._set_data(
-    key=store._Keys.VALUE,
+    key=store._TypeSafeStore__Keys.VALUE,
     value="now a string",
     set_default_type=str  # New type registered
 )
@@ -784,7 +808,7 @@ from jsktoolbox.attribtool import ReadOnlyClass
 class DataStore(BData):
     """Store collections with type safety."""
     
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         ITEMS: str = "items"
         METADATA: str = "metadata"
     
@@ -792,52 +816,52 @@ class DataStore(BData):
         """Add item to list."""
         # Get existing list or default
         items = self._get_data(
-            key=self._Keys.ITEMS,
-            default_value=[]
+            key=self.__Keys.ITEMS,
+            default_value=[],
         )
         items.append(item)
         # Register type on first set, preserve on updates
         self._set_data(
-            key=self._Keys.ITEMS,
+            key=self.__Keys.ITEMS,
             value=items,
-            set_default_type=List  # Registers type on first call
+            set_default_type=List[str],  # Registers type on first call
         )
     
-    def get_items(self) -> List[str]:
+    def get_items(self) -> Optional[List[str]]:
         """Get items list."""
         return self._get_data(
-            key=self._Keys.ITEMS,
-            default_value=[]
+            key=self.__Keys.ITEMS,
+            default_value=[],
         )
     
     def set_metadata(self, key: str, value: str) -> None:
         """Set metadata entry."""
         metadata = self._get_data(
-            key=self._Keys.METADATA,
-            default_value={}
+            key=self.__Keys.METADATA,
+            default_value={},
         )
         metadata[key] = value
         self._set_data(
-            key=self._Keys.METADATA,
+            key=self.__Keys.METADATA,
             value=metadata,
-            set_default_type=Dict  # Registers type on first call
+            set_default_type=Dict[str, str],  # Registers type on first call
         )
     
     def get_metadata(self, key: str) -> str:
         """Get metadata entry."""
         metadata = self._get_data(
-            key=self._Keys.METADATA,
-            default_value={}
+            key=self.__Keys.METADATA,
+            default_value={},
         )
         return metadata.get(key, "")
     
     def clear_items(self) -> None:
         """Clear items efficiently."""
-        self._clear_data(self._Keys.ITEMS)
+        self._clear_data(self.__Keys.ITEMS)
     
     def delete_metadata(self) -> None:
         """Delete metadata completely."""
-        self._delete_data(self._Keys.METADATA)
+        self._delete_data(self.__Keys.METADATA)
 
 # Usage
 store = DataStore()
@@ -866,7 +890,7 @@ from jsktoolbox.attribtool import ReadOnlyClass
 class ComplexDataStore(BData):
     """Demonstrates support for complex generic types."""
     
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         OPTIONAL_STR: str = "optional_str"
         TYPED_DICT: str = "typed_dict"
         OPTIONAL_LIST: str = "optional_list"
@@ -877,49 +901,49 @@ class ComplexDataStore(BData):
     def set_optional_string(self, value: Optional[str]) -> None:
         """Set optional string - accepts str or None."""
         self._set_data(
-            key=self._Keys.OPTIONAL_STR,
+            key=self.__Keys.OPTIONAL_STR,
             value=value,
-            set_default_type=Optional[str]
+            set_default_type=Optional[str],
         )
     
     def set_typed_dict(self, value: Dict[str, int]) -> None:
         """Set dictionary with typed keys and values."""
         self._set_data(
-            key=self._Keys.TYPED_DICT,
+            key=self.__Keys.TYPED_DICT,
             value=value,
-            set_default_type=Dict[str, int]
+            set_default_type=Dict[str, int],
         )
     
     def set_optional_list(self, value: Optional[List[str]]) -> None:
         """Set optional list of strings."""
         self._set_data(
-            key=self._Keys.OPTIONAL_LIST,
+            key=self.__Keys.OPTIONAL_LIST,
             value=value,
-            set_default_type=Optional[List[str]]
+            set_default_type=Optional[List[str]],
         )
     
     def set_nested_dict(self, value: Dict[str, Optional[int]]) -> None:
         """Set dict with optional values."""
         self._set_data(
-            key=self._Keys.NESTED_DICT,
+            key=self.__Keys.NESTED_DICT,
             value=value,
-            set_default_type=Dict[str, Optional[int]]
+            set_default_type=Dict[str, Optional[int]],
         )
     
     def set_any_list(self, value: List[Any]) -> None:
         """Set list accepting any element types."""
         self._set_data(
-            key=self._Keys.LIST_ANY,
+            key=self.__Keys.LIST_ANY,
             value=value,
-            set_default_type=List[Any]
+            set_default_type=List[Any],
         )
     
     def set_complex_nested(self, value: List[Dict[str, int]]) -> None:
         """Set list of dictionaries with typed elements."""
         self._set_data(
-            key=self._Keys.COMPLEX_NESTED,
+            key=self.__Keys.COMPLEX_NESTED,
             value=value,
-            set_default_type=List[Dict[str, int]]
+            set_default_type=List[Dict[str, int]],
         )
 
 # Usage examples
@@ -1020,7 +1044,7 @@ print(f"Copy: {copy}")  # Modified
 ### BData Methods Reference
 
 **Storage Methods:**
-- `_get_data(key, set_default_type, default_value)` - Get data with type checking
+- `_get_data(key, default_value)` - Get data without registering a type
 - `_set_data(key, value, set_default_type)` - Set data with type validation
 - `_copy_data(key)` - Get deep copy of data
 - `_delete_data(key)` - Delete data and its type constraint
@@ -1039,7 +1063,7 @@ print(f"Copy: {copy}")  # Modified
 
 1. **Use ReadOnlyClass for keys** - Prevents accidental modification
    ```python
-   class _Keys(object, metaclass=ReadOnlyClass):
+   class __Keys(object, metaclass=ReadOnlyClass):
        DATA: str = "data"
    ```
 2. **Use properties** - Wrap _get_data/_set_data in properties
@@ -1058,7 +1082,7 @@ The library enforces explicit attribute declaration through `NoDynamicAttributes
 2. **BData** (inherited via ThBaseObject) - For storing thread data safely with ReadOnlyClass keys
 3. **Properties from ThBaseObject** - Can be assigned directly (they have setters)
 
-**Python Version Note**: Python 3.13 changed threading internals. Library designed for Python 3.10-3.12.
+**Python Version Note**: The library supports Python 3.10-3.13.
 
 ### Custom Thread with ThBaseObject and BData
 
@@ -1070,6 +1094,8 @@ from typing import List
 from jsktoolbox.basetool import ThBaseObject
 from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from jsktoolbox.logstool import LoggerClient
+from jsktoolbox.raisetool import Raise
+from inspect import currentframe
 import time
 
 class DataProcessorThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
@@ -1085,7 +1111,7 @@ class DataProcessorThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     """
     
     # Immutable keys for BData storage
-    class _Keys(object, metaclass=ReadOnlyClass):
+    class __Keys(object, metaclass=ReadOnlyClass):
         """Immutable data keys."""
         LOGGER: str = "logger"
         QUEUE: str = "data_queue"
@@ -1108,41 +1134,50 @@ class DataProcessorThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
         
         # Store data using BData methods with immutable keys:
         self._set_data(
-            key=self._Keys.LOGGER,
+            key=self.__Keys.LOGGER,
             value=logger,
-            set_default_type=LoggerClient
+            set_default_type=LoggerClient,
         )
         self._set_data(
-            key=self._Keys.QUEUE,
+            key=self.__Keys.QUEUE,
             value=[],
-            set_default_type=List
+            set_default_type=List[str],
         )
     
     @property
     def logger(self) -> LoggerClient:
         """Get logger from BData storage."""
-        return self._get_data(
-            key=self._Keys.LOGGER,
-            set_default_type=LoggerClient
+        value: Optional[LoggerClient] = self._get_data(
+            key=self.__Keys.LOGGER,
         )
+        if value is None:
+            raise Raise.error(
+                'Logger is not initialized.',
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
+        return value
     
     @property
     def data_queue(self) -> List[str]:
         """Get queue from BData storage."""
-        return self._get_data(
-            key=self._Keys.QUEUE,
-            set_default_type=List,
-            default_value=[]
+        value: Optional[List[str]] = self._get_data(
+            key=self.__Keys.QUEUE,
+            default_value=[],
         )
+        if value is None:
+            return []
+        return value
     
     def add_data(self, data: str) -> None:
         """Add data to processing queue."""
         queue = self.data_queue
         queue.append(data)
         self._set_data(
-            key=self._Keys.QUEUE,
+            key=self.__Keys.QUEUE,
             value=queue,
-            set_default_type=List
+            set_default_type=None,
         )
         self.logger.debug(f"Added to queue: {data}")
     
@@ -1155,9 +1190,9 @@ class DataProcessorThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
             if queue:
                 data = queue.pop(0)
                 self._set_data(
-                    key=self._Keys.QUEUE,
+                    key=self.__Keys.QUEUE,
                     value=queue,
-                    set_default_type=List
+                    set_default_type=None,
                 )
                 self._process_item(data)
             else:
@@ -1208,7 +1243,7 @@ For simpler cases without logging:
 import threading
 from typing import Dict
 from jsktoolbox.basetool import ThBaseObject
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 
 class SimpleWorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     """Simple worker using BData for state.
@@ -1216,9 +1251,9 @@ class SimpleWorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     Note: _c_name property auto-returns "SimpleWorkerThread" from BClasses.
     """
     
-    # BData keys (class constants)
-    _KEY_CONFIG = "config"
-    _KEY_COUNTER = "counter"
+    class __Keys(object, metaclass=ReadOnlyClass):
+        CONFIG: str = "config"
+        COUNTER: str = "counter"
     
     def __init__(self, config: dict):
         # _c_name is auto-generated property
@@ -1229,12 +1264,12 @@ class SimpleWorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
         
         # Store config using BData
         self._set_data(
-            key=self._KEY_CONFIG,
+            key=self.__Keys.CONFIG,
             value=config,
             set_default_type=Dict
         )
         self._set_data(
-            key=self._KEY_COUNTER,
+            key=self.__Keys.COUNTER,
             value=0,
             set_default_type=int
         )
@@ -1242,11 +1277,13 @@ class SimpleWorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     @property
     def counter(self) -> int:
         """Get counter value."""
-        return self._get_data(
-            key=self._KEY_COUNTER,
-            set_default_type=int,
+        value: Optional[int] = self._get_data(
+            key=self.__Keys.COUNTER,
             default_value=0
         )
+        if value is None:
+            return 0
+        return value
     
     def run(self) -> None:
         """Thread execution."""
@@ -1254,9 +1291,9 @@ class SimpleWorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
             # Increment counter
             count = self.counter + 1
             self._set_data(
-                key=self._KEY_COUNTER,
+                key=self.__Keys.COUNTER,
                 value=count,
-                set_default_type=int
+                set_default_type=None
             )
             print(f"Counter: {count}")
             self._sleep()
@@ -1290,9 +1327,9 @@ from jsktoolbox.logstool import LogFormatterTime
 from jsktoolbox.raisetool import Raise
 from jsktoolbox.systemtool import CommandLineParser
 import threading
-from typing import List
+from typing import List, Optional
 from jsktoolbox.basetool import ThBaseObject
-from jsktoolbox.attribtool import NoDynamicAttributes
+from jsktoolbox.attribtool import NoDynamicAttributes, ReadOnlyClass
 from queue import Queue
 from inspect import currentframe
 import logging
@@ -1305,10 +1342,10 @@ class WorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     _c_name property will be "WorkerThread" automatically.
     """
     
-    # BData keys (class constants)
-    _KEY_LOGGER = "logger"
-    _KEY_CONFIG = "config"
-    _KEY_TASKS = "tasks"
+    class __Keys(object, metaclass=ReadOnlyClass):
+        CONFIG: str = "config"
+        LOGGER: str = "logger"
+        TASKS: str = "tasks"
     
     def __init__(self, logger: LoggerClient, config: Config):
         # Uses auto-generated _c_name property
@@ -1319,17 +1356,17 @@ class WorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
         
         # Store using BData methods:
         self._set_data(
-            key=self._KEY_LOGGER,
+            key=self.__Keys.LOGGER,
             value=logger,
             set_default_type=LoggerClient
         )
         self._set_data(
-            key=self._KEY_CONFIG,
+            key=self.__Keys.CONFIG,
             value=config,
             set_default_type=Config
         )
         self._set_data(
-            key=self._KEY_TASKS,
+            key=self.__Keys.TASKS,
             value=Queue(),
             set_default_type=Queue
         )
@@ -1337,12 +1374,28 @@ class WorkerThread(threading.Thread, ThBaseObject, NoDynamicAttributes):
     @property
     def logger(self) -> LoggerClient:
         """Get logger."""
-        return self._get_data(key=self._KEY_LOGGER, set_default_type=LoggerClient)
+        value: Optional[LoggerClient] = self._get_data(key=self.__Keys.LOGGER)
+        if value is None:
+            raise Raise.error(
+                "Logger is not initialized.",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
+        return value
     
     @property
     def tasks(self) -> Queue:
         """Get tasks queue."""
-        return self._get_data(key=self._KEY_TASKS, set_default_type=Queue)
+        value: Optional[Queue] = self._get_data(key=self.__Keys.TASKS)
+        if value is None:
+            raise Raise.error(
+                "Tasks queue is not initialized.",
+                RuntimeError,
+                self._c_name,
+                currentframe(),
+            )
+        return value
     
     def add_task(self, task: str) -> None:
         """Add task to queue."""

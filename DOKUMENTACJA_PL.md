@@ -18,6 +18,54 @@ from jsktoolbox.logstool.logs import LoggerClient
 
 Zobacz `PREFERRED_IMPORTS.md` dla pełnej listy leniwych importów.
 
+## Zasady rozwoju projektu
+
+### Formatowanie kodu i struktura klas
+
+- Kod Python formatuj przez `poetry run black .`
+- Styl waliduj przez `poetry run pycodestyle`
+- Wszystkie metody, właściwości i stałe klasowe muszą mieć pełne typowanie
+- Metody i właściwości wewnątrz sekcji klasy muszą być posortowane alfabetycznie
+
+Każda klasa powinna być podzielona na sekcje separatorami długości `80` znaków:
+
+```python
+# #[PUBLIC METHODS]####################################################################
+```
+
+Obowiązkowa kolejność sekcji:
+
+1. `CONSTANTS`
+2. `CONSTRUCTOR`
+3. `PUBLIC PROPERTIES`
+4. `PROTECTED PROPERTIES`
+5. `PRIVATE PROPERTIES`
+6. `PUBLIC METHODS`
+7. `PROTECTED METHODS`
+8. `PRIVATE METHODS`
+9. `STATIC/CLASS METHODS`
+10. `EOF`
+
+`EOF` oznacza wyłącznie ostatnią linię pliku modułu. W module może istnieć tylko jeden znacznik `# #[EOF]...`.
+
+### Wersjonowanie
+
+Projekt stosuje Semantic Versioning w formacie `X.Y.Z`.
+
+- `MAJOR` oznacza breaking changes
+- `MINOR` oznacza nowe funkcjonalności kompatybilne wstecz
+- `PATCH` oznacza poprawki, drobne usprawnienia i refaktoryzację
+- zmiany wyłącznie dokumentacyjne nie wymagają podniesienia wersji
+- zmiany w kodzie wymagają aktualizacji obu plików: `pyproject.toml` oraz `jsktoolbox/__init__.py`
+
+### Changelog
+
+Historia zmian projektu jest prowadzona w `CHANGELOG.md`.
+
+- wpisy mają format `<type>: <subject>`
+- dozwolone typy: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- zmiany dokumentacyjne także należy odnotowywać w changelogu
+
 ## Szybki start
 
 ### Instalacja zależności
@@ -89,26 +137,68 @@ Po uruchomieniu `make docs` otrzymujesz:
 
 ### ReadOnlyClass - Wzorce immutable keys
 
-**Zawsze używaj** `ReadOnlyClass` dla kluczy słowników w BData:
+**Cel:** minimalizacja błędów literówek w nazwach kluczy słowników `BData`. Docelowo wszystkie stałe klucze słownikowe powinny być definiowane przez `ReadOnlyClass`.
+
+| Zasięg | Wzorzec | Nazwa klasy | Lokalizacja |
+| --- | --- | --- | --- |
+| Jedna klasa | `__Keys` | `__Keys` | wewnątrz klasy |
+| Cały moduł | `_Keys` | `_Keys` | nagłówek modułu |
+| Cały projekt | publiczna klasa `NazwaKeys` | `NazwaKeys` | dedykowany publiczny moduł z kluczami |
+
+**Reguła wyboru:**
+
+```text
+Klucz używany tylko w jednej klasie? -> __Keys
+Klucz współdzielony przez klasy w module? -> _Keys
+Klucz współdzielony w całym projekcie? -> NazwaKeys w publicznym module z kluczami
+```
+
+**Pattern 1: Private `__Keys`**
 
 ```python
 from jsktoolbox.attribtool import ReadOnlyClass
+from typing import Optional
 
-# Wzorzec 1: Klucze w klasie (zakres klasy)
 class MyClass(BData):
-    class _Keys(object, metaclass=ReadOnlyClass):
-        DATA: str = "data"
+    class __Keys(object, metaclass=ReadOnlyClass):
+        COUNT: str = "__count__"
+        DATA: str = "__data__"
 
-# Wzorzec 2: Klucze na poziomie modułu (współdzielone)
-class _Keys(object, metaclass=ReadOnlyClass):
-    CONFIG: str = "config"
-
-# Wzorzec 3: Klucze publiczne (cały projekt)
-class ProjectKeys(object, metaclass=ReadOnlyClass):
-    APP_NAME: str = "app_name"
+    def __init__(self) -> None:
+        self._set_data(
+            key=self.__Keys.DATA,
+            value=None,
+            set_default_type=Optional[str],
+        )
 ```
 
-**Dlaczego?** Zapobiega przypadkowej modyfikacji kluczy.
+Python stosuje tu name mangling, więc `self.__Keys` nie koliduje z klasami dziedziczącymi lub mixinami.
+
+**Pattern 2: Module-Level `_Keys`**
+
+```python
+class _Keys(object, metaclass=ReadOnlyClass):
+    CONFIG: str = "__config__"
+    STATE: str = "__state__"
+
+class ClassA(BData):
+    def setup(self) -> None:
+        self._set_data(key=_Keys.CONFIG, value={}, set_default_type=dict)
+
+class ClassB(BData):
+    def get_state(self) -> Optional[str]:
+        return self._get_data(key=_Keys.STATE)
+```
+
+**Pattern 3: Project-Wide `NazwaKeys`**
+
+```python
+class ResponseDbQueryStatusKeys(object, metaclass=ReadOnlyClass):
+    ERROR: str = "error"
+    OK: str = "ok"
+```
+
+Lokalizacja nie jest sztywna. W obecnym projekcie publiczne klasy z kluczami występują w modułach, np. `keys.py` lub `*_keys.py`. Jeśli istnieje tylko jeden wspólny moduł publiczny z kluczami, powinien być umieszczony w miejscu łatwo dostępnym bez szukania.
 
 ### BClasses - Automatyczne właściwości
 
@@ -155,11 +245,32 @@ Raise.error("Error message", ValueError, ...)  # Tylko tworzy, nie rzuca!
 ```python
 # ✓ PREFEROWANE - z kontrolą typów
 self._set_data(key=self._Keys.DATA, value="test", set_default_type=str)
-value = self._get_data(key=self._Keys.DATA, set_default_type=str)
+value = self._get_data(key=self._Keys.DATA, default_value="")
 
 # ✗ DZIAŁA ALE BEZ KONTROLI TYPÓW
 self._data[self._Keys.DATA] = "test"  # Brak walidacji typu
 ```
+
+**Ważne:** `_get_data(key)` należy traktować jako zwracające `Optional[T]`. Jeśli getter ma zwracać ścisły typ, trzeba jawnie obsłużyć `None`.
+
+```python
+from inspect import currentframe
+from typing import Optional
+
+@property
+def my_property(self) -> int:
+    value: Optional[int] = self._get_data(key=self._Keys.MY_KEY)
+    if value is None:
+        raise Raise.error(
+            "Value for MY_KEY is None",
+            ValueError,
+            self._c_name,
+            currentframe(),
+        )
+    return value
+```
+
+Można też użyć `default_value`, jeśli tak działa logika inicjalizacji.
 
 ### netaddresstool - Poprawne API
 

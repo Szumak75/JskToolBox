@@ -37,8 +37,42 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 - Formatuj kod przy użyciu `black`; po zmianach wykonaj `poetry run black .`.
 - Pliki Markdown formatuj przy użyciu `prettier`; uruchamiaj `poetry run prettier --write <ścieżka>`.
 - Przestrzegaj PEP 8 i waliduj styl poleceniem `poetry run pycodestyle`.
-- Dodawaj adnotacje typów do nowych funkcji i metod.
+- Dodawaj adnotacje typów do nowych funkcji, metod, właściwości i stałych klasowych.
 - Preferuj pojedyncze cudzysłowy, chyba że podwójne są wymagane.
+
+#### Struktura klas
+
+**Wymagania bezwzględne:**
+
+1. Kod klasy musi być podzielony na sekcje oddzielone separatorami.
+2. Separator musi mieć format `# #[SECTION NAME]#####...` i długość `80` znaków.
+3. Metody i właściwości w każdej sekcji muszą być posortowane alfabetycznie.
+4. Wszystkie metody i właściwości muszą posiadać pełne typowanie.
+
+**Wymagana kolejność sekcji:**
+
+1. `CONSTANTS`
+2. `CONSTRUCTOR`
+3. `PUBLIC PROPERTIES`
+4. `PROTECTED PROPERTIES`
+5. `PRIVATE PROPERTIES`
+6. `PUBLIC METHODS`
+7. `PROTECTED METHODS`
+8. `PRIVATE METHODS`
+9. `STATIC/CLASS METHODS`
+10. `EOF`
+
+**Doprecyzowanie `EOF`:**
+
+- `EOF` oznacza wyłącznie ostatnią linię pliku modułu.
+- Nie dodawaj sekcji `EOF` na końcu każdej klasy.
+- W pliku może istnieć tylko jeden znacznik `# #[EOF]...` i powinien znajdować się na końcu modułu.
+
+**Przykład separatora:**
+
+```python
+# #[PUBLIC METHODS]####################################################################
+```
 
 #### Standardy Docstringów
 
@@ -71,6 +105,72 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 - Klasy testowe dziedziczą po `unittest.TestCase`, a zestaw uruchamiaj przez `poetry run pytest`.
 - Zapewnij pokrycie testami każdej nowej funkcjonalności.
 
+### Wersjonowanie projektu
+
+Projekt stosuje Semantic Versioning w formacie `X.Y.Z` (`MAJOR.MINOR.PATCH`).
+
+**Wymagania bezwzględne:**
+
+1. Zmiany w kodzie projektu wymagają aktualizacji wersji zgodnie z Semantic Versioning.
+2. Zmiany obejmujące wyłącznie dokumentację projektową lub developerską nie wymagają zmiany wersji.
+3. Przy zwiększeniu `Y` (`MINOR`) należy zresetować `Z` do `0`.
+4. Przy zwiększeniu `X` (`MAJOR`) należy zresetować `Y` i `Z` do `0`.
+
+**Znaczenie numerów wersji:**
+
+- `X` (`MAJOR`) - breaking changes, incompatible API changes.
+- `Y` (`MINOR`) - new features, backward-compatible additions.
+- `Z` (`PATCH`) - bug fixes, small improvements, refactoring.
+
+**Przykłady:**
+
+```text
+Current: 0.2.3
+- Bug fix       -> 0.2.4
+- New feature   -> 0.3.0
+- Breaking API  -> 1.0.0
+```
+
+**Zmiany dokumentacyjne i pozakodowe:**
+
+- Zmiany wyłącznie w dokumentacji projektowej, dokumentacji developerskiej, planach prac lub zasadach repozytorium nie wymagają podniesienia wersji.
+- Takie zmiany nadal należy odnotować w odpowiedniej sekcji `CHANGELOG.md`.
+- Jeśli zmiana łączy modyfikację kodu i dokumentacji, obowiązuje versioning wynikający ze zmiany kodu.
+
+**Pliki do aktualizacji przy zmianie wersji:**
+
+1. `pyproject.toml`
+2. `jsktoolbox/__init__.py`
+
+**Checklist wersjonowania:**
+
+- [ ] Określ, czy zmiana obejmuje kod czy wyłącznie dokumentację / metadane developerskie
+- [ ] Jeśli zmiana obejmuje kod: określ typ zmiany `MAJOR`, `MINOR`, `PATCH`
+- [ ] Jeśli zmiana obejmuje kod: zaktualizuj obie wersje tak, aby były zgodne
+- [ ] Zawsze dopisz zmianę do właściwej sekcji `CHANGELOG.md`
+- [ ] Jeśli zmiana obejmuje kod: przygotuj commit message `chore: bump version to X.Y.Z`
+- [ ] Jeśli zmiana obejmuje kod: przygotuj tag `git tag vX.Y.Z`
+
+### Changelog
+
+Plik `CHANGELOG.md` zawiera szczegółową historię zmian projektu zgodnie z Semantic Versioning, z podziałem na typy zmian i odniesieniami do commitów lub pull requestów.
+
+**Format wpisów:**
+
+```text
+<type>: <subject>
+```
+
+**Dozwolone typy:**
+
+- `feat` - nowa funkcjonalność
+- `fix` - poprawka błędu
+- `docs` - zmiany w dokumentacji
+- `style` - formatowanie i podobne poprawki niesemantyczne
+- `refactor` - refaktoryzacja kodu
+- `test` - dodanie lub modyfikacja testów
+- `chore` - zmiany w narzędziach i konfiguracji
+
 ### Dokumentacja API
 
 - Pełna dokumentacja API jest generowana automatycznie za pomocą Sphinx.
@@ -89,7 +189,7 @@ Sekcje poniżej opisują preferowane ustawienia dla agentów Gemini, Copilot, Co
 
 #### Klasy bazowe z basetool
 
-Wszystkie klasy z modułu `jsktoolbox.basetool` to klasy bazowe dla dziedziczenia. Kluczowe właściwości:
+Wszystkie klasy z modułu `jsktoolbox.basetool` to klasy typu mixin dla dziedziczenia. Kluczowe właściwości:
 
 - **Brak własnego konstruktora** - nie wymagają wywołania `super().__init__()`
 - **Dodają właściwości i metody** - rozszerzają API klas pochodnych
@@ -98,23 +198,73 @@ Wszystkie klasy z modułu `jsktoolbox.basetool` to klasy bazowe dla dziedziczeni
 
 #### ReadOnlyClass - Immutable Keys
 
-Zawsze używaj `ReadOnlyClass` dla kluczy słowników w BData:
+Celem jest minimalizacja błędów literówek w nazwach kluczy słowników `BData`. Docelowo wszystkie stałe klucze słownikowe powinny być definiowane przez `ReadOnlyClass`.
+
+**Dobór wzorca:**
+
+| Zasięg | Wzorzec | Nazwa klasy | Lokalizacja |
+| --- | --- | --- | --- |
+| Jedna klasa | `__Keys` | `__Keys` | wewnątrz klasy |
+| Cały moduł | `_Keys` | `_Keys` | nagłówek modułu |
+| Cały projekt | publiczna klasa `NazwaKeys` | `NazwaKeys` | dedykowany publiczny moduł z kluczami |
+
+**Reguła decyzji:**
+
+```text
+Klucz używany tylko w jednej klasie? -> __Keys
+Klucz współdzielony przez klasy w module? -> _Keys
+Klucz współdzielony w całym projekcie? -> NazwaKeys w publicznym module z kluczami
+```
+
+**Wzorzec 1: Private `__Keys`**
+
+Używaj, gdy klucze są wykorzystywane wyłącznie przez jedną klasę.
 
 ```python
 from jsktoolbox.attribtool import ReadOnlyClass
+from typing import Optional
 
-# Wzorzec 1: Klucze wewnątrz klasy (zakres klasy)
 class MyClass(BData):
-    class _Keys(object, metaclass=ReadOnlyClass):
-        DATA: str = "data"
+    class __Keys(object, metaclass=ReadOnlyClass):
+        COUNT: str = '__count__'
+        DATA: str = '__data__'
 
-# Wzorzec 2: Klucze na poziomie modułu (współdzielone w module)
+    def __init__(self) -> None:
+        self._set_data(
+            key=self.__Keys.DATA,
+            value=None,
+            set_default_type=Optional[str],
+        )
+```
+
+Python stosuje tu name mangling: `self.__Keys` przechodzi do `self._NazwaKlasy__Keys`, co eliminuje przysłanianie między klasami dziedziczącymi lub mixinami.
+
+**Wzorzec 2: Module-Level `_Keys`**
+
+Używaj, gdy kilka klas w tym samym module współdzieli te same klucze.
+
+```python
 class _Keys(object, metaclass=ReadOnlyClass):
-    CONFIG: str = "config"
+    CONFIG: str = '__config__'
+    STATE: str = '__state__'
 
-# Wzorzec 3: Klucze publiczne (całe projekty)
-class ProjectKeys(object, metaclass=ReadOnlyClass):
-    APP_NAME: str = "app_name"
+class ClassA(BData):
+    def setup(self) -> None:
+        self._set_data(key=_Keys.CONFIG, value={}, set_default_type=dict)
+
+class ClassB(BData):
+    def get_state(self) -> Optional[str]:
+        return self._get_data(key=_Keys.STATE)
+```
+
+**Wzorzec 3: Project-Wide `NazwaKeys`**
+
+Używaj, gdy klucze są współdzielone celowo w całym projekcie. Lokalizacja nie jest sztywna: zwykle umieszcza się je w katalogu modułu, którego dotyczą, w `keys.py` lub w kilku plikach `*_keys.py`. Jeśli w projekcie istnieje jeden wspólny publiczny moduł kluczy, powinien być łatwo dostępny bez szukania.
+
+```python
+class ResponseDbQueryStatusKeys(object, metaclass=ReadOnlyClass):
+    ERROR: str = 'error'
+    OK: str = 'ok'
 ```
 
 Zobacz `EXAMPLES_FOR_AI.md` dla szczegółów każdego wzorca.
@@ -193,6 +343,43 @@ self._set_data("key", "text", set_default_type=str)  # Nowy typ
 - `_copy_data(key)` - deep copy wartości
 - `_delete_data(key)` - usuwa wartość i constraint typu
 - `_clear_data(key)` - usuwa wartość, zachowuje constraint
+
+**Obsługa `Optional[T]` w getterach:**
+
+`_get_data(key)` semantycznie zwraca `Optional[T]`. Jeśli getter ma zwracać ścisły typ `T`, należy jawnie obsłużyć `None`.
+
+```python
+from inspect import currentframe
+from typing import Optional
+
+@property
+def my_property(self) -> int:
+    value: Optional[int] = self._get_data(key=self._Keys.MY_KEY)
+    if value is None:
+        raise Raise.error(
+            'Value for MY_KEY is None',
+            ValueError,
+            self._c_name,
+            currentframe(),
+        )
+    return value
+```
+
+Można również użyć `default_value`, jeśli logika inicjalizacji tego wymaga.
+
+```python
+from typing import Optional
+
+@property
+def my_property(self) -> str:
+    value: Optional[str] = self._get_data(
+        key=self._Keys.MY_KEY,
+        default_value='abc',
+    )
+    if value is None:
+        return ''
+    return value
+```
 
 #### Lazy Imports
 
@@ -293,6 +480,7 @@ Raise.error("Invalid value", ValueError)
 - [ ] **AI_README.md** - Quick reference (EN)
 - [ ] **DOKUMENTACJA_PL.md** - Instrukcja użytkowania (PL)
 - [ ] **AGENTS.md** - Konfiguracja i ustalenia (PL)
+- [ ] **CHANGELOG.md** - Historia zmian projektu
 - [ ] **README.md** - Główna dokumentacja projektu (EN)
 - [ ] **docs/\*.md** - Dokumentacja modułów w katalogu docs (EN)
 - [ ] **PREFERRED_IMPORTS.md** - Jeśli dodano nowe lenive importy

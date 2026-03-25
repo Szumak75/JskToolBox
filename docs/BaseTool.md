@@ -113,7 +113,7 @@ def _get_data(self, key: str,
 **Usage Example:**
 
 ```python
-state = self._get_data("port", set_default_type=int, default_value=22)
+state = self._get_data("port", default_value=22)
 ```
 
 ### `BData._set_data()`
