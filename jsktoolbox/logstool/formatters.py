@@ -11,7 +11,7 @@ to render message payloads consistently across engines.
 
 from datetime import datetime
 
-from ..basetool.logs import BLogFormatter
+from ..basetool import BLogFormatter
 from ..datetool import Timestamp
 
 

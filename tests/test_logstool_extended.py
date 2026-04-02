@@ -312,6 +312,15 @@ def test_logger_engine_default_dispatch_for_warning_level() -> None:
     assert "warn" in stdout_buffer.getvalue()
 
 
+def test_logger_engine_typed_storage_validation() -> None:
+    engine = LoggerEngine()
+    with pytest.raises(TypeError):
+        engine._set_data(LogKeys.NO_CONF, ["invalid"])  # type: ignore[arg-type]
+    engine.add_engine(LogsLevelKeys.INFO, DummyEngine())
+    with pytest.raises(TypeError):
+        engine._set_data(LogKeys.CONF, {"INFO": ["invalid"]})  # type: ignore[list-item]
+
+
 def test_logger_engine_send_custom_engine() -> None:
     engine = LoggerEngine()
     dummy = DummyEngine()

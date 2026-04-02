@@ -29,6 +29,13 @@ Allowed types:
 
 - `test: extend logstool coverage for LoggerClient proxies, LoggerEngine dispatch, file rotation validation, syslog integer configuration, and ThLoggerProcessor edge cases`
 
+## [1.2.11]
+
+### Fixes
+
+- `fix: refactor logstool LoggerEngine to use BData accessors instead of direct storage writes`
+- `fix: add typed storage validation for logstool LoggerEngine configuration maps`
+
 ## [1.2.10]
 
 ### Refactor

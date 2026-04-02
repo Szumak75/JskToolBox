@@ -13,7 +13,7 @@ import time
 import threading
 from inspect import currentframe
 
-from typing import Optional
+from typing import Optional, Dict, List
 
 from .queue import LoggerQueue
 
@@ -21,10 +21,10 @@ from .keys import LogKeys, LogsLevelKeys
 
 from ..attribtool import NoDynamicAttributes, ReadOnlyClass
 from ..raisetool import Raise
-from ..basetool.logs import (
+from ..basetool import (
     BLoggerQueue,
+    ThBaseObject,
 )
-from ..basetool.threads import ThBaseObject
 from .engines import *
 
 
@@ -283,19 +283,24 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
         # make logs queue object
         self.logs_queue = LoggerQueue()
         # default logs level configuration
-        self._data[LogKeys.NO_CONF] = {}
-        self._data[LogKeys.NO_CONF][LogsLevelKeys.INFO] = [LoggerEngineStdout()]
-        self._data[LogKeys.NO_CONF][LogsLevelKeys.WARNING] = [LoggerEngineStdout()]
-        self._data[LogKeys.NO_CONF][LogsLevelKeys.NOTICE] = [LoggerEngineStdout()]
-        self._data[LogKeys.NO_CONF][LogsLevelKeys.DEBUG] = [LoggerEngineStderr()]
-        self._data[LogKeys.NO_CONF][LogsLevelKeys.ERROR] = [
-            LoggerEngineStdout(),
-            LoggerEngineStderr(),
-        ]
-        self._data[LogKeys.NO_CONF][LogsLevelKeys.CRITICAL] = [
-            LoggerEngineStdout(),
-            LoggerEngineStderr(),
-        ]
+        self._set_data(
+            key=LogKeys.NO_CONF,
+            value={
+                LogsLevelKeys.INFO: [LoggerEngineStdout()],
+                LogsLevelKeys.WARNING: [LoggerEngineStdout()],
+                LogsLevelKeys.NOTICE: [LoggerEngineStdout()],
+                LogsLevelKeys.DEBUG: [LoggerEngineStderr()],
+                LogsLevelKeys.ERROR: [
+                    LoggerEngineStdout(),
+                    LoggerEngineStderr(),
+                ],
+                LogsLevelKeys.CRITICAL: [
+                    LoggerEngineStdout(),
+                    LoggerEngineStderr(),
+                ],
+            },
+            set_default_type=Dict[str, List[ILoggerEngine]],
+        )
 
     def add_engine(self, log_level: str, engine: ILoggerEngine) -> None:
         """Attach an engine to a specific log level.
@@ -324,23 +329,33 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        if LogKeys.CONF not in self._data:
-            self._data[LogKeys.CONF] = {}
-            self._data[LogKeys.CONF][log_level] = [engine]
+        configured: Optional[Dict[str, List[ILoggerEngine]]] = self._get_data(
+            key=LogKeys.CONF
+        )
+        config_map: Dict[str, List[ILoggerEngine]] = (
+            dict(configured) if configured is not None else {}
+        )
+        if log_level not in config_map:
+            config_map[log_level] = [engine]
         else:
-            if log_level not in self._data[LogKeys.CONF].keys():
-                self._data[LogKeys.CONF][log_level] = [engine]
-            else:
-                test = False
-                for i in range(0, len(self._data[LogKeys.CONF][log_level])):
-                    if (
-                        self._data[LogKeys.CONF][log_level][i].__class__
-                        == engine.__class__
-                    ):
-                        self._data[LogKeys.CONF][log_level][i] = engine
-                        test = True
-                if not test:
-                    self._data[LogKeys.CONF][log_level].append(engine)
+            engine_list: List[ILoggerEngine] = list(config_map[log_level])
+            test = False
+            for index, item in enumerate(engine_list):
+                if item.__class__ == engine.__class__:
+                    engine_list[index] = engine
+                    test = True
+                    break
+            if not test:
+                engine_list.append(engine)
+            config_map[log_level] = engine_list
+        if configured is None:
+            self._set_data(
+                key=LogKeys.CONF,
+                value=config_map,
+                set_default_type=Dict[str, List[ILoggerEngine]],
+            )
+        else:
+            self._set_data(key=LogKeys.CONF, value=config_map)
 
     def send(self) -> None:
         """Dequeue pending messages and dispatch them to engines.
@@ -355,14 +370,20 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
                     # get tuple(log_level, message)
                     log_level, message = item
                     # check if has have configured logging subsystem
-                    if LogKeys.CONF in self._data and len(self._data[LogKeys.CONF]) > 0:
-                        if log_level in self._data[LogKeys.CONF]:
-                            for l_eng in self._data[LogKeys.CONF][log_level]:
+                    configured: Optional[Dict[str, List[ILoggerEngine]]] = (
+                        self._get_data(key=LogKeys.CONF)
+                    )
+                    if configured is not None and len(configured) > 0:
+                        if log_level in configured:
+                            for l_eng in configured[log_level]:
                                 engine: ILoggerEngine = l_eng
                                 engine.send(message)
                     else:
-                        if log_level in self._data[LogKeys.NO_CONF]:
-                            for l_eng in self._data[LogKeys.NO_CONF][log_level]:
+                        default_map: Optional[Dict[str, List[ILoggerEngine]]] = (
+                            self._get_data(key=LogKeys.NO_CONF)
+                        )
+                        if default_map is not None and log_level in default_map:
+                            for l_eng in default_map[log_level]:
                                 engine: ILoggerEngine = l_eng
                                 engine.send(message)
                 else:

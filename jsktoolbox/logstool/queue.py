@@ -12,7 +12,7 @@ dispatch immediately.
 from typing import Optional, List
 
 from ..attribtool import NoDynamicAttributes
-from ..basetool.classes import BClasses
+from ..basetool import BClasses
 from .keys import LogsLevelKeys
 from ..raisetool import Raise
 from inspect import currentframe

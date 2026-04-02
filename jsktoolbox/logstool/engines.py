@@ -22,9 +22,9 @@ from .keys import LogKeys, SysLogKeys
 
 from ..attribtool import NoDynamicAttributes
 from ..raisetool import Raise
-from ..basetool.data import BData
+from ..basetool import BData
 from ..systemtool import PathChecker
-from ..basetool.logs import (
+from ..basetool import (
     BLoggerEngine,
 )
 from ..libs.interfaces.logger_engine import ILoggerEngine
@@ -70,7 +70,7 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Output is written to stdout.
         """
-        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
         if formatter:
             message = formatter.format(message, self.name)
         sys.stdout.write(f"{message}")
@@ -114,7 +114,7 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Output is written to stderr.
         """
-        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
         if formatter:
             message = formatter.format(message, self.name)
         sys.stderr.write(f"{message}")
@@ -164,7 +164,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         ### Raises:
         * ValueError: Raised when `logfile` is not configured.
         """
-        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
         if formatter:
             message = formatter.format(message, self.name)
             if self.logfile is None:
@@ -393,8 +393,9 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
 
     def __del__(self) -> None:
         try:
-            s_slog: syslog = self._get_data(key=LogKeys.SYSLOG)  # type: ignore
-            s_slog.closelog()
+            s_slog: Optional[ModuleType] = self._get_data(key=LogKeys.SYSLOG)
+            if s_slog is not None:
+                s_slog.closelog()
         except:
             pass
         self._set_data(key=LogKeys.SYSLOG, value=None)
@@ -445,8 +446,9 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
                     currentframe(),
                 )
         try:
-            s_slog: syslog = self._get_data(key=LogKeys.SYSLOG)  # type: ignore
-            s_slog.closelog()
+            s_slog: Optional[ModuleType] = self._get_data(key=LogKeys.SYSLOG)
+            if s_slog is not None:
+                s_slog.closelog()
         except:
             pass
         self._set_data(key=LogKeys.SYSLOG, value=None)
@@ -495,8 +497,9 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
                     currentframe(),
                 )
         try:
-            s_slog: syslog = self._get_data(key=LogKeys.SYSLOG)  # type: ignore
-            s_slog.closelog()
+            s_slog: Optional[ModuleType] = self._get_data(key=LogKeys.SYSLOG)
+            if s_slog is not None:
+                s_slog.closelog()
         except:
             pass
         self._set_data(key=LogKeys.SYSLOG, value=None)
@@ -510,7 +513,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Message is forwarded to syslog with configured facility/level.
         """
-        formatter: BLogFormatter = self._get_data(key=LogKeys.FORMATTER)  # type: ignore
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
         if formatter:
             message = formatter.format(message, self.name)
         if self._get_data(key=LogKeys.SYSLOG) is None:
