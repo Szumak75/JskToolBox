@@ -90,9 +90,16 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         * value: Optional[Union[str, int, float, bool, List]] - Payload to store.
         * desc: Optional[str] - Optional human-friendly description.
         """
-        self._data[_Keys.NAME] = name
-        self._data[_Keys.VALUE] = value
-        self._data[_Keys.DESC] = desc
+        self._set_data(key=_Keys.NAME, value=None, set_default_type=Optional[str])
+        self._set_data(
+            key=_Keys.VALUE,
+            value=None,
+            set_default_type=Optional[Union[str, int, float, bool, List]],
+        )
+        self._set_data(key=_Keys.DESC, value=None, set_default_type=Optional[str])
+        self.name = name
+        self.value = value
+        self.desc = desc
 
     def __repr__(self) -> str:
         """Return representation class string.
@@ -125,7 +132,9 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
             tmp += f"{self.value}" if self.value is not None else ""
         else:
             tmp += (
-                '"{}"'.format(self.value.strip("\"'")) if self.value is not None else ""
+                '"{}"'.format(str(self.value).strip().strip("\"'"))
+                if self.value is not None
+                else ""
             )
         if tmp:
             tmp += f" # {self.desc}" if self.desc is not None else ""
@@ -180,8 +189,15 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         * ValueError: Raised when the trimmed name becomes empty.
         """
         if name is None:
-            self._set_data(key=_Keys.NAME, value=None, set_default_type=Optional[str])
+            self._set_data(key=_Keys.NAME, value=None)
         else:
+            if not isinstance(name, str):
+                raise Raise.error(
+                    f"Expected 'str' type, received: '{type(name)}'",
+                    TypeError,
+                    self._c_name,
+                    currentframe(),
+                )
             cleaned = name.strip()
             if not cleaned:
                 raise Raise.error(
@@ -190,9 +206,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
                     self._c_name,
                     currentframe(),
                 )
-            self._set_data(
-                key=_Keys.NAME, value=cleaned, set_default_type=Optional[str]
-            )
+            self._set_data(key=_Keys.NAME, value=cleaned)
 
     def parser(self, value: str) -> None:
         """Parse raw string input ensuring valid state.
@@ -203,7 +217,13 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         ### Raises:
         * ValueError: Raised when the parsed value is empty after trimming.
         """
-
+        if not isinstance(value, str):
+            raise Raise.error(
+                f"Expected 'str' type, received: '{type(value)}'",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         if not value.strip():
             raise Raise.error(
                 "Variable value cannot be empty.",
@@ -240,11 +260,7 @@ class VariableModel(BData, IModel, NoDynamicAttributes):
         ### Arguments:
         * value: Optional[Union[str, int, float, bool, List]] - Payload.
         """
-        self._set_data(
-            key=_Keys.VALUE,
-            value=value,
-            set_default_type=Optional[Union[str, int, float, bool, List]],
-        )
+        self._set_data(key=_Keys.VALUE, value=value)
 
 
 class SectionModel(BData, IModel, NoDynamicAttributes):
@@ -260,9 +276,13 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         ### Arguments:
         * name: Optional[str] - Optional section header value.
         """
-        self._data[_Keys.NAME] = None
-        self._data[_Keys.VARIABLES] = []
-        self.parser(name)
+        self._set_data(key=_Keys.NAME, value=None, set_default_type=Optional[str])
+        self._set_data(
+            key=_Keys.VARIABLES,
+            value=[],
+            set_default_type=List[VariableModel],
+        )
+        self.name = name
 
     def __repr__(self) -> str:
         """Return representation class string.
@@ -289,8 +309,8 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         """
         tmp: List = []
         tmp.append(self)
-        for item in self._data[_Keys.VARIABLES]:
-            tmp.append(item.dump())
+        for item in self.variables:
+            tmp.append(item.dump)
         return copy(tmp)
 
     def parser(self, value: Optional[str]) -> None:
@@ -304,9 +324,16 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         """
         if value is None:
             return
+        if not isinstance(value, str):
+            raise Raise.error(
+                f"Expected 'str' type, received: '{type(value)}'",
+                TypeError,
+                self._c_name,
+                currentframe(),
+            )
         tmp: str = f"{value}".strip("[] \n")
         if tmp:
-            self._data[_Keys.NAME] = tmp
+            self._set_data(key=_Keys.NAME, value=tmp)
         else:
             raise Raise.error(
                 f"Expected String name, received: '{tmp}'.",
@@ -333,15 +360,18 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         ### Returns:
         [Optional[str]] - Section name.
         """
-        return self._data[_Keys.NAME]
+        return self._get_data(key=_Keys.NAME)
 
     @name.setter
-    def name(self, name: str) -> None:
+    def name(self, name: Optional[str]) -> None:
         """Set name property.
 
         ### Arguments:
-        * name: str - New section name.
+        * name: Optional[str] - New section name.
         """
+        if name is None:
+            self._set_data(key=_Keys.NAME, value=None)
+            return
         self.parser(name)
 
     def get_variable(self, name: str) -> Optional[VariableModel]:
@@ -353,8 +383,8 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         ### Returns:
         [Optional[VariableModel]] - Matching variable instance or None.
         """
-        name = str(name)
-        for item in self._data[_Keys.VARIABLES]:
+        name = str(name).strip()
+        for item in self.variables:
             if item.name == name:
                 return item
         return None
@@ -395,7 +425,10 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        self._data[_Keys.VARIABLES].append(VariableModel(name, value, desc))
+        normalized_name: Optional[str] = name.strip() if isinstance(name, str) else name
+        items: List[VariableModel] = copy(self.variables)
+        items.append(VariableModel(normalized_name, value, desc))
+        self._set_data(key=_Keys.VARIABLES, value=items)
 
     @property
     def variables(self) -> List[VariableModel]:
@@ -404,7 +437,11 @@ class SectionModel(BData, IModel, NoDynamicAttributes):
         ### Returns:
         [List[VariableModel]] - Mutable list of section variables.
         """
-        return self._data[_Keys.VARIABLES]
+        items: Optional[List[VariableModel]] = self._get_data(key=_Keys.VARIABLES)
+        if items is None:
+            self._set_data(key=_Keys.VARIABLES, value=[])
+            items = self._get_data(key=_Keys.VARIABLES)
+        return items  # type: ignore[return-value]
 
 
 class DataProcessor(BData, NoDynamicAttributes):
@@ -420,7 +457,12 @@ class DataProcessor(BData, NoDynamicAttributes):
         ### Purpose:
         Ensures the internal container for sections exists.
         """
-        self._data[_Keys.DATA] = []
+        self._set_data(
+            key=_Keys.DATA,
+            value=[],
+            set_default_type=List[SectionModel],
+        )
+        self._set_data(key=_Keys.MAIN, value=None, set_default_type=Optional[str])
 
     @property
     def main_section(self) -> Optional[str]:
@@ -440,7 +482,7 @@ class DataProcessor(BData, NoDynamicAttributes):
         """
         if not isinstance(name, str):
             name = str(name)
-        self._set_data(key=_Keys.MAIN, value=name, set_default_type=Optional[str])
+        self._set_data(key=_Keys.MAIN, value=name)
         self.add_section(name)
 
     @property
@@ -451,7 +493,8 @@ class DataProcessor(BData, NoDynamicAttributes):
         [Tuple] - Tuple containing names of tracked sections.
         """
         out = []
-        for item in self._data[_Keys.DATA]:
+        items: Optional[List[SectionModel]] = self._get_data(key=_Keys.DATA)
+        for item in items or []:
             out.append(item.name)
         return tuple(sorted(out))
 
@@ -466,7 +509,9 @@ class DataProcessor(BData, NoDynamicAttributes):
         """
         sm = SectionModel(str(name))
         if sm.name not in self.sections:
-            self._data[_Keys.DATA].append(sm)
+            items: List[SectionModel] = copy(self._get_data(key=_Keys.DATA) or [])
+            items.append(sm)
+            self._set_data(key=_Keys.DATA, value=items)
         return f"{sm.name}"
 
     def get_section(self, name: str) -> Optional[SectionModel]:
@@ -479,7 +524,8 @@ class DataProcessor(BData, NoDynamicAttributes):
         [Optional[SectionModel]] - Matching section or None.
         """
         sm = SectionModel(name)
-        for item in self._data[_Keys.DATA]:
+        items: Optional[List[SectionModel]] = self._get_data(key=_Keys.DATA)
+        for item in items or []:
             if item.name == sm.name:
                 return item
         return None
