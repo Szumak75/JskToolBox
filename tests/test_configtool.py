@@ -163,5 +163,17 @@ label=
         with self.assertRaises(TypeError):
             cfg.has_varname("configtool", 3.14)  # type: ignore[arg-type]
 
+    def test_07_config_typed_storage_validation(self) -> None:
+        """Test nr 07."""
+        cfg = Config(self.filename, "configtool")
+        fp_key = cfg._Config__Keys.FP
+        dp_key = cfg._Config__Keys.DP
+        regex_key = cfg._Config__Keys.RE_SECTION
+        with self.assertRaises(TypeError):
+            cfg._set_data(key=fp_key, value="invalid")
+        with self.assertRaises(TypeError):
+            cfg._set_data(key=dp_key, value="invalid")
+        self.assertIsNotNone(cfg._get_data(key=regex_key))
+
 
 # #[EOF]#######################################################################

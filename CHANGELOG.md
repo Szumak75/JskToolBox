@@ -25,6 +25,24 @@ Allowed types:
 
 ## [Unreleased]
 
+## [1.2.9]
+
+### Refactor
+
+- `refactor: move configtool FileProcessor keys registry into private FileProcessor.__Keys class`
+
+## [1.2.8]
+
+### Fixes
+
+- `fix: move configtool main keys registry into private Config.__Keys class`
+- `fix: refactor configtool Config storage to use BData accessors instead of direct storage writes`
+- `fix: enforce strict runtime type validation for Config helper object and regex storage`
+
+### Test
+
+- `test: extend configtool Config coverage for typed storage behavior`
+
 ## [1.2.7]
 
 ### Fixes

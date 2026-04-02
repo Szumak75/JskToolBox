@@ -15,21 +15,17 @@ from ...basetool.data import BData
 from ...systemtool import PathChecker
 
 
-class _Keys(object, metaclass=ReadOnlyClass):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
-
-    FILE: str = "__file__"
-
-
 class FileProcessor(BData, NoDynamicAttributes):
     """Handle filesystem interactions for configuration files.
 
     ### Purpose:
     Offers helpers to validate paths, read, and persist config data.
     """
+
+    class __Keys(object, metaclass=ReadOnlyClass):
+        """Private key registry for FileProcessor storage."""
+
+        FILE: str = "__file__"
 
     def __init__(self) -> None:
         """Initialise FileProcessor instance.
@@ -45,7 +41,7 @@ class FileProcessor(BData, NoDynamicAttributes):
         [Optional[str]] - Absolute path or None when not set.
         """
         out: Optional[PathChecker] = self._get_data(
-            key=_Keys.FILE,
+            key=self.__Keys.FILE,
         )
         if out:
             return out.path
@@ -59,7 +55,7 @@ class FileProcessor(BData, NoDynamicAttributes):
         * path: str - Path to configuration file.
         """
         self._set_data(
-            key=_Keys.FILE,
+            key=self.__Keys.FILE,
             set_default_type=PathChecker,
             value=PathChecker(path),
         )
@@ -74,7 +70,7 @@ class FileProcessor(BData, NoDynamicAttributes):
         ### Raises:
         * AttributeError: Path not configured prior to call.
         """
-        obj: Optional[PathChecker] = self._get_data(key=_Keys.FILE)
+        obj: Optional[PathChecker] = self._get_data(key=self.__Keys.FILE)
         if obj:
             return obj.exists and (obj.is_file or obj.is_symlink) and not obj.is_dir
         raise Raise.error(
@@ -96,7 +92,7 @@ class FileProcessor(BData, NoDynamicAttributes):
         """
         if self.file_exists:
             return True
-        obj: Optional[PathChecker] = self._get_data(key=_Keys.FILE)
+        obj: Optional[PathChecker] = self._get_data(key=self.__Keys.FILE)
         if obj:
             if obj.exists and obj.is_dir:
                 raise Raise.error(
