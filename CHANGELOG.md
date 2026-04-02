@@ -25,6 +25,57 @@ Allowed types:
 
 ## [Unreleased]
 
+## [1.2.9]
+
+### Refactor
+
+- `refactor: move configtool FileProcessor keys registry into private FileProcessor.__Keys class`
+
+## [1.2.8]
+
+### Fixes
+
+- `fix: move configtool main keys registry into private Config.__Keys class`
+- `fix: refactor configtool Config storage to use BData accessors instead of direct storage writes`
+- `fix: enforce strict runtime type validation for Config helper object and regex storage`
+
+### Test
+
+- `test: extend configtool Config coverage for typed storage behavior`
+
+## [1.2.7]
+
+### Fixes
+
+- `fix: refactor configtool DataProcessor to use BData accessors instead of direct storage writes`
+- `fix: enforce strict runtime type validation for DataProcessor section storage`
+
+### Test
+
+- `test: extend configtool data processor coverage for typed section storage behavior`
+
+## [1.2.6]
+
+### Fixes
+
+- `fix: refactor configtool SectionModel to use BData accessors instead of direct storage writes`
+- `fix: enforce strict runtime type validation for SectionModel name and variables storage`
+
+### Test
+
+- `test: extend configtool data model coverage for SectionModel typed storage behavior`
+
+## [1.2.5]
+
+### Fixes
+
+- `fix: refactor configtool VariableModel to use BData accessors instead of direct storage writes`
+- `fix: enforce strict runtime type validation for VariableModel constructor, setters, and parser`
+
+### Test
+
+- `test: extend configtool data model coverage for VariableModel typed storage behavior`
+
 ## [1.2.4]
 
 ### Chore

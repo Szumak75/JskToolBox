@@ -8,7 +8,7 @@ Purpose: Main class for creating and processes config files.
 
 import re
 from inspect import currentframe
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Pattern
 
 from ..attribtool import NoDynamicAttributes, ReadOnlyClass
 from ..raisetool import Raise
@@ -18,34 +18,30 @@ from .libs.data import DataProcessor
 from .libs.data import SectionModel
 
 
-class _Keys(object, metaclass=ReadOnlyClass):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
-
-    DESC: str = "__desc__"
-    DP: str = "__data_processor__"
-    FP: str = "__file_processor__"
-    RE_BOOL: str = "__re_bool__"
-    RE_DESC: str = "__re_description__"
-    RE_FALSE: str = "__re_false__"
-    RE_FLOAT: str = "__re_float__"
-    RE_INT: str = "__re_integer__"
-    RE_LIST: str = "__re_list__"
-    RE_SECTION: str = "__re_section__"
-    RE_TRUE: str = "__re_true__"
-    RE_VAR: str = "__re_variable__"
-    VALUE: str = "__value__"
-    VARNAME: str = "__varname__"
-
-
 class Config(BData, NoDynamicAttributes):
     """High-level configuration manager combining data and file processors.
 
     ### Purpose:
     Loads, modifies, and saves INI-like configuration files.
     """
+
+    class __Keys(object, metaclass=ReadOnlyClass):
+        """Private key registry for Config storage."""
+
+        DESC: str = "__desc__"
+        DP: str = "__data_processor__"
+        FP: str = "__file_processor__"
+        RE_BOOL: str = "__re_bool__"
+        RE_DESC: str = "__re_description__"
+        RE_FALSE: str = "__re_false__"
+        RE_FLOAT: str = "__re_float__"
+        RE_INT: str = "__re_integer__"
+        RE_LIST: str = "__re_list__"
+        RE_SECTION: str = "__re_section__"
+        RE_TRUE: str = "__re_true__"
+        RE_VAR: str = "__re_variable__"
+        VALUE: str = "__value__"
+        VARNAME: str = "__varname__"
 
     def __init__(
         self,
@@ -61,26 +57,61 @@ class Config(BData, NoDynamicAttributes):
         * auto_create: bool - Create file on demand when True.
         """
         self._set_data(
-            key=_Keys.FP, value=FileProcessor(), set_default_type=FileProcessor
+            key=self.__Keys.FP, value=FileProcessor(), set_default_type=FileProcessor
         )
         self._set_data(
-            key=_Keys.DP, value=DataProcessor(), set_default_type=DataProcessor
+            key=self.__Keys.DP, value=DataProcessor(), set_default_type=DataProcessor
+        )
+        self._set_data(
+            key=self.__Keys.RE_SECTION,
+            value=re.compile(r"\s{0,}\[.*\]\s{0,}"),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_DESC,
+            value=re.compile(r"\s{0,}#"),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_VAR,
+            value=re.compile(r"\s{0,}\S{1,}\s{0,}="),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_INT,
+            value=re.compile(r"^\d{1,}$"),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_FLOAT,
+            value=re.compile(r"^\d{1,}\.\d{1,}$"),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_BOOL,
+            value=re.compile(r"^true|false|yes|no$", re.IGNORECASE),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_TRUE,
+            value=re.compile(r"^true|yes$", re.IGNORECASE),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_FALSE,
+            value=re.compile(r"^false|no$", re.IGNORECASE),
+            set_default_type=re.Pattern,
+        )
+        self._set_data(
+            key=self.__Keys.RE_LIST,
+            value=re.compile(r"^\[.*\]$"),
+            set_default_type=re.Pattern,
         )
         self.__fp.file = filename
         self.__dp.main_section = main_section_name
         if auto_create:
             if not self.__fp.file_exists:
                 self.__fp.file_create()
-        # compile regex
-        self._data[_Keys.RE_SECTION] = re.compile(r"\s{0,}\[.*\]\s{0,}")
-        self._data[_Keys.RE_DESC] = re.compile(r"\s{0,}#")
-        self._data[_Keys.RE_VAR] = re.compile(r"\s{0,}\S{1,}\s{0,}=")
-        self._data[_Keys.RE_INT] = re.compile(r"^\d{1,}$")
-        self._data[_Keys.RE_FLOAT] = re.compile(r"^\d{1,}\.\d{1,}$")
-        self._data[_Keys.RE_BOOL] = re.compile(r"^true|false|yes|no$", re.IGNORECASE)
-        self._data[_Keys.RE_TRUE] = re.compile(r"^true|yes$", re.IGNORECASE)
-        self._data[_Keys.RE_FALSE] = re.compile(r"^false|no$", re.IGNORECASE)
-        self._data[_Keys.RE_LIST] = re.compile(r"^\[.*\]$")
 
     @property
     def __fp(self) -> FileProcessor:
@@ -89,7 +120,15 @@ class Config(BData, NoDynamicAttributes):
         ### Returns:
         [FileProcessor] - Underlying file helper.
         """
-        return self._get_data(key=_Keys.FP)  # type: ignore
+        obj: Optional[FileProcessor] = self._get_data(key=self.__Keys.FP)
+        if obj is None:
+            raise Raise.error(
+                f"{self._c_name}.__fp not set.",
+                AttributeError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj
 
     @property
     def __dp(self) -> DataProcessor:
@@ -98,7 +137,19 @@ class Config(BData, NoDynamicAttributes):
         ### Returns:
         [DataProcessor] - Underlying data helper.
         """
-        return self._get_data(key=_Keys.DP)  # type: ignore
+        obj: Optional[DataProcessor] = self._get_data(key=self.__Keys.DP)  
+        if obj is None:
+            raise Raise.error(
+                f"{self._c_name}.__dp not set.",
+                AttributeError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj  
+
+    def __rx(self, key: str) -> Pattern[str]:
+        """Return compiled regex stored in typed BData storage."""
+        return self._get_data(key=key)  # type: ignore[return-value]
 
     @property
     def file_exists(self) -> bool:
@@ -118,13 +169,13 @@ class Config(BData, NoDynamicAttributes):
         ### Returns:
         [Any] - Parsed value converted to bool/int/float/list/str.
         """
-        if self._data[_Keys.RE_BOOL].match(item):
-            return True if self._data[_Keys.RE_TRUE].match(item) else False
-        elif self._data[_Keys.RE_INT].match(item):
+        if self.__rx(self.__Keys.RE_BOOL).match(item):
+            return True if self.__rx(self.__Keys.RE_TRUE).match(item) else False
+        elif self.__rx(self.__Keys.RE_INT).match(item):
             return int(item)
-        elif self._data[_Keys.RE_FLOAT].match(item):
+        elif self.__rx(self.__Keys.RE_FLOAT).match(item):
             return float(item)
-        elif self._data[_Keys.RE_LIST].match(item):
+        elif self.__rx(self.__Keys.RE_LIST).match(item):
             out = []
             tmp: list[str] = [x.strip() for x in item.strip("[]").split(",")]
             for item in tmp:
@@ -145,9 +196,9 @@ class Config(BData, NoDynamicAttributes):
         * ValueError: Unexpected line format.
         """
         out: dict[str, Any] = {
-            _Keys.VARNAME: None,
-            _Keys.VALUE: None,
-            _Keys.DESC: None,
+            self.__Keys.VARNAME: None,
+            self.__Keys.VALUE: None,
+            self.__Keys.DESC: None,
         }
         tmp: list[str] = line.split("=", 1)
         if len(tmp) != 2:
@@ -157,8 +208,8 @@ class Config(BData, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        out[_Keys.VARNAME] = tmp[0].strip()
-        if not out[_Keys.VARNAME]:
+        out[self.__Keys.VARNAME] = tmp[0].strip()
+        if not out[self.__Keys.VARNAME]:
             raise Raise.error(
                 "Unexpected config line format: missing variable name.",
                 ValueError,
@@ -169,9 +220,9 @@ class Config(BData, NoDynamicAttributes):
             tmp = tmp[1].split("#", 1)
             # desc
             if len(tmp) == 2 and len(tmp[1]) > 0:
-                out[_Keys.DESC] = tmp[1].strip()
+                out[self.__Keys.DESC] = tmp[1].strip()
             # value
-            out[_Keys.VALUE] = self.__value_parser(tmp[0].strip())
+            out[self.__Keys.VALUE] = self.__value_parser(tmp[0].strip())
 
         return out
 
@@ -189,19 +240,19 @@ class Config(BData, NoDynamicAttributes):
             section_name = self.__dp.main_section
         for line in file:
             # check section
-            if self._data[_Keys.RE_SECTION].match(line):
+            if self.__rx(self.__Keys.RE_SECTION).match(line):
                 section_name = self.__dp.add_section(line)
             # check description
-            elif self._data[_Keys.RE_DESC].match(line):
+            elif self.__rx(self.__Keys.RE_DESC).match(line):
                 self.__dp.set(section_name, desc=line.strip("# "))
             # check var
-            elif self._data[_Keys.RE_VAR].match(line):
+            elif self.__rx(self.__Keys.RE_VAR).match(line):
                 out = self.__var_parser(line)
                 self.__dp.set(
                     section=section_name,
-                    varname=out[_Keys.VARNAME],
-                    value=out[_Keys.VALUE],
-                    desc=out[_Keys.DESC],
+                    varname=out[self.__Keys.VARNAME],
+                    value=out[self.__Keys.VALUE],
+                    desc=out[self.__Keys.DESC],
                 )
             else:
                 if "=" in line:

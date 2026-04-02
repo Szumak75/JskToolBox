@@ -167,5 +167,65 @@ var02 = 2 # comment 02
         with self.assertRaisesRegex(KeyError, "Main section is not set"):
             _ = self.dp.dump
 
+    def test_11_get_missing_section_raises(self) -> None:
+        """Test nr 11."""
+        self.dp.main_section = "TEST"
+        with self.assertRaisesRegex(KeyError, "Given section name: 'OTHER' not found"):
+            self.dp.get("OTHER")
+
+    def test_12_get_missing_variable_returns_none(self) -> None:
+        """Test nr 12."""
+        self.dp.main_section = "TEST"
+        self.dp.set(section="TEST", varname="var01", value="value")
+        self.assertIsNone(self.dp.get("TEST", "missing"))
+        self.assertIsNone(self.dp.get("TEST", "missing", desc=True))
+
+    def test_13_main_section_converts_non_string_values(self) -> None:
+        """Test nr 13."""
+        self.dp.main_section = 123  # type: ignore[assignment]
+        self.assertEqual(self.dp.main_section, "123")
+        self.assertIn("123", self.dp.sections)
+
+    def test_14_add_section_and_get_section_sanitize_name(self) -> None:
+        """Test nr 14."""
+        section_name = self.dp.add_section(" [TEST2]\n")
+        self.assertEqual(section_name, "TEST2")
+        found = self.dp.get_section("TEST2")
+        self.assertIsNotNone(found)
+        assert found is not None
+        self.assertEqual(found.name, "TEST2")
+
+    def test_15_get_section_returns_none_for_missing_entry(self) -> None:
+        """Test nr 15."""
+        self.dp.main_section = "TEST"
+        self.assertIsNone(self.dp.get_section("MISSING"))
+
+    def test_16_set_updates_existing_variable_description_only(self) -> None:
+        """Test nr 16."""
+        self.dp.main_section = "TEST"
+        self.dp.set(section="TEST", varname="var01", value="value", desc="desc01")
+        self.dp.set(section="TEST", varname="var01", desc="desc02")
+        self.assertEqual(self.dp.get("TEST", "var01"), "value")
+        self.assertEqual(self.dp.get("TEST", "var01", desc=True), "desc02")
+
+    def test_17_set_clears_existing_value_and_description(self) -> None:
+        """Test nr 17."""
+        self.dp.main_section = "TEST"
+        self.dp.set(section="TEST", varname="var01", value="value", desc="desc01")
+        self.dp.set(section="TEST", varname="var01", value=None, desc=None)
+        self.assertIsNone(self.dp.get("TEST", "var01"))
+        self.assertIsNone(self.dp.get("TEST", "var01", desc=True))
+
+    def test_18_data_processor_typed_storage(self) -> None:
+        """Test nr 18."""
+        self.assertEqual(self.dp.sections, tuple())
+        self.assertIsNone(self.dp.main_section)
+        with self.assertRaises(TypeError):
+            self.dp._set_data(key="__data__", value=["invalid"])  # type: ignore[list-item]
+
+        self.dp.main_section = "TEST"
+        self.dp.add_section("NEXT")
+        self.assertEqual(self.dp.sections, ("NEXT", "TEST"))
+
 
 # #[EOF]#######################################################################
