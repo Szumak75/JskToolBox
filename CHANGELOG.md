@@ -25,6 +25,16 @@ Allowed types:
 
 ## [Unreleased]
 
+### Test
+
+- `test: extend logstool coverage for LoggerClient proxies, LoggerEngine dispatch, file rotation validation, syslog integer configuration, and ThLoggerProcessor edge cases`
+
+## [1.2.10]
+
+### Refactor
+
+- `refactor: move logstool ThLoggerProcessor keys registry into private ThLoggerProcessor.__Keys class`
+
 ## [1.2.9]
 
 ### Refactor

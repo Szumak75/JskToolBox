@@ -28,16 +28,6 @@ from ..basetool.threads import ThBaseObject
 from .engines import *
 
 
-class _Keys(object, metaclass=ReadOnlyClass):
-    """Keys definition class.
-
-    For internal purpose only.
-    """
-
-    LCO: str = "__LCO__"
-    LEO: str = "__LEO__"
-
-
 class LoggerClient(BLoggerQueue, NoDynamicAttributes):
     """Provide a user-facing client for enqueuing log messages."""
 
@@ -384,6 +374,12 @@ class LoggerEngine(BLoggerQueue, NoDynamicAttributes):
 class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
     """Run a background thread that continually drains the log queue."""
 
+    class __Keys(object, metaclass=ReadOnlyClass):
+        """Private key registry for ThLoggerProcessor storage."""
+
+        LCO: str = "__LCO__"
+        LEO: str = "__LEO__"
+
     def __init__(self, debug: bool = False) -> None:
         """Initialise processing thread state.
 
@@ -406,7 +402,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         ### Returns:
         Optional[LoggerEngine] - Engine reference or None.
         """
-        return self._get_data(key=_Keys.LEO)
+        return self._get_data(key=self.__Keys.LEO)
 
     @logger_engine.setter
     def logger_engine(self, engine: LoggerEngine) -> None:
@@ -419,7 +415,9 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         None - Internal references updated.
         """
         self._set_data(
-            key=_Keys.LEO, set_default_type=Optional[LoggerEngine], value=engine
+            key=self.__Keys.LEO,
+            set_default_type=Optional[LoggerEngine],
+            value=engine,
         )
         if self.logger_client and self.logger_engine and self.logger_engine.logs_queue:
             self.logger_client.logs_queue = self.logger_engine.logs_queue
@@ -431,7 +429,7 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         ### Returns:
         Optional[LoggerClient] - Client reference or None.
         """
-        return self._get_data(key=_Keys.LCO)
+        return self._get_data(key=self.__Keys.LCO)
 
     @logger_client.setter
     def logger_client(self, client: LoggerClient) -> None:
@@ -444,7 +442,9 @@ class ThLoggerProcessor(threading.Thread, ThBaseObject, NoDynamicAttributes):
         None - Internal references updated.
         """
         self._set_data(
-            key=_Keys.LCO, set_default_type=Optional[LoggerClient], value=client
+            key=self.__Keys.LCO,
+            set_default_type=Optional[LoggerClient],
+            value=client,
         )
         if (
             self.logger_engine

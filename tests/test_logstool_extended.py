@@ -63,6 +63,35 @@ def test_logger_queue_roundtrip() -> None:
     assert queue.get() is None
 
 
+def test_logger_client_message_converts_payload_and_prefixes_name() -> None:
+    queue = LoggerQueue()
+    client = LoggerClient(queue, name="client")
+
+    client.message(123, LogsLevelKeys.WARNING)  # type: ignore[arg-type]
+
+    assert queue.get() == (LogsLevelKeys.WARNING, "[client] 123")
+
+
+def test_logger_client_property_proxies_emit_expected_levels() -> None:
+    queue = LoggerQueue()
+    client = LoggerClient(queue)
+
+    client.message_error = "error"
+    client.message_info = "info"
+    client.message_warning = "warning"
+
+    assert queue.get() == (LogsLevelKeys.ERROR, "error")
+    assert queue.get() == (LogsLevelKeys.INFO, "info")
+    assert queue.get() == (LogsLevelKeys.WARNING, "warning")
+    assert queue.get() is None
+
+
+def test_logger_client_invalid_log_level_type_raises() -> None:
+    client = LoggerClient(LoggerQueue())
+    with pytest.raises(TypeError):
+        client.message("payload", 1)  # type: ignore[arg-type]
+
+
 @pytest.mark.parametrize(
     "formatter_cls, expected",
     [
@@ -160,10 +189,35 @@ def test_logger_engine_file_rotation(tmp_path: Path) -> None:
 
 def test_logger_engine_file_logfile_directory_conflict(tmp_path: Path) -> None:
     engine = LoggerEngineFile(name="app", formatter=LogFormatterNull())
-    subdir = tmp_path / "existing"
+    subdir = tmp_path.joinpath("existing")
     subdir.mkdir()
     with pytest.raises(FileExistsError):
         engine.logfile = str(subdir)
+
+
+def test_logger_engine_file_send_without_logfile_raises() -> None:
+    engine = LoggerEngineFile(name="app", formatter=LogFormatterNull())
+    with pytest.raises(ValueError):
+        engine.send("message")
+
+
+def test_logger_engine_file_rotation_validation() -> None:
+    engine = LoggerEngineFile(name="app", formatter=LogFormatterNull())
+
+    with pytest.raises(ValueError):
+        engine.rotation_max_bytes = 0
+    with pytest.raises(ValueError):
+        engine.rotation_backup_count = -1
+
+    engine.rotation_max_bytes = 10
+    engine.rotation_backup_count = 2
+    assert engine.rotation_max_bytes == 10
+    assert engine.rotation_backup_count == 2
+
+    engine.rotation_max_bytes = None
+    engine.rotation_backup_count = 0
+    assert engine.rotation_max_bytes is None
+    assert engine.rotation_backup_count == 0
 
 
 def test_logger_engine_syslog_send(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -204,12 +258,58 @@ def test_logger_engine_syslog_invalid_level() -> None:
         engine.level = "UNKNOWN"
 
 
+def test_logger_engine_syslog_accepts_integer_values_and_closes_existing_handle() -> (
+    None
+):
+    engine = LoggerEngineSyslog()
+    closed = {"count": 0}
+
+    fake_syslog = type(sys)("fake_syslog")
+    fake_syslog.closelog = lambda: closed.__setitem__("count", closed["count"] + 1)
+
+    engine._set_data(LogKeys.SYSLOG, fake_syslog, set_default_type=None)
+    engine.facility = SysLogKeys.facility.LOCAL1
+    assert engine.facility == SysLogKeys.facility.LOCAL1
+    assert closed["count"] == 1
+
+    engine._set_data(LogKeys.SYSLOG, fake_syslog, set_default_type=None)
+    engine.level = SysLogKeys.level.WARNING
+    assert engine.level == SysLogKeys.level.WARNING
+    assert closed["count"] == 2
+
+
 def test_logger_engine_add_engine_invalid_inputs() -> None:
     engine = LoggerEngine()
     with pytest.raises(TypeError):
         engine.add_engine(123, LoggerEngineStdout())  # type: ignore[arg-type]
     with pytest.raises(TypeError):
         engine.add_engine(LogsLevelKeys.INFO, object())  # type: ignore[arg-type]
+
+
+def test_logger_engine_add_engine_replaces_same_class_for_level() -> None:
+    engine = LoggerEngine()
+    first = DummyEngine()
+    second = DummyEngine()
+
+    engine.add_engine(LogsLevelKeys.INFO, first)
+    engine.add_engine(LogsLevelKeys.INFO, second)
+
+    assert engine.logs_queue is not None
+    engine.logs_queue.put("hello", LogsLevelKeys.INFO)
+    engine.send()
+
+    assert first.messages == []
+    assert second.messages == ["hello"]
+
+
+def test_logger_engine_default_dispatch_for_warning_level() -> None:
+    engine = LoggerEngine()
+    stdout_buffer = io.StringIO()
+    with patch.object(sys, "stdout", stdout_buffer):
+        assert engine.logs_queue is not None
+        engine.logs_queue.put("warn", LogsLevelKeys.WARNING)
+        engine.send()
+    assert "warn" in stdout_buffer.getvalue()
 
 
 def test_logger_engine_send_custom_engine() -> None:
@@ -250,3 +350,27 @@ def test_th_logger_processor_missing_engine() -> None:
     processor.logger_client = LoggerClient()
     with pytest.raises(ValueError):
         processor.run()
+
+
+def test_th_logger_processor_missing_client() -> None:
+    processor = ThLoggerProcessor()
+    processor.logger_engine = LoggerEngine()
+    with pytest.raises(ValueError):
+        processor.run()
+
+
+def test_th_logger_processor_syncs_queue_between_engine_and_client() -> None:
+    processor = ThLoggerProcessor()
+    engine = LoggerEngine()
+    client = LoggerClient()
+
+    processor.logger_engine = engine
+    processor.logger_client = client
+
+    assert client.logs_queue is engine.logs_queue
+
+
+def test_keys_expose_expected_mappings() -> None:
+    assert LogsLevelKeys.INFO in LogsLevelKeys.keys
+    assert SysLogKeys.level_keys["ERROR"] == SysLogKeys.level.ERROR
+    assert SysLogKeys.facility_keys["USER"] == SysLogKeys.facility.USER
