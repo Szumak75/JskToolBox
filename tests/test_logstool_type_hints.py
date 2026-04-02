@@ -16,17 +16,16 @@ from typing import get_type_hints
 class TestLogsToolTypeHints(unittest.TestCase):
     """Test type hints and lazy loading for logstool module."""
 
-    def test_01_lazy_loading_not_imported_initially(self) -> None:
-        """Verify submodules are not loaded on package import."""
-        # Clean up any previous imports
+    def setUp(self) -> None:
+        """Reset cached logstool modules before each test."""
         modules_to_remove = [
-            key
-            for key in sys.modules.keys()
-            if key.startswith("jsktoolbox.logstool") and key != "jsktoolbox.logstool"
+            key for key in sys.modules.keys() if key.startswith("jsktoolbox.logstool")
         ]
         for mod in modules_to_remove:
             del sys.modules[mod]
 
+    def test_01_lazy_loading_not_imported_initially(self) -> None:
+        """Verify submodules are not loaded on package import."""
         # Import the package
         import jsktoolbox.logstool
 

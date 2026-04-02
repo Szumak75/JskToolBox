@@ -17,6 +17,8 @@ class TestCommandLineParser(unittest.TestCase):
 
     def setUp(self) -> None:
         """Set up tests."""
+        self._argv_backup = list(sys.argv)
+        sys.argv = ["test_command"]
         self.parser = CommandLineParser()
         self.parser.configure_option(None, "avar", "a var desc")
         self.parser.configure_option("b", "bvar", "b var desc")
@@ -25,6 +27,10 @@ class TestCommandLineParser(unittest.TestCase):
         self.parser.configure_option("e", "evar", "e var desc", has_value=True)
         self.parser.configure_option("f", "fvar", "f var desc", has_value=True)
         self.parser.configure_option("g", "gvar", "g var desc", has_value=True)
+
+    def tearDown(self) -> None:
+        """Restore original command line arguments."""
+        sys.argv = self._argv_backup
 
     def test_01_create_parser(self) -> None:
         """Test nr 01."""
@@ -75,6 +81,8 @@ class TestCommandLineParser(unittest.TestCase):
 
     def test_04_getting_short_args_with_value(self) -> None:
         """Test nr 04."""
+        sys.argv.append("--bvar")
+        sys.argv.append("-c")
         sys.argv.append("-d")
         sys.argv.append("10")
         self.parser.parse()
@@ -89,6 +97,10 @@ class TestCommandLineParser(unittest.TestCase):
 
     def test_05_getting_long_args_with_value(self) -> None:
         """Test nr 05."""
+        sys.argv.append("--bvar")
+        sys.argv.append("-c")
+        sys.argv.append("-d")
+        sys.argv.append("10")
         sys.argv.append("--evar=20")
         sys.argv.append("--fvar=/tmp/for test case.txt")
         sys.argv.append("--avar")

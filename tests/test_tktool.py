@@ -143,31 +143,24 @@ class CollectiveTest(unittest.TestCase):
         elif _XSel().is_tool:
             cb = _XSel()
 
-        if cb:
-            cb.set_clipboard(var)
+        if cb is None:
+            self.skipTest(
+                "X11 clipboard tools are not available - skipping collective clipboard test"
+            )
 
-            if _XClip().is_tool:
-                test = _XClip()
-                self.assertEqual(test.get_clipboard(), var)
+        cb.set_clipboard(var)
 
-            if _XSel().is_tool:
-                test = _XSel()
-                self.assertEqual(test.get_clipboard(), var)
+        if _XClip().is_tool:
+            test = _XClip()
+            self.assertEqual(test.get_clipboard(), var)
 
-            if _QtClip().is_tool:
-                test = _QtClip()
-                self.assertEqual(test.get_clipboard(), var)
+        if _XSel().is_tool:
+            test = _XSel()
+            self.assertEqual(test.get_clipboard(), var)
 
-            # TkClip
-            # if _TkClip().is_tool:
-            #     _TkClip().set_clipboard(var)
-            #     test = _TkClip()
-            #     self.assertEqual(test.get_clipboard(), var)
-            # win = tk.Tk()
-            # if _TkClip(win).is_tool:
-            #     _TkClip(win).set_clipboard(var)
-            #     test = _TkClip(win)
-            #     self.assertEqual(test.get_clipboard(), var)
+        # Qt and Tk use separate GUI frameworks and may require additional
+        # runtime integration with the active desktop session, so they are
+        # validated in their dedicated backend-specific tests instead.
 
 
 # #[EOF]#######################################################################
