@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING, Iterable, List, Optional, cast, Union
 from venv import logger
 
 from ..attribtool import ReadOnlyClass
-from ..basetool.data import BData
+from ..basetool import BData
 from ..logstool import (
     LoggerClient,
     LoggerEngine,

@@ -10,8 +10,8 @@ behaviour leveraged by higher-level logging utilities.
 """
 from typing import Optional, List, Any
 
-from ..logstool.keys import LogKeys
-from ..logstool.queue import LoggerQueue
+from ..logstool import LogKeys
+from ..logstool import LoggerQueue
 
 from .data import BData
 from ..attribtool import NoDynamicAttributes

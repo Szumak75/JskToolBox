@@ -8,7 +8,7 @@ Purpose: EDMC plugins system classes.
 
 import os
 
-from ..basetool.data import BData
+from ..basetool import BData
 from ..systemtool import Env
 from ..attribtool import ReadOnlyClass
 

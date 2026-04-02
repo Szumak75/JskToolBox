@@ -9,7 +9,7 @@ Purpose: Base classes for elements
 
 from typing import Dict, List, Any
 
-from .....basetool.data import BData
+from .....basetool import BData
 from .....attribtool import ReadOnlyClass
 
 

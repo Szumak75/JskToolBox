@@ -22,7 +22,7 @@ from typing import Optional, Union, List, Tuple, Dict, Any
 
 from .attribtool import ReadOnlyClass
 from .raisetool import Raise
-from .basetool.data import BData
+from .basetool import BData
 
 
 class _Keys(object, metaclass=ReadOnlyClass):

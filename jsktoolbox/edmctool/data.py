@@ -9,7 +9,7 @@ Purpose: Data container classes.
 from typing import Union, Optional
 
 from ..attribtool import ReadOnlyClass
-from ..basetool.data import BData
+from ..basetool import BData
 from .stars import StarsSystem
 
 

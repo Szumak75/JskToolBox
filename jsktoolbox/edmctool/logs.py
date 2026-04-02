@@ -16,7 +16,7 @@ from queue import Queue, SimpleQueue
 from ..edmctool.system import EnvLocal
 
 from ..attribtool import ReadOnlyClass, NoDynamicAttributes
-from ..basetool.data import BData
+from ..basetool import BData
 from ..raisetool import Raise
 
 

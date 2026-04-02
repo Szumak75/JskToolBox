@@ -17,8 +17,8 @@ from inspect import currentframe
 
 from ...attribtool import ReadOnlyClass
 from ...raisetool import Raise
-from ...logstool.logs import LoggerClient
-from ...basetool.data import BData
+from ...logstool import LoggerClient
+from ...basetool import BData
 
 
 from ..network.connectors import IConnector

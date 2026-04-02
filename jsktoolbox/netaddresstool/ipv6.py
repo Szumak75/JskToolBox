@@ -19,7 +19,7 @@ from ..attribtool import NoDynamicAttributes
 from ..raisetool import Raise
 from .libs.words import Word16
 from ..libs.interfaces.comparators import IComparators
-from ..basetool.classes import BClasses
+from ..basetool import BClasses
 
 TAddress6 = TypeVar("TAddress6", bound="Address6")
 DEFAULT_IPV6_HOST_LIMIT: int = 65536

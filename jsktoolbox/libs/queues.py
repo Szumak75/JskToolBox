@@ -8,7 +8,7 @@ Purpose: Sets of container classes with FIFO queue functionality.
 from inspect import currentframe
 from typing import List, Dict, Any, Optional
 
-from ..basetool.classes import BClasses
+from ..basetool import BClasses
 from ..raisetool import Raise
 
 

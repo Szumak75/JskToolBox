@@ -9,20 +9,20 @@ Purpose: MikroTik RouterOS main class.
 from typing import Dict, List, Optional, Union, Tuple, Any
 from inspect import currentframe
 
-from ...logstool.queue import LoggerQueue
+from ...logstool import LoggerQueue
 
 from ...attribtool import NoDynamicAttributes, ReadOnlyClass
 from ...raisetool import Raise
-from ...logstool.logs import LoggerClient
+from ...logstool import LoggerClient
 
 
-from ...netaddresstool.ipv4 import (
+from ...netaddresstool import (
     Address,
     Netmask,
     Network,
     SubNetwork,
 )
-from ...netaddresstool.ipv6 import (
+from ...netaddresstool import (
     Address6,
     Network6,
     Prefix6,

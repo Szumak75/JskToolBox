@@ -17,7 +17,7 @@ from ..attribtool import NoDynamicAttributes
 from ..raisetool import Raise
 from .libs.octets import Octet
 from ..libs.interfaces.comparators import IComparators
-from ..basetool.classes import BClasses
+from ..basetool import BClasses
 
 TAddress = TypeVar("TAddress", bound="Address")
 

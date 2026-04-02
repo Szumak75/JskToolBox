@@ -11,7 +11,7 @@ from typing import Optional, List, Dict, Union, Any
 
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
-from ..basetool.data import BData
+from ..basetool import BData
 from .edsm_keys import EdsmKeys
 
 

@@ -10,7 +10,7 @@ from queue import SimpleQueue, Queue
 from threading import Thread
 from typing import Union
 
-from ..basetool.data import BData
+from ..basetool import BData
 from ..attribtool import ReadOnlyClass
 
 from .logs import LogClient, LogProcessor

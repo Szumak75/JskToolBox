@@ -9,10 +9,10 @@ Purpose: RB '/certificate/'
 
 from typing import Dict, Optional, Any
 
-from ....logstool.queue import LoggerQueue
+from ....logstool import LoggerQueue
 
 from ....attribtool import ReadOnlyClass
-from ....logstool.logs import LoggerClient
+from ....logstool import LoggerClient
 from ..base import BRouterOS, BDev
 from ...network.connectors import IConnector
 

@@ -12,7 +12,7 @@ from typing import List, Dict, Optional, Any, Pattern
 
 from ..attribtool import NoDynamicAttributes, ReadOnlyClass
 from ..raisetool import Raise
-from ..basetool.data import BData
+from ..basetool import BData
 from .libs.file import FileProcessor
 from .libs.data import DataProcessor
 from .libs.data import SectionModel

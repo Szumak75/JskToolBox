@@ -12,7 +12,7 @@ from typing import Union, TypeVar
 from ...attribtool import NoDynamicAttributes
 from ...raisetool import Raise
 from ...libs.interfaces.comparators import IComparators
-from ...basetool.classes import BClasses
+from ...basetool import BClasses
 
 TOctet = TypeVar("TOctet", bound="Octet")
 

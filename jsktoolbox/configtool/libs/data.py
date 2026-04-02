@@ -13,7 +13,7 @@ from copy import copy
 
 from ...attribtool import NoDynamicAttributes, ReadOnlyClass
 from ...raisetool import Raise
-from ...basetool.data import BData
+from ...basetool import BData
 
 
 class _Keys(object, metaclass=ReadOnlyClass):

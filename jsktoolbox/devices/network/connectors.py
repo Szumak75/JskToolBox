@@ -19,10 +19,10 @@ from abc import ABC, abstractmethod
 from typing import List, Union, Optional, Tuple, TYPE_CHECKING, Any
 from inspect import currentframe
 
-from ...basetool.data import BData
+from ...basetool import BData
 from ...raisetool import Raise
-from ...netaddresstool.ipv4 import Address
-from ...netaddresstool.ipv6 import Address6
+from ...netaddresstool import Address
+from ...netaddresstool import Address6
 from ...attribtool import ReadOnlyClass
 from ..libs.converters import B64Converter
 

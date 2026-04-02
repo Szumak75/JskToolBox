@@ -16,7 +16,7 @@ from inspect import currentframe
 from .edsm_keys import EdsmKeys
 
 
-from ..basetool.data import BData
+from ..basetool import BData
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
 from ..edmctool.stars import StarsSystem

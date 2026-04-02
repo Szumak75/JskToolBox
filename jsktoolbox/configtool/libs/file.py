@@ -11,7 +11,7 @@ from typing import List, Optional
 
 from ...attribtool import NoDynamicAttributes, ReadOnlyClass
 from ...raisetool import Raise
-from ...basetool.data import BData
+from ...basetool import BData
 from ...systemtool import PathChecker
 
 

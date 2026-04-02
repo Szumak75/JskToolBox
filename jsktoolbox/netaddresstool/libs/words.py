@@ -12,7 +12,7 @@ from typing import Union, TypeVar
 from ...attribtool import NoDynamicAttributes
 from ...raisetool import Raise
 from ...libs.interfaces.comparators import IComparators
-from ...basetool.classes import BClasses
+from ...basetool import BClasses
 
 TWord16 = TypeVar("TWord16", bound="Word16")
 

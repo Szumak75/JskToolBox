@@ -20,11 +20,11 @@ from typing import Optional, Dict, List, Tuple
 from socket import getaddrinfo
 from re import Pattern
 
-from .basetool.data import BData
+from .basetool import BData
 from .attribtool import ReadOnlyClass
 from .attribtool import NoDynamicAttributes
-from .netaddresstool.ipv4 import Address
-from .netaddresstool.ipv6 import Address6
+from .netaddresstool import Address
+from .netaddresstool import Address6
 from .raisetool import Raise
 
 try:

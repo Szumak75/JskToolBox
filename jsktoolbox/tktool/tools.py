@@ -20,7 +20,7 @@ from inspect import currentframe
 from typing import Callable, Optional, Union
 from types import MethodType
 
-from ..basetool.data import BData
+from ..basetool import BData
 from ..attribtool import ReadOnlyClass
 from ..raisetool import Raise
 from .base import TkBase

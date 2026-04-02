@@ -9,7 +9,7 @@ Purpose: Query class as helper for build query elements dict.
 from copy import copy
 from typing import Dict, Optional
 
-from .....basetool.data import BData
+from .....basetool import BData
 from .....attribtool import ReadOnlyClass
 
 
