@@ -13,7 +13,6 @@ import unittest
 from jsktoolbox.devices import API
 from jsktoolbox.netaddresstool import Address, Address6
 
-
 _ENDPOINTS_ENV = os.environ.get("JSKTOOLBOX_ROUTEROS_ENDPOINTS")
 if _ENDPOINTS_ENV:
     ROUTEROS_ENDPOINTS = [

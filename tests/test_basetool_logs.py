@@ -6,6 +6,7 @@ Created: 4.10.2024, 12:43:33
 
 Purpose:
 """
+
 from types import NoneType
 import unittest
 from typing import Dict, List, Optional, Callable

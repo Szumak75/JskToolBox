@@ -6,7 +6,6 @@ Created: 08.12.2023
 Purpose: RB '/certificate/'
 """
 
-
 from typing import Dict, Optional, Any
 
 from ....logstool import LoggerQueue

@@ -7,7 +7,6 @@ Created: 5.09.2024, 22:07:07
 Purpose:
 """
 
-
 import unittest
 from typing import Optional, Any, List, Dict
 

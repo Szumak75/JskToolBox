@@ -6,7 +6,6 @@ Created: 2024-10-08
 Purpose: EDSM API response keys definition container.
 """
 
-
 from ..attribtool import ReadOnlyClass
 
 

@@ -70,8 +70,8 @@ class TestTkToolWidgets(unittest.TestCase):
     def test_status_bar_ttk_frame_does_not_require_default_root(self) -> None:
         """Create StatusBarTtkFrame without relying on Tk default root lookup."""
         with mock.patch(
-            'tkinter._get_default_root',
-            side_effect=AssertionError('default root lookup should not happen'),
+            "tkinter._get_default_root",
+            side_effect=AssertionError("default root lookup should not happen"),
         ):
             widget = StatusBarTtkFrame(self.root)
         self.assertIs(widget.master, self.root)

@@ -6,7 +6,6 @@ Created: 2024-10-08
 Purpose: Elite Dangerous journal event keys definition container.
 """
 
-
 from ..attribtool import ReadOnlyClass
 
 

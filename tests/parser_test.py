@@ -9,7 +9,6 @@ Purpose:
 
 from jsktoolbox.systemtool import CommandLineParser
 
-
 if __name__ == "__main__":
     parser = CommandLineParser()
 

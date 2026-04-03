@@ -137,7 +137,7 @@ class Config(BData, NoDynamicAttributes):
         ### Returns:
         [DataProcessor] - Underlying data helper.
         """
-        obj: Optional[DataProcessor] = self._get_data(key=self.__Keys.DP)  
+        obj: Optional[DataProcessor] = self._get_data(key=self.__Keys.DP)
         if obj is None:
             raise Raise.error(
                 f"{self._c_name}.__dp not set.",
@@ -145,7 +145,7 @@ class Config(BData, NoDynamicAttributes):
                 self._c_name,
                 currentframe(),
             )
-        return obj  
+        return obj
 
     def __rx(self, key: str) -> Pattern[str]:
         """Return compiled regex stored in typed BData storage."""

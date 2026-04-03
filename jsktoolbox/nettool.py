@@ -95,7 +95,7 @@ class Pinger(BData):
         )
         tmp: Optional[Tuple[str, int]] = self.__is_tool
         if tmp:
-            (command, multiplier) = tmp
+            command, multiplier = tmp
             self._set_data(key=_Keys.COMMAND, value=command, set_default_type=str)
             self._set_data(key=_Keys.MULTIPLIER, value=multiplier)
 

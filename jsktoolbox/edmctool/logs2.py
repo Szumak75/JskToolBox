@@ -34,7 +34,6 @@ from ..logstool import (
 from ..basetool import BLoggerQueue
 from ..raisetool import Raise
 
-
 if TYPE_CHECKING:
     from ..logstool import LoggerQueue
 

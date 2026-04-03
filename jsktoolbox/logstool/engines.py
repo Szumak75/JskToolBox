@@ -70,7 +70,7 @@ class LoggerEngineStdout(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Output is written to stdout.
         """
-        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)
         if formatter:
             message = formatter.format(message, self.name)
         sys.stdout.write(f"{message}")
@@ -114,7 +114,7 @@ class LoggerEngineStderr(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Output is written to stderr.
         """
-        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)
         if formatter:
             message = formatter.format(message, self.name)
         sys.stderr.write(f"{message}")
@@ -164,7 +164,7 @@ class LoggerEngineFile(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttributes)
         ### Raises:
         * ValueError: Raised when `logfile` is not configured.
         """
-        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)
         if formatter:
             message = formatter.format(message, self.name)
             if self.logfile is None:
@@ -513,7 +513,7 @@ class LoggerEngineSyslog(ILoggerEngine, BLoggerEngine, BData, NoDynamicAttribute
         ### Returns:
         None - Message is forwarded to syslog with configured facility/level.
         """
-        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)  
+        formatter: Optional[BLogFormatter] = self._get_data(key=LogKeys.FORMATTER)
         if formatter:
             message = formatter.format(message, self.name)
         if self._get_data(key=LogKeys.SYSLOG) is None:

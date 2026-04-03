@@ -6,7 +6,6 @@ Created: 04.12.2023
 Purpose: Base classes for elements
 """
 
-
 from typing import Dict, List, Any
 
 from .....basetool import BData

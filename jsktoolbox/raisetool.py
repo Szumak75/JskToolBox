@@ -8,6 +8,7 @@ and formatting standardized exception messages. It helps in generating
 rich, informative error messages that include details like the class name,
 method name, and line number where the error occurred, facilitating easier debugging.
 """
+
 from types import FrameType
 from typing import Optional
 

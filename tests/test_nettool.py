@@ -7,7 +7,6 @@ Created: 29.08.2025, 09:22:47
 Purpose:
 """
 
-
 import unittest
 from jsktoolbox.nettool import Pinger, Tracert
 

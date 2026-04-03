@@ -16,7 +16,6 @@ from jsktoolbox.tktool.widgets import (
     StatusBarTtkFrame,
 )
 
-
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Scrollbar Test")

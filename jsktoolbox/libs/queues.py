@@ -5,6 +5,7 @@ Created: 03.12.2023
 
 Purpose: Sets of container classes with FIFO queue functionality.
 """
+
 from inspect import currentframe
 from typing import List, Dict, Any, Optional
 

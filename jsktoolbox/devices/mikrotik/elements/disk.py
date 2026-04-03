@@ -6,7 +6,6 @@ Created: 08.12.2023
 Purpose: RB '/disk/'
 """
 
-
 from typing import Optional, Dict, Any
 
 from ....logstool import LoggerQueue

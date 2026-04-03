@@ -25,8 +25,25 @@ Allowed types:
 
 ## [Unreleased]
 
+## [1.2.12]
+
+### Chore
+
+- `chore: bump version to 1.2.12`
+- `chore: update dependencies in requirements.txt and poetry.lock for compatibility and improvements`
+
+### Refactor
+
+- `refactor: enhance data copying methods for BData class and improve error handling in Env and PathChecker classes`
+- `refactor: enhance widget initialization by specifying master for StringVar and Label in StatusBar mixin`
+- `refactor: improve test setup and teardown for CommandLineParser and enhance clipboard test logic`
+- `refactor: update import statements to simplify module paths for better readability`
+- `refactor: enhance project description, keywords, and classifiers in pyproject.toml`
+
 ### Test
 
+- `test: add coverage for BData nested data structures and shared references`
+- `test: add coverage for CommandLineParser and Env functionality`
 - `test: extend logstool coverage for LoggerClient proxies, LoggerEngine dispatch, file rotation validation, syslog integer configuration, and ThLoggerProcessor edge cases`
 
 ## [1.2.11]

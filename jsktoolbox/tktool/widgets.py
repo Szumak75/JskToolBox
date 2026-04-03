@@ -11,7 +11,6 @@ status reporting, hover hints, and vertically scrolling containers.
 VerticalScrolledFrame based on https://gist.github.com/novel-yet-trivial/3eddfce704db3082e38c84664fc1fdf8
 """
 
-
 import tkinter as tk
 from tkinter import Toplevel, ttk
 from typing import Any, Optional, List, Tuple, Union, Dict, cast

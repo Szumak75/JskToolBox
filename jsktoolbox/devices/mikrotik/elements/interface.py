@@ -6,7 +6,6 @@ Created: 06.12.2023
 Purpose: RB /interface/
 """
 
-
 from typing import Dict, Optional, Any
 
 from ....logstool import LoggerQueue

@@ -8,6 +8,7 @@ Purpose: Provide foundational mixins for the logging subsystem.
 Defines base mixins for logger queues, engine metadata, and formatting
 behaviour leveraged by higher-level logging utilities.
 """
+
 from typing import Optional, List, Any
 
 from ..logstool import LogKeys

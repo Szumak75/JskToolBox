@@ -225,9 +225,9 @@ class StarsSystem(BData):
         * TypeError: Argument is not a List or has incorrect length.
         """
         if arg is None:
-            (self.pos_x, self.pos_y, self.pos_z) = (None, None, None)
+            self.pos_x, self.pos_y, self.pos_z = (None, None, None)
         elif isinstance(arg, List) and len(arg) == 3:
-            (self.pos_x, self.pos_y, self.pos_z) = arg
+            self.pos_x, self.pos_y, self.pos_z = arg
         else:
             raise Raise.error(
                 f"List type expected, '{type(arg)}' received.",

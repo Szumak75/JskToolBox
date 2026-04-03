@@ -173,9 +173,7 @@ class BData(BClasses):
             out_dict: Dict[Any, Any] = {}
             memo[object_id] = out_dict
             for key, item in value.items():
-                out_dict[BData.__fast_copy(key, memo)] = BData.__fast_copy(
-                    item, memo
-                )
+                out_dict[BData.__fast_copy(key, memo)] = BData.__fast_copy(item, memo)
             return out_dict
 
         if type(value) is tuple:
