@@ -336,7 +336,10 @@ class Env(BData):
         ### Returns:
         str - The path to the detected home directory.
         """
-        return self._get_data(key=_Keys.HOME, default_value="")  # type: ignore
+        obj: Optional[str] = self._get_data(key=_Keys.HOME)
+        if obj is None:
+            return ""
+        return obj
 
     @property
     def tmpdir(self) -> str:
@@ -345,7 +348,10 @@ class Env(BData):
         ### Returns:
         str - The path to the detected temporary directory.
         """
-        return self._get_data(key=_Keys.TMP, default_value="")  # type: ignore
+        obj: Optional[str] = self._get_data(key=_Keys.TMP)
+        if obj is None:
+            return ""
+        return obj
 
     @property
     def username(self) -> str:
@@ -533,7 +539,15 @@ class PathChecker(BData):
         ### Returns:
         bool - Existence flag.
         """
-        return self._get_data(key=_Keys.EXISTS)  # type: ignore
+        obj: Optional[bool] = self._get_data(key=_Keys.EXISTS)
+        if obj is None:
+            raise Raise.error(
+                "Internal error: 'exists' metadata is missing.",
+                KeyError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj
 
     @property
     def is_dir(self) -> bool:
@@ -542,7 +556,15 @@ class PathChecker(BData):
         ### Returns:
         bool - Directory flag.
         """
-        return self._get_data(key=_Keys.IS_DIR)  # type: ignore
+        obj: Optional[bool] = self._get_data(key=_Keys.IS_DIR)
+        if obj is None:
+            raise Raise.error(
+                "Internal error: 'is_dir' metadata is missing.",
+                KeyError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj
 
     @property
     def is_file(self) -> bool:
@@ -551,7 +573,15 @@ class PathChecker(BData):
         ### Returns:
         bool - File flag.
         """
-        return self._get_data(key=_Keys.IS_FILE)  # type: ignore
+        obj: Optional[bool] = self._get_data(key=_Keys.IS_FILE)
+        if obj is None:
+            raise Raise.error(
+                "Internal error: 'is_file' metadata is missing.",
+                KeyError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj
 
     @property
     def is_symlink(self) -> bool:
@@ -560,7 +590,15 @@ class PathChecker(BData):
         ### Returns:
         bool - Symlink flag.
         """
-        return self._get_data(key=_Keys.IS_SYMLINK)  # type: ignore
+        obj: Optional[bool] = self._get_data(key=_Keys.IS_SYMLINK)
+        if obj is None:
+            raise Raise.error(
+                "Internal error: 'is_symlink' metadata is missing.",
+                KeyError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj
 
     @property
     def path(self) -> str:
@@ -569,7 +607,15 @@ class PathChecker(BData):
         ### Returns:
         str - Pathname.
         """
-        return self._get_data(key=_Keys.PATH_NAME)  # type: ignore
+        obj: Optional[str] = self._get_data(key=_Keys.PATH_NAME)
+        if obj is None:
+            raise Raise.error(
+                "Internal error: 'path' metadata is missing.",
+                KeyError,
+                self._c_name,
+                currentframe(),
+            )
+        return obj
 
     @property
     def posixpath(self) -> Optional[str]:
@@ -579,7 +625,15 @@ class PathChecker(BData):
         Optional[str] - Resolved path or None.
         """
         if self.exists:
-            return self._get_data(key=_Keys.POSIXPATH)  # type: ignore
+            obj: Optional[str] = self._get_data(key=_Keys.POSIXPATH)
+            if obj is None:
+                raise Raise.error(
+                    "Internal error: 'posixpath' metadata is missing.",
+                    KeyError,
+                    self._c_name,
+                    currentframe(),
+                )
+            return obj
         return None
 
     def create(self) -> bool:

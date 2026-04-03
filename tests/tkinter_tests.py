@@ -41,7 +41,7 @@ if __name__ == "__main__":
         text = ttk.Entry(line, style="info.TEntry")
         text.insert(0, f"test {i}")
 
-        sv = tk.StringVar()
+        sv = tk.StringVar(master=root)
         sv.set(f"text nr {i}")
         CreateToolTip(text, text=sv)
         sv.set(f"text nr {i+1}")

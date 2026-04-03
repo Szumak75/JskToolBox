@@ -100,7 +100,7 @@ class TestTkToolWidgets(unittest.TestCase):
 
     def test_create_tooltip_creation_with_string_var(self) -> None:
         """Create tooltip manager with StringVar text source."""
-        text_var = tk.StringVar(value="tooltip-var")
+        text_var = tk.StringVar(master=self.root, value="tooltip-var")
         anchor = tk.Label(self.root, text="anchor")
         tooltip = CreateToolTip(anchor, text=text_var)
         self.assertIs(tooltip.text, text_var)

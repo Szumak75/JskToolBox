@@ -207,5 +207,55 @@ class TestBData(unittest.TestCase):
         """Test nr 17."""
         self.assertIsNone(self.obj._copy_data("missing"))
 
+    def test_18_copy_data_nested_dict_is_isolated(self) -> None:
+        """Test nr 18."""
+        original = {"items": [{"value": 1}, {"value": 2}], "name": "test"}
+        self.obj._set_data("payload", original, Dict)
+
+        copied = self.obj._copy_data("payload")
+
+        self.assertIsInstance(copied, dict)
+        if isinstance(copied, dict):
+            copied["items"][0]["value"] = 99
+            copied["name"] = "changed"
+
+        retrieved = self.obj._get_data("payload")
+        self.assertIsInstance(retrieved, dict)
+        if isinstance(retrieved, dict):
+            self.assertEqual(retrieved["items"][0]["value"], 1)
+            self.assertEqual(retrieved["name"], "test")
+
+    def test_19_copy_data_preserves_shared_references(self) -> None:
+        """Test nr 19."""
+        shared = {"value": 1}
+        original = {"left": shared, "right": shared}
+        self.obj._set_data("payload", original, Dict)
+
+        copied = self.obj._copy_data("payload")
+
+        self.assertIsInstance(copied, dict)
+        if isinstance(copied, dict):
+            self.assertIs(copied["left"], copied["right"])
+            copied["left"]["value"] = 2
+
+        retrieved = self.obj._get_data("payload")
+        self.assertIsInstance(retrieved, dict)
+        if isinstance(retrieved, dict):
+            self.assertIs(retrieved["left"], retrieved["right"])
+            self.assertEqual(retrieved["left"]["value"], 1)
+
+    def test_20_copy_data_preserves_cycles(self) -> None:
+        """Test nr 20."""
+        original = {}
+        original["self"] = original
+        self.obj._set_data("payload", original, Dict)
+
+        copied = self.obj._copy_data("payload")
+
+        self.assertIsInstance(copied, dict)
+        if isinstance(copied, dict):
+            self.assertIs(copied["self"], copied)
+            self.assertIsNot(copied, original)
+
 
 # #[EOF]#######################################################################

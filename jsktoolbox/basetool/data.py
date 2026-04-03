@@ -26,6 +26,15 @@ class BData(BClasses):
 
     __bdata_storage: Optional[Dict[str, Any]] = None
     __bdata_types: Optional[Dict[str, Any]] = None
+    __IMMUTABLE_TYPES: tuple[type, ...] = (
+        type(None),
+        bool,
+        int,
+        float,
+        complex,
+        str,
+        bytes,
+    )
 
     @staticmethod
     def __validate_type(value: Any, expected_type: Any) -> bool:
@@ -132,6 +141,64 @@ class BData(BClasses):
         except TypeError:
             return False
 
+    @staticmethod
+    def __fast_copy(value: Any, memo: Optional[Dict[int, Any]] = None) -> Any:
+        """Create an isolated copy optimized for built-in container types.
+
+        ### Arguments:
+        * value: Any - Source value to copy.
+        * memo: Optional[Dict[int, Any]] - Internal recursion cache used to preserve
+          object identity for cyclic or shared references.
+
+        ### Returns:
+        Any - Copied value that can be safely mutated without affecting the source.
+        """
+        if type(value) in BData.__IMMUTABLE_TYPES:
+            return value
+
+        if memo is None:
+            memo = {}
+
+        object_id = id(value)
+        if object_id in memo:
+            return memo[object_id]
+
+        if type(value) is list:
+            out_list: List[Any] = []
+            memo[object_id] = out_list
+            out_list.extend(BData.__fast_copy(item, memo) for item in value)
+            return out_list
+
+        if type(value) is dict:
+            out_dict: Dict[Any, Any] = {}
+            memo[object_id] = out_dict
+            for key, item in value.items():
+                out_dict[BData.__fast_copy(key, memo)] = BData.__fast_copy(
+                    item, memo
+                )
+            return out_dict
+
+        if type(value) is tuple:
+            memo[object_id] = ()
+            out_tuple = tuple(BData.__fast_copy(item, memo) for item in value)
+            memo[object_id] = out_tuple
+            return out_tuple
+
+        if type(value) is set:
+            out_set: set[Any] = set()
+            memo[object_id] = out_set
+            for item in value:
+                out_set.add(BData.__fast_copy(item, memo))
+            return out_set
+
+        if type(value) is frozenset:
+            memo[object_id] = frozenset()
+            out_frozenset = frozenset(BData.__fast_copy(item, memo) for item in value)
+            memo[object_id] = out_frozenset
+            return out_frozenset
+
+        return copy.deepcopy(value, memo)
+
     def __check_keys(self, key: str) -> bool:
         """Check if the key is available in the storage dictionary.
 
@@ -192,7 +259,7 @@ class BData(BClasses):
         [Optional[Any]] - Deep copy of the stored value or None when missing.
         """
         if self.__check_keys(key):
-            return copy.deepcopy(self._data[key])
+            return self.__fast_copy(self._data[key])
         return None
 
     def _get_data(

@@ -147,9 +147,10 @@ Current: 0.2.3
 - [ ] Określ, czy zmiana obejmuje kod czy wyłącznie dokumentację / metadane developerskie
 - [ ] Jeśli zmiana obejmuje kod: określ typ zmiany `MAJOR`, `MINOR`, `PATCH`
 - [ ] Jeśli zmiana obejmuje kod: zaktualizuj obie wersje tak, aby były zgodne
-- [ ] Zawsze dopisz zmianę do właściwej sekcji `CHANGELOG.md`
 - [ ] Jeśli zmiana obejmuje kod: przygotuj commit message `chore: bump version to X.Y.Z`
 - [ ] Jeśli zmiana obejmuje kod: przygotuj tag `git tag vX.Y.Z`
+- [ ] Zawsze dopisz zmianę do właściwej sekcji `CHANGELOG.md`
+- [ ] Dopisując zmianę wersji do `CHANGELOG.md`, sprawdzaj 'git log' odnośnie commitów, które pojawiły się od poprzedniej zmiany wersji, a które nie zastały jeszcze odnotowane w changelogu, i upewnij się, że wszystkie zostały uwzględnione
 
 ### Changelog
 
