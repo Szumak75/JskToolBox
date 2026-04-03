@@ -14,7 +14,7 @@ VerticalScrolledFrame based on https://gist.github.com/novel-yet-trivial/3eddfce
 
 import tkinter as tk
 from tkinter import Toplevel, ttk
-from typing import Any, Optional, List, Tuple, Union, Dict
+from typing import Any, Optional, List, Tuple, Union, Dict, cast
 
 from ..attribtool import ReadOnlyClass
 from ..basetool import BData
@@ -83,7 +83,7 @@ class _StatusBarMixin(BData):
         """
         obj: Optional[tk.StringVar] = self._get_data(key=self.__Keys.STATUS)
         if obj is None:
-            obj = tk.StringVar()
+            obj = tk.StringVar(master=cast(tk.Misc, self))
         return obj
 
     @_status.setter
@@ -120,7 +120,7 @@ class _StatusBarMixin(BData):
             key=self.__Keys.LABEL
         )
         if obj is None:
-            obj = tk.Label()
+            obj = tk.Label(master=cast(tk.Misc, self))
         return obj
 
     @_status_label.setter
@@ -157,7 +157,7 @@ class _StatusBarMixin(BData):
         """
         obj: Optional[ttk.Sizegrip] = self._get_data(key=self.__Keys.SIZEGRIP)
         if obj is None:
-            obj = ttk.Sizegrip()
+            obj = ttk.Sizegrip(master=cast(tk.Misc, self))
         return obj
 
     @_sizegrip.setter
@@ -200,7 +200,7 @@ class StatusBarTkFrame(tk.Frame, TkBase, _StatusBarMixin):
         """
         tk.Frame.__init__(self, master, *args, **kwargs)
 
-        self._status = tk.StringVar()
+        self._status = tk.StringVar(master=self)
         self._status.set("Status Bar")
         self._status_label = tk.Label(
             self, bd=1, relief=tk.FLAT, anchor=tk.W, textvariable=self._status
@@ -234,7 +234,7 @@ class StatusBarTtkFrame(ttk.Frame, TkBase, _StatusBarMixin):
         """
         ttk.Frame.__init__(self, master, *args, **kwargs)
 
-        self._status = tk.StringVar()
+        self._status = tk.StringVar(master=self)
         self._status.set("Status Bar")
         self._status_label = ttk.Label(self, anchor=tk.W, textvariable=self._status)
         self._status_label.pack(side=tk.LEFT, fill=tk.X, expand=tk.TRUE, padx=5, pady=1)

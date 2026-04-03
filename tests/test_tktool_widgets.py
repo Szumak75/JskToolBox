@@ -8,6 +8,7 @@ Purpose: Validate Tk widget helper object creation and base mixin behaviour.
 
 import unittest
 import tkinter as tk
+from unittest import mock
 
 from jsktoolbox.tktool.widgets import (
     CreateToolTip,
@@ -64,6 +65,16 @@ class TestTkToolWidgets(unittest.TestCase):
         widget = StatusBarTtkFrame(self.root)
         self.assertIs(widget.master, self.root)
         self.assertIsInstance(widget.children, dict)
+        widget.destroy()
+
+    def test_status_bar_ttk_frame_does_not_require_default_root(self) -> None:
+        """Create StatusBarTtkFrame without relying on Tk default root lookup."""
+        with mock.patch(
+            'tkinter._get_default_root',
+            side_effect=AssertionError('default root lookup should not happen'),
+        ):
+            widget = StatusBarTtkFrame(self.root)
+        self.assertIs(widget.master, self.root)
         widget.destroy()
 
     def test_vertical_scrolled_tk_frame_creation(self) -> None:
